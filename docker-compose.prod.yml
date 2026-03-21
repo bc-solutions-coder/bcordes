@@ -1,0 +1,97 @@
+# Production stack — deploy via Portainer
+# Requires .env file with secrets (see .env.example)
+services:
+  # ============================================
+  # FRONTEND
+  # ============================================
+  web:
+    image: ghcr.io/susp3nse/bcordes:latest
+    container_name: bcordes
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+      - WALLOW_API_URL=https://api.wallow.dev
+      - OIDC_ISSUER=https://api.wallow.dev
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_REDIRECT_URI=${OIDC_REDIRECT_URI}
+      - OIDC_SERVICE_CLIENT_ID=${OIDC_SERVICE_CLIENT_ID}
+      - OIDC_SERVICE_CLIENT_SECRET=${OIDC_SERVICE_CLIENT_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
+    depends_on:
+      wallow:
+        condition: service_started
+    labels:
+      - pangolin.proxy-resources.personal.name=personal
+      - pangolin.proxy-resources.personal.full-domain=site.bcordes.dev
+      - pangolin.proxy-resources.personal.protocol=http
+      - pangolin.proxy-resources.personal.targets[0].method=http
+      - pangolin.proxy-resources.personal.targets[0].port=3000
+
+  # ============================================
+  # BACKEND API
+  # ============================================
+  wallow:
+    image: ghcr.io/bc-solutions-coder/wallow:latest
+    container_name: wallow-api
+    restart: unless-stopped
+    environment:
+      - ConnectionStrings__Default=${WALLOW_CONNECTION_STRING}
+      - Valkey__ConnectionString=${WALLOW_VALKEY_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    labels:
+      - pangolin.proxy-resources.wallow-api.name=wallow-api
+      - pangolin.proxy-resources.wallow-api.full-domain=api.wallow.dev
+      - pangolin.proxy-resources.wallow-api.protocol=http
+      - pangolin.proxy-resources.wallow-api.targets[0].method=http
+      - pangolin.proxy-resources.wallow-api.targets[0].port=8080
+
+  # ============================================
+  # DATABASE
+  # ============================================
+  postgres:
+    image: postgres:17-alpine
+    container_name: wallow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # CACHE
+  # ============================================
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: wallow-valkey
+    restart: unless-stopped
+    command: valkey-server --appendonly yes --requirepass ${VALKEY_PASSWORD}
+    volumes:
+      - valkey_data:/data
+    environment:
+      REDISCLI_AUTH: ${VALKEY_PASSWORD}
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  default:
+    name: bcordes-network
+
+volumes:
+  postgres_data:
+  valkey_data:
