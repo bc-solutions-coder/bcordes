@@ -5,14 +5,17 @@ services:
   # FRONTEND
   # ============================================
   web:
-    image: ghcr.io/susp3nse/bcordes:latest
+    image: ghcr.io/bc-solutions-coder/bcordes:latest
     container_name: bcordes
     restart: unless-stopped
+    ports:
+      - '3000:3000'
     environment:
       - HOST=0.0.0.0
+      - PORT=3000
       - NODE_ENV=production
-      - WALLOW_API_URL=https://api.wallow.dev
-      - OIDC_ISSUER=https://api.wallow.dev
+      - WALLOW_API_URL=${WALLOW_API_URL:-https://api.wallow.dev}
+      - OIDC_ISSUER=${OIDC_ISSUER:-https://api.wallow.dev}
       - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
       - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
       - OIDC_REDIRECT_URI=${OIDC_REDIRECT_URI}
