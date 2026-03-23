@@ -24,7 +24,7 @@ services:
         condition: service_started
     labels:
       - pangolin.proxy-resources.personal.name=personal
-      - pangolin.proxy-resources.personal.full-domain=site.bcordes.dev
+      - pangolin.proxy-resources.personal.full-domain=bcordes.dev
       - pangolin.proxy-resources.personal.protocol=http
       - pangolin.proxy-resources.personal.targets[0].method=http
       - pangolin.proxy-resources.personal.targets[0].port=3000

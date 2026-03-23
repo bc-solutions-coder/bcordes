@@ -101,9 +101,9 @@ export function MobileNav() {
                 variant="outline"
                 className="w-full border-border-default text-text-secondary hover:text-accent-primary"
               >
-                <Link to="/login" onClick={() => setOpen(false)}>
+                <a href="/auth/login" onClick={() => setOpen(false)}>
                   Sign In
-                </Link>
+                </a>
               </Button>
             )}
           </div>
