@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.1...bcordes-v0.1.2) (2026-03-23)
+
+
+### Bug Fixes
+
+* add Nitro plugin and fix Docker server entrypoint ([3dba4a8](https://github.com/bc-solutions-coder/bcordes/commit/3dba4a8dea7352ab4fd148d4cef8576fe90bf3c1))
+
 ## [0.1.1](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.0...bcordes-v0.1.1) (2026-03-23)
 
 
