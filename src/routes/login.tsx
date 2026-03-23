@@ -17,7 +17,9 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background-primary px-4">
       <Card className="w-full max-w-md border-border-default bg-background-secondary">
         <CardHeader>
-          <CardTitle className="text-2xl text-text-primary">Admin Login</CardTitle>
+          <CardTitle className="text-2xl text-text-primary">
+            Admin Login
+          </CardTitle>
           <CardDescription className="text-text-secondary">
             Sign in to access the admin panel
           </CardDescription>

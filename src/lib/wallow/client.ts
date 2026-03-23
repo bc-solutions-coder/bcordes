@@ -1,18 +1,18 @@
+import { setResponseStatus } from '@tanstack/react-start/server'
+import { getSession, setSession, withRefreshLock } from '../auth/session'
+import { parseUserFromToken, refreshToken } from '../auth/oidc'
+import { WallowError } from './errors'
 import type { ProblemDetails } from './types'
 import type { SessionData } from '../auth/types'
-import { WallowError } from './errors'
-import { getSession, setSession, withRefreshLock } from '../auth/session'
-import { refreshToken, parseUserFromToken } from '../auth/oidc'
-import { setResponseStatus } from '@tanstack/react-start/server'
 
 const BASE_URL = process.env.WALLOW_API_URL!
 
 interface WallowClient {
-  get(path: string): Promise<Response>
-  post(path: string, body?: unknown): Promise<Response>
-  put(path: string, body?: unknown): Promise<Response>
-  patch(path: string, body?: unknown): Promise<Response>
-  delete(path: string): Promise<Response>
+  get: (path: string) => Promise<Response>
+  post: (path: string, body?: unknown) => Promise<Response>
+  put: (path: string, body?: unknown) => Promise<Response>
+  patch: (path: string, body?: unknown) => Promise<Response>
+  delete: (path: string) => Promise<Response>
 }
 
 /** Create an authenticated HTTP client for the Wallow backend API */
@@ -46,7 +46,9 @@ export async function createWallowClient(): Promise<WallowClient> {
 
     // Wallow redirects to /Account/Login instead of returning 401 when token is invalid
     const isAuthRedirect = (r: Response) =>
-      r.status >= 300 && r.status < 400 && (r.headers.get('location') ?? '').includes('/Account/Login')
+      r.status >= 300 &&
+      r.status < 400 &&
+      (r.headers.get('location') ?? '').includes('/Account/Login')
 
     if (response.status === 401 || isAuthRedirect(response)) {
       const refreshed = await withRefreshLock(
@@ -80,9 +82,14 @@ export async function createWallowClient(): Promise<WallowClient> {
       let problem: ProblemDetails
       try {
         problem = await response.json()
-        console.error(`[wallow] ${method} ${path} → ${response.status}`, problem)
+        console.error(
+          `[wallow] ${method} ${path} → ${response.status}`,
+          problem,
+        )
       } catch {
-        console.error(`[wallow] ${method} ${path} → ${response.status} (no JSON body)`)
+        console.error(
+          `[wallow] ${method} ${path} → ${response.status} (no JSON body)`,
+        )
         problem = {
           type: `https://httpstatuses.com/${response.status}`,
           title: response.statusText || 'Request Failed',

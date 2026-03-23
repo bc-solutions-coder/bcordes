@@ -9,6 +9,7 @@
 **Goal:** Make the contact form actually save submissions to the database.
 
 **Tasks:**
+
 1. **Wire contact form to oRPC endpoint**
    - Modify `src/components/contact/ContactForm.tsx`
    - Import oRPC client
@@ -24,6 +25,7 @@
 **Goal:** Install and configure Better Auth with Drizzle adapter.
 
 **Tasks:**
+
 1. **Install better-auth package**
    - `npm install better-auth`
 
@@ -55,6 +57,7 @@
 **Goal:** Create a functional login page.
 
 **Tasks:**
+
 1. **Create login page route**
    - Create `src/routes/login.tsx`
    - Build login form (email + password)
@@ -71,6 +74,7 @@
 **Goal:** Create protected admin page to view and manage contact submissions.
 
 **Tasks:**
+
 1. **Add getContacts oRPC endpoint**
    - Modify `src/orpc/router/contacts.ts`
    - Add query to fetch all contacts ordered by date
@@ -98,6 +102,7 @@
 **Goal:** Create admin account and document setup.
 
 **Tasks:**
+
 1. **Create admin seed script**
    - Create `scripts/seed-admin.ts`
    - Use Better Auth API to create user

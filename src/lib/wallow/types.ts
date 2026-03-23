@@ -6,7 +6,7 @@ export interface ProblemDetails {
   detail: string
   traceId: string
   code: string
-  errors?: Record<string, string[]>
+  errors?: Record<string, Array<string>>
 }
 
 /** Envelope for real-time SignalR messages from the Wallow backend */

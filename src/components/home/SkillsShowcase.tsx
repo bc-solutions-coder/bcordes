@@ -1,9 +1,16 @@
-import { FadeInView } from '~/components/shared/FadeInView';
+import { FadeInView } from '~/components/shared/FadeInView'
 
 const skillCategories = [
   {
     name: 'Frontend',
-    skills: ['React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Vue.js', 'HTML/CSS'],
+    skills: [
+      'React',
+      'TypeScript',
+      'Next.js',
+      'TailwindCSS',
+      'Vue.js',
+      'HTML/CSS',
+    ],
   },
   {
     name: 'Backend',
@@ -17,7 +24,7 @@ const skillCategories = [
     name: 'Cloud',
     skills: ['AWS', 'GCP', 'Vercel', 'Cloudflare', 'CI/CD', 'Terraform'],
   },
-];
+]
 
 export function SkillsShowcase() {
   return (
@@ -30,7 +37,8 @@ export function SkillsShowcase() {
               Technologies & Skills
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-              A comprehensive toolkit built over years of professional experience
+              A comprehensive toolkit built over years of professional
+              experience
             </p>
           </div>
         </FadeInView>
@@ -62,5 +70,5 @@ export function SkillsShowcase() {
         </div>
       </div>
     </section>
-  );
+  )
 }

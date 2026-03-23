@@ -14,6 +14,20 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      onwarn(warning, defaultHandler) {
+        // Suppress unused import warnings from TanStack's published packages
+        if (
+          warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
+          warning.exporter?.includes('node_modules')
+        )
+          return
+        defaultHandler(warning)
+      },
+    },
+  },
 })
 
 export default config

@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { type ShowcaseMeta, getShowcases } from '@/content/projects'
+import type {ShowcaseMeta} from '@/content/projects';
+import {  getShowcases } from '@/content/projects'
 import { ProjectCard } from '@/components/projects/ProjectCard'
 import { ProjectFilter } from '@/components/projects/ProjectFilter'
 import { FadeInView } from '@/components/shared/FadeInView'
@@ -38,7 +39,7 @@ function WorkPage() {
       const matchesTag =
         selectedTag === null ||
         showcase.tags.some(
-          (tag) => tag.toLowerCase() === selectedTag.toLowerCase()
+          (tag) => tag.toLowerCase() === selectedTag.toLowerCase(),
         )
       const matchesYear =
         selectedYear === null || showcase.year === selectedYear

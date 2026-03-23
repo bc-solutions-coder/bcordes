@@ -15,6 +15,7 @@
 ### Task 1: Install framer-motion
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install framer-motion**
@@ -40,6 +41,7 @@ git commit -m "chore: add framer-motion"
 ### Task 2: Update design tokens and global styles
 
 **Files:**
+
 - Modify: `src/styles.css`
 - Modify: `src/lib/design-tokens.ts`
 
@@ -47,18 +49,18 @@ git commit -m "chore: add framer-motion"
 
 Replace the existing color variables in the `:root` / `@theme` section with the new palette from the spec. Key changes:
 
-| Variable | New Value |
-|----------|-----------|
-| `--color-bg-primary` | `#0a0a0a` |
-| `--color-bg-secondary` | `#111111` |
-| `--color-bg-tertiary` | `#1a1a1a` |
-| `--color-text-primary` | `#e5e5e5` |
+| Variable                 | New Value |
+| ------------------------ | --------- |
+| `--color-bg-primary`     | `#0a0a0a` |
+| `--color-bg-secondary`   | `#111111` |
+| `--color-bg-tertiary`    | `#1a1a1a` |
+| `--color-text-primary`   | `#e5e5e5` |
 | `--color-text-secondary` | `#a3a3a3` |
-| `--color-text-tertiary` | `#525252` |
-| `--color-accent` | `#10b981` |
-| `--color-accent-hover` | `#059669` |
+| `--color-text-tertiary`  | `#525252` |
+| `--color-accent`         | `#10b981` |
+| `--color-accent-hover`   | `#059669` |
 | `--color-border-default` | `#1e1e1e` |
-| `--color-border-hover` | `#333333` |
+| `--color-border-hover`   | `#333333` |
 
 Ensure these are registered via Tailwind v4's `@theme` so they work as `bg-(--color-bg-primary)` etc.
 
@@ -85,6 +87,7 @@ git commit -m "style: update design tokens for redesign"
 This is the core of the redesign. Create the bento grid with Framer Motion layout animations.
 
 **Files:**
+
 - Create: `src/components/work/BentoGrid.tsx`
 - Create: `src/components/work/BentoCard.tsx`
 - Create: `src/components/work/BentoCardExpanded.tsx`
@@ -235,8 +238,7 @@ export function BentoCard({
   useEffect(() => {
     if (isExpanded && ref.current) {
       const rect = ref.current.getBoundingClientRect()
-      const isFullyVisible =
-        rect.top >= 0 && rect.bottom <= window.innerHeight
+      const isFullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
       if (!isFullyVisible) {
         ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }
@@ -355,16 +357,16 @@ export function BentoGrid({ showcases, initialExpandedSlug }: BentoGridProps) {
     }
   }, [initialExpandedSlug, showcases])
 
-  const handleToggle = useCallback(
-    (id: string) => {
-      setExpandedId((prev) => (prev === id ? null : id))
-    },
-    [],
-  )
+  const handleToggle = useCallback((id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id))
+  }, [])
 
   return (
     <LayoutGroup>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4" style={{ gridAutoRows: '180px' }}>
+      <div
+        className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4"
+        style={{ gridAutoRows: '180px' }}
+      >
         {showcases.map((showcase, index) => (
           <BentoCard
             key={showcase.id}
@@ -398,6 +400,7 @@ git commit -m "feat: add BentoGrid, BentoCard, and BentoCardExpanded components"
 ### Task 4: Redesign the Hero component
 
 **Files:**
+
 - Modify: `src/components/home/Hero.tsx`
 
 - [ ] **Step 1: Rewrite Hero.tsx**
@@ -419,7 +422,11 @@ export function Hero() {
 
         <FadeInView delay={100}>
           <h1 className="text-3xl font-light leading-tight text-[--color-text-primary] md:text-4xl">
-            I build <strong className="font-semibold text-white">reliable software</strong> for teams that ship.
+            I build{' '}
+            <strong className="font-semibold text-white">
+              reliable software
+            </strong>{' '}
+            for teams that ship.
           </h1>
         </FadeInView>
 
@@ -429,7 +436,8 @@ export function Hero() {
 
         <FadeInView delay={300}>
           <p className="mt-5 max-w-lg text-base leading-relaxed text-[--color-text-secondary]">
-            Full-stack development and consulting — from architecture to production.
+            Full-stack development and consulting — from architecture to
+            production.
           </p>
         </FadeInView>
       </div>
@@ -455,6 +463,7 @@ git commit -m "style: redesign Hero with stacked breathing layout"
 ### Task 5: Redesign the ServicesGrid component
 
 **Files:**
+
 - Modify: `src/components/home/ServicesGrid.tsx`
 
 - [ ] **Step 1: Read current ServicesGrid**
@@ -466,6 +475,7 @@ Read `src/components/home/ServicesGrid.tsx` to understand the current structure 
 Simplify to 3 cards with icon, title, brief description. No skill tags. Subtle border with hover transition. Include the section label (overline) matching the pattern used in other sections.
 
 Key markup — section with label + cards:
+
 ```tsx
 <section className="px-6 py-24">
   <div className="mx-auto max-w-[1200px]">
@@ -475,19 +485,20 @@ Key markup — section with label + cards:
       </span>
     </FadeInView>
     <FadeInView delay={100}>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {/* cards */}
-      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">{/* cards */}</div>
     </FadeInView>
   </div>
 </section>
 ```
 
 Key markup per card:
+
 ```tsx
 <div className="rounded-xl border border-[--color-border-default] bg-[--color-bg-secondary] p-6 transition-colors hover:border-[--color-border-hover]">
   <div className="mb-3 text-xl">{icon}</div>
-  <h3 className="mb-1 text-sm font-semibold text-[--color-text-primary]">{title}</h3>
+  <h3 className="mb-1 text-sm font-semibold text-[--color-text-primary]">
+    {title}
+  </h3>
   <p className="text-xs text-[--color-text-tertiary]">{description}</p>
 </div>
 ```
@@ -511,6 +522,7 @@ git commit -m "style: simplify ServicesGrid to clean card design"
 ### Task 6: Replace FeaturedWork carousel with BentoGrid
 
 **Files:**
+
 - Modify: `src/components/home/FeaturedWork.tsx`
 - Modify: `src/routes/index.tsx`
 
@@ -589,7 +601,9 @@ function HomePage() {
               About
             </span>
             <p className="max-w-xl text-base leading-relaxed text-[--color-text-secondary]">
-              I've spent the last several years building software that teams actually want to maintain. Based in Denver, working with clients everywhere.
+              I've spent the last several years building software that teams
+              actually want to maintain. Based in Denver, working with clients
+              everywhere.
             </p>
             <Link
               to="/about"
@@ -639,6 +653,7 @@ git commit -m "feat: replace carousel with BentoGrid on homepage"
 ### Task 7: Redesign the /work page with BentoGrid
 
 **Files:**
+
 - Modify: `src/routes/work/index.tsx`
 - Modify: `src/routes/work/$slug.tsx`
 
@@ -684,7 +699,8 @@ function WorkPage() {
   }, [showcases, selectedTag])
 
   // Read hash for auto-expand
-  const hash = typeof window !== 'undefined' ? window.location.hash.slice(1) : undefined
+  const hash =
+    typeof window !== 'undefined' ? window.location.hash.slice(1) : undefined
 
   return (
     <div className="min-h-screen px-6 py-24">
@@ -694,7 +710,8 @@ function WorkPage() {
             Work
           </h1>
           <p className="mb-8 text-base text-[--color-text-secondary]">
-            A selection of projects across different industries and technologies.
+            A selection of projects across different industries and
+            technologies.
           </p>
         </FadeInView>
 
@@ -760,9 +777,10 @@ export const Route = createFileRoute('/work/$slug')({
 - [ ] **Step 3: Verify /work page and redirect**
 
 Run: `pnpm dev`
+
 - Check http://localhost:3000/work — bento grid with tag filters
 - Check http://localhost:3000/work/some-id — should redirect to /work#some-id
-Expected: Both work correctly
+  Expected: Both work correctly
 
 - [ ] **Step 4: Commit**
 
@@ -776,6 +794,7 @@ git commit -m "feat: redesign /work page with BentoGrid, add slug redirect"
 ### Task 8: Simplify Header and Footer
 
 **Files:**
+
 - Modify: `src/components/layout/Header.tsx`
 - Modify: `src/components/layout/Footer.tsx`
 
@@ -812,6 +831,7 @@ git commit -m "style: simplify Header and Footer for redesign"
 ### Task 9: Remove unused components, dependencies, and clean up
 
 **Files:**
+
 - Delete: `src/components/shared/AnimatedText.tsx`
 - Delete: `src/components/home/SkillsShowcase.tsx`
 - Delete: `src/components/work/ProjectCard.tsx` (replaced by BentoCard)
@@ -825,6 +845,7 @@ git commit -m "style: simplify Header and Footer for redesign"
 Search for imports of `AnimatedText`, `SkillsShowcase`, `ProjectCard`, `ProjectFilter`, `next-themes`, `useTheme`, `ThemeProvider`, and `Carousel`.
 
 Run:
+
 ```bash
 grep -r "AnimatedText\|SkillsShowcase\|ProjectCard\|ProjectFilter\|next-themes\|useTheme\|ThemeProvider\|carousel" src/ --include="*.tsx" --include="*.ts" -l
 ```
@@ -832,6 +853,7 @@ grep -r "AnimatedText\|SkillsShowcase\|ProjectCard\|ProjectFilter\|next-themes\|
 - [ ] **Step 2: Delete dead component files**
 
 Delete:
+
 - `src/components/shared/AnimatedText.tsx`
 - `src/components/home/SkillsShowcase.tsx`
 - `src/components/work/ProjectCard.tsx`
@@ -844,7 +866,7 @@ Remove any remaining imports of these in other files found in Step 1.
 
 Run: `pnpm remove embla-carousel-react next-themes`
 
-- [ ] **Step 4: Clean up __root.tsx**
+- [ ] **Step 4: Clean up \_\_root.tsx**
 
 Ensure `<html>` has `class="dark"` set statically. Remove any theme provider wrappers or useTheme calls if present. The root layout should be clean: just Header + main + Footer + Toaster.
 
@@ -865,6 +887,7 @@ git commit -m "chore: remove dead components, embla-carousel, and next-themes"
 ### Task 10: Restyle remaining pages (about, contact, blog, resume)
 
 **Files:**
+
 - Modify: `src/routes/about.tsx`
 - Modify: `src/routes/contact.tsx`
 - Modify: `src/routes/blog/index.tsx`
@@ -926,6 +949,7 @@ Expected: No lint errors
 - [ ] **Step 4: Manual smoke test**
 
 Start dev server and verify:
+
 - [ ] Homepage: Hero → Services → Bento grid → About teaser → Contact CTA
 - [ ] Bento card click expands with smooth Framer Motion animation
 - [ ] Only one card expanded at a time

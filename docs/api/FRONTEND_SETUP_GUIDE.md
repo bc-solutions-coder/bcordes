@@ -70,36 +70,36 @@ pnpm add @tanstack/react-query
 Create `client/orval.config.ts`:
 
 ```ts
-import { defineConfig } from "orval";
+import { defineConfig } from 'orval'
 
 export default defineConfig({
   wallow: {
     input: {
       // Points to the Wallow API's OpenAPI spec served by Scalar
       // Use the local file path if you want to generate without the API running
-      target: "http://localhost:5000/openapi/v1.json",
+      target: 'http://localhost:5000/openapi/v1.json',
     },
     output: {
       // Split generated code by API tag (maps to .NET controller groups)
-      mode: "tags-split",
+      mode: 'tags-split',
 
       // Where the generated hooks go
-      target: "./src/api/generated",
+      target: './src/api/generated',
 
       // Where the generated TypeScript types go
-      schemas: "./src/api/models",
+      schemas: './src/api/models',
 
       // Generate TanStack Query hooks
-      client: "react-query",
+      client: 'react-query',
 
       // Use fetch (not axios) — lighter, no extra dependency
-      httpClient: "fetch",
+      httpClient: 'fetch',
 
       // Use a custom fetch wrapper for auth, base URL, error handling
       override: {
         mutator: {
-          path: "./src/api/custom-fetch.ts",
-          name: "customFetch",
+          path: './src/api/custom-fetch.ts',
+          name: 'customFetch',
         },
         query: {
           useQuery: true,
@@ -109,7 +109,7 @@ export default defineConfig({
       },
     },
   },
-});
+})
 ```
 
 ---
@@ -120,17 +120,16 @@ Create `client/src/api/custom-fetch.ts`:
 
 ```ts
 // Base URL for the Wallow API
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL ?? "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
 
 type RequestConfig = {
-  url: string;
-  method: string;
-  params?: Record<string, string>;
-  data?: unknown;
-  headers?: Record<string, string>;
-  signal?: AbortSignal;
-};
+  url: string
+  method: string
+  params?: Record<string, string>
+  data?: unknown
+  headers?: Record<string, string>
+  signal?: AbortSignal
+}
 
 export const customFetch = async <T>({
   url,
@@ -140,44 +139,42 @@ export const customFetch = async <T>({
   headers,
   signal,
 }: RequestConfig): Promise<T> => {
-  const queryString = params
-    ? `?${new URLSearchParams(params).toString()}`
-    : "";
+  const queryString = params ? `?${new URLSearchParams(params).toString()}` : ''
 
   const response = await fetch(`${API_BASE_URL}${url}${queryString}`, {
     method,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...headers,
       // Auth is handled by the BFF server functions — see "Authentication" section below.
       // For server-side calls, use authenticatedFetch() from ~/api/server-api.ts instead.
     },
     body: data ? JSON.stringify(data) : undefined,
     signal,
-    credentials: "include",
-  });
+    credentials: 'include',
+  })
 
   if (!response.ok) {
     // Wallow API returns RFC 7807 Problem Details on errors
-    const problem = await response.json().catch(() => null);
+    const problem = await response.json().catch(() => null)
     throw {
       status: response.status,
       statusText: response.statusText,
       detail: problem?.detail ?? response.statusText,
-      title: problem?.title ?? "API Error",
+      title: problem?.title ?? 'API Error',
       errors: problem?.errors,
-    };
+    }
   }
 
   // Handle 204 No Content
   if (response.status === 204) {
-    return undefined as T;
+    return undefined as T
   }
 
-  return response.json();
-};
+  return response.json()
+}
 
-export default customFetch;
+export default customFetch
 ```
 
 ---
@@ -245,13 +242,13 @@ client/src/api/
 
 ```tsx
 // src/routes/inquiries.tsx
-import { useGetInquiries } from "~/api/generated/inquiries/inquiries";
+import { useGetInquiries } from '~/api/generated/inquiries/inquiries'
 
 export default function InquiriesPage() {
-  const { data, isLoading, error } = useGetInquiries();
+  const { data, isLoading, error } = useGetInquiries()
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.detail}</div>;
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.detail}</div>
 
   return (
     <ul>
@@ -259,36 +256,41 @@ export default function InquiriesPage() {
         <li key={inquiry.id}>{inquiry.title}</li>
       ))}
     </ul>
-  );
+  )
 }
 ```
 
 ### Mutation
 
 ```tsx
-import { useSubmitInquiry } from "~/api/generated/inquiries/inquiries";
+import { useSubmitInquiry } from '~/api/generated/inquiries/inquiries'
 
 function NewInquiryForm() {
-  const { mutate, isPending } = useSubmitInquiry();
+  const { mutate, isPending } = useSubmitInquiry()
 
   const handleSubmit = (formData: FormData) => {
     mutate({
       data: {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
+        title: formData.get('title') as string,
+        description: formData.get('description') as string,
       },
-    });
-  };
+    })
+  }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.currentTarget)); }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        handleSubmit(new FormData(e.currentTarget))
+      }}
+    >
       <input name="title" placeholder="Title" required />
       <textarea name="description" placeholder="Description" required />
       <button type="submit" disabled={isPending}>
-        {isPending ? "Submitting..." : "Submit"}
+        {isPending ? 'Submitting...' : 'Submit'}
       </button>
     </form>
-  );
+  )
 }
 ```
 
@@ -398,12 +400,12 @@ Browser ──► TanStack Start BFF (port 3000)  ──► Wallow.Api (port 500
 
 ### OIDC Endpoints (Wallow.Api)
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/connect/authorize` | GET | Start authorization (redirect user here) |
-| `/connect/token` | POST | Exchange code for tokens |
-| `/connect/logout` | GET/POST | End session |
-| `/connect/userinfo` | GET/POST | Get user profile claims |
+| Endpoint             | Method   | Purpose                                  |
+| -------------------- | -------- | ---------------------------------------- |
+| `/connect/authorize` | GET      | Start authorization (redirect user here) |
+| `/connect/token`     | POST     | Exchange code for tokens                 |
+| `/connect/logout`    | GET/POST | End session                              |
+| `/connect/userinfo`  | GET/POST | Get user profile claims                  |
 
 ---
 
@@ -411,15 +413,15 @@ Browser ──► TanStack Start BFF (port 3000)  ──► Wallow.Api (port 500
 
 Wallow seeds a development client for local frontend work:
 
-| Setting | Value |
-|---------|-------|
-| Client ID | `wallow-dev-client` |
-| Client Type | Public (no secret) |
-| Redirect URIs | `http://localhost:5000/callback`, `http://localhost:3000/callback` |
-| Post-Logout URIs | `http://localhost:5000`, `http://localhost:3000` |
-| Flows | Authorization Code + Refresh Token |
-| PKCE | **Required** (S256) |
-| Scopes | `openid`, `profile`, `email`, `roles`, `api` |
+| Setting          | Value                                                              |
+| ---------------- | ------------------------------------------------------------------ |
+| Client ID        | `wallow-dev-client`                                                |
+| Client Type      | Public (no secret)                                                 |
+| Redirect URIs    | `http://localhost:5000/callback`, `http://localhost:3000/callback` |
+| Post-Logout URIs | `http://localhost:5000`, `http://localhost:3000`                   |
+| Flows            | Authorization Code + Refresh Token                                 |
+| PKCE             | **Required** (S256)                                                |
+| Scopes           | `openid`, `profile`, `email`, `roles`, `api`                       |
 
 ---
 
@@ -438,26 +440,26 @@ pnpm add iron-session  # encrypted cookie sessions
 Create `client/src/auth/oidc.ts`:
 
 ```ts
-import { OAuth2Client } from "arctic";
+import { OAuth2Client } from 'arctic'
 
-const ISSUER = process.env.WALLOW_API_URL ?? "http://localhost:5000";
+const ISSUER = process.env.WALLOW_API_URL ?? 'http://localhost:5000'
 
 export const wallowOAuth = new OAuth2Client(
-  "wallow-dev-client",
+  'wallow-dev-client',
   null, // no client secret (public client)
   `${ISSUER}/connect/authorize`,
   `${ISSUER}/connect/token`,
-);
+)
 
 export const OIDC_CONFIG = {
   issuer: ISSUER,
-  clientId: "wallow-dev-client",
-  redirectUri: "http://localhost:3000/auth/callback",
-  postLogoutRedirectUri: "http://localhost:3000",
-  scopes: ["openid", "profile", "email", "roles"],
+  clientId: 'wallow-dev-client',
+  redirectUri: 'http://localhost:3000/auth/callback',
+  postLogoutRedirectUri: 'http://localhost:3000',
+  scopes: ['openid', 'profile', 'email', 'roles'],
   userInfoEndpoint: `${ISSUER}/connect/userinfo`,
   endSessionEndpoint: `${ISSUER}/connect/logout`,
-} as const;
+} as const
 ```
 
 #### 3. Configure Session Storage
@@ -465,30 +467,31 @@ export const OIDC_CONFIG = {
 Create `client/src/auth/session.ts`:
 
 ```ts
-import { getIronSession } from "iron-session";
+import { getIronSession } from 'iron-session'
 
 export interface SessionData {
-  accessToken?: string;
-  refreshToken?: string;
-  expiresAt?: number;
+  accessToken?: string
+  refreshToken?: string
+  expiresAt?: number
   user?: {
-    sub: string;
-    email: string;
-    name: string;
-    roles: string[];
-  };
+    sub: string
+    email: string
+    name: string
+    roles: string[]
+  }
 }
 
 export const SESSION_OPTIONS = {
-  password: process.env.SESSION_SECRET ?? "dev-secret-at-least-32-characters-long!!",
-  cookieName: "wallow_session",
+  password:
+    process.env.SESSION_SECRET ?? 'dev-secret-at-least-32-characters-long!!',
+  cookieName: 'wallow_session',
   cookieOptions: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
     maxAge: 60 * 60 * 24 * 7, // 7 days
   },
-};
+}
 
 // Use in server functions:
 // const session = await getIronSession<SessionData>(cookies, SESSION_OPTIONS);
@@ -499,142 +502,167 @@ export const SESSION_OPTIONS = {
 **Login route** — `client/src/routes/auth/login.ts`:
 
 ```ts
-import { createAPIFileRoute } from "@tanstack/start/api";
-import { generateCodeVerifier, generateState } from "arctic";
-import { wallowOAuth, OIDC_CONFIG } from "~/auth/oidc";
-import { setCookie } from "vinxi/http";
+import { createAPIFileRoute } from '@tanstack/start/api'
+import { generateCodeVerifier, generateState } from 'arctic'
+import { wallowOAuth, OIDC_CONFIG } from '~/auth/oidc'
+import { setCookie } from 'vinxi/http'
 
-export const APIRoute = createAPIFileRoute("/auth/login")({
+export const APIRoute = createAPIFileRoute('/auth/login')({
   GET: async ({ request }) => {
-    const state = generateState();
-    const codeVerifier = generateCodeVerifier();
+    const state = generateState()
+    const codeVerifier = generateCodeVerifier()
 
-    const url = wallowOAuth.createAuthorizationURL(OIDC_CONFIG.redirectUri, state, {
-      codeVerifier,
-      scopes: OIDC_CONFIG.scopes,
-    });
+    const url = wallowOAuth.createAuthorizationURL(
+      OIDC_CONFIG.redirectUri,
+      state,
+      {
+        codeVerifier,
+        scopes: OIDC_CONFIG.scopes,
+      },
+    )
 
     // Store state + verifier in short-lived cookies for the callback
-    setCookie("oidc_state", state, { httpOnly: true, maxAge: 600, path: "/" });
-    setCookie("oidc_code_verifier", codeVerifier, { httpOnly: true, maxAge: 600, path: "/" });
+    setCookie('oidc_state', state, { httpOnly: true, maxAge: 600, path: '/' })
+    setCookie('oidc_code_verifier', codeVerifier, {
+      httpOnly: true,
+      maxAge: 600,
+      path: '/',
+    })
 
     return new Response(null, {
       status: 302,
       headers: { Location: url.toString() },
-    });
+    })
   },
-});
+})
 ```
 
 **Callback route** — `client/src/routes/auth/callback.ts`:
 
 ```ts
-import { createAPIFileRoute } from "@tanstack/start/api";
-import { wallowOAuth, OIDC_CONFIG } from "~/auth/oidc";
-import { getIronSession } from "iron-session";
-import { SESSION_OPTIONS, type SessionData } from "~/auth/session";
-import { getCookie, deleteCookie } from "vinxi/http";
+import { createAPIFileRoute } from '@tanstack/start/api'
+import { wallowOAuth, OIDC_CONFIG } from '~/auth/oidc'
+import { getIronSession } from 'iron-session'
+import { SESSION_OPTIONS, type SessionData } from '~/auth/session'
+import { getCookie, deleteCookie } from 'vinxi/http'
 
-export const APIRoute = createAPIFileRoute("/auth/callback")({
+export const APIRoute = createAPIFileRoute('/auth/callback')({
   GET: async ({ request }) => {
-    const url = new URL(request.url);
-    const code = url.searchParams.get("code");
-    const state = url.searchParams.get("state");
-    const storedState = getCookie("oidc_state");
-    const codeVerifier = getCookie("oidc_code_verifier");
+    const url = new URL(request.url)
+    const code = url.searchParams.get('code')
+    const state = url.searchParams.get('state')
+    const storedState = getCookie('oidc_state')
+    const codeVerifier = getCookie('oidc_code_verifier')
 
     // Validate state to prevent CSRF
     if (!code || !state || state !== storedState || !codeVerifier) {
-      return new Response("Invalid callback", { status: 400 });
+      return new Response('Invalid callback', { status: 400 })
     }
 
     // Clean up temporary cookies
-    deleteCookie("oidc_state");
-    deleteCookie("oidc_code_verifier");
+    deleteCookie('oidc_state')
+    deleteCookie('oidc_code_verifier')
 
     // Exchange authorization code for tokens
     const tokens = await wallowOAuth.validateAuthorizationCode(
       code,
       OIDC_CONFIG.redirectUri,
       codeVerifier,
-    );
+    )
 
     // Fetch user info from the OIDC provider
     const userInfoResponse = await fetch(OIDC_CONFIG.userInfoEndpoint, {
       headers: { Authorization: `Bearer ${tokens.accessToken()}` },
-    });
-    const userInfo = await userInfoResponse.json();
+    })
+    const userInfo = await userInfoResponse.json()
 
     // Store tokens in encrypted session cookie
-    const session = await getIronSession<SessionData>(request, new Response(), SESSION_OPTIONS);
-    session.accessToken = tokens.accessToken();
-    session.refreshToken = tokens.refreshToken();
-    session.expiresAt = tokens.accessTokenExpiresAt()?.getTime();
+    const session = await getIronSession<SessionData>(
+      request,
+      new Response(),
+      SESSION_OPTIONS,
+    )
+    session.accessToken = tokens.accessToken()
+    session.refreshToken = tokens.refreshToken()
+    session.expiresAt = tokens.accessTokenExpiresAt()?.getTime()
     session.user = {
       sub: userInfo.sub,
       email: userInfo.email,
       name: userInfo.name ?? userInfo.given_name,
-      roles: Array.isArray(userInfo.role) ? userInfo.role : [userInfo.role].filter(Boolean),
-    };
-    await session.save();
+      roles: Array.isArray(userInfo.role)
+        ? userInfo.role
+        : [userInfo.role].filter(Boolean),
+    }
+    await session.save()
 
     return new Response(null, {
       status: 302,
-      headers: { Location: "/" },
-    });
+      headers: { Location: '/' },
+    })
   },
-});
+})
 ```
 
 **Me route** — `client/src/routes/auth/me.ts`:
 
 ```ts
-import { createAPIFileRoute } from "@tanstack/start/api";
-import { getIronSession } from "iron-session";
-import { SESSION_OPTIONS, type SessionData } from "~/auth/session";
+import { createAPIFileRoute } from '@tanstack/start/api'
+import { getIronSession } from 'iron-session'
+import { SESSION_OPTIONS, type SessionData } from '~/auth/session'
 
-export const APIRoute = createAPIFileRoute("/auth/me")({
+export const APIRoute = createAPIFileRoute('/auth/me')({
   GET: async ({ request }) => {
-    const session = await getIronSession<SessionData>(request, new Response(), SESSION_OPTIONS);
+    const session = await getIronSession<SessionData>(
+      request,
+      new Response(),
+      SESSION_OPTIONS,
+    )
 
     if (!session.user) {
       return new Response(JSON.stringify({ authenticated: false }), {
         status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     return new Response(
       JSON.stringify({ authenticated: true, user: session.user }),
-      { headers: { "Content-Type": "application/json" } },
-    );
+      { headers: { 'Content-Type': 'application/json' } },
+    )
   },
-});
+})
 ```
 
 **Logout route** — `client/src/routes/auth/logout.ts`:
 
 ```ts
-import { createAPIFileRoute } from "@tanstack/start/api";
-import { getIronSession } from "iron-session";
-import { SESSION_OPTIONS, type SessionData } from "~/auth/session";
-import { OIDC_CONFIG } from "~/auth/oidc";
+import { createAPIFileRoute } from '@tanstack/start/api'
+import { getIronSession } from 'iron-session'
+import { SESSION_OPTIONS, type SessionData } from '~/auth/session'
+import { OIDC_CONFIG } from '~/auth/oidc'
 
-export const APIRoute = createAPIFileRoute("/auth/logout")({
+export const APIRoute = createAPIFileRoute('/auth/logout')({
   POST: async ({ request }) => {
-    const session = await getIronSession<SessionData>(request, new Response(), SESSION_OPTIONS);
-    session.destroy();
+    const session = await getIronSession<SessionData>(
+      request,
+      new Response(),
+      SESSION_OPTIONS,
+    )
+    session.destroy()
 
     // Redirect to Wallow's OIDC end session endpoint
-    const logoutUrl = new URL(OIDC_CONFIG.endSessionEndpoint);
-    logoutUrl.searchParams.set("post_logout_redirect_uri", OIDC_CONFIG.postLogoutRedirectUri);
+    const logoutUrl = new URL(OIDC_CONFIG.endSessionEndpoint)
+    logoutUrl.searchParams.set(
+      'post_logout_redirect_uri',
+      OIDC_CONFIG.postLogoutRedirectUri,
+    )
 
     return new Response(null, {
       status: 302,
       headers: { Location: logoutUrl.toString() },
-    });
+    })
   },
-});
+})
 ```
 
 #### 5. Update Custom Fetch to Attach Bearer Tokens
@@ -642,19 +670,19 @@ export const APIRoute = createAPIFileRoute("/auth/logout")({
 Replace the placeholder in `client/src/api/custom-fetch.ts`:
 
 ```ts
-import { getIronSession } from "iron-session";
-import { SESSION_OPTIONS, type SessionData } from "~/auth/session";
+import { getIronSession } from 'iron-session'
+import { SESSION_OPTIONS, type SessionData } from '~/auth/session'
 
-const API_BASE_URL = process.env.WALLOW_API_URL ?? "http://localhost:5000";
+const API_BASE_URL = process.env.WALLOW_API_URL ?? 'http://localhost:5000'
 
 type RequestConfig = {
-  url: string;
-  method: string;
-  params?: Record<string, string>;
-  data?: unknown;
-  headers?: Record<string, string>;
-  signal?: AbortSignal;
-};
+  url: string
+  method: string
+  params?: Record<string, string>
+  data?: unknown
+  headers?: Record<string, string>
+  signal?: AbortSignal
+}
 
 export const customFetch = async <T>({
   url,
@@ -664,13 +692,11 @@ export const customFetch = async <T>({
   headers,
   signal,
 }: RequestConfig): Promise<T> => {
-  const queryString = params
-    ? `?${new URLSearchParams(params).toString()}`
-    : "";
+  const queryString = params ? `?${new URLSearchParams(params).toString()}` : ''
 
   // In server functions, attach the Bearer token from the session
-  const authHeaders: Record<string, string> = {};
-  if (typeof window === "undefined") {
+  const authHeaders: Record<string, string> = {}
+  if (typeof window === 'undefined') {
     // Server-side: read token from session
     // The session must be passed via async context or request
     // This is a simplified example — adapt to your server function pattern
@@ -679,38 +705,38 @@ export const customFetch = async <T>({
   const response = await fetch(`${API_BASE_URL}${url}${queryString}`, {
     method,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...authHeaders,
       ...headers,
     },
     body: data ? JSON.stringify(data) : undefined,
     signal,
-  });
+  })
 
   if (!response.ok) {
     if (response.status === 401) {
       // Token expired — trigger refresh or redirect to login
-      throw { status: 401, detail: "Session expired", redirect: "/auth/login" };
+      throw { status: 401, detail: 'Session expired', redirect: '/auth/login' }
     }
 
-    const problem = await response.json().catch(() => null);
+    const problem = await response.json().catch(() => null)
     throw {
       status: response.status,
       statusText: response.statusText,
       detail: problem?.detail ?? response.statusText,
-      title: problem?.title ?? "API Error",
+      title: problem?.title ?? 'API Error',
       errors: problem?.errors,
-    };
+    }
   }
 
   if (response.status === 204) {
-    return undefined as T;
+    return undefined as T
   }
 
-  return response.json();
-};
+  return response.json()
+}
 
-export default customFetch;
+export default customFetch
 ```
 
 #### 6. Create a Server Function Helper for Authenticated API Calls
@@ -718,12 +744,12 @@ export default customFetch;
 Create `client/src/api/server-api.ts`:
 
 ```ts
-import { createServerFn } from "@tanstack/start";
-import { getIronSession } from "iron-session";
-import { SESSION_OPTIONS, type SessionData } from "~/auth/session";
-import { getWebRequest } from "vinxi/http";
+import { createServerFn } from '@tanstack/start'
+import { getIronSession } from 'iron-session'
+import { SESSION_OPTIONS, type SessionData } from '~/auth/session'
+import { getWebRequest } from 'vinxi/http'
 
-const API_BASE_URL = process.env.WALLOW_API_URL ?? "http://localhost:5000";
+const API_BASE_URL = process.env.WALLOW_API_URL ?? 'http://localhost:5000'
 
 /**
  * Makes an authenticated API call from the BFF to Wallow.
@@ -734,11 +760,15 @@ export async function authenticatedFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const request = getWebRequest();
-  const session = await getIronSession<SessionData>(request, new Response(), SESSION_OPTIONS);
+  const request = getWebRequest()
+  const session = await getIronSession<SessionData>(
+    request,
+    new Response(),
+    SESSION_OPTIONS,
+  )
 
   if (!session.accessToken) {
-    throw new Error("Not authenticated");
+    throw new Error('Not authenticated')
   }
 
   // TODO: Check session.expiresAt and refresh if needed
@@ -747,29 +777,30 @@ export async function authenticatedFetch<T>(
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${session.accessToken}`,
       ...options.headers,
     },
-  });
+  })
 
   if (!response.ok) {
-    const problem = await response.json().catch(() => null);
+    const problem = await response.json().catch(() => null)
     throw {
       status: response.status,
       detail: problem?.detail ?? response.statusText,
-    };
+    }
   }
 
-  if (response.status === 204) return undefined as T;
-  return response.json();
+  if (response.status === 204) return undefined as T
+  return response.json()
 }
 
 // Example server function using authenticated fetch:
-export const getMyInvoices = createServerFn({ method: "GET" })
-  .handler(async () => {
-    return authenticatedFetch("/api/v1/billing/invoices");
-  });
+export const getMyInvoices = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    return authenticatedFetch('/api/v1/billing/invoices')
+  },
+)
 ```
 
 ---
@@ -782,11 +813,11 @@ Wallow access tokens are short-lived. The BFF should handle refresh transparentl
 // In authenticatedFetch, before making the API call:
 if (session.expiresAt && Date.now() > session.expiresAt - 30_000) {
   // Token expires within 30 seconds — refresh it
-  const newTokens = await wallowOAuth.refreshAccessToken(session.refreshToken!);
-  session.accessToken = newTokens.accessToken();
-  session.refreshToken = newTokens.refreshToken();
-  session.expiresAt = newTokens.accessTokenExpiresAt()?.getTime();
-  await session.save();
+  const newTokens = await wallowOAuth.refreshAccessToken(session.refreshToken!)
+  session.accessToken = newTokens.accessToken()
+  session.refreshToken = newTokens.refreshToken()
+  session.expiresAt = newTokens.accessTokenExpiresAt()?.getTime()
+  await session.save()
 }
 ```
 
@@ -796,24 +827,24 @@ if (session.expiresAt && Date.now() > session.expiresAt - 30_000) {
 
 ```tsx
 // src/hooks/useAuth.ts
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
 
 export function useAuth() {
   return useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: () => fetch("/auth/me").then((r) => r.json()),
+    queryKey: ['auth', 'me'],
+    queryFn: () => fetch('/auth/me').then((r) => r.json()),
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
-  });
+  })
 }
 
 // src/components/AuthButton.tsx
-import { useAuth } from "~/hooks/useAuth";
+import { useAuth } from '~/hooks/useAuth'
 
 export function AuthButton() {
-  const { data, isLoading } = useAuth();
+  const { data, isLoading } = useAuth()
 
-  if (isLoading) return null;
+  if (isLoading) return null
 
   if (data?.authenticated) {
     return (
@@ -823,10 +854,10 @@ export function AuthButton() {
           <button type="submit">Logout</button>
         </form>
       </div>
-    );
+    )
   }
 
-  return <a href="/auth/login">Login</a>;
+  return <a href="/auth/login">Login</a>
 }
 ```
 
@@ -848,10 +879,10 @@ SESSION_SECRET=dev-secret-at-least-32-characters-long!!
 
 ### Default Dev Credentials
 
-| Field | Value |
-|-------|-------|
-| Email | `admin@wallow.dev` |
-| Password | `Admin123!` |
+| Field    | Value              |
+| -------- | ------------------ |
+| Email    | `admin@wallow.dev` |
+| Password | `Admin123!`        |
 
 ---
 
@@ -859,25 +890,25 @@ SESSION_SECRET=dev-secret-at-least-32-characters-long!!
 
 Request these scopes in the `openid` authorization to access specific API features:
 
-| Category | Scopes |
-|----------|--------|
-| **Standard OIDC** | `openid`, `profile`, `email`, `roles` |
-| **Billing** | `billing.read`, `billing.manage`, `invoices.read`, `invoices.write`, `payments.read`, `payments.write`, `subscriptions.read`, `subscriptions.write` |
-| **Identity** | `users.read`, `users.write`, `users.manage`, `roles.read`, `roles.write`, `organizations.read`, `organizations.manage` |
-| **Storage** | `storage.read`, `storage.write` |
-| **Messaging** | `messaging.access`, `announcements.read`, `announcements.manage`, `notifications.read`, `notifications.write` |
-| **Inquiries** | `inquiries.read`, `inquiries.write` |
-| **Configuration** | `configuration.read`, `configuration.manage` |
+| Category          | Scopes                                                                                                                                              |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Standard OIDC** | `openid`, `profile`, `email`, `roles`                                                                                                               |
+| **Billing**       | `billing.read`, `billing.manage`, `invoices.read`, `invoices.write`, `payments.read`, `payments.write`, `subscriptions.read`, `subscriptions.write` |
+| **Identity**      | `users.read`, `users.write`, `users.manage`, `roles.read`, `roles.write`, `organizations.read`, `organizations.manage`                              |
+| **Storage**       | `storage.read`, `storage.write`                                                                                                                     |
+| **Messaging**     | `messaging.access`, `announcements.read`, `announcements.manage`, `notifications.read`, `notifications.write`                                       |
+| **Inquiries**     | `inquiries.read`, `inquiries.write`                                                                                                                 |
+| **Configuration** | `configuration.read`, `configuration.manage`                                                                                                        |
 
 ---
 
 ### Rate Limits
 
-| Endpoint | Limit | Window |
-|----------|-------|--------|
-| Auth endpoints | 3 requests | 10 minutes |
-| Global (per tenant) | 1000 requests | 1 hour |
-| File uploads | 10 requests | 1 hour |
+| Endpoint            | Limit         | Window     |
+| ------------------- | ------------- | ---------- |
+| Auth endpoints      | 3 requests    | 10 minutes |
+| Global (per tenant) | 1000 requests | 1 hour     |
+| File uploads        | 10 requests   | 1 hour     |
 
 The API returns `429 Too Many Requests` with a `Retry-After` header when limits are exceeded.
 
@@ -910,10 +941,10 @@ Orval diffs the spec and updates only what changed. Review the generated code fo
 
 ## Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| `orval` can't reach the API | Make sure `dotnet run --project src/Wallow.Api` is running |
-| Spec URL 404 | Verify the spec is at `http://localhost:5000/openapi/v1.json` (not `/swagger/`) |
-| CORS errors in browser | Add `http://localhost:3000` to `Cors:AllowedOrigins` in `appsettings.Development.json` |
-| Generated types are `any` | Check that your .NET DTOs have proper XML docs or `[Required]` attributes |
-| Auth 401 errors | Ensure the Bearer token is being passed in `custom-fetch.ts` |
+| Problem                     | Solution                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------- |
+| `orval` can't reach the API | Make sure `dotnet run --project src/Wallow.Api` is running                             |
+| Spec URL 404                | Verify the spec is at `http://localhost:5000/openapi/v1.json` (not `/swagger/`)        |
+| CORS errors in browser      | Add `http://localhost:3000` to `Cors:AllowedOrigins` in `appsettings.Development.json` |
+| Generated types are `any`   | Check that your .NET DTOs have proper XML docs or `[Required]` attributes              |
+| Auth 401 errors             | Ensure the Bearer token is being passed in `custom-fetch.ts`                           |

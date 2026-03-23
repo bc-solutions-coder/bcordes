@@ -1,7 +1,13 @@
-import { discovery, clientCredentialsGrant, allowInsecureRequests, type Configuration } from 'openid-client'
-import type { ProblemDetails } from './types'
-import { WallowError } from './errors'
+import {
+  
+  allowInsecureRequests,
+  clientCredentialsGrant,
+  discovery
+} from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
+import { WallowError } from './errors'
+import type {Configuration} from 'openid-client';
+import type { ProblemDetails } from './types'
 
 const BASE_URL = process.env.WALLOW_API_URL!
 
@@ -23,7 +29,7 @@ function getConfig(): Promise<Configuration> {
     configPromise = discovery(
       new URL(issuer),
       process.env.OIDC_SERVICE_CLIENT_ID!,
-      process.env.OIDC_SERVICE_CLIENT_SECRET!,
+      process.env.OIDC_SERVICE_CLIENT_SECRET,
       undefined,
       isDev ? { execute: [allowInsecureRequests] } : undefined,
     ).catch((err) => {
@@ -62,7 +68,11 @@ async function fetchServiceToken(): Promise<string> {
   return tokenCache.accessToken
 }
 
-async function request(method: string, path: string, body?: unknown): Promise<Response> {
+async function request(
+  method: string,
+  path: string,
+  body?: unknown,
+): Promise<Response> {
   const token = await getServiceToken()
 
   const doFetch = (accessToken: string) =>

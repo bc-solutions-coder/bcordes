@@ -7,9 +7,9 @@ export interface User {
   /** Email claim */
   email: string
   /** Roles assigned to the user (e.g. admin, manager, user) */
-  roles: string[]
+  roles: Array<string>
   /** Permissions expanded from roles by Wallow */
-  permissions: string[]
+  permissions: Array<string>
   /** Tenant identifier from the organization claim */
   tenantId: string
   /** Tenant display name from the organization claim */

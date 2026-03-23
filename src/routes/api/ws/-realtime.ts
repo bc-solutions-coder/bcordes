@@ -1,5 +1,9 @@
 import { defineWebSocketHandler } from 'h3'
-import { HubConnectionBuilder, HttpTransportType, LogLevel } from '@microsoft/signalr'
+import {
+  HttpTransportType,
+  HubConnectionBuilder,
+  LogLevel,
+} from '@microsoft/signalr'
 import type { HubConnection } from '@microsoft/signalr'
 import type { Peer } from 'crossws'
 import type { SessionData } from '~/lib/auth/types'
@@ -96,7 +100,7 @@ export default defineWebSocketHandler({
     try {
       const data = JSON.parse(message.text()) as {
         method: string
-        args?: unknown[]
+        args?: Array<unknown>
       }
       await hub.invoke(data.method, ...(data.args ?? []))
     } catch {

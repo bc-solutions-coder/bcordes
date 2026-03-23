@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
 import { createWallowClient } from '@/lib/wallow/client'
 import { serviceClient } from '@/lib/wallow/service-client'
 import { getSession } from '@/lib/auth/session'
-import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
 
 const submitInquirySchema = z.object({
   name: z.string().min(1).max(200),
@@ -35,7 +35,7 @@ export const fetchInquiries = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
     const response = await client.get('/api/v1/inquiries')
-    return (await response.json()) as Inquiry[]
+    return (await response.json()) as Array<Inquiry>
   },
 )
 
@@ -46,7 +46,7 @@ export const fetchMyInquiries = createServerFn({ method: 'GET' }).handler(
     const client = await createWallowClient()
     const path = isAdmin ? '/api/v1/inquiries' : '/api/v1/inquiries/submitted'
     const response = await client.get(path)
-    return (await response.json()) as Inquiry[]
+    return (await response.json()) as Array<Inquiry>
   },
 )
 
@@ -72,10 +72,8 @@ export const fetchInquiryComments = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    const response = await client.get(
-      `/api/v1/inquiries/${data.id}/comments`,
-    )
-    return (await response.json()) as InquiryComment[]
+    const response = await client.get(`/api/v1/inquiries/${data.id}/comments`)
+    return (await response.json()) as Array<InquiryComment>
   })
 
 const submitInquiryCommentSchema = z.object({

@@ -1,5 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { randomState, randomPKCECodeVerifier, getAuthorizationUrl } from '~/lib/auth/oidc'
+import {
+  getAuthorizationUrl,
+  randomPKCECodeVerifier,
+  randomState,
+} from '~/lib/auth/oidc'
 
 export const Route = createFileRoute('/auth/login')({
   server: {
@@ -23,10 +27,7 @@ export const Route = createFileRoute('/auth/login')({
         const headers = new Headers({
           Location: authorizationURL,
         })
-        headers.append(
-          'Set-Cookie',
-          `__oauth_state=${state}; ${cookieOptions}`,
-        )
+        headers.append('Set-Cookie', `__oauth_state=${state}; ${cookieOptions}`)
         headers.append(
           'Set-Cookie',
           `__oauth_code_verifier=${codeVerifier}; ${cookieOptions}`,

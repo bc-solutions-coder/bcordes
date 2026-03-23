@@ -19,6 +19,7 @@ This design creates a performance-first, dark-mode portfolio website for BC Solu
 ## Technology Stack
 
 ### Frontend
+
 - React 19 with TanStack Start (SSR)
 - TanStack Router (file-based routing)
 - TanStack Query (server state)
@@ -26,12 +27,14 @@ This design creates a performance-first, dark-mode portfolio website for BC Solu
 - shadcn/ui (component library)
 
 ### Backend & Data
+
 - Nitro (server runtime)
 - oRPC (type-safe API layer)
 - Drizzle ORM + PostgreSQL (database)
 - Orval (C# backend integration)
 
 ### Performance
+
 - CSS animations only (GPU-accelerated)
 - Intersection Observer (lazy loading)
 - Code splitting (automatic via TanStack Router)
@@ -227,15 +230,16 @@ src/content/
 ```
 
 Frontmatter structure:
+
 ```yaml
 ---
-title: "Drop Enforcement Module"
-description: "Customer-facing compliance workflow"
-client: "Drop"
-year: "2025"
-tags: ["Angular", "TypeScript", "Compliance"]
+title: 'Drop Enforcement Module'
+description: 'Customer-facing compliance workflow'
+client: 'Drop'
+year: '2025'
+tags: ['Angular', 'TypeScript', 'Compliance']
 featured: true
-image: "/projects/drop-cover.jpg"
+image: '/projects/drop-cover.jpg'
 ---
 ```
 
@@ -266,7 +270,7 @@ export default defineConfig({
       },
     },
   },
-});
+})
 ```
 
 Generates type-safe hooks: `useGetProjects()`, `useSubmitContact()`
@@ -293,12 +297,14 @@ Generates type-safe hooks: `useGetProjects()`, `useSubmitContact()`
 ## Implementation Phases
 
 ### Phase 1: Foundation
+
 - Tailwind theme with dark green palette
 - Layout components (Header, Footer)
 - Animation utilities (FadeInView, AnimatedText)
 - Database schema and migrations
 
 ### Phase 2: Homepage
+
 - Hero section with animated text
 - Services grid
 - Featured work carousel
@@ -306,18 +312,21 @@ Generates type-safe hooks: `useGetProjects()`, `useSubmitContact()`
 - Contact CTA
 
 ### Phase 3: Work Section
+
 - Project listing page with filtering
 - Project detail pages (MDX rendering)
 - Skill demonstration components
 - Project reactions feature
 
 ### Phase 4: Additional Pages
+
 - About page
 - Contact page with form
 - Resume page (interactive)
 - Blog setup (MDX rendering)
 
 ### Phase 5: Polish & Optimization
+
 - Performance optimization
 - Accessibility audit
 - SEO optimization
@@ -325,6 +334,7 @@ Generates type-safe hooks: `useGetProjects()`, `useSubmitContact()`
 - Testing
 
 ### Phase 6: Future Integration
+
 - Orval setup for C# backend
 - API client configuration
 - Type-safe backend integration

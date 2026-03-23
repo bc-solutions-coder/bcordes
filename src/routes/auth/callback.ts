@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import type { SessionData } from '~/lib/auth/types'
 import { exchangeCode, fetchUserProfile } from '~/lib/auth/oidc'
 import { sealSessionCookie } from '~/lib/auth/session'
-import type { SessionData } from '~/lib/auth/types'
 
 function parseCookies(cookieHeader: string): Record<string, string> {
   return Object.fromEntries(
@@ -13,7 +13,7 @@ function parseCookies(cookieHeader: string): Record<string, string> {
   )
 }
 
-function clearTempCookies(): string[] {
+function clearTempCookies(): Array<string> {
   const expired = 'Max-Age=0; Path=/; HttpOnly; SameSite=Lax'
   return [
     `__oauth_state=; ${expired}`,
@@ -63,10 +63,19 @@ export const Route = createFileRoute('/auth/callback')({
         }
 
         try {
-          const tokens = await exchangeCode(code, codeVerifier, request.url, state)
-          const user = await fetchUserProfile(tokens.accessToken, tokens.subject)
+          const tokens = await exchangeCode(
+            code,
+            codeVerifier,
+            request.url,
+            state,
+          )
+          const user = await fetchUserProfile(
+            tokens.accessToken,
+            tokens.subject,
+          )
           // Default to 1 hour if the provider doesn't return expires_in
-          const expiresAt = Math.floor(Date.now() / 1000) + (tokens.expiresIn || 3600)
+          const expiresAt =
+            Math.floor(Date.now() / 1000) + (tokens.expiresIn || 3600)
 
           const sessionData: SessionData = {
             sessionId: crypto.randomUUID(),

@@ -2,8 +2,8 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 interface ProjectFilterProps {
-  tags: string[]
-  years: number[]
+  tags: Array<string>
+  years: Array<number>
   selectedTag: string | null
   selectedYear: number | null
   onTagChange: (tag: string | null) => void
@@ -33,7 +33,7 @@ export function ProjectFilter({
             onClick={() => onTagChange(null)}
             className={cn(
               'cursor-pointer transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full'
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
             )}
           >
             <Badge
@@ -42,7 +42,7 @@ export function ProjectFilter({
                 'px-3 py-1',
                 selectedTag === null
                   ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
               )}
             >
               All
@@ -55,7 +55,7 @@ export function ProjectFilter({
               onClick={() => onTagChange(tag)}
               className={cn(
                 'cursor-pointer transition-all duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full'
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
               )}
             >
               <Badge
@@ -64,7 +64,7 @@ export function ProjectFilter({
                   'px-3 py-1',
                   selectedTag === tag
                     ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
                 )}
               >
                 {tag}
@@ -85,7 +85,7 @@ export function ProjectFilter({
             onClick={() => onYearChange(null)}
             className={cn(
               'cursor-pointer transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full'
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
             )}
           >
             <Badge
@@ -94,7 +94,7 @@ export function ProjectFilter({
                 'px-3 py-1',
                 selectedYear === null
                   ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
               )}
             >
               All Years
@@ -107,7 +107,7 @@ export function ProjectFilter({
               onClick={() => onYearChange(year)}
               className={cn(
                 'cursor-pointer transition-all duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full'
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
               )}
             >
               <Badge
@@ -116,7 +116,7 @@ export function ProjectFilter({
                   'px-3 py-1',
                   selectedYear === year
                     ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
                 )}
               >
                 {year}

@@ -14,15 +14,15 @@ function processInlineMarkdown(text: string): string {
     )
 }
 
-function processContent(content: string): React.ReactNode[] {
+function processContent(content: string): Array<React.ReactNode> {
   const lines = content.split('\n')
-  const elements: React.ReactNode[] = []
-  let currentParagraph: string[] = []
+  const elements: Array<React.ReactNode> = []
+  let currentParagraph: Array<string> = []
   let inCodeBlock = false
-  let codeBlockContent: string[] = []
+  let codeBlockContent: Array<string> = []
   let codeBlockLang = ''
   let inList = false
-  let listItems: string[] = []
+  let listItems: Array<string> = []
   let listType: 'ul' | 'ol' = 'ul'
   let keyIndex = 0
 

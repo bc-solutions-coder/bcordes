@@ -1,13 +1,13 @@
 import {
-  discovery,
-  buildAuthorizationUrl,
-  authorizationCodeGrant,
-  refreshTokenGrant,
-  fetchUserInfo,
-  randomState,
-  randomPKCECodeVerifier,
-  calculatePKCECodeChallenge,
   allowInsecureRequests,
+  authorizationCodeGrant,
+  buildAuthorizationUrl,
+  calculatePKCECodeChallenge,
+  discovery,
+  fetchUserInfo,
+  randomPKCECodeVerifier,
+  randomState,
+  refreshTokenGrant,
 } from 'openid-client'
 import type { Configuration } from 'openid-client'
 import type { User } from './types'
@@ -37,7 +37,7 @@ function getConfig(): Promise<Configuration> {
     configPromise = discovery(
       new URL(issuer),
       process.env.OIDC_CLIENT_ID!,
-      process.env.OIDC_CLIENT_SECRET!,
+      process.env.OIDC_CLIENT_SECRET,
       undefined,
       isDev ? { execute: [allowInsecureRequests] } : undefined,
     ).catch((err) => {
@@ -61,7 +61,8 @@ export async function getAuthorizationUrl(
   const codeChallenge = await calculatePKCECodeChallenge(codeVerifier)
   const url = buildAuthorizationUrl(config, {
     redirect_uri: process.env.OIDC_REDIRECT_URI!,
-    scope: 'openid profile email roles offline_access inquiries.read inquiries.write',
+    scope:
+      'openid profile email roles offline_access inquiries.read inquiries.write',
     state,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
@@ -125,13 +126,16 @@ export async function getLogoutUrl(
 }
 
 /** Fetches user info from the OIDC userinfo endpoint using the access token. */
-export async function fetchUserProfile(accessToken: string, expectedSubject: string): Promise<User> {
+export async function fetchUserProfile(
+  accessToken: string,
+  expectedSubject: string,
+): Promise<User> {
   const config = await getConfig()
   const claims = await fetchUserInfo(config, accessToken, expectedSubject)
 
   const rawRole = claims.role as unknown
-  const roles: string[] = Array.isArray(rawRole)
-    ? (rawRole as string[])
+  const roles: Array<string> = Array.isArray(rawRole)
+    ? (rawRole as Array<string>)
     : typeof rawRole === 'string'
       ? [rawRole]
       : []
@@ -143,9 +147,13 @@ export async function fetchUserProfile(accessToken: string, expectedSubject: str
   const tenantName = org && tenantId ? org[tenantId].name : ''
 
   return {
-    id: claims.sub as string,
-    name: ((claims.name ?? claims.preferred_username ?? [claims.given_name, claims.family_name].filter(Boolean).join(' ')) || (claims.email as string) || 'User') as string,
-    email: (claims.email as string) ?? '',
+    id: claims.sub,
+    name: ((claims.name ??
+      claims.preferred_username ??
+      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
+      (claims.email as string) ||
+      'User'),
+    email: String(claims.email ?? ''),
     roles,
     permissions: [],
     tenantId,
@@ -161,7 +169,9 @@ export async function fetchUserProfile(accessToken: string, expectedSubject: str
 export function parseUserFromToken(token: string): User {
   const parts = token.split('.')
   if (parts.length !== 3) {
-    throw new Error('Token is not a valid JWT — use the id_token instead of an opaque access_token')
+    throw new Error(
+      'Token is not a valid JWT — use the id_token instead of an opaque access_token',
+    )
   }
   const json = Buffer.from(
     parts[1].replace(/-/g, '+').replace(/_/g, '/'),
@@ -170,8 +180,8 @@ export function parseUserFromToken(token: string): User {
   const claims = JSON.parse(json) as Record<string, unknown>
 
   const rawRole = claims.role
-  const roles: string[] = Array.isArray(rawRole)
-    ? (rawRole as string[])
+  const roles: Array<string> = Array.isArray(rawRole)
+    ? (rawRole as Array<string>)
     : typeof rawRole === 'string'
       ? [rawRole]
       : []
@@ -184,8 +194,13 @@ export function parseUserFromToken(token: string): User {
 
   return {
     id: claims.sub as string,
-    name: ((claims.name ?? claims.preferred_username ?? [claims.given_name, claims.family_name].filter(Boolean).join(' ')) || (claims.email as string) || 'User') as string,
-    email: claims.email as string,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- claims are Record<string, unknown>
+    name: ((claims.name ??
+      claims.preferred_username ??
+      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
+      (claims.email as string) ||
+      'User') as string,
+    email: String(claims.email ?? ''),
     roles,
     permissions: [],
     tenantId,

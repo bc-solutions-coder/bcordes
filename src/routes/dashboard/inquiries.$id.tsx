@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { Link, createFileRoute, useRouter } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchInquiry,
@@ -13,7 +14,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
 
 const fetchCurrentUserRoles = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -133,7 +133,9 @@ function InquiryDetailPage() {
                 <dt className="text-sm font-medium text-text-tertiary">
                   Budget
                 </dt>
-                <dd className="mt-1 text-text-primary">{inquiry.budgetRange}</dd>
+                <dd className="mt-1 text-text-primary">
+                  {inquiry.budgetRange}
+                </dd>
               </div>
             )}
             {inquiry.timeline && (

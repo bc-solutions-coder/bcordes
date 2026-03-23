@@ -50,18 +50,18 @@
 
 ## Tech Stack
 
-| Layer | Technologies |
-|-------|-------------|
-| **Framework** | TanStack Start, React 19, Vite 7 |
-| **Routing** | TanStack Router (file-based) |
-| **Data** | TanStack Query, PostgreSQL 16 |
-| **Styling** | Tailwind CSS v4, shadcn/ui, Lucide icons |
-| **Auth** | OpenID Connect, iron-webcrypto sessions |
-| **Real-time** | Microsoft SignalR |
-| **Forms** | React Hook Form + Zod |
-| **Testing** | Vitest, Testing Library |
-| **Tooling** | ESLint, Prettier, Storybook 9 |
-| **Infra** | Docker, GitHub Actions, GHCR, Portainer |
+| Layer         | Technologies                             |
+| ------------- | ---------------------------------------- |
+| **Framework** | TanStack Start, React 19, Vite 7         |
+| **Routing**   | TanStack Router (file-based)             |
+| **Data**      | TanStack Query, PostgreSQL 16            |
+| **Styling**   | Tailwind CSS v4, shadcn/ui, Lucide icons |
+| **Auth**      | OpenID Connect, iron-webcrypto sessions  |
+| **Real-time** | Microsoft SignalR                        |
+| **Forms**     | React Hook Form + Zod                    |
+| **Testing**   | Vitest, Testing Library                  |
+| **Tooling**   | ESLint, Prettier, Storybook 9            |
+| **Infra**     | Docker, GitHub Actions, GHCR, Portainer  |
 
 ## Getting Started
 
@@ -72,14 +72,14 @@ pnpm dev
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start dev server on port 3000 |
-| `pnpm build` | Production build |
-| `pnpm test` | Run tests with Vitest |
-| `pnpm lint` | Lint with ESLint |
-| `pnpm format` | Format with Prettier |
-| `pnpm check` | Format + lint fix |
+| Command          | Description                   |
+| ---------------- | ----------------------------- |
+| `pnpm dev`       | Start dev server on port 3000 |
+| `pnpm build`     | Production build              |
+| `pnpm test`      | Run tests with Vitest         |
+| `pnpm lint`      | Lint with ESLint              |
+| `pnpm format`    | Format with Prettier          |
+| `pnpm check`     | Format + lint fix             |
 | `pnpm storybook` | Launch Storybook on port 6006 |
 
 ## Project Structure

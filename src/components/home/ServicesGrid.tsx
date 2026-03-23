@@ -1,27 +1,36 @@
-import { Code, Layers, MessageSquare } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import { FadeInView } from '~/components/shared/FadeInView';
+import { Code, Layers, MessageSquare } from 'lucide-react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import { FadeInView } from '~/components/shared/FadeInView'
 
 const services = [
   {
     icon: Code,
     title: 'Frontend Development',
-    description: 'Modern, responsive web applications built with React, TypeScript, and cutting-edge frameworks. Focused on performance, accessibility, and exceptional user experience.',
+    description:
+      'Modern, responsive web applications built with React, TypeScript, and cutting-edge frameworks. Focused on performance, accessibility, and exceptional user experience.',
     skills: ['React', 'TypeScript', 'Next.js', 'TailwindCSS'],
   },
   {
     icon: Layers,
     title: 'Full-Stack Solutions',
-    description: 'End-to-end development from database design to deployment. Scalable architectures using Node.js, PostgreSQL, and cloud infrastructure.',
+    description:
+      'End-to-end development from database design to deployment. Scalable architectures using Node.js, PostgreSQL, and cloud infrastructure.',
     skills: ['Node.js', 'PostgreSQL', 'AWS', 'Docker'],
   },
   {
     icon: MessageSquare,
     title: 'Technical Consulting',
-    description: 'Strategic guidance on architecture decisions, code reviews, and team mentorship. Helping teams adopt best practices and improve development workflows.',
+    description:
+      'Strategic guidance on architecture decisions, code reviews, and team mentorship. Helping teams adopt best practices and improve development workflows.',
     skills: ['Architecture', 'Code Review', 'Mentorship', 'Agile'],
   },
-];
+]
 
 export function ServicesGrid() {
   return (
@@ -34,7 +43,8 @@ export function ServicesGrid() {
               What I Do
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-              Delivering comprehensive software solutions tailored to your business needs
+              Delivering comprehensive software solutions tailored to your
+              business needs
             </p>
           </div>
         </FadeInView>
@@ -73,5 +83,5 @@ export function ServicesGrid() {
         </div>
       </div>
     </section>
-  );
+  )
 }

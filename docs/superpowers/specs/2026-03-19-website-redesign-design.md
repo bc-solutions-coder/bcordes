@@ -15,18 +15,18 @@ Complete visual redesign of the BC Solutions portfolio site. The new design uses
 
 Tokens are defined as CSS custom properties in `src/styles.css` via Tailwind v4's `@theme` directive. Usage in classes: `bg-(--color-bg-primary)`, `text-(--color-text-primary)`, etc.
 
-| CSS Variable | Value | Usage |
-|-------|-------|-------|
-| `--color-bg-primary` | `#0a0a0a` | Page background |
-| `--color-bg-secondary` | `#111111` | Card/section backgrounds |
-| `--color-bg-tertiary` | `#1a1a1a` | Elevated surfaces |
-| `--color-text-primary` | `#e5e5e5` | Headings, primary text |
-| `--color-text-secondary` | `#a3a3a3` | Body text |
-| `--color-text-tertiary` | `#525252` | Labels, overlines, metadata |
-| `--color-accent` | `#10b981` | Primary accent (emerald green) |
-| `--color-accent-hover` | `#059669` | Hover state for accent |
-| `--color-border-default` | `#1e1e1e` | Subtle borders |
-| `--color-border-hover` | `#333333` | Border hover states |
+| CSS Variable             | Value     | Usage                          |
+| ------------------------ | --------- | ------------------------------ |
+| `--color-bg-primary`     | `#0a0a0a` | Page background                |
+| `--color-bg-secondary`   | `#111111` | Card/section backgrounds       |
+| `--color-bg-tertiary`    | `#1a1a1a` | Elevated surfaces              |
+| `--color-text-primary`   | `#e5e5e5` | Headings, primary text         |
+| `--color-text-secondary` | `#a3a3a3` | Body text                      |
+| `--color-text-tertiary`  | `#525252` | Labels, overlines, metadata    |
+| `--color-accent`         | `#10b981` | Primary accent (emerald green) |
+| `--color-accent-hover`   | `#059669` | Hover state for accent         |
+| `--color-border-default` | `#1e1e1e` | Subtle borders                 |
+| `--color-border-hover`   | `#333333` | Border hover states            |
 
 ## Typography
 

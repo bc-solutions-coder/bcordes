@@ -38,6 +38,7 @@ A single spec file — either a file path or `@`-referenced file.
 - **Task** = an individual implementable work item under a feature (e.g., "Build expand-on-click card interaction")
 
 Parent/child relationships:
+
 - Features are children of the epic (`--parent=<epic-id>`)
 - Tasks are children of their feature (`--parent=<feature-id>`)
 
@@ -75,16 +76,19 @@ EPIC: Website Redesign [P2]
 Each bead is self-contained — an agent should be able to pick it up and work without reading the full spec.
 
 ### Epic
+
 - `--description`: Spec overview and purpose
 - `--design`: Architectural decisions, key constraints, design principles
 - `--priority`: Inferred from spec or default P2
 
 ### Feature
+
 - `--description`: What this feature accomplishes and why
 - `--design`: Relevant spec section — layout details, component behavior, patterns to follow
 - `--priority`: Inherited from epic or adjusted if spec indicates urgency
 
 ### Task
+
 - `--description`: Clear actionable instruction ("Build X that does Y using Z")
 - `--acceptance`: Success criteria when the spec defines them
 - `--notes`: Reference to parent feature for context
@@ -95,6 +99,7 @@ Each bead is self-contained — an agent should be able to pick it up and work w
 The skill embeds knowledge of these commands:
 
 ### Creating
+
 - `bd create --title="..." --description="..." --type=epic|feature|task --priority=N --parent=<id>`
 - Valid types: `task`, `bug`, `feature`, `chore`, `epic`, `decision`
 - `--design` flag for design context
@@ -104,6 +109,7 @@ The skill embeds knowledge of these commands:
 ### Parallel Creation
 
 To speed up bead creation, spawn one subagent per feature (after the epic exists). Each subagent receives:
+
 - The feature title, description, and design content
 - The epic ID (for `--parent`)
 - The list of tasks under that feature with their descriptions
@@ -113,6 +119,7 @@ Each subagent creates its feature bead, then creates all child tasks, and return
 ### Dependencies
 
 **Argument order is critical — easy to get backwards:**
+
 - `bd dep add <blocked-id> <blocker-id>` — "blocked depends on blocker" (first arg = the one waiting)
 - `bd dep <blocker-id> --blocks <blocked-id>` — flag-based alternative (first arg = the one blocking)
 - Both create the same relationship, but argument order is inverted. Pick one form and use it consistently.
@@ -121,19 +128,23 @@ Each subagent creates its feature bead, then creates all child tasks, and return
 - `bd dep cycles` — check for circular dependencies
 
 ### Hierarchy
+
 - `--parent=<epic-id>` on features, `--parent=<feature-id>` on tasks
 - `bd children <id>` — list children of a parent
 - `bd epic status` — show completion status of all epics (no ID argument)
 
 ### Verification
+
 - `bd show <id>` — verify a created bead
 - `bd update <id> --title="..." --description="..." --priority=N` — fix fields post-creation (use named flags, not generic `--field=value`)
 - `bd list -s open` — show open beads (note: beads with unmet dependencies show as `blocked`, not `open`)
 
 ### Priority Mapping
+
 - P0 = critical, P1 = high, P2 = medium (default), P3 = low, P4 = backlog
 
 ### Constraints
+
 - Never use `bd edit` (opens $EDITOR, blocks agents)
 - Use `--description` and `--design` flags to push spec context into beads
 - Use `--acceptance` for tasks with clear criteria from spec

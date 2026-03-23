@@ -56,6 +56,7 @@ The Postgres data volume (`postgres-data`) persists across container restarts an
 ### Docker Changes
 
 **Dockerfile** additions to the runtime stage:
+
 - Copy `drizzle/` migration SQL files from the builder
 - Copy `scripts/` directory (migrate.mjs, seed-admin.ts)
 - Copy minimal source files needed by the seed script (`src/db/`, `src/lib/auth.ts`)
@@ -63,6 +64,7 @@ The Postgres data volume (`postgres-data`) persists across container restarts an
 - Set `docker-entrypoint.sh` as the container entrypoint
 
 **docker-compose.prod.yml** changes:
+
 - Add `ADMIN_EMAIL` and `ADMIN_PASSWORD` env vars to the `web` service
 - Add a healthcheck to the `db` service so `depends_on` can use `condition: service_healthy`
 - Remove the separate `seed` service entirely
@@ -80,6 +82,7 @@ Run `pnpm db:generate` locally to create the initial migration SQL files in `dri
 ### Step 2: Create the Migration Script
 
 Create `scripts/migrate.mjs`:
+
 - Import `drizzle` from `drizzle-orm/node-postgres` and `migrate` from `drizzle-orm/node-postgres/migrator`
 - Connect using `DATABASE_URL` env var
 - Run `migrate(db, { migrationsFolder: './drizzle' })`
@@ -88,6 +91,7 @@ Create `scripts/migrate.mjs`:
 ### Step 3: Create the Docker Entrypoint
 
 Create `docker-entrypoint.sh`:
+
 - Wait loop: attempt a `SELECT 1` query against Postgres, retry every 2 seconds up to 30 attempts
 - Run `node scripts/migrate.mjs`
 - If `ADMIN_EMAIL` is set, run `npx tsx scripts/seed-admin.ts`
@@ -96,6 +100,7 @@ Create `docker-entrypoint.sh`:
 ### Step 4: Update the Dockerfile
 
 Add to the runtime stage:
+
 - `COPY --from=builder /app/drizzle ./drizzle`
 - `COPY --from=builder /app/scripts ./scripts`
 - `COPY --from=builder /app/src/db ./src/db`
@@ -112,7 +117,7 @@ Add to the runtime stage:
 - Add a healthcheck to the `db` service:
   ```yaml
   healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U personalsite"]
+    test: ['CMD-SHELL', 'pg_isready -U personalsite']
     interval: 5s
     timeout: 5s
     retries: 5

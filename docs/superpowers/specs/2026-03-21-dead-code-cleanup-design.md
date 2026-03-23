@@ -15,18 +15,18 @@ Clean up dead code, stale scaffolding, outdated documentation, and consolidate d
 
 **Changes:**
 
-| Section | Current (Wrong) | Correct |
-|---------|-----------------|---------|
-| Routes table | `/work`, `/work/:slug` | `/projects`, `/projects/$slug` |
-| Routes table | Missing | Add `/dashboard/inquiries`, `/dashboard/inquiries/:id` |
-| Routes table | `/admin/messages` | Remove (will be deleted in item 4) |
+| Section          | Current (Wrong)                                                        | Correct                                                                                                                                                                                 |
+| ---------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Routes table     | `/work`, `/work/:slug`                                                 | `/projects`, `/projects/$slug`                                                                                                                                                          |
+| Routes table     | Missing                                                                | Add `/dashboard/inquiries`, `/dashboard/inquiries/:id`                                                                                                                                  |
+| Routes table     | `/admin/messages`                                                      | Remove (will be deleted in item 4)                                                                                                                                                      |
 | Server Functions | `submitContact`, `getContacts`, `updateContactStatus`, `trackPageView` | `submitInquiry`, `fetchInquiry`, `fetchInquiries`, `fetchMyInquiries`, `updateInquiryStatus`, `fetchInquiryComments`, `submitInquiryComment`, `fetchNotifications`, `serverRequireAuth` |
-| Features | "Dark Mode: Theme toggling via next-themes" | Remove — no dark mode exists |
-| Features | "Analytics: Page view tracking" | Remove — no analytics exists |
-| Features | Add "Real-time Updates" | SignalR integration for live inquiry updates |
-| Features | Add "Notifications" | Wallow notification system integration |
-| Component dirs | `work/` | `projects/` |
-| Component dirs | Missing `storybook/` removal | Remove `storybook/` (deleted in item 5) |
+| Features         | "Dark Mode: Theme toggling via next-themes"                            | Remove — no dark mode exists                                                                                                                                                            |
+| Features         | "Analytics: Page view tracking"                                        | Remove — no analytics exists                                                                                                                                                            |
+| Features         | Add "Real-time Updates"                                                | SignalR integration for live inquiry updates                                                                                                                                            |
+| Features         | Add "Notifications"                                                    | Wallow notification system integration                                                                                                                                                  |
+| Component dirs   | `work/`                                                                | `projects/`                                                                                                                                                                             |
+| Component dirs   | Missing `storybook/` removal                                           | Remove `storybook/` (deleted in item 5)                                                                                                                                                 |
 
 ---
 
@@ -35,6 +35,7 @@ Clean up dead code, stale scaffolding, outdated documentation, and consolidate d
 **Problem:** Both `package-lock.json` (npm) and `pnpm-lock.yaml` (pnpm) exist. The project uses pnpm.
 
 **Steps:**
+
 1. Delete `package-lock.json`
 2. Run `pnpm install` to ensure `pnpm-lock.yaml` is current
 3. Verify build succeeds with `pnpm build`
@@ -46,6 +47,7 @@ Clean up dead code, stale scaffolding, outdated documentation, and consolidate d
 **Problem:** `package.json` has 12 `db:*` scripts referencing `drizzle-kit`, `docker-compose.dev.yml`, and `scripts/seed-admin.ts` — none of which exist. The project uses Wallow (not Drizzle) for data.
 
 **Scripts to remove:**
+
 - `db:generate`, `db:migrate`, `db:push`, `db:pull`, `db:studio` — reference nonexistent `drizzle-kit`
 - `db:start`, `db:stop`, `db:restart`, `db:logs`, `db:reset` — reference nonexistent `docker-compose.dev.yml`
 - `db:seed`, `db:seed:local` — reference nonexistent `scripts/seed-admin.ts`
@@ -57,6 +59,7 @@ Clean up dead code, stale scaffolding, outdated documentation, and consolidate d
 ## 4. Consolidate Admin Routes
 
 **Problem:** Two routes serve the same purpose:
+
 - `src/routes/admin/messages.tsx` — slim table-based UI, uses `fetchInquiries()` (all inquiries)
 - `src/routes/dashboard/inquiries/` — card-based UI with detail page, comments, SignalR real-time updates
 
@@ -65,7 +68,9 @@ Clean up dead code, stale scaffolding, outdated documentation, and consolidate d
 **Design approach — merge the best of both:**
 
 ### List Page (`inquiries.index.tsx`)
+
 Adopt the admin/messages table layout:
+
 - Header: Mail icon + "Messages" title + count Badge + Refresh button
 - Table with columns: Name, Email, Company, Project Type, Budget, Date, Status
 - Inline status `<Select>` on each row — **admin only** (with `updateInquiryStatus`)
@@ -76,7 +81,9 @@ Adopt the admin/messages table layout:
 - **Status values:** Use the dashboard's richer set (`new`, `open`, `in_progress`, `resolved`, `closed`) — these match the Wallow API's inquiry status model. The admin/messages statuses (`new`, `read`, `responded`) were a simplified frontend-only mapping and should be dropped.
 
 ### Detail Page (`inquiries.$id.tsx`)
+
 Keep as-is from current dashboard implementation:
+
 - Full inquiry details in a `<dl>` grid
 - Comments section with internal notes (admin-only visibility)
 - Comment form with "Internal note" checkbox
@@ -84,10 +91,12 @@ Keep as-is from current dashboard implementation:
 - Back navigation to list
 
 ### Navigation Updates
+
 - Remove `/admin/messages` from `UserMenu.tsx` and `MobileNav.tsx`
 - Update links to point to `/dashboard/inquiries`
 
 ### Files to Delete
+
 - `src/routes/admin/messages.tsx`
 - `src/routes/admin/` directory if empty after deletion
 
@@ -96,16 +105,21 @@ Keep as-is from current dashboard implementation:
 ## 5. Delete Unused Files
 
 ### `src/lib/animations.ts`
+
 Framer Motion animation variants. Framer Motion is not installed. The project uses Tailwind CSS animations (`tw-animate-css`, `FadeInView`, `AnimatedText`). Delete entirely.
 
 ### `src/lib/blog.types.ts`
+
 Exact duplicate of `src/lib/blog.ts`. Never imported anywhere — `blog.server.ts` imports from `./blog`. Delete entirely.
 
 ### `src/polyfill.ts`
+
 oRPC Node.js 18 / Stackblitz polyfill. oRPC is not used, project targets Node.js 20+, not intended for Stackblitz. Delete entirely.
 
 ### `src/components/storybook/`
+
 CTA scaffold demo components (button, dialog, input, radio-group, slider) with stories. These duplicate `src/components/ui/` and are not used in the app. Delete the entire directory:
+
 - `button.tsx`, `button.stories.ts`
 - `dialog.tsx`, `dialog.stories.tsx`
 - `input.tsx`, `input.stories.ts`
@@ -114,6 +128,7 @@ CTA scaffold demo components (button, dialog, input, radio-group, slider) with s
 - `index.ts`
 
 ### `src/components/contact/index.ts`
+
 Unused barrel export — `ContactForm` is imported directly from `~/components/contact/ContactForm` everywhere. Delete the barrel file.
 
 ---
@@ -121,6 +136,7 @@ Unused barrel export — `ContactForm` is imported directly from `~/components/c
 ## 6. Remove Dead Functions in `blog.server.ts`
 
 **Functions to remove:**
+
 - `getBlogPostsByTag(tag)` — never called, no tag filtering UI exists
 - `getAllTags()` — never called, no tag listing UI exists
 
@@ -133,6 +149,7 @@ Unused barrel export — `ContactForm` is imported directly from `~/components/c
 **Problem:** References scaffold add-ons that are no longer used (oRPC, drizzle, store).
 
 **Options:**
+
 - **Option A:** Update `chosenAddOns` to only list what's actually used: `eslint`, `start`, `form`, `table`, `shadcn`, `tanstack-query`, `storybook`. Remove the `addOnOptions.drizzle` block.
 - **Option B:** Delete `.cta.json` entirely — it's a scaffold artifact with no runtime impact.
 
@@ -157,10 +174,12 @@ Contains only a single shadcn install command (`pnpx shadcn@latest add <componen
 ## 10. Update Blog Post
 
 **Problem:** `src/content/blog/first-post.mdx` references:
+
 - "Drizzle ORM with SQLite" — project uses Wallow/PostgreSQL
 - Planned features that are now implemented (contact form, resume page)
 
 **Changes:**
+
 - Replace "Drizzle ORM with SQLite (for future features)" with accurate backend description (Wallow API with PostgreSQL)
 - Update "What's Next" section to remove implemented items and reflect actual current roadmap
 - Consider whether this post should be updated or unpublished if it's too stale
@@ -176,6 +195,7 @@ Contains only a single shadcn install command (`pnpx shadcn@latest add <componen
 **Unused (candidates for deletion):** `accordion`, `alert-dialog`, `alert`, `aspect-ratio`, `breadcrumb`, `button-group`, `calendar`, `carousel`, `chart`, `collapsible`, `command`, `context-menu`, `dialog`, `drawer`, `empty`, `field`, `hover-card`, `input-group`, `input-otp`, `item`, `kbd`, `menubar`, `pagination`, `popover`, `progress`, `radio-group`, `resizable`, `scroll-area`, `sidebar`, `skeleton`, `slider`, `spinner`, `switch`, `tabs`, `toggle-group`, `toggle`, `tooltip`
 
 **Consideration:** Some of these may be needed soon (e.g., `dialog` for confirmations, `tabs` for the dashboard, `tooltip` for UX, `popover` for notifications). Rather than deleting and re-adding via shadcn later, consider keeping components that are likely to be used soon:
+
 - **Keep for likely near-term use:** `dialog`, `tabs`, `tooltip`, `skeleton`, `popover`, `progress`, `spinner`
 - **Safe to delete (unlikely to need):** `accordion`, `alert-dialog`, `alert`, `aspect-ratio`, `breadcrumb`, `button-group`, `calendar`, `carousel`, `chart`, `collapsible`, `command`, `context-menu`, `drawer`, `empty`, `field`, `hover-card`, `input-group`, `input-otp`, `item`, `kbd`, `menubar`, `pagination`, `radio-group`, `resizable`, `scroll-area`, `sidebar`, `slider`, `switch`, `toggle-group`, `toggle`
 

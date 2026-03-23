@@ -263,6 +263,7 @@ For pages that **require** data (e.g., `/work/:slug` detail page), let the error
 ### Layer 4: Error Boundary
 
 Add a root error boundary component that displays:
+
 - **Dev:** Full error message, stack trace, trace ID
 - **Prod:** "Something went wrong" with the trace ID (so users can report it)
 
@@ -294,6 +295,7 @@ This is a React component using TanStack Router's `ErrorComponent` pattern on `_
 ## Environment Variables
 
 **Add:**
+
 - `OTEL_EXPORTER_OTLP_ENDPOINT` — Alloy collector endpoint (e.g., `http://alloy:4318`)
 - `OTEL_SERVICE_NAME` — Service identifier (default: `bcordes`)
 

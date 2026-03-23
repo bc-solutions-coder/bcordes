@@ -12,7 +12,7 @@ export class WallowError extends Error {
   readonly traceId: string
 
   /** Field-level validation errors, present when status is 400 */
-  readonly validationErrors: Record<string, string[]> | undefined
+  readonly validationErrors: Record<string, Array<string>> | undefined
 
   constructor(problem: ProblemDetails) {
     super(problem.detail || problem.title)

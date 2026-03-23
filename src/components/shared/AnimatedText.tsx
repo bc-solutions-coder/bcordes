@@ -1,11 +1,11 @@
-import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { cn } from '@/lib/utils';
+import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { cn } from '@/lib/utils'
 
 interface AnimatedTextProps {
-  text: string;
-  className?: string;
-  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
-  staggerDelay?: number;
+  text: string
+  className?: string
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span'
+  staggerDelay?: number
 }
 
 export function AnimatedText({
@@ -14,11 +14,11 @@ export function AnimatedText({
   as: Component = 'span',
   staggerDelay = 30,
 }: AnimatedTextProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const words = text.split(' ');
+  const prefersReducedMotion = useReducedMotion()
+  const words = text.split(' ')
 
   if (prefersReducedMotion) {
-    return <Component className={className}>{text}</Component>;
+    return <Component className={className}>{text}</Component>
   }
 
   return (
@@ -37,5 +37,5 @@ export function AnimatedText({
         </span>
       ))}
     </Component>
-  );
+  )
 }

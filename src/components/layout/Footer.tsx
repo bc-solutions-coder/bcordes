@@ -38,13 +38,18 @@ export function Footer() {
           {/* Brand Column */}
           <div className="space-y-4">
             <Link to="/" className="inline-flex items-center gap-3">
-              <img src="/BC-Solutions-no-background.svg" alt="BC Solutions" className="h-14" />
+              <img
+                src="/BC-Solutions-no-background.svg"
+                alt="BC Solutions"
+                className="h-14"
+              />
               <span className="text-2xl font-bold tracking-tight text-white">
                 BC <span className="text-[#a8e6a0]">Solutions</span>
               </span>
             </Link>
             <p className="text-sm text-white/70 leading-relaxed">
-              Building exceptional digital experiences with modern web technologies.
+              Building exceptional digital experiences with modern web
+              technologies.
             </p>
           </div>
 
@@ -69,9 +74,7 @@ export function Footer() {
 
           {/* Connect Column */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">
-              Connect
-            </h3>
+            <h3 className="text-sm font-semibold text-white mb-4">Connect</h3>
             <div className="flex gap-4">
               {socialLinks.map((link) => {
                 const IconComponent = link.icon
@@ -79,8 +82,14 @@ export function Footer() {
                   <a
                     key={link.name}
                     href={link.href}
-                    target={link.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                    target={
+                      link.href.startsWith('mailto:') ? undefined : '_blank'
+                    }
+                    rel={
+                      link.href.startsWith('mailto:')
+                        ? undefined
+                        : 'noopener noreferrer'
+                    }
                     className="text-white/70 hover:text-[#a8e6a0] transition-colors duration-200"
                     aria-label={link.name}
                   >

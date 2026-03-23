@@ -20,25 +20,25 @@ Evolve the existing `ProjectFrontmatter` interface. Drop `client` and `year` (re
 
 ```yaml
 ---
-title: "My Portfolio Site"
-description: "Brief summary for cards and meta tags"
-tags: ["React", "TypeScript", "Tailwind"]
-imageUrl: "/images/projects/portfolio.png"
-projectUrl: "https://github.com/user/repo"
-publishedAt: "2025-06-15"
+title: 'My Portfolio Site'
+description: 'Brief summary for cards and meta tags'
+tags: ['React', 'TypeScript', 'Tailwind']
+imageUrl: '/images/projects/portfolio.png'
+projectUrl: 'https://github.com/user/repo'
+publishedAt: '2025-06-15'
 featured: true
 ---
 ```
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| `title` | string | yes | Display title |
-| `description` | string | yes | Card summary and meta description |
-| `tags` | string[] | yes | Technology/category tags for filtering |
-| `imageUrl` | string | no | Local path (`/images/...`) or external URL |
-| `projectUrl` | string | no | Link to live project or repo |
-| `publishedAt` | string (ISO date) | no | Determines year filter; undated items sort last |
-| `featured` | boolean | no | Defaults to `false`; controls home page carousel |
+| Field         | Type              | Required | Notes                                            |
+| ------------- | ----------------- | -------- | ------------------------------------------------ |
+| `title`       | string            | yes      | Display title                                    |
+| `description` | string            | yes      | Card summary and meta description                |
+| `tags`        | string[]          | yes      | Technology/category tags for filtering           |
+| `imageUrl`    | string            | no       | Local path (`/images/...`) or external URL       |
+| `projectUrl`  | string            | no       | Link to live project or repo                     |
+| `publishedAt` | string (ISO date) | no       | Determines year filter; undated items sort last  |
+| `featured`    | boolean           | no       | Defaults to `false`; controls home page carousel |
 
 ### Zod Validation Schema
 
@@ -84,7 +84,7 @@ export interface ShowcaseMeta {
 }
 
 export interface Showcase extends ShowcaseMeta {
-  content: string  // raw markdown body (rendered client-side)
+  content: string // raw markdown body (rendered client-side)
 }
 ```
 

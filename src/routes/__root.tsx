@@ -5,17 +5,43 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { Toaster } from '../components/ui/sonner'
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+
+function DevTools() {
+  const [Panel, setPanel] = useState<React.ReactNode>(null)
+
+  useEffect(() => {
+    Promise.all([
+      import('@tanstack/react-devtools'),
+      import('@tanstack/react-router-devtools'),
+      import('../integrations/tanstack-query/devtools'),
+    ]).then(
+      ([{ TanStackDevtools }, { TanStackRouterDevtoolsPanel }, query]) => {
+        setPanel(
+          <TanStackDevtools
+            config={{ position: 'bottom-right' }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+              query.default,
+            ]}
+          />,
+        )
+      },
+    )
+  }, [])
+
+  return Panel
+}
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -25,7 +51,9 @@ function NotFound() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
       <h1 className="mb-2 text-8xl font-bold text-accent-primary">404</h1>
-      <h2 className="mb-4 text-2xl font-semibold text-text-primary">Page Not Found</h2>
+      <h2 className="mb-4 text-2xl font-semibold text-text-primary">
+        Page Not Found
+      </h2>
       <p className="mb-8 max-w-md text-text-secondary">
         The page you're looking for doesn't exist or has been moved.
       </p>
@@ -40,7 +68,8 @@ function NotFound() {
 }
 
 const siteTitle = 'BC Solutions | Professional Software Engineering'
-const siteDescription = 'Bryan Cordes - Professional software engineering solutions. Full-stack development, technical consulting, and architecture expertise for startups and enterprises.'
+const siteDescription =
+  'Bryan Cordes - Professional software engineering solutions. Full-stack development, technical consulting, and architecture expertise for startups and enterprises.'
 const siteUrl = 'https://bcordes.dev'
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -73,7 +102,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       // Google Fonts
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossOrigin: 'anonymous',
+      },
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap',
@@ -136,7 +169,8 @@ function LoadingOverlay() {
     >
       <style
         dangerouslySetInnerHTML={{
-          __html: '@keyframes loading-spin { to { transform: rotate(360deg); } }',
+          __html:
+            '@keyframes loading-spin { to { transform: rotate(360deg); } }',
         }}
       />
       <div
@@ -167,20 +201,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <Footer />
         </div>
         <Toaster position="bottom-right" />
-        {import.meta.env.DEV && (
-          <TanStackDevtools
-            config={{
-              position: 'bottom-right',
-            }}
-            plugins={[
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-              TanStackQueryDevtools,
-            ]}
-          />
-        )}
+        {import.meta.env.DEV && <DevTools />}
         <Scripts />
       </body>
     </html>

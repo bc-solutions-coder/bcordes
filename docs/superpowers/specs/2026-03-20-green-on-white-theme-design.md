@@ -22,46 +22,46 @@ Replace all `:root` CSS variables in `src/styles.css`.
 
 ### Backgrounds
 
-| Variable | Value | Usage |
-|----------|-------|-------|
-| `--background-primary` | `#ffffff` | Page background |
+| Variable                 | Value     | Usage                                               |
+| ------------------------ | --------- | --------------------------------------------------- |
+| `--background-primary`   | `#ffffff` | Page background                                     |
 | `--background-secondary` | `#f0f9ec` | Green-tinted section backgrounds (services, skills) |
-| `--background-tertiary` | `#fafafa` | Subtle lift surfaces |
+| `--background-tertiary`  | `#fafafa` | Subtle lift surfaces                                |
 
 ### Text
 
-| Variable | Value | Contrast | Usage |
-|----------|-------|----------|-------|
-| `--text-primary` | `#1a1a1a` | 17.4:1 AAA | Headings, primary labels |
-| `--text-secondary` | `#4a4a4a` | 9.7:1 AAA | Body text, descriptions |
-| `--text-tertiary` | `#737373` | 4.6:1 AA | Meta info, placeholders |
+| Variable           | Value     | Contrast   | Usage                    |
+| ------------------ | --------- | ---------- | ------------------------ |
+| `--text-primary`   | `#1a1a1a` | 17.4:1 AAA | Headings, primary labels |
+| `--text-secondary` | `#4a4a4a` | 9.7:1 AAA  | Body text, descriptions  |
+| `--text-tertiary`  | `#737373` | 4.6:1 AA   | Meta info, placeholders  |
 
 ### Green Accent (Accessible)
 
-| Variable | Value | Contrast | Usage |
-|----------|-------|----------|-------|
-| `--accent-primary` | `#2a6b22` | 6.5:1 AA | Buttons, links, stat numbers |
-| `--accent-secondary` | `#3d8b37` | 4.25:1 AA large | Large text accents only |
-| `--accent-tertiary` | `#1e5218` | 8.8:1 AAA | Hover/pressed button states |
-| `--accent-decorative` | `#6BBF59` | — | Non-text: borders, icons, dots |
-| `--accent-light` | `#f0f9ec` | — | Badge/tag backgrounds |
-| `--accent-mid` | `#dcefd4` | — | Gradient endpoints |
+| Variable              | Value     | Contrast        | Usage                          |
+| --------------------- | --------- | --------------- | ------------------------------ |
+| `--accent-primary`    | `#2a6b22` | 6.5:1 AA        | Buttons, links, stat numbers   |
+| `--accent-secondary`  | `#3d8b37` | 4.25:1 AA large | Large text accents only        |
+| `--accent-tertiary`   | `#1e5218` | 8.8:1 AAA       | Hover/pressed button states    |
+| `--accent-decorative` | `#6BBF59` | —               | Non-text: borders, icons, dots |
+| `--accent-light`      | `#f0f9ec` | —               | Badge/tag backgrounds          |
+| `--accent-mid`        | `#dcefd4` | —               | Gradient endpoints             |
 
 ### Borders
 
-| Variable | Value | Usage |
-|----------|-------|-------|
-| `--border-default` | `#e5e5e5` | Cards, inputs, dividers |
-| `--border-accent` | `rgb(61 139 55 / 0.3)` | Hover/focus green border |
+| Variable           | Value                  | Usage                    |
+| ------------------ | ---------------------- | ------------------------ |
+| `--border-default` | `#e5e5e5`              | Cards, inputs, dividers  |
+| `--border-accent`  | `rgb(61 139 55 / 0.3)` | Hover/focus green border |
 
 ### Additional
 
-| Variable | Value | Usage |
-|----------|-------|-------|
+| Variable       | Value     | Usage                  |
+| -------------- | --------- | ---------------------- |
 | `--focus-ring` | `#2a6b22` | Focus-visible outlines |
-| `--gray-50` | `#fafafa` | Subtle background |
-| `--gray-100` | `#f5f5f5` | Tag backgrounds |
-| `--gray-200` | `#e5e5e5` | Borders |
+| `--gray-50`    | `#fafafa` | Subtle background      |
+| `--gray-100`   | `#f5f5f5` | Tag backgrounds        |
+| `--gray-200`   | `#e5e5e5` | Borders                |
 
 ### Tailwind `@theme inline` Mappings
 
@@ -82,32 +82,32 @@ All new tokens must be added to the `@theme inline` block so Tailwind utility cl
 Full replacement values for the light theme:
 
 ```css
---background: oklch(1 0 0);                    /* #ffffff */
---foreground: oklch(0.145 0 0);                /* near-black */
---card: oklch(1 0 0);                          /* white */
---card-foreground: oklch(0.145 0 0);           /* near-black */
---popover: oklch(1 0 0);                       /* white */
---popover-foreground: oklch(0.145 0 0);        /* near-black */
---primary: oklch(0.39 0.11 142);               /* #2a6b22 */
---primary-foreground: oklch(1 0 0);            /* white */
---secondary: oklch(0.96 0.02 142);             /* light green-gray */
---secondary-foreground: oklch(0.145 0 0);      /* near-black */
---muted: oklch(0.96 0 0);                      /* #f5f5f5 */
---muted-foreground: oklch(0.556 0 0);          /* #737373 */
---accent: oklch(0.96 0.02 142);                /* light green tint */
---accent-foreground: oklch(0.145 0 0);         /* near-black */
---destructive: oklch(0.577 0.245 27.325);      /* red for light bg */
---border: oklch(0.922 0 0);                    /* #e5e5e5 */
---input: oklch(0.922 0 0);                     /* #e5e5e5 */
---ring: oklch(0.39 0.11 142);                  /* matches --primary */
---sidebar-background: oklch(0.985 0 0);        /* near-white */
---sidebar-foreground: oklch(0.145 0 0);        /* near-black */
---sidebar-primary: oklch(0.39 0.11 142);       /* green */
---sidebar-primary-foreground: oklch(1 0 0);    /* white */
---sidebar-accent: oklch(0.96 0.02 142);        /* light green */
+--background: oklch(1 0 0); /* #ffffff */
+--foreground: oklch(0.145 0 0); /* near-black */
+--card: oklch(1 0 0); /* white */
+--card-foreground: oklch(0.145 0 0); /* near-black */
+--popover: oklch(1 0 0); /* white */
+--popover-foreground: oklch(0.145 0 0); /* near-black */
+--primary: oklch(0.39 0.11 142); /* #2a6b22 */
+--primary-foreground: oklch(1 0 0); /* white */
+--secondary: oklch(0.96 0.02 142); /* light green-gray */
+--secondary-foreground: oklch(0.145 0 0); /* near-black */
+--muted: oklch(0.96 0 0); /* #f5f5f5 */
+--muted-foreground: oklch(0.556 0 0); /* #737373 */
+--accent: oklch(0.96 0.02 142); /* light green tint */
+--accent-foreground: oklch(0.145 0 0); /* near-black */
+--destructive: oklch(0.577 0.245 27.325); /* red for light bg */
+--border: oklch(0.922 0 0); /* #e5e5e5 */
+--input: oklch(0.922 0 0); /* #e5e5e5 */
+--ring: oklch(0.39 0.11 142); /* matches --primary */
+--sidebar-background: oklch(0.985 0 0); /* near-white */
+--sidebar-foreground: oklch(0.145 0 0); /* near-black */
+--sidebar-primary: oklch(0.39 0.11 142); /* green */
+--sidebar-primary-foreground: oklch(1 0 0); /* white */
+--sidebar-accent: oklch(0.96 0.02 142); /* light green */
 --sidebar-accent-foreground: oklch(0.145 0 0); /* near-black */
---sidebar-border: oklch(0.922 0 0);            /* #e5e5e5 */
---sidebar-ring: oklch(0.39 0.11 142);          /* green */
+--sidebar-border: oklch(0.922 0 0); /* #e5e5e5 */
+--sidebar-ring: oklch(0.39 0.11 142); /* green */
 ```
 
 ## Typography
@@ -115,6 +115,7 @@ Full replacement values for the light theme:
 ### Font Loading
 
 Add Google Fonts via `<link>` in the root document `__root.tsx`:
+
 ```
 Inter: weights 400, 500, 600, 700
 Outfit: weights 600, 700, 800
@@ -149,6 +150,7 @@ Use `rel="preconnect"` for `fonts.googleapis.com` and `fonts.gstatic.com`.
 ### Footer (`src/components/layout/Footer.tsx`)
 
 Keep existing three-column layout (brand, navigation links, social icons) but restyle:
+
 - Background: `var(--text-primary)` (`#1a1a1a`) — dark footer
 - Text: `rgba(255,255,255,0.7)`
 - Links: `#a8e6a0` with underline
@@ -157,6 +159,7 @@ Keep existing three-column layout (brand, navigation links, social icons) but re
 ### Hero (`src/components/home/Hero.tsx`)
 
 Complete redesign:
+
 - **Layout**: Two-column grid (content left, graphic right)
 - **Badge**: Green-light bg with pulsing dot, "Available for Projects"
 - **Heading**: Plain `<h1>` with Outfit 800 (remove `AnimatedText` wrapper — the word-stagger animation conflicts with the `::after` underline on the accent `<span>`)
@@ -203,6 +206,7 @@ Complete redesign:
 **FadeInView** — keep as-is, works with any color scheme
 
 **Cards/Badges across other pages** — will automatically inherit new token values:
+
 - `ProjectCard`: border colors, hover effects update via tokens
 - `ProjectFilter`: active state uses `bg-accent-primary`
 - `ContactForm`: input borders and focus states update via tokens
@@ -237,16 +241,16 @@ Complete redesign:
 
 ## Files Changed
 
-| File | Change Type |
-|------|-------------|
-| `src/styles.css` | Major — replace all tokens, `@theme inline` mappings, font declarations, showcase content styles |
-| `src/routes/__root.tsx` | Moderate — remove dark styles, add font links |
-| `src/components/home/Hero.tsx` | Major — complete redesign |
-| `src/components/home/ServicesGrid.tsx` | Moderate — restyle cards |
-| `src/components/home/FeaturedWork.tsx` | Major — carousel → grid |
-| `src/components/home/SkillsShowcase.tsx` | Moderate — restyle pills |
-| `src/components/layout/Header.tsx` | Moderate — light theme nav |
-| `src/components/layout/Footer.tsx` | Moderate — restyle with dark bg, keep layout |
-| `src/components/layout/MobileNav.tsx` | Minor — verify token inheritance on light bg |
-| `src/components/shared/FadeInView.tsx` | None — works as-is |
-| `package.json` | Minor — remove `next-themes` |
+| File                                     | Change Type                                                                                      |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `src/styles.css`                         | Major — replace all tokens, `@theme inline` mappings, font declarations, showcase content styles |
+| `src/routes/__root.tsx`                  | Moderate — remove dark styles, add font links                                                    |
+| `src/components/home/Hero.tsx`           | Major — complete redesign                                                                        |
+| `src/components/home/ServicesGrid.tsx`   | Moderate — restyle cards                                                                         |
+| `src/components/home/FeaturedWork.tsx`   | Major — carousel → grid                                                                          |
+| `src/components/home/SkillsShowcase.tsx` | Moderate — restyle pills                                                                         |
+| `src/components/layout/Header.tsx`       | Moderate — light theme nav                                                                       |
+| `src/components/layout/Footer.tsx`       | Moderate — restyle with dark bg, keep layout                                                     |
+| `src/components/layout/MobileNav.tsx`    | Minor — verify token inheritance on light bg                                                     |
+| `src/components/shared/FadeInView.tsx`   | None — works as-is                                                                               |
+| `package.json`                           | Minor — remove `next-themes`                                                                     |

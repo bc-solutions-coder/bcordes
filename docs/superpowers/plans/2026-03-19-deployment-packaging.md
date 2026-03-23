@@ -15,6 +15,7 @@
 ### Task 1: Simplify Dockerfile and delete stale files
 
 **Files:**
+
 - Modify: `Dockerfile` (runtime stage — lines 48 onward)
 - Delete: `docker-entrypoint.sh`
 - Delete: `docker-compose.dev.yml`
@@ -103,6 +104,7 @@ EOF
 ### Task 2: Rewrite docker-compose.yml for local dev
 
 **Files:**
+
 - Rewrite: `docker-compose.yml`
 
 Replace the stale compose (hardcoded DATABASE_URL, seedbox-network, Pangolin SSO labels, old Postgres service) with a minimal local dev infrastructure compose providing Postgres and Valkey for running Wallow locally alongside `pnpm dev`.
@@ -120,11 +122,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wallow}
       POSTGRES_DB: ${POSTGRES_DB:-wallow}
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wallow}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-wallow}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -134,7 +136,7 @@ services:
     restart: unless-stopped
     command: valkey-server --appendonly yes --requirepass ${VALKEY_PASSWORD:-devpassword}
     ports:
-      - "127.0.0.1:6379:6379"
+      - '127.0.0.1:6379:6379'
     volumes:
       - valkey_data:/data
 
@@ -170,6 +172,7 @@ EOF
 ### Task 3: Write docker-compose.prod.yml
 
 **Files:**
+
 - Rewrite: `docker-compose.prod.yml`
 
 Self-contained production stack with all four services, Pangolin labels, healthchecks, and env var references.
@@ -241,7 +244,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -259,7 +262,7 @@ services:
     environment:
       REDISCLI_AUTH: ${VALKEY_PASSWORD}
     healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
+      test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -300,6 +303,7 @@ EOF
 ### Task 4: Update .env.example
 
 **Files:**
+
 - Rewrite: `.env.example`
 
 Replace stale Keycloak/Vite env vars with the new structure matching the prod compose.
@@ -353,6 +357,7 @@ EOF
 ### Task 5: Update CLAUDE.md
 
 **Files:**
+
 - Modify: `CLAUDE.md`
 
 Update the environment variables section, deployment section, auth reference, and API conventions to reflect the current state.
@@ -360,10 +365,13 @@ Update the environment variables section, deployment section, auth reference, an
 - [ ] **Step 1: Update Auth line in Tech Stack**
 
 Replace:
+
 ```
 - **Auth:** Keycloak OIDC
 ```
+
 With:
+
 ```
 - **Auth:** OIDC (migrating from Keycloak to ASP.NET Identity + OpenIddict)
 ```
@@ -423,6 +431,7 @@ With:
 - [ ] **Step 4: Update Deployment section**
 
 Replace:
+
 ```
 ## Deployment
 
@@ -430,6 +439,7 @@ Push to `main` or create a version tag triggers GitHub Actions, which builds a m
 ```
 
 With:
+
 ```
 ## Deployment
 

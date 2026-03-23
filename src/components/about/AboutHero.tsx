@@ -1,5 +1,5 @@
-import { Badge } from '~/components/ui/badge';
-import { FadeInView } from '~/components/shared/FadeInView';
+import { Badge } from '~/components/ui/badge'
+import { FadeInView } from '~/components/shared/FadeInView'
 
 export function AboutHero() {
   return (
@@ -55,10 +55,12 @@ export function AboutHero() {
 
             <FadeInView delay={400}>
               <p className="text-text-secondary text-lg leading-relaxed max-w-xl mb-6">
-                I'm a passionate software engineer with a love for building elegant, scalable solutions.
-                With over six years of experience across the full stack, I specialize in turning complex
-                problems into clean, maintainable code. My approach combines technical excellence with
-                clear communication to deliver results that truly matter.
+                I'm a passionate software engineer with a love for building
+                elegant, scalable solutions. With over six years of experience
+                across the full stack, I specialize in turning complex problems
+                into clean, maintainable code. My approach combines technical
+                excellence with clear communication to deliver results that
+                truly matter.
               </p>
             </FadeInView>
 
@@ -90,5 +92,5 @@ export function AboutHero() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -5,7 +5,7 @@ export interface BlogFrontmatter {
   title: string
   date: string
   excerpt: string
-  tags: string[]
+  tags: Array<string>
   image?: string
   published?: boolean
 }

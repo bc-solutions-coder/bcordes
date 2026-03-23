@@ -1,6 +1,6 @@
 import { redirect } from '@tanstack/react-router'
 import { getSession, setSession } from './session'
-import { refreshToken, fetchUserProfile } from './oidc'
+import { fetchUserProfile, refreshToken } from './oidc'
 import type { User } from './types'
 
 /** Resolve the current authenticated user, silently refreshing tokens if needed. */

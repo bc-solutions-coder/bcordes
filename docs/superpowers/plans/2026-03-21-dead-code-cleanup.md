@@ -10,15 +10,19 @@
 All items in this phase are independent and can be executed in parallel by separate agents.
 
 ### Step 1.1: Remove npm Lockfile + Verify pnpm
+
 **Design doc item:** 2
 **Files:** `package-lock.json`
+
 1. Delete `package-lock.json`
 2. Run `pnpm install` to ensure `pnpm-lock.yaml` is current
 3. Run `pnpm build` to verify nothing breaks
 
 ### Step 1.2: Remove Stale Drizzle Scripts
+
 **Design doc item:** 3
 **Files:** `package.json`
+
 1. Remove these scripts from `package.json`:
    - `db:generate`, `db:migrate`, `db:push`, `db:pull`, `db:studio` (reference nonexistent `drizzle-kit`)
    - `db:start`, `db:stop`, `db:restart`, `db:logs`, `db:reset` (reference nonexistent `docker-compose.dev.yml`)
@@ -27,8 +31,10 @@ All items in this phase are independent and can be executed in parallel by separ
 3. Check for any `dotenv` CLI dependency used only by `db:seed:local` — remove if unused elsewhere
 
 ### Step 1.3: Delete Unused Files
+
 **Design doc item:** 5
 **Files to delete:**
+
 - `src/lib/animations.ts` — unused Framer Motion variants
 - `src/lib/blog.types.ts` — exact duplicate of `blog.ts`, never imported
 - `src/polyfill.ts` — oRPC polyfill, oRPC not used
@@ -36,38 +42,48 @@ All items in this phase are independent and can be executed in parallel by separ
 - `src/components/contact/index.ts` — unused barrel export
 
 ### Step 1.4: Remove Dead Blog Functions
+
 **Design doc item:** 6
 **Files:** `src/lib/blog.server.ts`
+
 1. Remove `getBlogPostsByTag(tag)` function
 2. Remove `getAllTags()` function
 3. Keep `getBlogPosts()` and `getBlogPostBySlug()` — these are used
 
 ### Step 1.5: Delete Scaffold Artifacts
+
 **Design doc item:** 7, 8
 **Files to delete:**
+
 - `.cta.json` — CTA scaffold config, no runtime use
 - `.cursorrules` — single shadcn install instruction, no value
 
 ### Step 1.6: Delete Homepage Variations
+
 **Design doc item:** 9
 **Files:** `docs/homepage-variations/` (31 HTML files)
+
 1. Delete the entire `docs/homepage-variations/` directory
 2. Git history preserves them if needed
 
 ### Step 1.7: Update Blog Post
+
 **Design doc item:** 10
 **Files:** `src/content/blog/first-post.mdx`
+
 1. Replace "Drizzle ORM with SQLite (for future features)" with "Wallow API with PostgreSQL"
 2. Update "What's Next" section — remove items that are now implemented (contact form, resume page)
 3. Keep items that are still future work
 
 ### Step 1.8: Remove Unused UI Components
+
 **Design doc item:** 11
 **Files:** `src/components/ui/` (29 files to delete)
 
 **Keep (likely near-term use):** `dialog`, `tabs`, `tooltip`, `skeleton`, `popover`, `progress`, `spinner`
 
 **Delete these 29 components:**
+
 - `accordion.tsx`
 - `alert-dialog.tsx`
 - `alert.tsx`
@@ -106,6 +122,7 @@ All items in this phase are independent and can be executed in parallel by separ
 ## Phase 2 — Route Consolidation & Doc Updates
 
 ### Step 2.1: Consolidate Admin Routes
+
 **Design doc item:** 4
 **Files modified:** `src/routes/dashboard/inquiries/inquiries.index.tsx`
 **Files deleted:** `src/routes/admin/messages.tsx`, `src/routes/admin/` (if empty)
@@ -131,10 +148,12 @@ All items in this phase are independent and can be executed in parallel by separ
 11. **Verify:** Run `pnpm build` to regenerate route tree, then confirm `/dashboard/inquiries` renders correctly
 
 ### Step 2.2: Update CLAUDE.md
+
 **Design doc item:** 1
 **Files:** `CLAUDE.md`
 
 Update the following sections:
+
 1. **Routes table:**
    - Change `/work` to `/projects`
    - Change `/work/:slug` to `/projects/$slug`
@@ -156,12 +175,14 @@ Update the following sections:
 ## Phase 3 — Verification
 
 ### Step 3.1: Full Build Check
+
 1. Run `pnpm install` (in case lockfile changed)
 2. Run `pnpm build` — must succeed with zero errors
 3. Run `pnpm test` — all tests must pass
 4. Run `pnpm lint` — check for import errors referencing deleted files
 
 ### Step 3.2: Manual Smoke Test (optional)
+
 1. Start dev server: `pnpm dev`
 2. Visit `/`, `/projects`, `/contact`, `/blog`
 3. Log in and visit `/dashboard/inquiries`

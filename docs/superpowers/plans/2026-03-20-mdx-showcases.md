@@ -12,25 +12,26 @@
 
 ## File Structure
 
-| Action | File | Responsibility |
-|--------|------|----------------|
-| Modify | `src/lib/mdx.server.ts` | Showcase content utilities: `getShowcases()`, `getShowcase()`, `getFeaturedShowcases()` with gray-matter + Zod |
-| Create | `src/components/shared/MarkdownContent.tsx` | Shared markdown renderer extracted from blog |
-| Modify | `src/routes/blog/$slug.tsx` | Import `MarkdownContent` instead of inline `BlogContent` |
-| Modify | `src/routes/work/index.tsx` | Switch loader from Wallow API to `getShowcases()` |
-| Modify | `src/routes/work/$slug.tsx` | Switch loader to `getShowcase()`, add body rendering |
-| Modify | `src/routes/index.tsx` | Switch loader to `getFeaturedShowcases()` |
-| Modify | `src/components/work/ProjectCard.tsx` | Accept `ShowcaseMeta`, use `slug` instead of `id` |
-| Modify | `src/components/home/FeaturedWork.tsx` | Accept `ShowcaseMeta[]`, use `slug` instead of `id` |
-| Create | `src/content/projects/sample-project.mdx` | Sample MDX file for development/testing |
-| Delete | `src/server-fns/showcases.ts` | Remove Wallow showcase server functions |
-| Modify | `src/lib/wallow/types.ts` | Remove `Showcase` interface |
+| Action | File                                        | Responsibility                                                                                                 |
+| ------ | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Modify | `src/lib/mdx.server.ts`                     | Showcase content utilities: `getShowcases()`, `getShowcase()`, `getFeaturedShowcases()` with gray-matter + Zod |
+| Create | `src/components/shared/MarkdownContent.tsx` | Shared markdown renderer extracted from blog                                                                   |
+| Modify | `src/routes/blog/$slug.tsx`                 | Import `MarkdownContent` instead of inline `BlogContent`                                                       |
+| Modify | `src/routes/work/index.tsx`                 | Switch loader from Wallow API to `getShowcases()`                                                              |
+| Modify | `src/routes/work/$slug.tsx`                 | Switch loader to `getShowcase()`, add body rendering                                                           |
+| Modify | `src/routes/index.tsx`                      | Switch loader to `getFeaturedShowcases()`                                                                      |
+| Modify | `src/components/work/ProjectCard.tsx`       | Accept `ShowcaseMeta`, use `slug` instead of `id`                                                              |
+| Modify | `src/components/home/FeaturedWork.tsx`      | Accept `ShowcaseMeta[]`, use `slug` instead of `id`                                                            |
+| Create | `src/content/projects/sample-project.mdx`   | Sample MDX file for development/testing                                                                        |
+| Delete | `src/server-fns/showcases.ts`               | Remove Wallow showcase server functions                                                                        |
+| Modify | `src/lib/wallow/types.ts`                   | Remove `Showcase` interface                                                                                    |
 
 ---
 
 ### Task 1: Install gray-matter
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install gray-matter**
@@ -51,6 +52,7 @@ git commit -m "chore: add gray-matter dependency for MDX frontmatter parsing"
 ### Task 2: Create sample MDX content file
 
 **Files:**
+
 - Create: `src/content/projects/sample-project.mdx`
 
 This file is needed for all subsequent development and testing.
@@ -59,12 +61,12 @@ This file is needed for all subsequent development and testing.
 
 ```mdx
 ---
-title: "Sample Project"
-description: "A sample project for development and testing"
-tags: ["React", "TypeScript"]
+title: 'Sample Project'
+description: 'A sample project for development and testing'
+tags: ['React', 'TypeScript']
 imageUrl: null
-projectUrl: "https://github.com/example/sample"
-publishedAt: "2025-06-15"
+projectUrl: 'https://github.com/example/sample'
+publishedAt: '2025-06-15'
 featured: true
 ---
 
@@ -91,6 +93,7 @@ git commit -m "content: add sample project MDX file for development"
 ### Task 3: Rewrite mdx.server.ts with gray-matter + Zod
 
 **Files:**
+
 - Modify: `src/lib/mdx.server.ts`
 
 This task replaces the entire contents of `mdx.server.ts`. The existing hand-rolled frontmatter parser, `ProjectFrontmatter`/`Project` types, and all existing functions (`getProjects`, `getProjectBySlug`, `getFeaturedProjects`, `getProjectsByTag`) are replaced wholesale.
@@ -222,6 +225,7 @@ git commit -m "feat: rewrite mdx.server.ts with gray-matter and Zod validation"
 ### Task 4: Extract shared MarkdownContent component
 
 **Files:**
+
 - Create: `src/components/shared/MarkdownContent.tsx`
 - Modify: `src/routes/blog/$slug.tsx`
 
@@ -236,6 +240,7 @@ Read `src/routes/blog/$slug.tsx` fully. Identify the exact `processInlineMarkdow
 - [ ] **Step 2: Create MarkdownContent.tsx**
 
 Create `src/components/shared/MarkdownContent.tsx` containing:
+
 - The `processInlineMarkdown` function (copy verbatim from blog/$slug.tsx)
 - The `processContent` function (copy verbatim from blog/$slug.tsx)
 - A `MarkdownContent` component (renamed from `BlogContent`) that accepts `{ content: string }` and renders `processContent(content)`
@@ -256,6 +261,7 @@ export function MarkdownContent({ content }: { content: string }) {
 - [ ] **Step 3: Update blog/$slug.tsx to import MarkdownContent**
 
 In `src/routes/blog/$slug.tsx`:
+
 - Remove the `processInlineMarkdown`, `processContent`, and `BlogContent` function definitions
 - Add `import { MarkdownContent } from '@/components/shared/MarkdownContent'`
 - Replace `<BlogContent content={post.content} />` with `<MarkdownContent content={post.content} />`
@@ -280,6 +286,7 @@ git commit -m "refactor: extract shared MarkdownContent component from blog"
 ### Task 5: Update ProjectCard to accept ShowcaseMeta
 
 **Files:**
+
 - Modify: `src/components/work/ProjectCard.tsx`
 
 **Current anatomy:** Imports `Showcase` from `@/lib/wallow/types`. Destructures `{ id, title, tags, imageUrl, description, publishedAt }`. Uses `params={{ slug: id }}` for the Link.
@@ -287,6 +294,7 @@ git commit -m "refactor: extract shared MarkdownContent component from blog"
 - [ ] **Step 1: Update ProjectCard**
 
 In `src/components/work/ProjectCard.tsx`:
+
 - Change import from `import type { Showcase } from '@/lib/wallow/types'` to `import type { ShowcaseMeta } from '@/lib/mdx.server'`
 - Change `ProjectCardProps` interface from `showcase: Showcase` to `showcase: ShowcaseMeta`
 - Change destructuring from `{ id, title, tags, imageUrl, description, publishedAt }` to `{ slug, title, tags, imageUrl, description, publishedAt }`
@@ -304,6 +312,7 @@ git commit -m "refactor: update ProjectCard to accept ShowcaseMeta with slug"
 ### Task 6: Update FeaturedWork to accept ShowcaseMeta[]
 
 **Files:**
+
 - Modify: `src/components/home/FeaturedWork.tsx`
 
 **Current anatomy:** Imports `Showcase` from `@/lib/wallow/types`. Uses `showcase.id` for keys and Link params.
@@ -311,6 +320,7 @@ git commit -m "refactor: update ProjectCard to accept ShowcaseMeta with slug"
 - [ ] **Step 1: Update FeaturedWork**
 
 In `src/components/home/FeaturedWork.tsx`:
+
 - Change import from `import type { Showcase } from '@/lib/wallow/types'` to `import type { ShowcaseMeta } from '@/lib/mdx.server'`
 - Change `FeaturedWorkProps` from `showcases: Showcase[]` to `showcases: ShowcaseMeta[]`
 - Change all `showcase.id` references to `showcase.slug` — this includes:
@@ -329,6 +339,7 @@ git commit -m "refactor: update FeaturedWork to accept ShowcaseMeta with slug"
 ### Task 7: Wire routes to MDX utilities
 
 **Files:**
+
 - Modify: `src/routes/work/index.tsx`
 - Modify: `src/routes/work/$slug.tsx`
 - Modify: `src/routes/index.tsx`
@@ -338,6 +349,7 @@ This is the switchover task. After this, the app reads from MDX files instead of
 - [ ] **Step 1: Update work/index.tsx (gallery)**
 
 In `src/routes/work/index.tsx`:
+
 - Replace `import { fetchShowcases } from '@/server-fns/showcases'` with `import { getShowcases } from '@/lib/mdx.server'`
 - Replace `import type { Showcase } from '@/lib/wallow/types'` with `import type { ShowcaseMeta } from '@/lib/mdx.server'`
 - In the loader function, replace `const showcases = await fetchShowcases()` (or however it's called) with `const showcases = await getShowcases()`
@@ -348,6 +360,7 @@ In `src/routes/work/index.tsx`:
 - [ ] **Step 2: Update work/$slug.tsx (detail)**
 
 In `src/routes/work/$slug.tsx`:
+
 - Replace `import { fetchShowcase } from '@/server-fns/showcases'` with `import { getShowcase } from '@/lib/mdx.server'`
 - Add `import { MarkdownContent } from '@/components/shared/MarkdownContent'`
 - In the loader, replace `fetchShowcase({ data: params.slug })` with `getShowcase(params.slug)`
@@ -355,11 +368,13 @@ In `src/routes/work/$slug.tsx`:
 - Add a content rendering section in the JSX, after the hero/metadata area and before any footer navigation:
 
 ```tsx
-{showcase.content && (
-  <article className="prose prose-invert max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-strong:text-text-primary prose-a:text-accent-primary">
-    <MarkdownContent content={showcase.content} />
-  </article>
-)}
+{
+  showcase.content && (
+    <article className="prose prose-invert max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-strong:text-text-primary prose-a:text-accent-primary">
+      <MarkdownContent content={showcase.content} />
+    </article>
+  )
+}
 ```
 
 Use the same prose classes as the blog detail page (`src/routes/blog/$slug.tsx`) for visual consistency.
@@ -367,6 +382,7 @@ Use the same prose classes as the blog detail page (`src/routes/blog/$slug.tsx`)
 - [ ] **Step 3: Update index.tsx (home)**
 
 In `src/routes/index.tsx`:
+
 - Replace `import { fetchShowcases } from '@/server-fns/showcases'` with `import { getFeaturedShowcases } from '@/lib/mdx.server'`
 - In the loader, replace `const showcases = await fetchShowcases()` with `const showcases = await getFeaturedShowcases()`
 - Pass the result to `<FeaturedWork showcases={showcases} />`
@@ -392,6 +408,7 @@ git commit -m "feat: wire routes to MDX showcases instead of Wallow API"
 ### Task 8: Cleanup — remove Wallow showcase integration
 
 **Files:**
+
 - Delete: `src/server-fns/showcases.ts`
 - Modify: `src/lib/wallow/types.ts`
 
@@ -406,6 +423,7 @@ In `src/lib/wallow/types.ts`, remove the `Showcase` interface. Leave all other t
 - [ ] **Step 3: Search for any remaining references**
 
 Search the entire `src/` directory for any remaining imports or references to:
+
 - `fetchShowcases` or `fetchShowcase`
 - `Showcase` from `@/lib/wallow/types`
 - `server-fns/showcases`
@@ -439,6 +457,7 @@ pnpm dev
 ```
 
 Manually verify (or use the browser agent):
+
 1. `http://localhost:3000/` — home page shows the sample project in the FeaturedWork carousel
 2. `http://localhost:3000/work` — gallery shows the sample project card
 3. `http://localhost:3000/work/sample-project` — detail page shows metadata and rendered markdown body

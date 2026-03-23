@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Mail, Linkedin, Github, MapPin } from 'lucide-react'
+import { Github, Linkedin, Mail, MapPin } from 'lucide-react'
 import { FadeInView } from '~/components/shared/FadeInView'
 import { ContactForm } from '~/components/contact/ContactForm'
 
@@ -45,8 +45,8 @@ function ContactPage() {
               Get in Touch
             </h1>
             <p className="max-w-2xl text-lg text-text-secondary">
-              Have a project in mind? Let's discuss how I can help bring your ideas to life.
-              Fill out the form below or reach out directly.
+              Have a project in mind? Let's discuss how I can help bring your
+              ideas to life. Fill out the form below or reach out directly.
             </p>
           </FadeInView>
         </div>
@@ -72,8 +72,14 @@ function ContactPage() {
                       {item.href ? (
                         <a
                           href={item.href}
-                          target={item.href.startsWith('http') ? '_blank' : undefined}
-                          rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          target={
+                            item.href.startsWith('http') ? '_blank' : undefined
+                          }
+                          rel={
+                            item.href.startsWith('http')
+                              ? 'noopener noreferrer'
+                              : undefined
+                          }
                           className="text-text-primary hover:text-accent-secondary transition-colors"
                         >
                           {item.value}
@@ -93,7 +99,9 @@ function ContactPage() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-secondary opacity-75" />
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-accent-secondary" />
                   </span>
-                  <span className="font-medium text-text-primary">Available for projects</span>
+                  <span className="font-medium text-text-primary">
+                    Available for projects
+                  </span>
                 </div>
                 <p className="text-sm text-text-secondary">
                   Currently accepting new clients for Q1 2026.

@@ -1,5 +1,9 @@
-import { seal, unseal, defaults } from 'iron-webcrypto'
-import { getCookie, setCookie, deleteCookie } from '@tanstack/react-start/server'
+import { defaults, seal, unseal } from 'iron-webcrypto'
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+} from '@tanstack/react-start/server'
 import type { SessionData } from './types'
 
 const SESSION_SECRET = process.env.SESSION_SECRET!

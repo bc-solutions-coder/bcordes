@@ -26,13 +26,29 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-const projectTypeValues = ['Frontend', 'Full-Stack', 'Consulting', 'Other'] as const
+const projectTypeValues = [
+  'Frontend',
+  'Full-Stack',
+  'Consulting',
+  'Other',
+] as const
 const budgetValues = ['Under $5k', '$5k-$15k', '$15k-$50k', '$50k+'] as const
-const timelineValues = ['Less than 1 month', '1-3 months', '3-6 months', '6+ months'] as const
+const timelineValues = [
+  'Less than 1 month',
+  '1-3 months',
+  '3-6 months',
+  '6+ months',
+] as const
 
 const contactFormSchema = z.object({
-  name: z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .min(2, 'Name must be at least 2 characters'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
   phone: z.string().optional(),
   company: z.string().optional(),
   projectType: z.enum(projectTypeValues, {
@@ -134,10 +150,17 @@ export function ContactForm() {
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-text-primary">Message Sent!</h3>
+        <h3 className="mb-2 text-lg font-semibold text-text-primary">
+          Message Sent!
+        </h3>
         <p className="mb-6 text-text-secondary">
           Thanks for reaching out. I&apos;ll get back to you within 24-48 hours.
         </p>
@@ -244,7 +267,10 @@ export function ContactForm() {
                 <FormLabel className="text-text-primary">
                   Project Type <span className="text-accent-primary">*</span>
                 </FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
                       <SelectValue placeholder="Select project type" />
@@ -275,7 +301,10 @@ export function ContactForm() {
                 <FormLabel className="text-text-primary">
                   Budget Range <span className="text-accent-primary">*</span>
                 </FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
                       <SelectValue placeholder="Select budget range" />

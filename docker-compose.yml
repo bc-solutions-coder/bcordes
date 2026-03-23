@@ -8,11 +8,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wallow}
       POSTGRES_DB: ${POSTGRES_DB:-wallow}
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wallow}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-wallow}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     command: valkey-server --appendonly yes --requirepass ${VALKEY_PASSWORD:-devpassword}
     ports:
-      - "127.0.0.1:6379:6379"
+      - '127.0.0.1:6379:6379'
     volumes:
       - valkey_data:/data
 

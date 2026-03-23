@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
+import { MobileNav } from './MobileNav'
+import { UserMenu } from './UserMenu'
 import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
@@ -12,8 +14,6 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
-import { MobileNav } from './MobileNav'
-import { UserMenu } from './UserMenu'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -48,7 +48,11 @@ export function Header() {
           to="/"
           className="flex items-center transition-opacity hover:opacity-80"
         >
-          <img src="/BC-Solutions-no-background.svg" alt="BC Solutions" className="h-12" />
+          <img
+            src="/BC-Solutions-no-background.svg"
+            alt="BC Solutions"
+            className="h-12"
+          />
           <span className="ml-2 text-2xl font-bold tracking-tight text-text-primary">
             BC <span className="text-accent-secondary">Solutions</span>
           </span>

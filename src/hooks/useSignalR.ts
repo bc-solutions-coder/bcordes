@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { RealtimeEnvelope } from '@/lib/wallow/types'
 
-type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting'
+type ConnectionStatus =
+  | 'connecting'
+  | 'connected'
+  | 'disconnected'
+  | 'reconnecting'
 type Handler = (envelope: RealtimeEnvelope) => void
 
 export function useSignalR() {

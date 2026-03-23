@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { Mail, RefreshCw } from 'lucide-react'
 import { serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
 import { getAuthUser } from '@/lib/auth/middleware'
@@ -22,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Mail, RefreshCw } from 'lucide-react'
 
 const fetchCurrentUserRoles = createServerFn({ method: 'GET' }).handler(
   async () => {

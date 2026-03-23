@@ -1,12 +1,12 @@
-import { Link } from '@tanstack/react-router';
-import { Button } from '~/components/ui/button';
-import { FadeInView } from '~/components/shared/FadeInView';
+import { Link } from '@tanstack/react-router'
+import { Button } from '~/components/ui/button'
+import { FadeInView } from '~/components/shared/FadeInView'
 
 const stats = [
   { value: '6+', label: 'Years Experience' },
   { value: '25+', label: 'Projects Delivered' },
   { value: '100%', label: 'Client Satisfaction' },
-];
+]
 
 export function Hero() {
   return (
@@ -129,5 +129,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
+  )
 }

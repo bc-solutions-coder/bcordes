@@ -29,24 +29,24 @@ Wire up the existing contact form to save messages to the database, add authenti
 
 ## New Files
 
-| File | Purpose |
-|------|---------|
-| `src/lib/auth.ts` | Better Auth server configuration |
-| `src/lib/auth-client.ts` | Better Auth React client |
-| `src/routes/api.auth.$.ts` | Auth API catch-all route |
-| `src/routes/login.tsx` | Login page |
-| `src/routes/admin/messages.tsx` | Protected messages admin page |
-| `scripts/seed-admin.ts` | One-time script to create admin user |
+| File                            | Purpose                              |
+| ------------------------------- | ------------------------------------ |
+| `src/lib/auth.ts`               | Better Auth server configuration     |
+| `src/lib/auth-client.ts`        | Better Auth React client             |
+| `src/routes/api.auth.$.ts`      | Auth API catch-all route             |
+| `src/routes/login.tsx`          | Login page                           |
+| `src/routes/admin/messages.tsx` | Protected messages admin page        |
+| `scripts/seed-admin.ts`         | One-time script to create admin user |
 
 ## Modified Files
 
-| File | Changes |
-|------|---------|
-| `src/db/schema.ts` | Add user, session, account, verification tables |
-| `src/orpc/router/contacts.ts` | Add `getContacts` endpoint |
-| `src/orpc/router/index.ts` | Export new endpoint |
-| `src/components/contact/ContactForm.tsx` | Wire to real oRPC API |
-| `package.json` | Add better-auth dependency |
+| File                                     | Changes                                         |
+| ---------------------------------------- | ----------------------------------------------- |
+| `src/db/schema.ts`                       | Add user, session, account, verification tables |
+| `src/orpc/router/contacts.ts`            | Add `getContacts` endpoint                      |
+| `src/orpc/router/index.ts`               | Export new endpoint                             |
+| `src/components/contact/ContactForm.tsx` | Wire to real oRPC API                           |
+| `package.json`                           | Add better-auth dependency                      |
 
 ## Database Schema
 
@@ -69,14 +69,18 @@ export const session = pgTable('session', {
   token: text('token').notNull().unique(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  userId: text('user_id').notNull().references(() => user.id),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id),
 })
 
 export const account = pgTable('account', {
   id: text('id').primaryKey(),
   accountId: text('account_id').notNull(),
   providerId: text('provider_id').notNull(),
-  userId: text('user_id').notNull().references(() => user.id),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id),
   accessToken: text('access_token'),
   refreshToken: text('refresh_token'),
   idToken: text('id_token'),
@@ -134,6 +138,7 @@ export const { signIn, signOut, useSession } = authClient
 ## Admin Messages Page
 
 ### Features
+
 - Table view of all contact submissions
 - Columns: Name, Email, Company, Project Type, Budget, Date, Status
 - Sorted by newest first
@@ -154,10 +159,12 @@ export const getContacts = os.handler(async () => {
 
 // Update contact status
 export const updateContactStatus = os
-  .input(z.object({
-    id: z.number(),
-    status: z.enum(['new', 'read', 'responded'])
-  }))
+  .input(
+    z.object({
+      id: z.number(),
+      status: z.enum(['new', 'read', 'responded']),
+    }),
+  )
   .handler(async ({ input }) => {
     await db
       .update(contacts)
@@ -202,7 +209,7 @@ await auth.api.signUpEmail({
     name: 'Admin',
     email: process.env.ADMIN_EMAIL,
     password: process.env.ADMIN_PASSWORD,
-  }
+  },
 })
 ```
 

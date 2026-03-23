@@ -15,14 +15,16 @@
 ### Task 1: Tailwind Dark Theme Configuration
 
 **Files:**
+
 - Modify: `app.css`
 - Create: `src/lib/design-tokens.ts`
 
 **Step 1: Add dark theme colors to Tailwind**
 
 Update `app.css`:
+
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Background Colors */
@@ -56,7 +58,13 @@ Update `app.css`:
 body {
   background-color: var(--color-background-primary);
   color: var(--color-text-primary);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
 
 /* Reduced Motion Support */
@@ -74,6 +82,7 @@ body {
 **Step 2: Create design tokens helper**
 
 Create `src/lib/design-tokens.ts`:
+
 ```typescript
 export const colors = {
   background: {
@@ -97,7 +106,7 @@ export const colors = {
     default: '#262626',
     accent: 'rgba(5, 150, 105, 0.2)',
   },
-} as const;
+} as const
 
 export const animations = {
   duration: {
@@ -110,7 +119,7 @@ export const animations = {
     out: 'cubic-bezier(0, 0, 0.2, 1)',
     inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
   },
-} as const;
+} as const
 ```
 
 **Step 3: Test theme in browser**
@@ -134,6 +143,7 @@ git commit -m "feat: add dark theme with green accent colors
 ### Task 2: Animation Utilities
 
 **Files:**
+
 - Create: `src/lib/animations.ts`
 - Create: `src/hooks/useReducedMotion.ts`
 - Create: `src/hooks/useScrollAnimation.ts`
@@ -141,109 +151,112 @@ git commit -m "feat: add dark theme with green accent colors
 **Step 1: Create animation helper functions**
 
 Create `src/lib/animations.ts`:
+
 ```typescript
 export const fadeInVariants = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20 },
-};
+}
 
 export const slideInVariants = {
   initial: { opacity: 0, x: -20 },
   animate: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: 20 },
-};
+}
 
 export const scaleInVariants = {
   initial: { opacity: 0, scale: 0.95 },
   animate: { opacity: 1, scale: 1 },
   exit: { opacity: 0, scale: 0.95 },
-};
+}
 
 export const getTransition = (duration: 'fast' | 'base' | 'slow' = 'base') => {
   const durations = {
     fast: 0.15,
     base: 0.25,
     slow: 0.35,
-  };
+  }
 
   return {
     duration: durations[duration],
     ease: [0.4, 0, 0.2, 1], // ease-in-out cubic-bezier
-  };
-};
+  }
+}
 ```
 
 **Step 2: Create reduced motion hook**
 
 Create `src/hooks/useReducedMotion.ts`:
+
 ```typescript
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
 
     const listener = (event: MediaQueryListEvent) => {
-      setPrefersReducedMotion(event.matches);
-    };
+      setPrefersReducedMotion(event.matches)
+    }
 
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, []);
+    mediaQuery.addEventListener('change', listener)
+    return () => mediaQuery.removeEventListener('change', listener)
+  }, [])
 
-  return prefersReducedMotion;
+  return prefersReducedMotion
 }
 ```
 
 **Step 3: Create scroll animation hook**
 
 Create `src/hooks/useScrollAnimation.ts`:
+
 ```typescript
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'
 
 interface UseScrollAnimationOptions {
-  threshold?: number;
-  rootMargin?: string;
-  triggerOnce?: boolean;
+  threshold?: number
+  rootMargin?: string
+  triggerOnce?: boolean
 }
 
 export function useScrollAnimation<T extends HTMLElement>(
-  options: UseScrollAnimationOptions = {}
+  options: UseScrollAnimationOptions = {},
 ) {
-  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
-  const ref = useRef<T>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options
+  const ref = useRef<T>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const element = ref.current
+    if (!element) return
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          setIsVisible(true)
           if (triggerOnce) {
-            observer.unobserve(element);
+            observer.unobserve(element)
           }
         } else if (!triggerOnce) {
-          setIsVisible(false);
+          setIsVisible(false)
         }
       },
-      { threshold, rootMargin }
-    );
+      { threshold, rootMargin },
+    )
 
-    observer.observe(element);
+    observer.observe(element)
 
     return () => {
-      observer.unobserve(element);
-    };
-  }, [threshold, rootMargin, triggerOnce]);
+      observer.unobserve(element)
+    }
+  }, [threshold, rootMargin, triggerOnce])
 
-  return { ref, isVisible };
+  return { ref, isVisible }
 }
 ```
 
@@ -268,14 +281,24 @@ git commit -m "feat: add animation utilities and hooks
 ### Task 3: Database Schema Setup
 
 **Files:**
+
 - Modify: `src/db/schema.ts`
 - Create: `drizzle/migrations/0001_add_bc_solutions_tables.sql`
 
 **Step 1: Update database schema**
 
 Modify `src/db/schema.ts`:
+
 ```typescript
-import { boolean, pgTable, serial, text, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  jsonb,
+  integer,
+} from 'drizzle-orm/pg-core'
 
 // Contact form submissions
 export const contacts = pgTable('contacts', {
@@ -288,7 +311,7 @@ export const contacts = pgTable('contacts', {
   budget: text('budget'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   status: text('status').default('new').notNull(), // new, read, responded
-});
+})
 
 // Page analytics (simple tracking)
 export const pageViews = pgTable('page_views', {
@@ -297,7 +320,7 @@ export const pageViews = pgTable('page_views', {
   referrer: text('referrer'),
   userAgent: text('user_agent'),
   timestamp: timestamp('timestamp').defaultNow().notNull(),
-});
+})
 
 // Project reactions (optional engagement)
 export const projectReactions = pgTable('project_reactions', {
@@ -305,7 +328,7 @@ export const projectReactions = pgTable('project_reactions', {
   projectSlug: text('project_slug').notNull(),
   sessionId: text('session_id').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+})
 
 // Newsletter subscribers (optional)
 export const subscribers = pgTable('subscribers', {
@@ -313,7 +336,7 @@ export const subscribers = pgTable('subscribers', {
   email: text('email').notNull().unique(),
   subscribedAt: timestamp('subscribed_at').defaultNow().notNull(),
   active: boolean('active').default(true).notNull(),
-});
+})
 ```
 
 **Step 2: Generate migration**
@@ -350,11 +373,13 @@ git commit -m "feat: add database schema for BC Solutions
 ### Task 4: FadeInView Animation Component
 
 **Files:**
+
 - Create: `src/components/shared/FadeInView.tsx`
 
 **Step 1: Create FadeInView component**
 
 Create `src/components/shared/FadeInView.tsx`:
+
 ```typescript
 import { useScrollAnimation } from '~/hooks/useScrollAnimation';
 import { useReducedMotion } from '~/hooks/useReducedMotion';
@@ -419,11 +444,13 @@ git commit -m "feat: add FadeInView scroll animation component
 ### Task 5: AnimatedText Component
 
 **Files:**
+
 - Create: `src/components/shared/AnimatedText.tsx`
 
 **Step 1: Create AnimatedText component**
 
 Create `src/components/shared/AnimatedText.tsx`:
+
 ```typescript
 import { useReducedMotion } from '~/hooks/useReducedMotion';
 import { cn } from '~/lib/utils';
@@ -471,6 +498,7 @@ export function AnimatedText({
 **Step 2: Add animation to app.css**
 
 Add to `app.css`:
+
 ```css
 @keyframes fade-in-up {
   from {
@@ -509,6 +537,7 @@ git commit -m "feat: add AnimatedText component
 ### Task 6: Layout Header Component
 
 **Files:**
+
 - Create: `src/components/layout/Header.tsx`
 - Create: `src/components/layout/MobileNav.tsx`
 
@@ -520,6 +549,7 @@ Expected: Components added to `src/components/ui/`
 **Step 2: Create Header component**
 
 Create `src/components/layout/Header.tsx`:
+
 ```typescript
 import { Link } from '@tanstack/react-router';
 import {
@@ -586,6 +616,7 @@ export function Header() {
 **Step 3: Create MobileNav component**
 
 Create `src/components/layout/MobileNav.tsx`:
+
 ```typescript
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -671,6 +702,7 @@ git commit -m "feat: add Header and MobileNav components
 ### Task 7: Layout Footer Component
 
 **Files:**
+
 - Create: `src/components/layout/Footer.tsx`
 
 **Step 1: Add Separator component**
@@ -681,6 +713,7 @@ Expected: Separator component added
 **Step 2: Create Footer component**
 
 Create `src/components/layout/Footer.tsx`:
+
 ```typescript
 import { Link } from '@tanstack/react-router';
 import { Github, Linkedin, Mail } from 'lucide-react';
@@ -812,11 +845,13 @@ git commit -m "feat: add Footer component
 ### Task 8: Update Root Layout
 
 **Files:**
+
 - Modify: `src/routes/__root.tsx`
 
 **Step 1: Update root route with layout**
 
 Modify `src/routes/__root.tsx`:
+
 ```typescript
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
@@ -864,12 +899,14 @@ git commit -m "feat: update root layout with header and footer
 ### Task 9: Hero Section
 
 **Files:**
+
 - Create: `src/components/home/Hero.tsx`
 - Create: `src/routes/index.tsx` (modify)
 
 **Step 1: Create Hero component**
 
 Create `src/components/home/Hero.tsx`:
+
 ```typescript
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
@@ -963,6 +1000,7 @@ export function Hero() {
 **Step 2: Update homepage route**
 
 Modify `src/routes/index.tsx`:
+
 ```typescript
 import { createFileRoute } from '@tanstack/react-router';
 import { Hero } from '~/components/home/Hero';
@@ -1003,6 +1041,7 @@ git commit -m "feat: add Hero section to homepage
 ### Task 10: Services Grid
 
 **Files:**
+
 - Create: `src/components/home/ServicesGrid.tsx`
 - Modify: `src/routes/index.tsx`
 
@@ -1014,6 +1053,7 @@ Expected: Card component added
 **Step 2: Create ServicesGrid component**
 
 Create `src/components/home/ServicesGrid.tsx`:
+
 ```typescript
 import { Code, Layers, MessageSquare } from 'lucide-react';
 import {
@@ -1099,6 +1139,7 @@ export function ServicesGrid() {
 **Step 3: Add to homepage**
 
 Modify `src/routes/index.tsx`:
+
 ```typescript
 import { createFileRoute } from '@tanstack/react-router';
 import { Hero } from '~/components/home/Hero';
@@ -1142,6 +1183,7 @@ git commit -m "feat: add ServicesGrid to homepage
 ### Task 11: MDX Setup for Projects
 
 **Files:**
+
 - Create: `src/content/projects/drop-enforcement-module.mdx`
 - Create: `src/lib/mdx.ts`
 
@@ -1153,79 +1195,81 @@ Expected: Dependencies installed
 **Step 2: Create MDX utility**
 
 Create `src/lib/mdx.ts`:
-```typescript
-import fs from 'fs/promises';
-import path from 'path';
-import { compileMDX } from 'next-mdx-remote/rsc';
 
-const CONTENT_DIR = path.join(process.cwd(), 'src/content');
+```typescript
+import fs from 'fs/promises'
+import path from 'path'
+import { compileMDX } from 'next-mdx-remote/rsc'
+
+const CONTENT_DIR = path.join(process.cwd(), 'src/content')
 
 export interface ProjectFrontmatter {
-  title: string;
-  description: string;
-  client: string;
-  year: string;
-  tags: string[];
-  featured: boolean;
-  image: string;
+  title: string
+  description: string
+  client: string
+  year: string
+  tags: string[]
+  featured: boolean
+  image: string
 }
 
 export interface Project {
-  slug: string;
-  frontmatter: ProjectFrontmatter;
-  content: string;
+  slug: string
+  frontmatter: ProjectFrontmatter
+  content: string
 }
 
 export async function getProjects(): Promise<Project[]> {
-  const projectsDir = path.join(CONTENT_DIR, 'projects');
-  const files = await fs.readdir(projectsDir);
+  const projectsDir = path.join(CONTENT_DIR, 'projects')
+  const files = await fs.readdir(projectsDir)
 
   const projects = await Promise.all(
     files
       .filter((file) => file.endsWith('.mdx'))
       .map(async (file) => {
-        const slug = file.replace('.mdx', '');
-        const filePath = path.join(projectsDir, file);
-        const source = await fs.readFile(filePath, 'utf-8');
+        const slug = file.replace('.mdx', '')
+        const filePath = path.join(projectsDir, file)
+        const source = await fs.readFile(filePath, 'utf-8')
 
         const { frontmatter, content } = await compileMDX<ProjectFrontmatter>({
           source,
           options: {
             parseFrontmatter: true,
           },
-        });
+        })
 
         return {
           slug,
           frontmatter,
           content: content.toString(),
-        };
-      })
-  );
+        }
+      }),
+  )
 
-  return projects.sort((a, b) =>
-    parseInt(b.frontmatter.year) - parseInt(a.frontmatter.year)
-  );
+  return projects.sort(
+    (a, b) => parseInt(b.frontmatter.year) - parseInt(a.frontmatter.year),
+  )
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const projects = await getProjects();
-  return projects.find((p) => p.slug === slug) || null;
+  const projects = await getProjects()
+  return projects.find((p) => p.slug === slug) || null
 }
 ```
 
 **Step 3: Create first project MDX**
 
 Create `src/content/projects/drop-enforcement-module.mdx`:
+
 ```mdx
 ---
-title: "Drop Enforcement Module"
-description: "Customer-facing enforcement management module enabling violation tracking workflows with complete audit trails for state regulatory compliance"
-client: "Drop"
-year: "2025"
-tags: ["Angular", "TypeScript", "Compliance", "Enterprise"]
+title: 'Drop Enforcement Module'
+description: 'Customer-facing enforcement management module enabling violation tracking workflows with complete audit trails for state regulatory compliance'
+client: 'Drop'
+year: '2025'
+tags: ['Angular', 'TypeScript', 'Compliance', 'Enterprise']
 featured: true
-image: "/projects/drop-enforcement.jpg"
+image: '/projects/drop-enforcement.jpg'
 ---
 
 ## Challenge
@@ -1286,29 +1330,34 @@ git commit -m "feat: add MDX infrastructure for project content
 Due to length constraints, here's a summary of remaining implementation tasks:
 
 ### Phase 5: Work Portfolio (Tasks 12-15)
+
 - Task 12: Work listing page with filtering
 - Task 13: Project detail page with MDX rendering
 - Task 14: Featured work carousel for homepage
 - Task 15: Skills showcase component
 
 ### Phase 6: Forms & API (Tasks 16-18)
+
 - Task 16: Contact form with validation
 - Task 17: oRPC API endpoints for contacts
 - Task 18: Analytics tracking
 
 ### Phase 7: Additional Pages (Tasks 19-22)
+
 - Task 19: About page
 - Task 20: Resume page
 - Task 21: Contact page
 - Task 22: Blog infrastructure
 
 ### Phase 8: Polish & Optimization (Tasks 23-26)
+
 - Task 23: Performance optimization
 - Task 24: Accessibility audit
 - Task 25: SEO optimization
 - Task 26: Testing setup
 
 ### Phase 9: Future Integration (Task 27)
+
 - Task 27: Orval configuration for C# backend
 
 ---

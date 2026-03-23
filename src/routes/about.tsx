@@ -1,20 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { AboutHero } from '~/components/about/AboutHero';
-import { Timeline } from '~/components/about/Timeline';
-import { FadeInView } from '~/components/shared/FadeInView';
+import { createFileRoute } from '@tanstack/react-router'
+import { AboutHero } from '~/components/about/AboutHero'
+import { Timeline } from '~/components/about/Timeline'
+import { FadeInView } from '~/components/shared/FadeInView'
 
-export const Route = createFileRoute('/about')({ component: AboutPage });
+export const Route = createFileRoute('/about')({ component: AboutPage })
 
 interface ValueCard {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
+  icon: React.ReactNode
+  title: string
+  description: string
 }
 
-const values: ValueCard[] = [
+const values: Array<ValueCard> = [
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -29,7 +34,12 @@ const values: ValueCard[] = [
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -44,7 +54,12 @@ const values: ValueCard[] = [
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -59,7 +74,12 @@ const values: ValueCard[] = [
   },
   {
     icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -72,7 +92,7 @@ const values: ValueCard[] = [
     description:
       'Your business goals drive my technical decisions. I focus on delivering value, understanding your needs, and building solutions that grow with you.',
   },
-];
+]
 
 function AboutPage() {
   return (
@@ -91,7 +111,8 @@ function AboutPage() {
               My Approach
             </h2>
             <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
-              The principles that guide my work and ensure successful project outcomes.
+              The principles that guide my work and ensure successful project
+              outcomes.
             </p>
           </FadeInView>
 
@@ -105,10 +126,14 @@ function AboutPage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-text-primary mb-2">{value.title}</h3>
+                  <h3 className="text-xl font-semibold text-text-primary mb-2">
+                    {value.title}
+                  </h3>
 
                   {/* Description */}
-                  <p className="text-text-secondary text-sm leading-relaxed">{value.description}</p>
+                  <p className="text-text-secondary text-sm leading-relaxed">
+                    {value.description}
+                  </p>
                 </div>
               </FadeInView>
             ))}
@@ -124,15 +149,20 @@ function AboutPage() {
               Let's Build Something Great
             </h2>
             <p className="text-text-secondary mb-8 max-w-xl mx-auto">
-              Interested in working together? I'd love to hear about your project and explore how I
-              can help bring your vision to life.
+              Interested in working together? I'd love to hear about your
+              project and explore how I can help bring your vision to life.
             </p>
             <a
               href="/contact"
               className="inline-flex items-center gap-2 bg-accent-primary hover:bg-accent-tertiary text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300"
             >
               Get in Touch
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -145,5 +175,5 @@ function AboutPage() {
         </div>
       </section>
     </>
-  );
+  )
 }

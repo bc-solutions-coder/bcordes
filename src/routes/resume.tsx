@@ -57,10 +57,28 @@ const experience = [
 ]
 
 const skills = {
-  Frontend: ['JavaScript', 'TypeScript', 'Angular', 'React', 'Svelte', 'Blazor', 'GraphQL', 'HTML5', 'SCSS'],
+  Frontend: [
+    'JavaScript',
+    'TypeScript',
+    'Angular',
+    'React',
+    'Svelte',
+    'Blazor',
+    'GraphQL',
+    'HTML5',
+    'SCSS',
+  ],
   Backend: ['Node.js', 'Nest.js', 'C#', 'Java'],
   'Cloud & Infrastructure': ['AWS', 'Terraform', 'Docker', 'CI/CD pipelines'],
-  'Tools & Platforms': ['Atlassian Suite', 'Jira', 'Confluence', 'Rovo', 'Electron', 'Nx', 'Twilio'],
+  'Tools & Platforms': [
+    'Atlassian Suite',
+    'Jira',
+    'Confluence',
+    'Rovo',
+    'Electron',
+    'Nx',
+    'Twilio',
+  ],
   Databases: ['MySQL', 'PostgreSQL'],
 }
 
@@ -106,7 +124,9 @@ function ResumePage() {
         {/* Experience */}
         <FadeInView delay={100}>
           <section className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">Experience</h2>
+            <h2 className="mb-6 text-2xl font-bold text-text-primary">
+              Experience
+            </h2>
             <div className="space-y-8">
               {experience.map((job, index) => (
                 <div
@@ -117,13 +137,18 @@ function ResumePage() {
                     <h3 className="text-lg font-semibold text-text-primary">
                       {job.title}
                     </h3>
-                    <span className="text-sm text-text-tertiary">{job.period}</span>
+                    <span className="text-sm text-text-tertiary">
+                      {job.period}
+                    </span>
                   </div>
                   <p className="mb-2 text-accent-secondary">{job.company}</p>
                   <p className="mb-3 text-text-secondary">{job.description}</p>
                   <ul className="space-y-1">
                     {job.highlights.map((highlight, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-text-secondary"
+                      >
                         <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent-primary" />
                         {highlight}
                       </li>
@@ -138,7 +163,9 @@ function ResumePage() {
         {/* Skills */}
         <FadeInView delay={200}>
           <section className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">Skills</h2>
+            <h2 className="mb-6 text-2xl font-bold text-text-primary">
+              Skills
+            </h2>
             <div className="grid gap-6 sm:grid-cols-2">
               {Object.entries(skills).map(([category, items]) => (
                 <div key={category}>
@@ -165,14 +192,18 @@ function ResumePage() {
         {/* Education */}
         <FadeInView delay={300}>
           <section>
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">Education</h2>
+            <h2 className="mb-6 text-2xl font-bold text-text-primary">
+              Education
+            </h2>
             <div className="space-y-4">
               {education.map((edu, index) => (
                 <div
                   key={index}
                   className="border-l-2 border-accent-primary/30 pl-6"
                 >
-                  <h3 className="font-semibold text-text-primary">{edu.degree}</h3>
+                  <h3 className="font-semibold text-text-primary">
+                    {edu.degree}
+                  </h3>
                   <p className="text-text-secondary">{edu.school}</p>
                   <p className="text-sm text-text-tertiary">{edu.year}</p>
                 </div>

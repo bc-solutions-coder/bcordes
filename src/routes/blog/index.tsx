@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { Calendar, Clock, Tag } from 'lucide-react'
+import type {BlogPost} from '@/lib/blog';
 import { FadeInView } from '@/components/shared/FadeInView'
-import { formatDate, type BlogPost } from '@/lib/blog'
+import {  formatDate } from '@/lib/blog'
 import { getBlogPosts } from '@/lib/blog.server'
 
 const fetchBlogPosts = createServerFn({ method: 'GET' }).handler(async () => {
@@ -79,7 +80,8 @@ function BlogIndex() {
               Blog
             </h1>
             <p className="max-w-2xl text-lg text-text-secondary">
-              Thoughts on software engineering, architecture patterns, and lessons learned from building products.
+              Thoughts on software engineering, architecture patterns, and
+              lessons learned from building products.
             </p>
           </FadeInView>
         </div>
@@ -90,7 +92,9 @@ function BlogIndex() {
         {posts.length === 0 ? (
           <FadeInView>
             <div className="rounded-xl border border-border-default bg-background-secondary p-12 text-center">
-              <p className="text-text-secondary">No blog posts yet. Check back soon!</p>
+              <p className="text-text-secondary">
+                No blog posts yet. Check back soon!
+              </p>
             </div>
           </FadeInView>
         ) : (

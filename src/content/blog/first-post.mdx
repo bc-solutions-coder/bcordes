@@ -1,7 +1,7 @@
 ---
-title: "Building a Modern Personal Site with TanStack Start"
-date: "2026-01-21"
-excerpt: "A deep dive into the architecture decisions and lessons learned while building this portfolio site using TanStack Start, React, and MDX."
+title: 'Building a Modern Personal Site with TanStack Start'
+date: '2026-01-21'
+excerpt: 'A deep dive into the architecture decisions and lessons learned while building this portfolio site using TanStack Start, React, and MDX.'
 tags: [TanStack, React, TypeScript, Architecture]
 ---
 
@@ -35,10 +35,9 @@ The implementation is straightforward. Each content type (projects, blog posts) 
 Rather than creating separate API routes, I colocated server functions with their consuming components:
 
 ```typescript
-const fetchBlogPosts = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    return getBlogPosts()
-  })
+const fetchBlogPosts = createServerFn({ method: 'GET' }).handler(async () => {
+  return getBlogPosts()
+})
 ```
 
 This keeps related code together and makes the data flow obvious. When you open a route file, you see both the data requirements and the component that renders them.

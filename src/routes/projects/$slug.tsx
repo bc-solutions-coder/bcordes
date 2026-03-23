@@ -1,9 +1,9 @@
-import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
+import type {ShowcaseMeta} from '@/content/projects';
 import { FadeInView } from '@/components/shared/FadeInView'
 import { Badge } from '@/components/ui/badge'
-import { getShowcases, type ShowcaseMeta } from '@/content/projects'
-import { getShowcaseContent } from '@/content/projects'
+import {  getShowcaseContent, getShowcases  } from '@/content/projects'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ShowcaseDetailPage,
@@ -16,7 +16,9 @@ export const Route = createFileRoute('/projects/$slug')({
   notFoundComponent: () => (
     <div className="min-h-screen bg-background-primary">
       <div className="mx-auto max-w-4xl px-6 py-16 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-text-primary">Project Not Found</h1>
+        <h1 className="mb-4 text-3xl font-bold text-text-primary">
+          Project Not Found
+        </h1>
         <p className="mb-8 text-text-secondary">
           The project you are looking for does not exist.
         </p>
@@ -62,7 +64,9 @@ function ShowcaseDetailPage() {
             </h1>
 
             {/* Description */}
-            <p className="mb-6 text-lg text-text-secondary">{showcase.description}</p>
+            <p className="mb-6 text-lg text-text-secondary">
+              {showcase.description}
+            </p>
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">

@@ -42,8 +42,8 @@ export function Content() {
           subscription management with multi-currency support
         </li>
         <li>
-          <strong>Storage</strong> — File upload and management with configurable
-          storage backends
+          <strong>Storage</strong> — File upload and management with
+          configurable storage backends
         </li>
         <li>
           <strong>Messaging</strong> — Announcements, notifications, and
@@ -62,8 +62,8 @@ export function Content() {
           separation
         </li>
         <li>
-          <strong>OpenIddict Integration</strong> — Full OIDC provider with PKCE,
-          token introspection, and dynamic client registration
+          <strong>OpenIddict Integration</strong> — Full OIDC provider with
+          PKCE, token introspection, and dynamic client registration
         </li>
         <li>
           <strong>Rate Limiting</strong> — Per-tenant and per-endpoint rate

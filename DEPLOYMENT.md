@@ -14,6 +14,7 @@ This guide covers deploying your personal site to your server using Docker, GitH
 ### 1. Enable GitHub Container Registry
 
 GitHub Container Registry (GHCR) is enabled by default. Your images will be pushed to:
+
 ```
 ghcr.io/susp3nse/bcordes:latest
 ```
@@ -23,6 +24,7 @@ ghcr.io/susp3nse/bcordes:latest
 No additional configuration needed! The workflow uses the built-in `GITHUB_TOKEN` which has permission to write to GHCR.
 
 **Optional**: Make the package public (by default it's private)
+
 1. Go to your repository on GitHub
 2. Click on "Packages" in the right sidebar
 3. Click on the `bcordes` package
@@ -48,6 +50,7 @@ No additional configuration needed! The workflow uses the built-in `GITHUB_TOKEN
    - Paste into the editor
 
 5. **Environment variables** (if using database):
+
    ```
    DATABASE_URL=postgresql://user:password@host:5432/dbname
    ```
@@ -102,6 +105,7 @@ If your image is private, you'll need to authenticate:
 ### For Development (Continuous Deployment)
 
 Push to main branch:
+
 ```bash
 git add .
 git commit -m "feat: add new feature"
@@ -109,12 +113,14 @@ git push origin main
 ```
 
 This will trigger a build and push an image tagged with:
+
 - `latest`
 - `main-<git-sha>`
 
 ### For Production Releases (Versioned Deployment)
 
 Create a version tag:
+
 ```bash
 # Create and push a version tag
 git tag v1.0.0
@@ -122,21 +128,24 @@ git push origin v1.0.0
 ```
 
 This will create images tagged with:
+
 - `v1.0.0` (full version)
 - `v1.0` (minor version)
 - `v1` (major version)
 - `latest`
 
 You can then update your `docker-compose.prod.yml` to pin to a specific version:
+
 ```yaml
 services:
   web:
-    image: ghcr.io/susp3nse/bcordes:v1.0.0  # Pin to specific version
+    image: ghcr.io/susp3nse/bcordes:v1.0.0 # Pin to specific version
 ```
 
 ## Portainer Stack Management
 
 ### Update to Latest Version
+
 ```bash
 # In Portainer, click "Pull and redeploy"
 # Or via CLI on your server:
@@ -145,15 +154,19 @@ docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ### View Logs
+
 In Portainer:
+
 - Stacks → bcordes → Click on container → Logs
 
 Or via CLI:
+
 ```bash
 docker logs -f bcordes
 ```
 
 ### Rollback to Previous Version
+
 ```yaml
 # Edit stack and change image tag to previous version
 image: ghcr.io/susp3nse/bcordes:v0.9.0
@@ -163,11 +176,11 @@ image: ghcr.io/susp3nse/bcordes:v0.9.0
 
 Add these to your stack in Portainer:
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `NODE_ENV` | Set to `production` | Yes |
-| `DATABASE_URL` | PostgreSQL connection string | Only if using database |
-| `PORT` | Port to run on (default: 3000) | No |
+| Variable       | Description                    | Required               |
+| -------------- | ------------------------------ | ---------------------- |
+| `NODE_ENV`     | Set to `production`            | Yes                    |
+| `DATABASE_URL` | PostgreSQL connection string   | Only if using database |
+| `PORT`         | Port to run on (default: 3000) | No                     |
 
 ## Database Setup (Optional)
 
@@ -187,16 +200,19 @@ If you need a database, uncomment the `db` service in `docker-compose.prod.yml`:
 ## Troubleshooting
 
 ### Container fails to start
+
 - Check logs: `docker logs bcordes`
 - Verify environment variables are set
 - Ensure port 3000 is not already in use
 
 ### Image not found
+
 - Check if GitHub Actions workflow completed successfully
 - Verify registry authentication in Portainer
 - Ensure package is public or credentials are configured
 
 ### Database connection errors
+
 - Verify `DATABASE_URL` is correct
 - Check if database container is running
 - Ensure network connectivity between containers

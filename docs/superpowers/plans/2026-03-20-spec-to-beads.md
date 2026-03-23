@@ -13,6 +13,7 @@
 ### Task 1: Create the skill directory and SKILL.md
 
 **Files:**
+
 - Create: `~/.claude/skills/spec-to-beads/SKILL.md`
 
 - [ ] **Step 1: Create directory**

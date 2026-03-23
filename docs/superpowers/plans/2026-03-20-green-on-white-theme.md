@@ -15,24 +15,25 @@
 
 ## File Map
 
-| File | Action | Responsibility |
-|------|--------|---------------|
-| `src/styles.css` | Modify | All CSS variables, `@theme inline` mappings, font declarations, showcase content link fix |
-| `src/routes/__root.tsx` | Modify | Remove dark inline styles, add Google Fonts links, update theme-color |
-| `src/components/layout/Header.tsx` | Modify | Light theme nav: white bg, dark text, green CTA |
-| `src/components/layout/Footer.tsx` | Modify | Dark footer bg with light text, green links |
-| `src/components/layout/MobileNav.tsx` | Modify | Verify/fix token classes for light bg |
-| `src/components/home/Hero.tsx` | Rewrite | Two-column layout, logo-centered geometric graphic, orbit animation |
-| `src/components/home/ServicesGrid.tsx` | Modify | Green-tint section, left-border cards, tech pill tags |
-| `src/components/home/FeaturedWork.tsx` | Rewrite | Replace carousel with 2-col card grid, left-border cards |
-| `src/components/home/SkillsShowcase.tsx` | Modify | Green-tint section, pill badges with hover, category bar |
-| `package.json` | Modify | Remove `next-themes` |
+| File                                     | Action  | Responsibility                                                                            |
+| ---------------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
+| `src/styles.css`                         | Modify  | All CSS variables, `@theme inline` mappings, font declarations, showcase content link fix |
+| `src/routes/__root.tsx`                  | Modify  | Remove dark inline styles, add Google Fonts links, update theme-color                     |
+| `src/components/layout/Header.tsx`       | Modify  | Light theme nav: white bg, dark text, green CTA                                           |
+| `src/components/layout/Footer.tsx`       | Modify  | Dark footer bg with light text, green links                                               |
+| `src/components/layout/MobileNav.tsx`    | Modify  | Verify/fix token classes for light bg                                                     |
+| `src/components/home/Hero.tsx`           | Rewrite | Two-column layout, logo-centered geometric graphic, orbit animation                       |
+| `src/components/home/ServicesGrid.tsx`   | Modify  | Green-tint section, left-border cards, tech pill tags                                     |
+| `src/components/home/FeaturedWork.tsx`   | Rewrite | Replace carousel with 2-col card grid, left-border cards                                  |
+| `src/components/home/SkillsShowcase.tsx` | Modify  | Green-tint section, pill badges with hover, category bar                                  |
+| `package.json`                           | Modify  | Remove `next-themes`                                                                      |
 
 ---
 
 ### Task 1: Replace CSS Design Tokens
 
 **Files:**
+
 - Modify: `src/styles.css`
 
 This is the foundation. Every subsequent task depends on these tokens being correct.
@@ -58,7 +59,7 @@ Open `src/styles.css` and replace the entire `:root { ... }` block (lines 22–7
   --accent-primary: #2a6b22;
   --accent-secondary: #3d8b37;
   --accent-tertiary: #1e5218;
-  --accent-decorative: #6BBF59;
+  --accent-decorative: #6bbf59;
   --accent-light: #f0f9ec;
   --accent-mid: #dcefd4;
 
@@ -93,7 +94,7 @@ Open `src/styles.css` and replace the entire `:root { ... }` block (lines 22–7
   --input: oklch(0.922 0 0);
   --ring: oklch(0.39 0.11 142);
   --chart-1: oklch(0.39 0.11 142);
-  --chart-2: oklch(0.50 0.13 142);
+  --chart-2: oklch(0.5 0.13 142);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
@@ -193,7 +194,10 @@ body {
 After the `code { ... }` block, add:
 
 ```css
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: 'Outfit', sans-serif;
   line-height: 1.15;
 }
@@ -210,23 +214,41 @@ Before the `/* Reduced Motion Support */` section, add:
 ```css
 /* Hero graphic animations */
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spin-reverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 ```
 
@@ -267,6 +289,7 @@ git commit -m "feat: replace dark theme tokens with green-on-white light theme"
 ### Task 2: Update Root Document
 
 **Files:**
+
 - Modify: `src/routes/__root.tsx`
 - Modify: `package.json` (remove `next-themes`)
 
@@ -287,11 +310,13 @@ In the `meta` array, change `{ name: 'theme-color', content: '#10B981' }` to `{ 
 - [ ] **Step 3: Update `RootDocument` inline styles**
 
 Replace the `<html>` tag (remove `backgroundColor` and `colorScheme`):
+
 ```tsx
 <html lang="en">
 ```
 
 Replace the `<body>` tag (remove `backgroundColor` and `color`, keep `margin: 0`):
+
 ```tsx
 <body style={{ margin: 0 }}>
 ```
@@ -299,6 +324,7 @@ Replace the `<body>` tag (remove `backgroundColor` and `color`, keep `margin: 0`
 - [ ] **Step 4: Update `LoadingOverlay` colors**
 
 In the `LoadingOverlay` component, update the inline styles:
+
 - Background: `backgroundColor: '#ffffff'`
 - Spinner border: `border: '3px solid #e5e5e5'`
 - Spinner top color: `borderTopColor: '#2a6b22'`
@@ -324,6 +350,7 @@ git commit -m "feat: update root document for light theme with Google Fonts"
 ### Task 3: Restyle Header and Footer
 
 **Files:**
+
 - Modify: `src/components/layout/Header.tsx`
 - Modify: `src/components/layout/Footer.tsx`
 - Modify: `src/components/layout/MobileNav.tsx`
@@ -337,16 +364,21 @@ In `Header.tsx`, update the `<header>` element classes:
 ```
 
 Update the logo text — change `text-accent-secondary` to `text-accent-primary`:
+
 ```tsx
 <span className="text-accent-primary">Solutions</span>
 ```
 
 Update nav link hover — change `hover:text-accent-secondary` to `hover:text-accent-primary`:
+
 ```tsx
-<span className="text-text-secondary hover:text-accent-primary transition-colors">{link.label}</span>
+<span className="text-text-secondary hover:text-accent-primary transition-colors">
+  {link.label}
+</span>
 ```
 
 Update active link class — change `text-accent-secondary` to `text-accent-primary`:
+
 ```tsx
 activeProps={{ className: `${navigationMenuTriggerStyle()} text-accent-primary` }}
 ```
@@ -378,6 +410,7 @@ In `Footer.tsx`, update the `<footer>` element:
 ```
 
 Update all text colors inside the footer:
+
 - Brand text: change `text-text-primary` to `text-white` and `text-accent-secondary` to `text-[#a8e6a0]`
 - Tagline: change `text-text-secondary` to `text-white/70`
 - Section headings: change `text-text-primary` to `text-white`
@@ -398,6 +431,7 @@ In `MobileNav.tsx`, the background/border token classes (`bg-background-primary`
 
 Run: `pnpm dev`
 Open the site. Verify:
+
 - Header: white/frosted background, dark nav text, green CTA
 - Footer: dark background, light text, green links
 - Mobile nav (resize to mobile): white drawer, dark text, green button
@@ -414,6 +448,7 @@ git commit -m "feat: restyle header, footer, and mobile nav for green-on-white t
 ### Task 4: Redesign Hero
 
 **Files:**
+
 - Rewrite: `src/components/home/Hero.tsx`
 
 - [ ] **Step 1: Rewrite Hero component**
@@ -553,6 +588,7 @@ The old Hero imported `Badge`, `Button`, and `AnimatedText`. The new version onl
 
 Run: `pnpm dev`
 Verify:
+
 - Two-column layout (text left, graphic right)
 - BC Solutions SVG logo visible in the center of the geometric graphic
 - Circles orbit slowly in opposite directions
@@ -573,6 +609,7 @@ git commit -m "feat: redesign hero with logo-centered geometric graphic"
 ### Task 5: Restyle ServicesGrid
 
 **Files:**
+
 - Modify: `src/components/home/ServicesGrid.tsx`
 
 - [ ] **Step 1: Rewrite ServicesGrid**
@@ -667,6 +704,7 @@ export function ServicesGrid() {
 - [ ] **Step 2: Visual check**
 
 Verify:
+
 - Green-tinted section background
 - White cards with green left border
 - Icon in green-light circle (no hover color flip — simplified)
@@ -685,6 +723,7 @@ git commit -m "feat: restyle services grid with left-border cards and green tags
 ### Task 6: Rewrite FeaturedWork as Card Grid
 
 **Files:**
+
 - Rewrite: `src/components/home/FeaturedWork.tsx`
 
 - [ ] **Step 1: Replace FeaturedWork with card grid**
@@ -778,6 +817,7 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
 - [ ] **Step 2: Visual check**
 
 Verify:
+
 - 2-column card grid (no carousel)
 - White cards with green left border
 - Year badge + client type label
@@ -797,6 +837,7 @@ git commit -m "feat: replace carousel with 2-column card grid for featured work"
 ### Task 7: Restyle SkillsShowcase
 
 **Files:**
+
 - Modify: `src/components/home/SkillsShowcase.tsx`
 
 - [ ] **Step 1: Rewrite SkillsShowcase**
@@ -879,6 +920,7 @@ export function SkillsShowcase() {
 - [ ] **Step 2: Visual check**
 
 Verify:
+
 - Green-tinted section background
 - 4-column grid with category names
 - Green bar before each category name
@@ -897,6 +939,7 @@ git commit -m "feat: restyle skills showcase with pill badges and green category
 ### Task 8: Add Contact CTA Section to Homepage
 
 **Files:**
+
 - Modify: `src/routes/index.tsx`
 
 - [ ] **Step 1: Add contact section to homepage**
@@ -994,6 +1037,7 @@ git commit -m "feat: add contact CTA section to homepage"
 
 Run: `pnpm dev`
 Walk through every page:
+
 - `/` — all homepage sections match the mockup's style
 - `/projects` — cards inherit new tokens (green accents, light borders)
 - `/projects/:slug` — showcase content readable on white bg, links accessible

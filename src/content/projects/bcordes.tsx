@@ -62,8 +62,8 @@ export function Content() {
           route params and search params
         </li>
         <li>
-          <strong>SSR</strong> — Server-side rendering for fast initial loads and
-          SEO
+          <strong>SSR</strong> — Server-side rendering for fast initial loads
+          and SEO
         </li>
         <li>
           <strong>Dark Mode</strong> — Theme toggling with custom design tokens

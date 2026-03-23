@@ -1,5 +1,5 @@
-import { readdir, readFile } from 'fs/promises'
-import { join } from 'path'
+import { readFile, readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { BlogFrontmatter, BlogPost } from './blog'
 
 const BLOG_DIR = join(process.cwd(), 'src/content/blog')
@@ -31,7 +31,11 @@ function parseFrontmatter(fileContent: string): {
     let value: unknown = line.slice(colonIndex + 1).trim()
 
     // Handle arrays (tags: [tag1, tag2])
-    if (typeof value === 'string' && value.startsWith('[') && value.endsWith(']')) {
+    if (
+      typeof value === 'string' &&
+      value.startsWith('[') &&
+      value.endsWith(']')
+    ) {
       value = value
         .slice(1, -1)
         .split(',')
@@ -44,7 +48,11 @@ function parseFrontmatter(fileContent: string): {
       value = false
     }
     // Handle numbers
-    else if (typeof value === 'string' && !isNaN(Number(value)) && value !== '') {
+    else if (
+      typeof value === 'string' &&
+      !isNaN(Number(value)) &&
+      value !== ''
+    ) {
       value = Number(value)
     }
     // Handle quoted strings
@@ -63,12 +71,14 @@ function parseFrontmatter(fileContent: string): {
  */
 function validateFrontmatter(
   frontmatter: Record<string, unknown>,
-  slug: string
+  slug: string,
 ): BlogFrontmatter {
   const required = ['title', 'date', 'excerpt', 'tags']
   for (const field of required) {
     if (!(field in frontmatter)) {
-      throw new Error(`Missing required frontmatter field "${field}" in ${slug}.mdx`)
+      throw new Error(
+        `Missing required frontmatter field "${field}" in ${slug}.mdx`,
+      )
     }
   }
 
@@ -96,7 +106,7 @@ function calculateReadTime(content: string): number {
 /**
  * Get all blog posts from the content/blog directory
  */
-export async function getBlogPosts(): Promise<BlogPost[]> {
+export async function getBlogPosts(): Promise<Array<BlogPost>> {
   try {
     const files = await readdir(BLOG_DIR)
     const mdxFiles = files.filter((file) => file.endsWith('.mdx'))
@@ -116,7 +126,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           content,
           readTime: calculateReadTime(content),
         }
-      })
+      }),
     )
 
     // Filter out unpublished posts and sort by date descending
@@ -139,7 +149,9 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 /**
  * Get a single blog post by slug
  */
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<BlogPost | null> {
   try {
     const filePath = join(BLOG_DIR, `${slug}.mdx`)
     const fileContent = await readFile(filePath, 'utf-8')
@@ -165,4 +177,3 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
     throw error
   }
 }
-

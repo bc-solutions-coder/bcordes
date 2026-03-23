@@ -15,6 +15,7 @@ The login/register UI lives on Wallow (redirect-based flow, same pattern as Keyc
 **Library swap:** Replace `arctic` with `openid-client`. openid-client supports OpenID Connect Discovery (fetches `/.well-known/openid-configuration`), eliminating the need to hardcode endpoint URLs.
 
 **Auth flow (unchanged pattern):**
+
 1. User clicks "Sign In" → frontend redirects to Wallow's `/connect/authorize` (via openid-client)
 2. User authenticates on Wallow's hosted login page (`/connect/login`)
 3. Wallow redirects back to `/auth/callback` with authorization code
@@ -27,20 +28,21 @@ The login/register UI lives on Wallow (redirect-based flow, same pattern as Keyc
 
 Wallow's OpenIddict exposes standard endpoints:
 
-| Endpoint | Path | Purpose |
-|----------|------|---------|
-| Authorization | `/connect/authorize` | Start auth code flow |
-| Token | `/connect/token` | Exchange code / refresh / client credentials |
-| Logout | `/connect/logout` | End session |
-| Login UI | `/connect/login` | Wallow-hosted login page |
-| Register UI | `/connect/register` | Wallow-hosted registration page |
-| Discovery | `/.well-known/openid-configuration` | Auto-discovery of all endpoints |
+| Endpoint      | Path                                | Purpose                                      |
+| ------------- | ----------------------------------- | -------------------------------------------- |
+| Authorization | `/connect/authorize`                | Start auth code flow                         |
+| Token         | `/connect/token`                    | Exchange code / refresh / client credentials |
+| Logout        | `/connect/logout`                   | End session                                  |
+| Login UI      | `/connect/login`                    | Wallow-hosted login page                     |
+| Register UI   | `/connect/register`                 | Wallow-hosted registration page              |
+| Discovery     | `/.well-known/openid-configuration` | Auto-discovery of all endpoints              |
 
 All endpoints are discovered automatically via openid-client — the frontend only needs the issuer URL.
 
 ## Environment Variables
 
 **Remove** (11 vars):
+
 - `VITE_KEYCLOAK_URL`
 - `VITE_KEYCLOAK_REALM`
 - `VITE_KEYCLOAK_CLIENT_ID`
@@ -54,6 +56,7 @@ All endpoints are discovered automatically via openid-client — the frontend on
 - `WALLOW_TOKEN_URL`
 
 **Add** (6 vars):
+
 - `OIDC_ISSUER` — Wallow's base URL (e.g., `https://api.bcordes.dev`). openid-client fetches discovery from this.
 - `OIDC_CLIENT_ID` — OAuth2 client ID for user-facing auth
 - `OIDC_CLIENT_SECRET` — OAuth2 client secret for user-facing auth
@@ -68,6 +71,7 @@ All endpoints are discovered automatically via openid-client — the frontend on
 Replace the arctic KeyCloak class with openid-client discovery.
 
 **Exports:**
+
 - `getAuthorizationUrl(state, codeVerifier)` — Returns the authorization URL with PKCE challenge
 - `exchangeCode(code, codeVerifier)` — Exchanges authorization code for tokens
 - `refreshToken(refreshToken)` — Refreshes an access token
@@ -77,6 +81,7 @@ Replace the arctic KeyCloak class with openid-client discovery.
 **Return types:** `exchangeCode()` and `refreshToken()` return a plain object `{ accessToken: string, refreshToken: string, idToken: string, expiresIn: number }` — not openid-client's raw response object. This keeps consumers (`client.ts`, `middleware.ts`, `callback.ts`) decoupled from the library.
 
 **Implementation:**
+
 - On first call, discover the provider via `OIDC_ISSUER/.well-known/openid-configuration` (cache the config)
 - If discovery fetch fails, throw immediately — the server cannot serve auth routes without a valid provider config. Each auth route will return 500. No retry/fallback.
 - Use `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_REDIRECT_URI` for the client
@@ -102,6 +107,7 @@ Same logic as today, but using openid-client instead of arctic.
 - Clear OAuth cookies, redirect to return URL
 
 **Claim mapping:** OpenIddict may use different claim names than Keycloak. The callback extracts these standard claims from the access token:
+
 - `sub` → user ID
 - `name` or `preferred_username` → display name
 - `email` → email
@@ -127,11 +133,13 @@ Reads from session cookie, not from the OIDC provider.
 ### 6. `src/lib/auth/middleware.ts` — Update
 
 **`getAuthUser()`:**
+
 - Unseal session (same as today)
 - Check token expiry — if within 30s of expiring, refresh via `oidc.ts`'s `refreshToken()`
 - Update session with new tokens if refreshed
 
 **`requireAuth()`:**
+
 - No change — checks session existence and redirects to `/auth/login`
 
 ### 7. `src/lib/auth/types.ts` — Update

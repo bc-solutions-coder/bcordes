@@ -1,14 +1,14 @@
-import { FadeInView } from '~/components/shared/FadeInView';
+import { FadeInView } from '~/components/shared/FadeInView'
 
 interface TimelineEntry {
-  period: string;
-  role: string;
-  company: string;
-  description: string;
-  isCurrent?: boolean;
+  period: string
+  role: string
+  company: string
+  description: string
+  isCurrent?: boolean
 }
 
-const timelineData: TimelineEntry[] = [
+const timelineData: Array<TimelineEntry> = [
   {
     period: 'Nov 2025 - Feb 2026',
     role: 'Freelance Software Engineer',
@@ -38,7 +38,7 @@ const timelineData: TimelineEntry[] = [
     description:
       'Developed automation scripts and user-defined functions for daily testing. Designed and ran smoke tests in pre-production and production environments.',
   },
-];
+]
 
 export function Timeline() {
   return (
@@ -49,7 +49,8 @@ export function Timeline() {
             Career Journey
           </h2>
           <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
-            A timeline of my professional growth and the experiences that shaped my expertise.
+            A timeline of my professional growth and the experiences that shaped
+            my expertise.
           </p>
         </FadeInView>
 
@@ -106,7 +107,9 @@ export function Timeline() {
                       <h3 className="text-xl font-semibold text-text-primary mb-1">
                         {entry.role}
                       </h3>
-                      <p className="text-accent-secondary font-medium mb-3">{entry.company}</p>
+                      <p className="text-accent-secondary font-medium mb-3">
+                        {entry.company}
+                      </p>
 
                       {/* Description */}
                       <p className="text-text-secondary text-sm leading-relaxed">
@@ -124,5 +127,5 @@ export function Timeline() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
+import type { ShowcaseMeta } from '@/content/projects'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { ShowcaseMeta } from '@/content/projects'
 
 interface ProjectCardProps {
   showcase: ShowcaseMeta
@@ -20,7 +20,7 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
         'transition-all duration-300 ease-out',
         'hover:scale-[1.02] hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary',
-        className
+        className,
       )}
     >
       {/* Image Container */}

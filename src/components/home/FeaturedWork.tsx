@@ -1,17 +1,17 @@
-import { Link } from '@tanstack/react-router';
-import { ArrowRight } from 'lucide-react';
-import { FadeInView } from '~/components/shared/FadeInView';
-import { Badge } from '~/components/ui/badge';
-import { Button } from '~/components/ui/button';
-import type { ShowcaseMeta } from '@/content/projects';
+import { Link } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
+import type { ShowcaseMeta } from '@/content/projects'
+import { FadeInView } from '~/components/shared/FadeInView'
+import { Badge } from '~/components/ui/badge'
+import { Button } from '~/components/ui/button'
 
 interface FeaturedWorkProps {
-  showcases: ShowcaseMeta[];
+  showcases: Array<ShowcaseMeta>
 }
 
 export function FeaturedWork({ showcases }: FeaturedWorkProps) {
   if (showcases.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -82,5 +82,5 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
         </FadeInView>
       </div>
     </section>
-  );
+  )
 }

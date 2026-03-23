@@ -12,12 +12,12 @@ The bcordes frontend needs to be deployed alongside the Wallow (.NET) backend as
 
 A single `docker-compose.prod.yml` in this repo brings up the entire stack:
 
-| Service    | Image                                         | Purpose                |
-|------------|-----------------------------------------------|------------------------|
-| `web`      | `ghcr.io/susp3nse/bcordes:latest`       | Frontend (SSR + static)|
-| `wallow`  | `ghcr.io/bc-solutions-coder/wallow:latest`   | Backend API            |
-| `postgres` | `postgres:17-alpine`                          | Wallow's database     |
-| `valkey`   | `valkey/valkey:8-alpine`                       | Wallow's cache        |
+| Service    | Image                                      | Purpose                 |
+| ---------- | ------------------------------------------ | ----------------------- |
+| `web`      | `ghcr.io/susp3nse/bcordes:latest`          | Frontend (SSR + static) |
+| `wallow`   | `ghcr.io/bc-solutions-coder/wallow:latest` | Backend API             |
+| `postgres` | `postgres:17-alpine`                       | Wallow's database       |
+| `valkey`   | `valkey/valkey:8-alpine`                   | Wallow's cache          |
 
 - All services share a `personal-network` Docker network
 - `web` depends on `wallow`; `wallow` depends on `postgres` + `valkey`
@@ -37,6 +37,7 @@ A single `docker-compose.prod.yml` in this repo brings up the entire stack:
 Remove stale copies from the runtime stage:
 
 **Remove:**
+
 - `COPY --from=builder /app/drizzle ./drizzle`
 - `COPY --from=builder /app/scripts ./scripts`
 - `COPY --from=builder /app/src/db ./src/db`
@@ -47,6 +48,7 @@ Remove stale copies from the runtime stage:
 - `ENTRYPOINT ["./docker-entrypoint.sh"]`
 
 **Replace entrypoint with:**
+
 ```dockerfile
 CMD ["node", ".output/server/index.mjs"]
 ```
@@ -71,11 +73,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wallow}
       POSTGRES_DB: ${POSTGRES_DB:-wallow}
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wallow}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-wallow}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,7 +86,7 @@ services:
     image: valkey/valkey:8-alpine
     command: valkey-server --appendonly yes --requirepass ${VALKEY_PASSWORD:-devpassword}
     ports:
-      - "127.0.0.1:6379:6379"
+      - '127.0.0.1:6379:6379'
     volumes:
       - valkey_data:/data
 
@@ -151,7 +153,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -166,7 +168,7 @@ services:
     environment:
       REDISCLI_AUTH: ${VALKEY_PASSWORD}
     healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
+      test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5

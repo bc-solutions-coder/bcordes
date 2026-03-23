@@ -53,7 +53,10 @@ export function UserMenu() {
               {getInitials(user.name)}
             </AvatarFallback>
           </Avatar>
-          <span className="max-w-[120px] truncate">{user.name ?? user.email ?? 'User'}</span>
+          <span className="max-w-[120px] truncate">
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive against runtime OIDC data */}
+            {user.name ?? user.email ?? 'User'}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
@@ -65,15 +68,19 @@ export function UserMenu() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <a href="/auth/logout" className="cursor-pointer" onClick={(e) => {
-            e.preventDefault()
-            // POST to logout endpoint
-            const form = document.createElement('form')
-            form.method = 'POST'
-            form.action = '/auth/logout'
-            document.body.appendChild(form)
-            form.submit()
-          }}>
+          <a
+            href="/auth/logout"
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              // POST to logout endpoint
+              const form = document.createElement('form')
+              form.method = 'POST'
+              form.action = '/auth/logout'
+              document.body.appendChild(form)
+              form.submit()
+            }}
+          >
             <LogOut className="mr-2 h-4 w-4" />
             Sign Out
           </a>
