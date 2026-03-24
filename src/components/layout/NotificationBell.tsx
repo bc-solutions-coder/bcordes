@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useMemo } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { useCallback, useEffect } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -15,8 +16,11 @@ import { useUser } from '@/hooks/useUser'
 import { useSignalR } from '@/hooks/useSignalR'
 import {
   fetchNotifications,
+  fetchUnreadCount,
+  markAllNotificationsRead,
   markNotificationRead,
 } from '@/server-fns/notifications'
+import { getNotificationRoute } from '@/lib/notifications/routing'
 import type { Notification } from '@/lib/wallow/types'
 
 function timeAgo(dateStr: string): string {
@@ -45,26 +49,52 @@ export function NotificationBell() {
     refetchInterval: 60_000,
   })
 
+  const { data: unreadCount = 0 } = useQuery<number>({
+    queryKey: ['notifications', 'unread-count'],
+    queryFn: () => fetchUnreadCount(),
+    enabled: !!user,
+    refetchInterval: 60_000,
+  })
+
+  const markAllRead = useMutation({
+    mutationFn: () => markAllNotificationsRead(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unread-count'],
+      })
+    },
+  })
+
   useEffect(() => {
     if (!user) return
-    const unsubscribe = subscribe('NotificationCreated', () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-    })
+    const unsubscribe = subscribe(
+      'NotificationCreated',
+      (envelope: { payload?: { title: string } }) => {
+        queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        queryClient.invalidateQueries({
+          queryKey: ['notifications', 'unread-count'],
+        })
+        if (document.visibilityState === 'visible') {
+          toast(envelope.payload?.title ?? 'New notification')
+        }
+      },
+    )
     return unsubscribe
   }, [user, subscribe, queryClient])
 
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.readAt).length,
-    [notifications],
-  )
+  const displayedNotifications = notifications.slice(0, 5)
 
   const handleClick = useCallback(
     async (notification: Notification) => {
       if (!notification.readAt) {
         await markNotificationRead({ data: { id: notification.id } })
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        queryClient.invalidateQueries({
+          queryKey: ['notifications', 'unread-count'],
+        })
       }
-      navigate({ to: '/dashboard/inquiries' })
+      navigate({ to: getNotificationRoute(notification) })
     },
     [navigate, queryClient],
   )
@@ -77,7 +107,7 @@ export function NotificationBell() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative hidden md:inline-flex text-text-secondary hover:text-accent-primary"
+          className="relative text-text-secondary hover:text-accent-primary"
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -89,18 +119,29 @@ export function NotificationBell() {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
-        <div className="border-b border-border-default px-4 py-3">
+        <div className="flex items-center justify-between border-b border-border-default px-4 py-3">
           <h3 className="text-sm font-semibold text-text-primary">
             Notifications
           </h3>
+          {unreadCount > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto px-2 py-1 text-xs text-accent-primary hover:text-accent-primary/80"
+              onClick={() => markAllRead.mutate()}
+              disabled={markAllRead.isPending}
+            >
+              Mark all as read
+            </Button>
+          )}
         </div>
         <div className="max-h-80 overflow-y-auto">
-          {notifications.length === 0 ? (
+          {displayedNotifications.length === 0 ? (
             <p className="px-4 py-6 text-center text-sm text-text-secondary">
               No notifications
             </p>
           ) : (
-            notifications.map((n) => (
+            displayedNotifications.map((n) => (
               <button
                 key={n.id}
                 onClick={() => handleClick(n)}
@@ -120,6 +161,14 @@ export function NotificationBell() {
               </button>
             ))
           )}
+        </div>
+        <div className="border-t border-border-default px-4 py-2">
+          <Link
+            to="/dashboard/notifications"
+            className="block text-center text-xs font-medium text-accent-primary hover:text-accent-primary/80"
+          >
+            View all notifications
+          </Link>
         </div>
       </PopoverContent>
     </Popover>

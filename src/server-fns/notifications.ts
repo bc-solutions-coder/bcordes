@@ -1,13 +1,30 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { createWallowClient } from '~/lib/wallow/client'
-import type { Notification } from '~/lib/wallow/types'
+import type {
+  Notification,
+  NotificationSettings,
+  PaginatedResponse,
+  PushDevice,
+} from '~/lib/wallow/types'
 
 export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
-    const response = await client.get('/api/notifications')
-    return (await response.json()) as Notification[]
+    const response = await client.get(
+      '/api/v1/notifications?pageNumber=1&pageSize=20',
+    )
+    const paginated =
+      (await response.json()) as PaginatedResponse<Notification>
+    return paginated.items
+  },
+)
+
+export const fetchUnreadCount = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const client = await createWallowClient()
+    const response = await client.get('/api/v1/notifications/unread-count')
+    return (await response.json()) as number
   },
 )
 
@@ -15,5 +32,76 @@ export const markNotificationRead = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    await client.patch(`/api/notifications/${data.id}/read`)
+    await client.post(`/api/v1/notifications/${data.id}/read`)
   })
+
+export const markAllNotificationsRead = createServerFn({
+  method: 'POST',
+}).handler(async () => {
+  const client = await createWallowClient()
+  await client.post('/api/v1/notifications/read-all')
+})
+
+export const fetchNotificationSettings = createServerFn({
+  method: 'GET',
+}).handler(async () => {
+  const client = await createWallowClient()
+  const response = await client.get('/api/v1/notification-settings')
+  return (await response.json()) as Array<NotificationSettings>
+})
+
+const updateChannelSettingSchema = z.object({
+  channelType: z.string(),
+  isEnabled: z.boolean(),
+})
+
+export const updateChannelSetting = createServerFn({ method: 'POST' })
+  .inputValidator(updateChannelSettingSchema)
+  .handler(async ({ data }) => {
+    const client = await createWallowClient()
+    await client.put('/api/v1/notification-settings/channel', data)
+  })
+
+const registerPushDeviceSchema = z.object({
+  endpoint: z.string(),
+  p256dh: z.string(),
+  auth: z.string(),
+})
+
+export const registerPushDevice = createServerFn({ method: 'POST' })
+  .inputValidator(registerPushDeviceSchema)
+  .handler(async ({ data }) => {
+    const client = await createWallowClient()
+    const response = await client.post('/api/v1/push/devices', data)
+    return (await response.json()) as PushDevice
+  })
+
+export const deregisterPushDevice = createServerFn({ method: 'POST' })
+  .inputValidator(z.object({ id: z.string() }))
+  .handler(async ({ data }) => {
+    const client = await createWallowClient()
+    await client.delete(`/api/v1/push/devices/${data.id}`)
+  })
+
+export const listPushDevices = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const client = await createWallowClient()
+    const response = await client.get('/api/v1/push/devices')
+    return (await response.json()) as Array<PushDevice>
+  },
+)
+
+export const fetchVapidPublicKey = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const client = await createWallowClient()
+    const response = await client.get('/api/v1/push/vapid-public-key')
+    return (await response.text()) as string
+  },
+)
+
+export const sendTestPush = createServerFn({ method: 'POST' }).handler(
+  async () => {
+    const client = await createWallowClient()
+    await client.post('/api/v1/push/send')
+  },
+)
