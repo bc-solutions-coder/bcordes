@@ -19,14 +19,14 @@ Co-located `*.test.ts(x)` files next to source files.
 
 **Priority order by risk/value:**
 
-| Priority | Area | What to test |
-|----------|------|-------------|
-| 1 | `src/lib/wallow/` | Client creation, token refresh, 401/429 retry logic, error wrapping to WallowError |
-| 2 | `src/server-fns/` | Inquiry CRUD, notification ops, auth guards (mock Wallow client) |
-| 3 | `src/lib/auth/` | Session sealing/unsealing, OIDC config, middleware auth guards |
-| 4 | `src/lib/notifications/` | Notification routing logic |
-| 5 | `src/hooks/` | useSignalR reconnect, usePushNotifications, useReducedMotion |
-| 6 | `src/components/contact/` | ContactForm validation states and submission flow |
+| Priority | Area                      | What to test                                                                       |
+| -------- | ------------------------- | ---------------------------------------------------------------------------------- |
+| 1        | `src/lib/wallow/`         | Client creation, token refresh, 401/429 retry logic, error wrapping to WallowError |
+| 2        | `src/server-fns/`         | Inquiry CRUD, notification ops, auth guards (mock Wallow client)                   |
+| 3        | `src/lib/auth/`           | Session sealing/unsealing, OIDC config, middleware auth guards                     |
+| 4        | `src/lib/notifications/`  | Notification routing logic                                                         |
+| 5        | `src/hooks/`              | useSignalR reconnect, usePushNotifications, useReducedMotion                       |
+| 6        | `src/components/contact/` | ContactForm validation states and submission flow                                  |
 
 ### E2E Tests (Playwright)
 
@@ -34,18 +34,19 @@ Tests in `e2e/tests/` directory at project root.
 
 **Priority order:**
 
-| Priority | Flow | What to verify |
-|----------|------|---------------|
-| 1 | Contact form | Fill form, submit, success state |
-| 2 | Public pages | Home, About, Projects, Blog render correctly |
-| 3 | Dashboard (authed) | Inquiries list, detail view, status updates |
-| 4 | Notifications | Bell indicator, notification center, mark read |
+| Priority | Flow               | What to verify                                 |
+| -------- | ------------------ | ---------------------------------------------- |
+| 1        | Contact form       | Fill form, submit, success state               |
+| 2        | Public pages       | Home, About, Projects, Blog render correctly   |
+| 3        | Dashboard (authed) | Inquiries list, detail view, status updates    |
+| 4        | Notifications      | Bell indicator, notification center, mark read |
 
 ## Infrastructure
 
 ### Vitest Configuration
 
 `vitest.config.ts` at project root:
+
 - Environment: jsdom
 - Path aliases: mirror `@/*` and `~/*` from tsconfig
 - Setup file: `src/test/setup.ts`

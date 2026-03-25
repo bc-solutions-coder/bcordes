@@ -13,9 +13,7 @@ export function useNotificationSelection(
   const selectAll = useCallback(
     (checked: boolean) => {
       setSelectedIds(
-        checked
-          ? new Set(filteredNotifications.map((n) => n.id))
-          : new Set(),
+        checked ? new Set(filteredNotifications.map((n) => n.id)) : new Set(),
       )
     },
     [filteredNotifications],

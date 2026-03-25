@@ -15,6 +15,7 @@
 ### Task 1: Pin seroval via pnpm override
 
 **Files:**
+
 - Modify: `package.json:90-95`
 
 **Step 1: Write the failing test**
@@ -53,6 +54,7 @@ git commit -m "fix(deps): pin seroval >=1.4.1 to resolve 5 high-severity CVEs"
 ### Task 2: Add COOP and COEP security headers
 
 **Files:**
+
 - Modify: `src/server/middleware/security-headers.ts:8-16`
 - Modify: `src/__tests__/security-headers.test.ts`
 
@@ -116,6 +118,7 @@ git commit -m "feat(security): add COOP and COEP headers for cross-origin isolat
 ### Task 3: Timing-safe OAuth state comparison
 
 **Files:**
+
 - Modify: `src/routes/auth/callback.ts:61`
 - Create: `src/__tests__/oauth-state-timing.test.ts`
 
@@ -128,13 +131,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-const SOURCE_PATH = resolve(
-  __dirname,
-  '..',
-  'routes',
-  'auth',
-  'callback.ts',
-)
+const SOURCE_PATH = resolve(__dirname, '..', 'routes', 'auth', 'callback.ts')
 
 function readSource(): string {
   return readFileSync(SOURCE_PATH, 'utf-8')
@@ -147,7 +144,12 @@ describe('OAuth callback — timing-safe state comparison', () => {
     // Must not use === for state comparison
     const stateComparisonLine = source
       .split('\n')
-      .find((line) => line.includes('state') && line.includes('storedState') && line.includes('==='))
+      .find(
+        (line) =>
+          line.includes('state') &&
+          line.includes('storedState') &&
+          line.includes('==='),
+      )
 
     expect(stateComparisonLine).toBeUndefined()
 
@@ -157,7 +159,9 @@ describe('OAuth callback — timing-safe state comparison', () => {
 
   it('should import timingSafeEqual from node:crypto', () => {
     const source = readSource()
-    expect(source).toMatch(/import.*timingSafeEqual.*from\s+['"]node:crypto['"]/)
+    expect(source).toMatch(
+      /import.*timingSafeEqual.*from\s+['"]node:crypto['"]/,
+    )
   })
 })
 ```
@@ -212,6 +216,7 @@ git commit -m "fix(auth): use timing-safe comparison for OAuth state parameter"
 ### Task 4: Service client 401 retry with token refresh
 
 **Files:**
+
 - Modify: `src/lib/wallow/service-client.ts:90-107`
 - Create: `src/__tests__/service-client-401.test.ts`
 
@@ -227,7 +232,8 @@ const mockDiscovery = vi.fn()
 
 vi.mock('openid-client', () => ({
   allowInsecureRequests: Symbol('allowInsecureRequests'),
-  clientCredentialsGrant: (...args: unknown[]) => mockClientCredentialsGrant(...args),
+  clientCredentialsGrant: (...args: unknown[]) =>
+    mockClientCredentialsGrant(...args),
   discovery: (...args: unknown[]) => mockDiscovery(...args),
 }))
 
@@ -242,7 +248,9 @@ describe('service client — 401 retry', () => {
     process.env.OIDC_SERVICE_CLIENT_SECRET = 'svc-secret'
     process.env.WALLOW_API_URL = 'https://api.test.local'
 
-    const fakeConfig = { serverMetadata: () => ({ issuer: 'https://auth.test.local' }) }
+    const fakeConfig = {
+      serverMetadata: () => ({ issuer: 'https://auth.test.local' }),
+    }
     mockDiscovery.mockResolvedValue(fakeConfig)
 
     fetchSpy = vi.fn()
@@ -270,7 +278,9 @@ describe('service client — 401 retry', () => {
     // First call returns 401, second succeeds
     fetchSpy
       .mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }))
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ ok: true }), { status: 200 }),
+      )
 
     const { serviceClient } = await import('@/lib/wallow/service-client')
     const response = await serviceClient.get('/api/v1/test')
@@ -386,6 +396,7 @@ git commit -m "fix(wallow): add 401 retry with token refresh to service client"
 ### Task 5: Graceful 403/404 error handling in server functions
 
 **Files:**
+
 - Modify: `src/server-fns/inquiries.ts:97-106`
 - Modify: `src/server-fns/notifications.ts:80-85`
 - Create: `src/__tests__/server-fn-error-handling.test.ts`
@@ -441,6 +452,7 @@ The existing `WallowError` already handles this correctly — Wallow scopes acce
 Review: `src/lib/wallow/client.ts:111-115` — `parseProblemDetails` already creates a proper `WallowError` for any non-ok response, and `WallowError.toJSON()` already strips `traceId`.
 
 No code changes needed. The existing error handling pipeline is already correct:
+
 1. Wallow returns 403/404 when user doesn't own the resource
 2. `createWallowClient()` wraps it in `WallowError`
 3. `WallowError.toJSON()` sanitizes the output
@@ -457,6 +469,7 @@ git commit -m "test: verify 403/404 error handling in server functions"
 ### Task 6: CSRF synchronizer token — session storage
 
 **Files:**
+
 - Modify: `src/lib/auth/types.ts:28-43`
 - Modify: `src/lib/auth/session.ts`
 - Modify: `src/routes/auth/callback.ts:80-88`
@@ -560,6 +573,7 @@ git commit -m "feat(auth): add CSRF token generation to session creation"
 ### Task 7: CSRF token — server function and validation middleware
 
 **Files:**
+
 - Create: `src/server-fns/csrf.ts`
 - Create: `src/server/middleware/csrf-validation.ts`
 - Modify: `src/__tests__/csrf-token.test.ts`
@@ -695,13 +709,13 @@ Only if lint/build required changes.
 
 ## Task Summary
 
-| Task | Description | Files Changed | Estimated Steps |
-|------|-------------|---------------|-----------------|
-| 1 | Pin seroval override | package.json | 4 |
-| 2 | COOP/COEP headers | security-headers.ts, test | 5 |
-| 3 | Timing-safe OAuth state | callback.ts, test | 6 |
-| 4 | Service client 401 retry | service-client.ts, test | 5 |
-| 5 | Verify 403/404 error handling | test only | 4 |
-| 6 | CSRF token — session storage | types.ts, callback.ts, test | 6 |
-| 7 | CSRF token — server fn + middleware | csrf.ts, csrf-validation.ts, test | 6 |
-| 8 | Integration verification | none | 5 |
+| Task | Description                         | Files Changed                     | Estimated Steps |
+| ---- | ----------------------------------- | --------------------------------- | --------------- |
+| 1    | Pin seroval override                | package.json                      | 4               |
+| 2    | COOP/COEP headers                   | security-headers.ts, test         | 5               |
+| 3    | Timing-safe OAuth state             | callback.ts, test                 | 6               |
+| 4    | Service client 401 retry            | service-client.ts, test           | 5               |
+| 5    | Verify 403/404 error handling       | test only                         | 4               |
+| 6    | CSRF token — session storage        | types.ts, callback.ts, test       | 6               |
+| 7    | CSRF token — server fn + middleware | csrf.ts, csrf-validation.ts, test | 6               |
+| 8    | Integration verification            | none                              | 5               |

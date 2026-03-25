@@ -69,7 +69,7 @@ export interface InquiryCommentAddedPayload {
 
 /** Generic paginated response from the Wallow backend */
 export interface PaginatedResponse<T> {
-  items: T[]
+  items: Array<T>
   pageNumber: number
   pageSize: number
   totalCount: number

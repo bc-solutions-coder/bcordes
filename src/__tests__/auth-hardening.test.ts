@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SessionData, User } from '@/lib/auth/types'
 
+import { getAuthUser } from '@/lib/auth/middleware'
+
 // ---------------------------------------------------------------------------
 // Hoisted mocks for getAuthUser tests (session + oidc)
 // ---------------------------------------------------------------------------
@@ -29,8 +31,6 @@ vi.mock('@/lib/auth/oidc', () => ({
   refreshToken: mockRefreshToken,
   fetchUserProfile: mockFetchUserProfile,
 }))
-
-import { getAuthUser } from '@/lib/auth/middleware'
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -129,9 +129,9 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
       const state = oidc.randomState()
       const verifier = oidc.randomPKCECodeVerifier()
       // getConfig() is called internally — should throw because OIDC_CLIENT_ID is empty
-      await expect(
-        oidc.getAuthorizationUrl(state, verifier),
-      ).rejects.toThrow(/OIDC_CLIENT_ID/i)
+      await expect(oidc.getAuthorizationUrl(state, verifier)).rejects.toThrow(
+        /OIDC_CLIENT_ID/i,
+      )
     } finally {
       process.env = saved
     }
@@ -151,9 +151,9 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
       const oidc = await import('@/lib/auth/oidc')
       const state = oidc.randomState()
       const verifier = oidc.randomPKCECodeVerifier()
-      await expect(
-        oidc.getAuthorizationUrl(state, verifier),
-      ).rejects.toThrow(/OIDC_REDIRECT_URI/i)
+      await expect(oidc.getAuthorizationUrl(state, verifier)).rejects.toThrow(
+        /OIDC_REDIRECT_URI/i,
+      )
     } finally {
       process.env = saved
     }

@@ -18,10 +18,12 @@ Prepare bcordes.dev for production deployment at `bcordes.dev` (not `site.bcorde
 ### 2. Notification System (Bell Icon)
 
 **Server functions** (`src/server-fns/notifications.ts`):
+
 - `fetchNotifications()` — `GET /api/notifications` (authenticated)
 - `markNotificationRead({ id })` — `PATCH /api/notifications/{id}/read`
 
 **Component** (`src/components/layout/NotificationBell.tsx`):
+
 - Bell icon (lucide `Bell`) with unread count badge
 - Only renders when user is logged in
 - Dropdown panel (shadcn Popover or DropdownMenu) listing recent notifications
@@ -30,18 +32,22 @@ Prepare bcordes.dev for production deployment at `bcordes.dev` (not `site.bcorde
 - Initial data loaded via TanStack Query, refetched on SignalR events
 
 **Real-time updates:**
+
 - Subscribe to SignalR for `NotificationCreated` events
 - On event: invalidate the notifications query so the bell updates automatically
 
 **Placement:**
+
 - In `Header.tsx`, between "Get in Touch" button and `UserMenu`, only shown when logged in
 
 ### 3. Production URL Configuration
 
 **`docker-compose.prod.yml`:**
+
 - Change Pangolin label from `site.bcordes.dev` to `bcordes.dev`
 
 **`.env.example`:**
+
 - Change `OIDC_REDIRECT_URI` from `https://site.bcordes.dev/auth/callback` to `https://bcordes.dev/auth/callback`
 
 ## Out of Scope

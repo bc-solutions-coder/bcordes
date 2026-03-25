@@ -13,6 +13,7 @@
 ### Task 1: Delete login page and fix sign-in links
 
 **Files:**
+
 - Delete: `src/routes/login.tsx`
 - Modify: `src/components/layout/UserMenu.tsx:32-41`
 - Modify: `src/components/layout/MobileNav.tsx:99-107`
@@ -73,6 +74,7 @@ git commit -m "chore: remove login page, fix sign-in links to use /auth/login di
 ### Task 2: Update notification server functions
 
 **Files:**
+
 - Modify: `src/server-fns/notifications.ts`
 
 **Step 1: Rewrite notifications.ts with updated endpoint and mark-as-read**
@@ -118,6 +120,7 @@ git commit -m "fix: update notification endpoints from /api/communications/notif
 ### Task 3: Create NotificationBell component
 
 **Files:**
+
 - Create: `src/components/layout/NotificationBell.tsx`
 
 **Step 1: Create the NotificationBell component**
@@ -148,9 +151,7 @@ import type { Notification } from '@/lib/wallow/types'
 import { useEffect } from 'react'
 
 function timeAgo(dateStr: string): string {
-  const seconds = Math.floor(
-    (Date.now() - new Date(dateStr).getTime()) / 1000,
-  )
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
   if (seconds < 60) return 'just now'
   const minutes = Math.floor(seconds / 60)
   if (minutes < 60) return `${minutes}m ago`
@@ -274,6 +275,7 @@ git commit -m "feat: add NotificationBell component with real-time updates"
 ### Task 4: Wire NotificationBell into the Header
 
 **Files:**
+
 - Modify: `src/components/layout/Header.tsx:1-94`
 
 **Step 1: Add NotificationBell import and render**
@@ -289,8 +291,10 @@ import { NotificationBell } from './NotificationBell'
 2. Add `<NotificationBell />` in the button/menu area (line 81-89), between the "Get in Touch" button and `<UserMenu />`:
 
 ```tsx
-{/* CTA Button, User Menu, and Mobile Nav */}
-<div className="flex items-center gap-2">
+{
+  /* CTA Button, User Menu, and Mobile Nav */
+}
+;<div className="flex items-center gap-2">
   <Button
     asChild
     className="hidden md:inline-flex bg-accent-primary hover:bg-accent-tertiary text-white font-medium"
@@ -320,6 +324,7 @@ git commit -m "feat: add notification bell to header"
 ### Task 5: Fix production URLs
 
 **Files:**
+
 - Modify: `docker-compose.prod.yml:27`
 - Modify: `.env.example:26`
 
@@ -329,10 +334,10 @@ Change line 27:
 
 ```yaml
 # Before
-      - pangolin.proxy-resources.personal.full-domain=site.bcordes.dev
+- pangolin.proxy-resources.personal.full-domain=site.bcordes.dev
 
 # After
-      - pangolin.proxy-resources.personal.full-domain=bcordes.dev
+- pangolin.proxy-resources.personal.full-domain=bcordes.dev
 ```
 
 **Step 2: Update .env.example redirect URI**
@@ -371,6 +376,7 @@ Expected: No lint errors, build succeeds.
 **Step 2: Dev server smoke test**
 
 Run: `pnpm dev` and verify:
+
 - Home page loads
 - "Sign In" links point to `/auth/login` (not `/login`)
 - No `/login` route exists (404 if navigated directly)

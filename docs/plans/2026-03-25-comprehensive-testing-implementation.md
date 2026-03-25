@@ -13,6 +13,7 @@
 ### Task 1: Vitest Infrastructure
 
 **Files:**
+
 - Create: `vitest.config.ts`
 - Create: `src/test/setup.ts`
 
@@ -68,6 +69,7 @@ git commit -m "test: add vitest configuration and test setup"
 ### Task 2: Test Mock Factories
 
 **Files:**
+
 - Create: `src/test/mocks/wallow.ts`
 - Create: `src/test/mocks/auth.ts`
 - Create: `src/test/helpers/render.tsx`
@@ -174,9 +176,7 @@ export function renderWithProviders(
 
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
   }
 
@@ -201,6 +201,7 @@ git commit -m "test: add mock factories and render helper"
 ### Task 3: WallowError Unit Tests
 
 **Files:**
+
 - Create: `src/lib/wallow/errors.test.ts`
 - Reference: `src/lib/wallow/errors.ts`
 - Reference: `src/lib/wallow/types.ts`
@@ -233,7 +234,9 @@ describe('WallowError', () => {
   })
 
   it('falls back to title when detail is empty', () => {
-    const err = new WallowError(makeProblem({ detail: '', title: 'Bad Request' }))
+    const err = new WallowError(
+      makeProblem({ detail: '', title: 'Bad Request' }),
+    )
     expect(err.message).toBe('Bad Request')
   })
 
@@ -277,11 +280,15 @@ describe('WallowError', () => {
 
   describe('status helpers', () => {
     it('isNotFound is true for 404', () => {
-      expect(new WallowError(makeProblem({ status: 404 })).isNotFound).toBe(true)
+      expect(new WallowError(makeProblem({ status: 404 })).isNotFound).toBe(
+        true,
+      )
     })
 
     it('isForbidden is true for 403', () => {
-      expect(new WallowError(makeProblem({ status: 403 })).isForbidden).toBe(true)
+      expect(new WallowError(makeProblem({ status: 403 })).isForbidden).toBe(
+        true,
+      )
     })
 
     it('isUnauthorized is true for 401', () => {
@@ -326,6 +333,7 @@ git commit -m "test: add WallowError unit tests"
 ### Task 4: Notification Routing Unit Tests
 
 **Files:**
+
 - Create: `src/lib/notifications/routing.test.ts`
 - Reference: `src/lib/notifications/routing.ts`
 
@@ -338,9 +346,7 @@ import { describe, it, expect } from 'vitest'
 import { getNotificationRoute } from './routing'
 import type { Notification } from '@/lib/wallow/types'
 
-function makeNotification(
-  overrides: Partial<Notification> = {},
-): Notification {
+function makeNotification(overrides: Partial<Notification> = {}): Notification {
   return {
     id: 'notif-1',
     userId: 'user-1',
@@ -427,6 +433,7 @@ git commit -m "test: add notification routing unit tests"
 ### Task 5: parseUserFromToken Unit Tests
 
 **Files:**
+
 - Create: `src/lib/auth/oidc.test.ts`
 - Reference: `src/lib/auth/oidc.ts`
 
@@ -552,6 +559,7 @@ git commit -m "test: add parseUserFromToken unit tests"
 ### Task 6: withRefreshLock Unit Tests
 
 **Files:**
+
 - Create: `src/lib/auth/session.test.ts`
 - Reference: `src/lib/auth/session.ts`
 
@@ -668,6 +676,7 @@ git commit -m "test: add withRefreshLock concurrency tests"
 ### Task 7: useSignalR Hook Tests
 
 **Files:**
+
 - Create: `src/hooks/useSignalR.test.ts`
 - Reference: `src/hooks/useSignalR.ts`
 
@@ -860,6 +869,7 @@ git commit -m "test: add useSignalR hook tests with mock EventSource"
 ### Task 8: Playwright Infrastructure
 
 **Files:**
+
 - Create: `e2e/playwright.config.ts`
 - Create: `e2e/fixtures/auth.ts`
 - Create: `e2e/mocks/api.ts`
@@ -963,12 +973,9 @@ export async function mockWallowApi(page: Page) {
     },
   )
 
-  await page.route(
-    `${WALLOW_URL}/api/v1/notification-settings`,
-    (route) => {
-      return route.fulfill({ json: [] })
-    },
-  )
+  await page.route(`${WALLOW_URL}/api/v1/notification-settings`, (route) => {
+    return route.fulfill({ json: [] })
+  })
 }
 
 /** Override a specific API route with custom data */
@@ -987,6 +994,7 @@ export async function mockRoute(
 **Step 5: Add playwright scripts to package.json**
 
 Add to package.json scripts:
+
 ```json
 "test:e2e": "playwright test --config e2e/playwright.config.ts",
 "test:e2e:ui": "playwright test --config e2e/playwright.config.ts --ui"
@@ -1004,6 +1012,7 @@ git commit -m "test: add Playwright infrastructure with auth fixture and API moc
 ### Task 9: E2E Public Pages Tests
 
 **Files:**
+
 - Create: `e2e/tests/public-pages.spec.ts`
 
 **Step 1: Write tests**
@@ -1045,10 +1054,16 @@ test.describe('Public pages', () => {
     await page.getByRole('link', { name: /about/i }).first().click()
     await expect(page).toHaveURL(/\/about/)
 
-    await page.getByRole('link', { name: /projects/i }).first().click()
+    await page
+      .getByRole('link', { name: /projects/i })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/projects/)
 
-    await page.getByRole('link', { name: /contact/i }).first().click()
+    await page
+      .getByRole('link', { name: /contact/i })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/contact/)
   })
 })
@@ -1071,6 +1086,7 @@ git commit -m "test: add E2E tests for public pages"
 ### Task 10: E2E Contact Form Tests
 
 **Files:**
+
 - Create: `e2e/tests/contact-form.spec.ts`
 
 **Step 1: Write tests**
@@ -1193,6 +1209,7 @@ git commit -m "test: add E2E tests for contact form submission"
 ### Task 11: E2E Dashboard Tests (Authenticated)
 
 **Files:**
+
 - Create: `e2e/tests/dashboard.spec.ts`
 
 Note: These tests require the auth bypass fixture. The exact implementation depends on how the dev server handles sessions — you may need to set up a test session on the server side. If the cookie-based approach doesn't work because the server-side store is empty, an alternative is to mock the auth server function responses at the API level.
@@ -1271,6 +1288,7 @@ git commit -m "test: add scaffolded E2E dashboard tests (skipped pending auth by
 ### Task 12: Add .gitignore Entries and Final Verification
 
 **Files:**
+
 - Modify: `.gitignore`
 
 **Step 1: Add test artifact directories to .gitignore**

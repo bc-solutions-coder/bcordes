@@ -1,10 +1,6 @@
 import { useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AlertTriangle,
   Bell,
@@ -17,6 +13,7 @@ import {
   MessageCircleReply,
   MessageSquare,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Notification } from '@/lib/wallow/types'
 import type { NotificationType } from '@/hooks/useNotificationFilters'
 import { serverRequireAuth } from '@/server-fns/auth'
@@ -78,9 +75,7 @@ function NotificationRow({
       <div className="pt-1" onClick={(e) => e.stopPropagation()}>
         <Checkbox
           checked={selectedIds.has(notification.id)}
-          onCheckedChange={(checked) =>
-            onSelect(notification.id, !!checked)
-          }
+          onCheckedChange={(checked) => onSelect(notification.id, !!checked)}
           aria-label={`Select notification: ${notification.title}`}
         />
       </div>
@@ -160,12 +155,8 @@ function NotificationsIndexPage() {
     handleTypeFilter,
   } = useNotificationFilters(notifications)
 
-  const {
-    selectedIds,
-    allSelected,
-    selectAll,
-    selectOne,
-  } = useNotificationSelection(filteredNotifications)
+  const { selectedIds, allSelected, selectAll, selectOne } =
+    useNotificationSelection(filteredNotifications)
 
   useSignalREvents({
     NotificationCreated: () => invalidateNotifications(queryClient),
@@ -176,12 +167,19 @@ function NotificationsIndexPage() {
     onSuccess: () => {
       invalidateNotifications(queryClient)
     },
+    onError: () => {
+      toast.error('Failed to mark notification as read')
+    },
   })
 
   const markAllReadMutation = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
       invalidateNotifications(queryClient)
+      toast.success('All notifications marked as read')
+    },
+    onError: (error) => {
+      toast.error(`Failed to mark all as read: ${error.message}`)
     },
   })
 

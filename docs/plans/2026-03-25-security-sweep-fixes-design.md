@@ -12,12 +12,14 @@ Follow-up fixes from a comprehensive security sweep of the bcordes application. 
 **Files:** `src/routes/api/notifications/stream.ts`
 
 **Problems:**
+
 - `LogLevel.Debug` hardcoded for all environments — leaks user data in production logs
 - `hub.on` monkey-patch unconditionally logs all SignalR method invocations with payload previews
 - Missing `ReceiveNotification` (singular) event listener on reconnect — only 2 of 3 listeners re-registered
 - Console.log statements for connection status in all environments
 
 **Changes:**
+
 1. Set `LogLevel.Warning` when `NODE_ENV === 'production'`, `LogLevel.Debug` otherwise
 2. Wrap hub.on console.log in `NODE_ENV !== 'production'` guard
 3. Add `ReceiveNotification` to reconnect listener registration alongside `ReceiveNotifications` and `ReceivePresence`
@@ -44,12 +46,14 @@ Follow-up fixes from a comprehensive security sweep of the bcordes application. 
 **Files:** `src/server-fns/inquiries.ts`, `src/server-fns/notifications.ts`
 
 **Problem:**
+
 - `submitInquiryComment()` doesn't handle 403/404 from Wallow gracefully
 - `deregisterPushDevice()` doesn't handle 403/404 from Wallow gracefully
 
 **Context:** Wallow already enforces ownership scoping on both inquiry comments and push devices. No authorization logic needs to be added in TanStack Start.
 
 **Changes:**
+
 - Handle 403/404 responses from Wallow in both server functions
 - Surface appropriate user-facing error messages rather than generic failures
 
@@ -60,6 +64,7 @@ Follow-up fixes from a comprehensive security sweep of the bcordes application. 
 **Problem:** Missing `Cross-Origin-Opener-Policy` and `Cross-Origin-Embedder-Policy` headers.
 
 **Changes:**
+
 - Add `Cross-Origin-Opener-Policy: same-origin` — prevents other windows from getting a reference to yours
 - Add `Cross-Origin-Embedder-Policy: require-corp` — ensures all subresources explicitly opt in to being loaded
 - No third-party external resources are loaded, so `require-corp` is safe. If something breaks, relax to `credentialless`.
@@ -81,6 +86,7 @@ Follow-up fixes from a comprehensive security sweep of the bcordes application. 
 **Problem:** Both clients retry once immediately on 429 with no backoff.
 
 **Changes:**
+
 - Check for `Retry-After` header on 429 responses
 - Wait that duration, then retry once
 - If no `Retry-After` header, fall back to single immediate retry (current behavior)
@@ -90,6 +96,7 @@ Follow-up fixes from a comprehensive security sweep of the bcordes application. 
 **Problem:** Service client lacks 401 retry logic unlike the user client.
 
 **Changes:**
+
 - On 401 response, refresh the client credentials token via existing token cache/deduplication mechanism
 - Retry the request once with the new token
 - Mirrors the user client's existing 401 handling pattern
@@ -111,16 +118,16 @@ This closes the subdomain vector because even if cookies flow from a compromised
 
 ## Summary of Changes by File
 
-| File | Changes |
-|------|---------|
-| `src/routes/api/notifications/stream.ts` | Environment-gated logging, add missing reconnect listener |
-| `package.json` | Add pnpm seroval override |
-| `src/server-fns/inquiries.ts` | Handle 403/404 from Wallow on comment submission |
-| `src/server-fns/notifications.ts` | Handle 403/404 from Wallow on device deregistration |
-| `src/server/middleware/security-headers.ts` | Add COOP and COEP headers |
-| `src/routes/auth/callback.ts` | Timing-safe state comparison |
-| `src/lib/wallow/client.ts` | Retry-After support on 429 |
-| `src/lib/wallow/service-client.ts` | Retry-After support on 429, 401 retry with token refresh |
-| `src/lib/auth/session.ts` | Store CSRF token in session on creation |
-| New: CSRF middleware | Validate x-csrf-token header on state-changing requests |
-| New: CSRF server function | Expose `getCsrfToken()` for client retrieval |
+| File                                        | Changes                                                   |
+| ------------------------------------------- | --------------------------------------------------------- |
+| `src/routes/api/notifications/stream.ts`    | Environment-gated logging, add missing reconnect listener |
+| `package.json`                              | Add pnpm seroval override                                 |
+| `src/server-fns/inquiries.ts`               | Handle 403/404 from Wallow on comment submission          |
+| `src/server-fns/notifications.ts`           | Handle 403/404 from Wallow on device deregistration       |
+| `src/server/middleware/security-headers.ts` | Add COOP and COEP headers                                 |
+| `src/routes/auth/callback.ts`               | Timing-safe state comparison                              |
+| `src/lib/wallow/client.ts`                  | Retry-After support on 429                                |
+| `src/lib/wallow/service-client.ts`          | Retry-After support on 429, 401 retry with token refresh  |
+| `src/lib/auth/session.ts`                   | Store CSRF token in session on creation                   |
+| New: CSRF middleware                        | Validate x-csrf-token header on state-changing requests   |
+| New: CSRF server function                   | Expose `getCsrfToken()` for client retrieval              |

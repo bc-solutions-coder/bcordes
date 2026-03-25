@@ -44,7 +44,6 @@ const projectTypeLabels: Record<string, string> = {
   consulting: 'Consulting',
 }
 
-
 function DashboardInquiriesPage() {
   const { inquiries, isAdmin } = Route.useLoaderData()
   const router = useRouter()

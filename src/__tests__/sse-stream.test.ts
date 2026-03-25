@@ -1,7 +1,7 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { LogLevel } from '@microsoft/signalr'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { LogLevel } from '@microsoft/signalr'
 
 /**
  * Tests for SSE stream (src/routes/api/notifications/stream.ts).
@@ -19,7 +19,7 @@ import { resolve } from 'node:path'
 
 interface BuilderCalls {
   configureLoggingLevel: LogLevel | null
-  onHandlers: Map<string, Array<(...args: unknown[]) => void>>
+  onHandlers: Map<string, Array<(...args: Array<unknown>) => void>>
   oncloseCallback: (() => Promise<void>) | null
   started: boolean
 }
@@ -37,7 +37,7 @@ let primaryBuilder: BuilderCalls
 
 function makeFakeHub(calls: BuilderCalls) {
   return {
-    on: vi.fn((method: string, handler: (...args: unknown[]) => void) => {
+    on: vi.fn((method: string, handler: (...args: Array<unknown>) => void) => {
       const existing = calls.onHandlers.get(method) ?? []
       existing.push(handler)
       calls.onHandlers.set(method, existing)
@@ -45,8 +45,9 @@ function makeFakeHub(calls: BuilderCalls) {
     onclose: vi.fn((cb: () => Promise<void>) => {
       calls.oncloseCallback = cb
     }),
-    start: vi.fn(async () => {
+    start: vi.fn(() => {
       calls.started = true
+      return Promise.resolve()
     }),
     stop: vi.fn(),
   }
@@ -92,7 +93,7 @@ describe('SSE stream — debug logging and log sanitization', () => {
   async function setupMocksAndImport() {
     // Register fresh mocks before each dynamic import
     vi.doMock('@microsoft/signalr', async () => {
-      const actual = await vi.importActual<typeof import('@microsoft/signalr')>(
+      const actual = await vi.importActual<typeof import('@microsoft/signalr')>( // eslint-disable-line @typescript-eslint/consistent-type-imports
         '@microsoft/signalr',
       )
       return {
@@ -114,22 +115,26 @@ describe('SSE stream — debug logging and log sanitization', () => {
     })
 
     vi.doMock('~/lib/auth/session', () => ({
-      getSession: vi.fn(async () => ({
-        accessToken: 'test-access-token',
-        refreshToken: 'test-refresh-token',
-        user: {
-          id: 'usr_abc123-secret-id',
-          name: 'Test User',
-          email: 'test@test.com',
-        },
-      })),
+      getSession: vi.fn(() =>
+        Promise.resolve({
+          accessToken: 'test-access-token',
+          refreshToken: 'test-refresh-token',
+          user: {
+            id: 'usr_abc123-secret-id',
+            name: 'Test User',
+            email: 'test@test.com',
+          },
+        }),
+      ),
     }))
 
     vi.doMock('~/lib/auth/oidc', () => ({
-      refreshToken: vi.fn(async () => ({
-        accessToken: 'refreshed-access-token',
-        refreshToken: 'refreshed-refresh-token',
-      })),
+      refreshToken: vi.fn(() =>
+        Promise.resolve({
+          accessToken: 'refreshed-access-token',
+          refreshToken: 'refreshed-refresh-token',
+        }),
+      ),
     }))
 
     let capturedGetHandler: (() => Promise<Response>) | null = null
@@ -199,12 +204,15 @@ describe('SSE stream — debug logging and log sanitization', () => {
 
       // After refactoring, the onclose handler uses registerHubHandlers
       // instead of individual .on() calls — verify that call exists
-      const usesSharedRegistration =
-        oncloseBlock.includes('registerHubHandlers(reconnectedHub')
+      const usesSharedRegistration = oncloseBlock.includes(
+        'registerHubHandlers(reconnectedHub',
+      )
 
       if (usesSharedRegistration) {
         // Verify that HUB_EVENTS contains all 3 events
-        const hubEventsMatch = source.match(/const HUB_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/)
+        const hubEventsMatch = source.match(
+          /const HUB_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/,
+        )
         expect(hubEventsMatch).not.toBeNull()
         const eventsBlock = hubEventsMatch![1]
         expect(eventsBlock).toContain('ReceiveNotifications')
@@ -235,7 +243,7 @@ describe('SSE stream — debug logging and log sanitization', () => {
 
       const logCalls = (console.log as ReturnType<typeof vi.fn>).mock.calls
       const allLogContent = logCalls
-        .map((args: unknown[]) => args.join(' '))
+        .map((args: Array<unknown>) => args.join(' '))
         .join('\n')
 
       expect(allLogContent).not.toContain('usr_abc123-secret-id')

@@ -31,9 +31,7 @@ interface ValueCard {
 
 const values: Array<ValueCard> = [
   {
-    icon: (
-      <ValueIcon d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    ),
+    icon: <ValueIcon d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />,
     title: 'Quality-Driven Development',
     description:
       'Every line of code is crafted with care. I prioritize clean architecture, comprehensive testing, and maintainable solutions over quick fixes.',

@@ -12,13 +12,13 @@ export function userFromClaims(claims: Record<string, unknown>): User {
   const roles = parseRoles(claims.role)
   return {
     id: claims.sub as string,
-    name: (String(
+    name: String(
       claims.name ||
         claims.preferred_username ||
         [claims.given_name, claims.family_name].filter(Boolean).join(' ') ||
         claims.email ||
         'User',
-    )),
+    ),
     email: String(claims.email ?? ''),
     roles,
     permissions: [],

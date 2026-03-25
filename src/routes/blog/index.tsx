@@ -1,9 +1,9 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { Calendar, Clock, Tag } from 'lucide-react'
-import type {BlogPost} from '@/lib/blog';
+import type { BlogPost } from '@/lib/blog'
 import { FadeInView } from '@/components/shared/FadeInView'
-import {  formatDate } from '@/lib/blog'
+import { formatDate } from '@/lib/blog'
 import { getBlogPosts } from '@/lib/blog.server'
 
 const fetchBlogPosts = createServerFn({ method: 'GET' }).handler(async () => {

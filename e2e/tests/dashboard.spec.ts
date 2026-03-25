@@ -44,51 +44,42 @@ test.describe('Dashboard (authenticated)', () => {
    *   ])
    */
 
-  test.skip(
-    'authenticated user with sealed session cookie lands on dashboard without redirect',
-    async ({ page }) => {
-      // Navigate to a dashboard sub-route (inquiries is the primary view)
-      const response = await page.goto('/dashboard/inquiries')
+  test.skip('authenticated user with sealed session cookie lands on dashboard without redirect', async ({
+    page,
+  }) => {
+    // Navigate to a dashboard sub-route (inquiries is the primary view)
+    const response = await page.goto('/dashboard/inquiries')
 
-      // Should NOT redirect to /auth/login — status should be 200
-      expect(response?.status()).toBe(200)
-      expect(page.url()).toContain('/dashboard/inquiries')
-    },
-  )
+    // Should NOT redirect to /auth/login — status should be 200
+    expect(response?.status()).toBe(200)
+    expect(page.url()).toContain('/dashboard/inquiries')
+  })
 
-  test.skip(
-    'dashboard layout and key widgets render',
-    async ({ page }) => {
-      await page.goto('/dashboard/inquiries')
+  test.skip('dashboard layout and key widgets render', async ({ page }) => {
+    await page.goto('/dashboard/inquiries')
 
-      // The dashboard layout should contain navigation to its sub-sections
-      await expect(
-        page.getByRole('link', { name: /inquiries/i }),
-      ).toBeVisible()
-      await expect(
-        page.getByRole('link', { name: /notifications/i }),
-      ).toBeVisible()
-      await expect(
-        page.getByRole('link', { name: /settings/i }),
-      ).toBeVisible()
-    },
-  )
+    // The dashboard layout should contain navigation to its sub-sections
+    await expect(page.getByRole('link', { name: /inquiries/i })).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: /notifications/i }),
+    ).toBeVisible()
+    await expect(page.getByRole('link', { name: /settings/i })).toBeVisible()
+  })
 
-  test.skip(
-    'protected API routes receive the auth token forwarded from the session',
-    async ({ page }) => {
-      // Intercept an outbound API call the dashboard makes to the Wallow
-      // backend and assert the Authorization header is present.
-      const apiRequestPromise = page.waitForRequest((req) =>
-        req.url().includes('/api/'),
-      )
+  test.skip('protected API routes receive the auth token forwarded from the session', async ({
+    page,
+  }) => {
+    // Intercept an outbound API call the dashboard makes to the Wallow
+    // backend and assert the Authorization header is present.
+    const apiRequestPromise = page.waitForRequest((req) =>
+      req.url().includes('/api/'),
+    )
 
-      await page.goto('/dashboard/inquiries')
+    await page.goto('/dashboard/inquiries')
 
-      const apiRequest = await apiRequestPromise
-      const authHeader = apiRequest.headers()['authorization']
-      expect(authHeader).toBeTruthy()
-      expect(authHeader).toMatch(/^Bearer\s+.+/)
-    },
-  )
+    const apiRequest = await apiRequestPromise
+    const authHeader = apiRequest.headers()['authorization']
+    expect(authHeader).toBeTruthy()
+    expect(authHeader).toMatch(/^Bearer\s+.+/)
+  })
 })

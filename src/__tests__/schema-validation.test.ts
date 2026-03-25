@@ -15,7 +15,12 @@ const submitInquirySchema = z.object({
   company: z.string().optional(),
   projectType: z.enum(['Frontend', 'Full-Stack', 'Consulting', 'Other']),
   budgetRange: z.enum(['Under $5k', '$5k-$15k', '$15k-$50k', '$50k+']),
-  timeline: z.enum(['Less than 1 month', '1-3 months', '3-6 months', '6+ months']),
+  timeline: z.enum([
+    'Less than 1 month',
+    '1-3 months',
+    '3-6 months',
+    '6+ months',
+  ]),
   message: z.string().min(1).max(5000),
 })
 
@@ -57,12 +62,18 @@ const VALID_UUID = '550e8400-e29b-41d4-a716-446655440000'
 
 function expectFail(schema: z.ZodSchema, data: unknown) {
   const result = schema.safeParse(data)
-  expect(result.success, `Expected parse to fail for: ${JSON.stringify(data)}`).toBe(false)
+  expect(
+    result.success,
+    `Expected parse to fail for: ${JSON.stringify(data)}`,
+  ).toBe(false)
 }
 
 function expectPass(schema: z.ZodSchema, data: unknown) {
   const result = schema.safeParse(data)
-  expect(result.success, `Expected parse to pass for: ${JSON.stringify(data)}`).toBe(true)
+  expect(
+    result.success,
+    `Expected parse to pass for: ${JSON.stringify(data)}`,
+  ).toBe(true)
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────
@@ -133,19 +144,17 @@ describe('submitInquirySchema – enum fields', () => {
       })
     })
 
-    it.each([
-      'Less than 1 month',
-      '1-3 months',
-      '3-6 months',
-      '6+ months',
-    ])('accepts valid enum value: %s', (value) => {
-      expectPass(submitInquirySchema, {
-        ...base,
-        projectType: 'Frontend',
-        budgetRange: 'Under $5k',
-        timeline: value,
-      })
-    })
+    it.each(['Less than 1 month', '1-3 months', '3-6 months', '6+ months'])(
+      'accepts valid enum value: %s',
+      (value) => {
+        expectPass(submitInquirySchema, {
+          ...base,
+          projectType: 'Frontend',
+          budgetRange: 'Under $5k',
+          timeline: value,
+        })
+      },
+    )
   })
 })
 

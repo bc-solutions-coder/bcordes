@@ -113,8 +113,7 @@ function SelectFormField<TFieldValues extends FieldValues>({
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-text-primary">
-            {label}{' '}
-            {required && <span className="text-accent-primary">*</span>}
+            {label} {required && <span className="text-accent-primary">*</span>}
           </FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>

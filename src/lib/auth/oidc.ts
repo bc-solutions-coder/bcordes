@@ -36,7 +36,8 @@ function getConfig(): Promise<Configuration> {
     const issuer = process.env.OIDC_ISSUER
     if (!issuer) throw new Error('OIDC_ISSUER environment variable is not set')
     const clientId = process.env.OIDC_CLIENT_ID
-    if (!clientId) throw new Error('OIDC_CLIENT_ID environment variable is not set')
+    if (!clientId)
+      throw new Error('OIDC_CLIENT_ID environment variable is not set')
     const redirectUri = process.env.OIDC_REDIRECT_URI
     if (!redirectUri)
       throw new Error('OIDC_REDIRECT_URI environment variable is not set')

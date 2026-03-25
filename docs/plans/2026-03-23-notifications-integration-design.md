@@ -18,6 +18,7 @@ Reference: `docs/api/NOTIFICATIONS_GUIDE.md`
 The current `fetchNotifications` server function hits `/api/notifications` and casts the response as `Notification[]`, but the backend returns a paginated object. This causes `notifications.filter is not a function`.
 
 **Fix:**
+
 - Update endpoint to `/api/v1/notifications?pageNumber=1&pageSize=20`
 - Extract `.items` from the paginated response wrapper
 - Add a `PaginatedResponse<T>` type to `src/lib/wallow/types.ts`
@@ -70,18 +71,18 @@ Per-type granularity (`PUT /api/v1/notification-settings/type`) is not in scope 
 
 ### Smart routing map
 
-| NotificationType       | Route                                |
-|------------------------|--------------------------------------|
-| `TaskAssigned`         | `/dashboard/tasks/{entityId}`        |
-| `TaskCompleted`        | `/dashboard/tasks/{entityId}`        |
-| `TaskComment`          | `/dashboard/tasks/{entityId}`        |
-| `BillingInvoice`       | `/dashboard/billing`                 |
-| `InquirySubmitted`     | `/dashboard/inquiries/{entityId}`    |
-| `InquiryStatusChanged` | `/dashboard/inquiries/{entityId}`    |
-| `Mention`              | `/dashboard/notifications` (fallback)|
-| `SystemAlert`          | `/dashboard/notifications`           |
-| `Announcement`         | `/dashboard/notifications`           |
-| Unknown/default        | `/dashboard/notifications`           |
+| NotificationType       | Route                                 |
+| ---------------------- | ------------------------------------- |
+| `TaskAssigned`         | `/dashboard/tasks/{entityId}`         |
+| `TaskCompleted`        | `/dashboard/tasks/{entityId}`         |
+| `TaskComment`          | `/dashboard/tasks/{entityId}`         |
+| `BillingInvoice`       | `/dashboard/billing`                  |
+| `InquirySubmitted`     | `/dashboard/inquiries/{entityId}`     |
+| `InquiryStatusChanged` | `/dashboard/inquiries/{entityId}`     |
+| `Mention`              | `/dashboard/notifications` (fallback) |
+| `SystemAlert`          | `/dashboard/notifications`            |
+| `Announcement`         | `/dashboard/notifications`            |
+| Unknown/default        | `/dashboard/notifications`            |
 
 Requires `Notification` type to include an optional `entityId` or `metadata` field. Falls back to notifications center if unavailable.
 
@@ -98,18 +99,18 @@ Requires `Notification` type to include an optional `entityId` or `metadata` fie
 
 ### New server functions (`src/server-fns/notifications.ts`)
 
-| Function                  | Method | Endpoint                                    |
-|---------------------------|--------|---------------------------------------------|
-| `fetchNotifications`      | GET    | `/api/v1/notifications?pageNumber&pageSize&type&unreadOnly` |
-| `markNotificationRead`    | POST   | `/api/v1/notifications/{id}/read`           |
-| `markAllNotificationsRead`| POST   | `/api/v1/notifications/read-all`            |
-| `fetchUnreadCount`        | GET    | `/api/v1/notifications/unread-count`        |
-| `fetchNotificationSettings`| GET   | `/api/v1/notification-settings`             |
-| `updateChannelSetting`    | PUT    | `/api/v1/notification-settings/channel`     |
-| `registerPushDevice`      | POST   | `/api/v1/push/devices`                      |
-| `deregisterPushDevice`    | DELETE | `/api/v1/push/devices/{id}`                 |
-| `listPushDevices`         | GET    | `/api/v1/push/devices`                      |
-| `sendTestPush`            | POST   | `/api/v1/push/send`                         |
+| Function                    | Method | Endpoint                                                    |
+| --------------------------- | ------ | ----------------------------------------------------------- |
+| `fetchNotifications`        | GET    | `/api/v1/notifications?pageNumber&pageSize&type&unreadOnly` |
+| `markNotificationRead`      | POST   | `/api/v1/notifications/{id}/read`                           |
+| `markAllNotificationsRead`  | POST   | `/api/v1/notifications/read-all`                            |
+| `fetchUnreadCount`          | GET    | `/api/v1/notifications/unread-count`                        |
+| `fetchNotificationSettings` | GET    | `/api/v1/notification-settings`                             |
+| `updateChannelSetting`      | PUT    | `/api/v1/notification-settings/channel`                     |
+| `registerPushDevice`        | POST   | `/api/v1/push/devices`                                      |
+| `deregisterPushDevice`      | DELETE | `/api/v1/push/devices/{id}`                                 |
+| `listPushDevices`           | GET    | `/api/v1/push/devices`                                      |
+| `sendTestPush`              | POST   | `/api/v1/push/send`                                         |
 
 ### TanStack Query keys
 
@@ -121,6 +122,7 @@ Requires `Notification` type to include an optional `entityId` or `metadata` fie
 ### SignalR events
 
 On `NotificationCreated`:
+
 - Invalidate `['notifications']` queries
 - Invalidate `['notifications', 'unread-count']`
 - Show a toast with notification title (if tab is active)

@@ -67,8 +67,7 @@ async function mockSubmitInquiry(page: import('@playwright/test').Page) {
           projectType: 'Frontend',
           budgetRange: '$5k-$15k',
           timeline: '1-3 months',
-          message:
-            'I would like to discuss a new web application project.',
+          message: 'I would like to discuss a new web application project.',
           status: 'new',
           createdAt: new Date().toISOString(),
         }),
@@ -96,12 +95,8 @@ test.describe('Contact Form', () => {
     await expect(page.getByText('Name is required')).toBeVisible()
     await expect(page.getByText('Email is required')).toBeVisible()
     await expect(page.getByText('Message is required')).toBeVisible()
-    await expect(
-      page.getByText('Please select a project type'),
-    ).toBeVisible()
-    await expect(
-      page.getByText('Please select a budget range'),
-    ).toBeVisible()
+    await expect(page.getByText('Please select a project type')).toBeVisible()
+    await expect(page.getByText('Please select a budget range')).toBeVisible()
     await expect(page.getByText('Please select a timeline')).toBeVisible()
 
     // No network request should have been made

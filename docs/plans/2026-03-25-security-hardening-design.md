@@ -15,6 +15,7 @@
 ### Task 1: Add security headers middleware
 
 **Files:**
+
 - Create: `src/server/middleware/security-headers.ts`
 
 **Context:** Nitro supports server middleware via files in `server/middleware/`. TanStack Start with Nitro will auto-discover these. No security headers (CSP, HSTS, X-Frame-Options, etc.) are currently configured anywhere.
@@ -68,6 +69,7 @@ git commit -m "feat(security): add Nitro middleware for CSP, HSTS, and security 
 ### Task 2: Add admin authorization guard to inquiry server functions
 
 **Files:**
+
 - Modify: `src/server-fns/inquiries.ts`
 
 **Context:** `fetchInquiries` (line 57) and `updateInquiryStatus` (line 84) have no role checks — any authenticated user can call the admin endpoint. The `getSession()` call already returns the user with roles. Add a guard that checks `session.user.roles.includes('admin')`.
@@ -91,8 +93,9 @@ async function requireAdmin() {
 ```
 
 Update `fetchInquiries` handler (line 58-62):
+
 ```typescript
-async () => {
+;async () => {
   const client = await requireAdmin()
   const response = await client.get('/api/v1/inquiries')
   return ((await response.json()) as Array<Inquiry>).map(normalizeInquiryStatus)
@@ -100,8 +103,9 @@ async () => {
 ```
 
 Update `updateInquiryStatus` handler (line 86-93):
+
 ```typescript
-async ({ data }) => {
+;async ({ data }) => {
   const client = await requireAdmin()
   const apiStatus = statusToApi[data.status] ?? data.status
   const response = await client.patch(`/api/v1/inquiries/${data.id}/status`, {
@@ -121,6 +125,7 @@ git commit -m "feat(security): add admin authorization guard to inquiry admin en
 ### Task 3: Tighten Zod schemas across server functions
 
 **Files:**
+
 - Modify: `src/server-fns/inquiries.ts`
 - Modify: `src/server-fns/notifications.ts`
 
@@ -131,14 +136,17 @@ git commit -m "feat(security): add admin authorization guard to inquiry admin en
 In `src/server-fns/inquiries.ts`:
 
 - Line 85: Change `status: z.string()` to:
+
   ```typescript
   status: z.enum(['new', 'reviewed', 'contacted', 'closed'])
   ```
 
 - Line 77: Change `id: z.string()` to:
+
   ```typescript
   id: z.string().uuid()
   ```
+
   (Apply to all `id` fields on lines 77, 85, 96, 104)
 
 - Line 105: Change `content: z.string().min(1)` to:
@@ -151,11 +159,13 @@ In `src/server-fns/inquiries.ts`:
 In `src/server-fns/notifications.ts`:
 
 - Line 55: Change `channelType: z.string()` to:
+
   ```typescript
   channelType: z.enum(['email', 'sms', 'push', 'in_app'])
   ```
 
 - Lines 67-69: Add max lengths to push device registration:
+
   ```typescript
   endpoint: z.string().url().max(2048),
   p256dh: z.string().max(512),
@@ -181,6 +191,7 @@ git commit -m "feat(security): tighten Zod schemas with enums, UUID validation, 
 ### Task 4: Validate `actionUrl` in notification routing
 
 **Files:**
+
 - Modify: `src/lib/notifications/routing.ts`
 - Modify: `public/sw.js`
 
@@ -215,11 +226,21 @@ self.addEventListener('notificationclick', (event) => {
   const isValidId = entityId && /^[0-9a-f-]{36}$/i.test(entityId)
 
   const routeMap = {
-    TaskAssigned: isValidId ? `/dashboard/tasks/${entityId}` : '/dashboard/notifications',
-    TaskCompleted: isValidId ? `/dashboard/tasks/${entityId}` : '/dashboard/notifications',
-    TaskComment: isValidId ? `/dashboard/tasks/${entityId}` : '/dashboard/notifications',
-    InquirySubmitted: isValidId ? `/dashboard/inquiries/${entityId}` : '/dashboard/notifications',
-    InquiryStatusChanged: isValidId ? `/dashboard/inquiries/${entityId}` : '/dashboard/notifications',
+    TaskAssigned: isValidId
+      ? `/dashboard/tasks/${entityId}`
+      : '/dashboard/notifications',
+    TaskCompleted: isValidId
+      ? `/dashboard/tasks/${entityId}`
+      : '/dashboard/notifications',
+    TaskComment: isValidId
+      ? `/dashboard/tasks/${entityId}`
+      : '/dashboard/notifications',
+    InquirySubmitted: isValidId
+      ? `/dashboard/inquiries/${entityId}`
+      : '/dashboard/notifications',
+    InquiryStatusChanged: isValidId
+      ? `/dashboard/inquiries/${entityId}`
+      : '/dashboard/notifications',
     BillingInvoice: '/dashboard/billing',
   }
 
@@ -238,6 +259,7 @@ git commit -m "feat(security): validate notification actionUrl and entityId befo
 ### Task 5: Sanitize link hrefs in MarkdownContent
 
 **Files:**
+
 - Modify: `src/components/shared/MarkdownContent.tsx`
 
 **Context:** The `processInlineMarkdown` function on line 11-14 converts `[text](url)` to `<a href="$2">` without protocol validation. A `javascript:alert(1)` URL would produce a clickable XSS link. Currently only used with trusted content, but worth hardening.
@@ -270,6 +292,7 @@ git commit -m "feat(security): sanitize link protocols in MarkdownContent to pre
 ### Task 6: Strip internal details from WallowError before client serialization
 
 **Files:**
+
 - Modify: `src/lib/wallow/errors.ts`
 
 **Context:** `WallowError` includes `traceId` and potentially sensitive `detail` messages from the backend. TanStack Start serializes thrown errors and sends them to the client. The `traceId` leaks internal distributed tracing identifiers.
@@ -306,9 +329,11 @@ git commit -m "feat(security): strip traceId and internal details from client-fa
 ### Task 7: Fix orphaned hub on reconnection and gate debug logging
 
 **Files:**
+
 - Modify: `src/routes/api/notifications/stream.ts`
 
 **Context:** Three issues in this file:
+
 1. `LogLevel.Debug` hardcoded on line 21 — may leak sensitive data in production
 2. Hub `on()` monkey-patch logs all payloads (lines 54-59)
 3. Reconnection creates new hub without updating the reference for `cancel()` (lines 74-95)
@@ -316,6 +341,7 @@ git commit -m "feat(security): strip traceId and internal details from client-fa
 **Step 1: Fix log level**
 
 Replace line 21:
+
 ```typescript
 .configureLogging(process.env.NODE_ENV === 'production' ? LogLevel.Warning : LogLevel.Debug)
 ```
@@ -323,12 +349,16 @@ Replace line 21:
 **Step 2: Gate debug logging behind dev check**
 
 Replace lines 53-60:
+
 ```typescript
 if (process.env.NODE_ENV !== 'production') {
   const origOn = hub.on.bind(hub)
   hub.on = (methodName: string, handler: (...args: unknown[]) => void) => {
     return origOn(methodName, (...args: unknown[]) => {
-      console.log(`[sse] hub.on("${methodName}"):`, JSON.stringify(args).slice(0, 300))
+      console.log(
+        `[sse] hub.on("${methodName}"):`,
+        JSON.stringify(args).slice(0, 300),
+      )
       handler(...args)
     })
   }
@@ -348,8 +378,12 @@ hub.onclose(async () => {
   try {
     const tokens = await refreshToken(currentSession.refreshToken)
     const newHub = buildHubConnection(tokens.accessToken)
-    newHub.on('ReceiveNotifications', (envelope: RealtimeEnvelope) => send(envelope))
-    newHub.on('ReceiveNotification', (envelope: RealtimeEnvelope) => send(envelope))
+    newHub.on('ReceiveNotifications', (envelope: RealtimeEnvelope) =>
+      send(envelope),
+    )
+    newHub.on('ReceiveNotification', (envelope: RealtimeEnvelope) =>
+      send(envelope),
+    )
     newHub.on('ReceivePresence', (envelope: RealtimeEnvelope) => send(envelope))
 
     // Set up recursive onclose for the new hub
@@ -358,7 +392,7 @@ hub.onclose(async () => {
     })
 
     await newHub.start()
-    hub = newHub  // Update reference so cancel() stops the right hub
+    hub = newHub // Update reference so cancel() stops the right hub
     console.log('[sse] reconnected to hub')
   } catch {
     if (!closed) controller.close()
@@ -367,6 +401,7 @@ hub.onclose(async () => {
 ```
 
 Also remove the user ID log on line 99:
+
 ```typescript
 // Before:
 console.log('[sse] hub connected for user:', session.user.id)
@@ -388,6 +423,7 @@ git commit -m "feat(security): harden SSE stream — fix orphaned hub, gate debu
 ### Task 8: Handle refresh failure by clearing stale session
 
 **Files:**
+
 - Modify: `src/lib/auth/middleware.ts`
 
 **Context:** When token refresh fails (line 33-35), the middleware silently returns the cached user. This means a user with a revoked refresh token continues to appear authenticated. A user whose access has been revoked should be logged out.
@@ -415,6 +451,7 @@ git commit -m "feat(security): clear session on token refresh failure instead of
 ### Task 9: Remove GET handler from logout
 
 **Files:**
+
 - Modify: `src/routes/auth/logout.ts`
 
 **Context:** GET logout on line 25 allows CSRF via `<img src="/auth/logout">`. Only POST should perform state-changing operations.
@@ -447,10 +484,12 @@ git commit -m "feat(security): remove GET logout handler to prevent CSRF logout 
 ### Task 10: Add session cookie `Max-Age` and env var validation
 
 **Files:**
+
 - Modify: `src/lib/auth/session.ts`
 - Modify: `src/lib/auth/oidc.ts`
 
 **Context:**
+
 1. Session cookie has no `Max-Age` (line 51-56), making it a browser-session cookie inconsistent with the 24h server TTL.
 2. `OIDC_CLIENT_ID!`, `OIDC_REDIRECT_URI!` etc. use non-null assertions without startup validation.
 
@@ -469,6 +508,7 @@ setCookie(COOKIE_NAME, sealed, {
 ```
 
 Also add it to the `sealSessionCookie` function (line 67-73):
+
 ```typescript
 const parts = [
   `${COOKIE_NAME}=${sealed}`,
@@ -485,7 +525,11 @@ const parts = [
 At the top of `src/lib/auth/oidc.ts`, after the imports (line 14), add:
 
 ```typescript
-const requiredEnvVars = ['OIDC_ISSUER', 'OIDC_CLIENT_ID', 'OIDC_REDIRECT_URI'] as const
+const requiredEnvVars = [
+  'OIDC_ISSUER',
+  'OIDC_CLIENT_ID',
+  'OIDC_REDIRECT_URI',
+] as const
 for (const name of requiredEnvVars) {
   if (!process.env[name]) {
     throw new Error(`${name} environment variable is not set`)
@@ -509,6 +553,7 @@ git commit -m "feat(security): add session cookie Max-Age and validate required 
 ### Task 11: Run Docker container as non-root user
 
 **Files:**
+
 - Modify: `Dockerfile`
 
 **Context:** The runtime stage (line 36) does not include a `USER` directive, so the Node process runs as root.
@@ -538,6 +583,7 @@ git commit -m "feat(security): run Docker container as non-root user"
 ### Task 12: Move dev dependencies to devDependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 **Context:** `@faker-js/faker`, `storybook`, and `@storybook/react-vite` are in production dependencies but are only needed for development.
@@ -569,6 +615,7 @@ git commit -m "chore: move dev-only dependencies to devDependencies"
 ### Task 13: Sanitize error logging across the codebase
 
 **Files:**
+
 - Modify: `src/lib/wallow/client.ts`
 - Modify: `src/routes/auth/callback.ts`
 
@@ -579,10 +626,11 @@ git commit -m "chore: move dev-only dependencies to devDependencies"
 Replace lines 85-88 in `src/lib/wallow/client.ts`:
 
 ```typescript
-console.error(
-  `[wallow] ${method} ${path} → ${response.status}`,
-  { title: problem.title, code: problem.code, status: problem.status },
-)
+console.error(`[wallow] ${method} ${path} → ${response.status}`, {
+  title: problem.title,
+  code: problem.code,
+  status: problem.status,
+})
 ```
 
 **Step 2: Log only error message in callback.ts**
@@ -590,7 +638,10 @@ console.error(
 Find the `console.error('[auth/callback] Token exchange failed:', err)` line in `src/routes/auth/callback.ts` and replace:
 
 ```typescript
-console.error('[auth/callback] Token exchange failed:', err instanceof Error ? err.message : 'Unknown error')
+console.error(
+  '[auth/callback] Token exchange failed:',
+  err instanceof Error ? err.message : 'Unknown error',
+)
 ```
 
 **Step 3: Commit**
@@ -604,15 +655,15 @@ git commit -m "feat(security): sanitize error logging to prevent leaking sensiti
 
 ## Summary
 
-| Epic | Tasks | Priority | Risk Addressed |
-|------|-------|----------|----------------|
-| 1. Security Headers | Task 1 | High | Clickjacking, XSS, MIME sniffing |
-| 2. Authorization & Validation | Tasks 2-3 | High | Unauthorized admin access, input injection |
-| 3. Notification URL Validation | Tasks 4-5 | Medium | Open redirect, XSS via notifications/markdown |
-| 4. Error Sanitization | Task 6 | Medium | Internal detail leakage to client |
-| 5. SSE Hardening | Task 7 | Medium | Resource leaks, data exposure in logs |
-| 6. Auth Hardening | Tasks 8-10 | Medium | Stale sessions, CSRF logout, cookie lifetime |
-| 7. Docker & Deps | Tasks 11-12 | Medium | Container privilege escalation, bloated bundles |
-| 8. Error Logging | Task 13 | Low | Sensitive data in logs |
+| Epic                           | Tasks       | Priority | Risk Addressed                                  |
+| ------------------------------ | ----------- | -------- | ----------------------------------------------- |
+| 1. Security Headers            | Task 1      | High     | Clickjacking, XSS, MIME sniffing                |
+| 2. Authorization & Validation  | Tasks 2-3   | High     | Unauthorized admin access, input injection      |
+| 3. Notification URL Validation | Tasks 4-5   | Medium   | Open redirect, XSS via notifications/markdown   |
+| 4. Error Sanitization          | Task 6      | Medium   | Internal detail leakage to client               |
+| 5. SSE Hardening               | Task 7      | Medium   | Resource leaks, data exposure in logs           |
+| 6. Auth Hardening              | Tasks 8-10  | Medium   | Stale sessions, CSRF logout, cookie lifetime    |
+| 7. Docker & Deps               | Tasks 11-12 | Medium   | Container privilege escalation, bloated bundles |
+| 8. Error Logging               | Task 13     | Low      | Sensitive data in logs                          |
 
 **Total: 13 tasks across 8 epics**

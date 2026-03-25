@@ -6,12 +6,12 @@ The Notifications module handles all outbound communication: **Email**, **SMS**,
 
 ## Channels Overview
 
-| Channel | Provider | Fallback | Real-Time |
-|---------|----------|----------|-----------|
-| Email | SMTP (MailKit) | None | No |
-| SMS | Twilio | NullSmsProvider (logs only) | No |
-| In-App | SignalR + Redis backplane | None | Yes |
-| Push | FCM, APNS, WebPush | LogPushProvider (logs only) | Yes |
+| Channel | Provider                  | Fallback                    | Real-Time |
+| ------- | ------------------------- | --------------------------- | --------- |
+| Email   | SMTP (MailKit)            | None                        | No        |
+| SMS     | Twilio                    | NullSmsProvider (logs only) | No        |
+| In-App  | SignalR + Redis backplane | None                        | Yes       |
+| Push    | FCM, APNS, WebPush        | LogPushProvider (logs only) | Yes       |
 
 ---
 
@@ -92,20 +92,20 @@ Global defaults can be set in `appsettings.json`:
 
 ### In-App Notifications — `/api/v1/notifications`
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Get paginated notifications (`?pageNumber=1&pageSize=20`) |
-| GET | `/unread-count` | Get unread notification count |
-| POST | `/{id}/read` | Mark a single notification as read |
-| POST | `/read-all` | Mark all notifications as read |
+| Method | Path            | Description                                               |
+| ------ | --------------- | --------------------------------------------------------- |
+| GET    | `/`             | Get paginated notifications (`?pageNumber=1&pageSize=20`) |
+| GET    | `/unread-count` | Get unread notification count                             |
+| POST   | `/{id}/read`    | Mark a single notification as read                        |
+| POST   | `/read-all`     | Mark all notifications as read                            |
 
 ### Notification Settings — `/api/v1/notification-settings`
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Get all notification preferences for current user |
-| PUT | `/channel` | Enable/disable an entire channel (e.g., turn off all email) |
-| PUT | `/type` | Enable/disable a specific notification type on a channel |
+| Method | Path       | Description                                                 |
+| ------ | ---------- | ----------------------------------------------------------- |
+| GET    | `/`        | Get all notification preferences for current user           |
+| PUT    | `/channel` | Enable/disable an entire channel (e.g., turn off all email) |
+| PUT    | `/type`    | Enable/disable a specific notification type on a channel    |
 
 **Example — disable email notifications globally:**
 
@@ -134,21 +134,21 @@ Content-Type: application/json
 
 ### Push Configuration (Admin) — `/api/v1/admin/push/config`
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Get tenant's push configuration |
-| PUT | `/` | Upsert push credentials for a platform |
-| PATCH | `/enabled` | Enable/disable push for a platform |
+| Method | Path          | Description                              |
+| ------ | ------------- | ---------------------------------------- |
+| GET    | `/`           | Get tenant's push configuration          |
+| PUT    | `/`           | Upsert push credentials for a platform   |
+| PATCH  | `/enabled`    | Enable/disable push for a platform       |
 | DELETE | `/{platform}` | Remove push configuration for a platform |
 
 ### Push Devices — `/api/v1/push`
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/devices` | Register a device for push notifications |
-| DELETE | `/devices/{id}` | Deregister a device |
-| GET | `/devices` | List current user's registered devices |
-| POST | `/send` | Send a push notification to a user |
+| Method | Path            | Description                              |
+| ------ | --------------- | ---------------------------------------- |
+| POST   | `/devices`      | Register a device for push notifications |
+| DELETE | `/devices/{id}` | Deregister a device                      |
+| GET    | `/devices`      | List current user's registered devices   |
+| POST   | `/send`         | Send a push notification to a user       |
 
 ---
 
@@ -156,16 +156,16 @@ Content-Type: application/json
 
 The `NotificationType` enum defines what kinds of notifications exist:
 
-| Type | Description |
-|------|-------------|
-| `TaskAssigned` | A task was assigned to the user |
-| `TaskCompleted` | A task the user owns was completed |
-| `TaskComment` | Someone commented on the user's task |
-| `SystemAlert` | System-level alert |
-| `BillingInvoice` | Invoice-related notification |
-| `Mention` | User was mentioned |
-| `Announcement` | Tenant-wide announcement |
-| `SystemNotification` | General system notification |
+| Type                 | Description                          |
+| -------------------- | ------------------------------------ |
+| `TaskAssigned`       | A task was assigned to the user      |
+| `TaskCompleted`      | A task the user owns was completed   |
+| `TaskComment`        | Someone commented on the user's task |
+| `SystemAlert`        | System-level alert                   |
+| `BillingInvoice`     | Invoice-related notification         |
+| `Mention`            | User was mentioned                   |
+| `Announcement`       | Tenant-wide announcement             |
+| `SystemNotification` | General system notification          |
 
 Users can enable/disable each type independently per channel.
 
@@ -177,30 +177,30 @@ The Notifications module **listens** to events from other modules and sends noti
 
 ### Events Consumed
 
-| Event | Source Module | Action |
-|-------|-------------|--------|
-| `UserRegisteredEvent` | Identity | Welcome email + SMS (if phone provided) |
-| `PasswordResetRequestedEvent` | Identity | Password reset email |
-| `UserRoleChangedEvent` | Identity | Role change notification |
-| `OrganizationCreatedEvent` | Identity | Organization creation email |
-| `OrganizationMemberAddedEvent` | Identity | Member added email |
-| `OrganizationMemberRemovedEvent` | Identity | Member removed email |
-| `InvoiceOverdueEvent` | Billing | Overdue invoice email |
-| `InvoicePaidEvent` | Billing | Invoice paid email |
-| `PaymentReceivedEvent` | Billing | Payment received email |
-| `InquirySubmittedEvent` | Inquiries | Admin notification email + SignalR |
-| `InquiryStatusChangedEvent` | Inquiries | Status change email + SignalR |
-| `InquiryCommentAddedEvent` | Inquiries | SignalR real-time notification |
-| `MessageSentEvent` | Messaging | Message notification |
-| `AnnouncementPublishedEvent` | Announcements | Email + SignalR broadcast |
+| Event                            | Source Module | Action                                  |
+| -------------------------------- | ------------- | --------------------------------------- |
+| `UserRegisteredEvent`            | Identity      | Welcome email + SMS (if phone provided) |
+| `PasswordResetRequestedEvent`    | Identity      | Password reset email                    |
+| `UserRoleChangedEvent`           | Identity      | Role change notification                |
+| `OrganizationCreatedEvent`       | Identity      | Organization creation email             |
+| `OrganizationMemberAddedEvent`   | Identity      | Member added email                      |
+| `OrganizationMemberRemovedEvent` | Identity      | Member removed email                    |
+| `InvoiceOverdueEvent`            | Billing       | Overdue invoice email                   |
+| `InvoicePaidEvent`               | Billing       | Invoice paid email                      |
+| `PaymentReceivedEvent`           | Billing       | Payment received email                  |
+| `InquirySubmittedEvent`          | Inquiries     | Admin notification email + SignalR      |
+| `InquiryStatusChangedEvent`      | Inquiries     | Status change email + SignalR           |
+| `InquiryCommentAddedEvent`       | Inquiries     | SignalR real-time notification          |
+| `MessageSentEvent`               | Messaging     | Message notification                    |
+| `AnnouncementPublishedEvent`     | Announcements | Email + SignalR broadcast               |
 
 ### Events Published
 
-| Event | When |
-|-------|------|
-| `EmailSentEvent` | After successful email delivery |
-| `SmsSentEvent` | After successful SMS delivery |
-| `PushSentEvent` | After successful push delivery |
+| Event                      | When                                 |
+| -------------------------- | ------------------------------------ |
+| `EmailSentEvent`           | After successful email delivery      |
+| `SmsSentEvent`             | After successful SMS delivery        |
+| `PushSentEvent`            | After successful push delivery       |
 | `NotificationCreatedEvent` | After in-app notification is created |
 
 ---
@@ -385,14 +385,17 @@ Messages are wrapped in a `RealtimeEnvelope` with event types like `"Notificatio
 ## Retry and Resilience
 
 ### Email
+
 - **SMTP resilience pipeline** (Polly): 3 retries with exponential backoff + 30-second timeout
 - **Failed email retry job**: Background Hangfire job picks up emails with `Status = Failed` and `RetryCount < 3`, resets them, and re-attempts delivery
 
 ### SMS and Push
+
 - Messages track `RetryCount` and support `ResetForRetry()` / `CanRetry()` methods
 - Failed messages can be retried up to 3 times
 
 ### Connection Pooling
+
 - SMTP connections are pooled via `SmtpConnectionPool` for performance under load
 
 ---
@@ -416,11 +419,11 @@ Messages are wrapped in a `RealtimeEnvelope` with event types like `"Notificatio
 
 ## Local Development
 
-| Service | URL | Purpose |
-|---------|-----|---------|
-| Mailpit | http://localhost:8025 | Catches all outgoing email |
+| Service  | URL                    | Purpose                      |
+| -------- | ---------------------- | ---------------------------- |
+| Mailpit  | http://localhost:8025  | Catches all outgoing email   |
 | RabbitMQ | http://localhost:15672 | Message broker management UI |
-| Grafana | http://localhost:3001 | Observability dashboards |
+| Grafana  | http://localhost:3001  | Observability dashboards     |
 
 Start infrastructure:
 

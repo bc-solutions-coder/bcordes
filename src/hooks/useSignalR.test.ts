@@ -1,5 +1,5 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, renderHook } from '@testing-library/react'
 import type { RealtimeEnvelope } from '@/lib/wallow/types'
 
 /* ------------------------------------------------------------------ */
@@ -17,7 +17,7 @@ interface MockEventSource {
   _namedListeners: Map<string, Array<(ev: MessageEvent) => void>>
 }
 
-let mockEventSources: MockEventSource[]
+let mockEventSources: Array<MockEventSource>
 
 function createMockEventSource(url: string): MockEventSource {
   const instance: MockEventSource = {
@@ -60,11 +60,7 @@ function fireMessage(es: MockEventSource, data: unknown) {
   es.onmessage?.(event)
 }
 
-function fireNamedEvent(
-  es: MockEventSource,
-  eventType: string,
-  data: unknown,
-) {
+function fireNamedEvent(es: MockEventSource, eventType: string, data: unknown) {
   const event = new MessageEvent(eventType, {
     data: JSON.stringify(data),
   })
