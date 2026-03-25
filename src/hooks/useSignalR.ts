@@ -10,7 +10,7 @@ type Handler = (envelope: RealtimeEnvelope) => void
 
 export function useSignalR() {
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
-  const wsRef = useRef<WebSocket | null>(null)
+  const eventSourceRef = useRef<EventSource | null>(null)
   const subscribersRef = useRef<Map<string, Set<Handler>>>(new Map())
   const reconnectAttemptRef = useRef(0)
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -19,41 +19,75 @@ export function useSignalR() {
   const connect = useCallback(() => {
     if (!mountedRef.current) return
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const url = `${protocol}//${window.location.host}/api/ws/realtime`
-
     setStatus(reconnectAttemptRef.current > 0 ? 'reconnecting' : 'connecting')
 
-    const ws = new WebSocket(url)
-    wsRef.current = ws
+    const es = new EventSource('/api/notifications/stream')
+    eventSourceRef.current = es
 
-    ws.onopen = () => {
+    es.onopen = () => {
       if (!mountedRef.current) return
       reconnectAttemptRef.current = 0
       setStatus('connected')
+      console.log('[sse] connected')
     }
 
-    ws.onmessage = (event) => {
-      try {
-        const envelope: RealtimeEnvelope = JSON.parse(event.data)
-        const handlers = subscribersRef.current.get(envelope.type)
-        if (handlers) {
-          handlers.forEach((handler) => handler(envelope))
-        }
-      } catch {
-        // Ignore malformed messages
-      }
-    }
-
-    ws.onclose = () => {
+    es.onerror = () => {
       if (!mountedRef.current) return
+      console.log('[sse] error/disconnected, will reconnect')
+      es.close()
       setStatus('disconnected')
       scheduleReconnect()
     }
 
-    ws.onerror = () => {
-      // onclose will fire after onerror, reconnect handled there
+    // Register a listener for each known event type, plus a catch-all
+    // via the generic 'message' event for unnamed events
+    const dispatchEnvelope = (envelope: RealtimeEnvelope) => {
+      console.log('[sse] event:', envelope.type)
+      const handlers = subscribersRef.current.get(envelope.type)
+      if (handlers) {
+        handlers.forEach((handler) => handler(envelope))
+      }
     }
+
+    // SSE named events — the server sends `event: <type>\ndata: <json>\n\n`
+    // We register listeners dynamically when subscribers are added,
+    // but also handle via the generic message listener as fallback
+    es.onmessage = (event) => {
+      try {
+        const envelope: RealtimeEnvelope = JSON.parse(event.data)
+        dispatchEnvelope(envelope)
+      } catch {
+        // Ignore keepalive comments or malformed data
+      }
+    }
+
+    // For named SSE events, EventSource dispatches to event-specific listeners
+    // We need to add listeners for the event types our subscribers care about
+    const addNamedListener = (eventType: string) => {
+      es.addEventListener(eventType, ((event: MessageEvent) => {
+        try {
+          const envelope: RealtimeEnvelope = JSON.parse(event.data)
+          dispatchEnvelope(envelope)
+        } catch {
+          // Ignore malformed data
+        }
+      }) as EventListener)
+    }
+
+    // Pre-register all known notification event types
+    const knownTypes = [
+      'NotificationCreated',
+      'InquirySubmitted',
+      'InquiryStatusUpdated',
+      'InquiryCommentAdded',
+      'TaskAssigned',
+      'TaskCompleted',
+      'TaskComment',
+      'SystemAlert',
+      'Announcement',
+      'ReceivePresence',
+    ]
+    knownTypes.forEach(addNamedListener)
   }, [])
 
   const scheduleReconnect = useCallback(() => {
@@ -91,9 +125,8 @@ export function useSignalR() {
     return () => {
       mountedRef.current = false
       if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
-      if (wsRef.current) {
-        wsRef.current.onclose = null
-        wsRef.current.close()
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close()
       }
     }
   }, [connect])

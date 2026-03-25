@@ -47,17 +47,15 @@ export const Route = createFileRoute('/dashboard/inquiries/')({
 
 const statusColors: Record<string, string> = {
   new: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-  open: 'bg-green-500/10 text-green-500 border-green-500/20',
-  in_progress: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-  resolved: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
+  reviewed: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+  contacted: 'bg-green-500/10 text-green-500 border-green-500/20',
   closed: 'bg-red-500/10 text-red-500 border-red-500/20',
 }
 
 const statusLabels: Record<string, string> = {
   new: 'New',
-  open: 'Open',
-  in_progress: 'In Progress',
-  resolved: 'Resolved',
+  reviewed: 'Reviewed',
+  contacted: 'Contacted',
   closed: 'Closed',
 }
 
@@ -67,14 +65,18 @@ const projectTypeLabels: Record<string, string> = {
   consulting: 'Consulting',
 }
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
 function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  const d = new Date(date)
+  const month = MONTHS[d.getMonth()]
+  const day = d.getDate()
+  const year = d.getFullYear()
+  const h = d.getHours()
+  const m = d.getMinutes().toString().padStart(2, '0')
+  const ampm = h >= 12 ? 'PM' : 'AM'
+  const hour = (h % 12 || 12).toString().padStart(2, '0')
+  return `${month} ${day}, ${year}, ${hour}:${m} ${ampm}`
 }
 
 function DashboardInquiriesPage() {
@@ -227,22 +229,16 @@ function DashboardInquiriesPage() {
                               New
                             </SelectItem>
                             <SelectItem
-                              value="open"
+                              value="reviewed"
                               className="text-text-primary"
                             >
-                              Open
+                              Reviewed
                             </SelectItem>
                             <SelectItem
-                              value="in_progress"
+                              value="contacted"
                               className="text-text-primary"
                             >
-                              In Progress
-                            </SelectItem>
-                            <SelectItem
-                              value="resolved"
-                              className="text-text-primary"
-                            >
-                              Resolved
+                              Contacted
                             </SelectItem>
                             <SelectItem
                               value="closed"

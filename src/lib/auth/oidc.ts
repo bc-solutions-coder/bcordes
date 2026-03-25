@@ -34,9 +34,14 @@ function getConfig(): Promise<Configuration> {
   if (!configPromise) {
     const issuer = process.env.OIDC_ISSUER
     if (!issuer) throw new Error('OIDC_ISSUER environment variable is not set')
+    const clientId = process.env.OIDC_CLIENT_ID
+    if (!clientId) throw new Error('OIDC_CLIENT_ID environment variable is not set')
+    const redirectUri = process.env.OIDC_REDIRECT_URI
+    if (!redirectUri)
+      throw new Error('OIDC_REDIRECT_URI environment variable is not set')
     configPromise = discovery(
       new URL(issuer),
-      process.env.OIDC_CLIENT_ID!,
+      clientId,
       process.env.OIDC_CLIENT_SECRET,
       undefined,
       isDev ? { execute: [allowInsecureRequests] } : undefined,
@@ -62,7 +67,7 @@ export async function getAuthorizationUrl(
   const url = buildAuthorizationUrl(config, {
     redirect_uri: process.env.OIDC_REDIRECT_URI!,
     scope:
-      'openid profile email roles offline_access inquiries.read inquiries.write',
+      'openid profile email roles offline_access inquiries.read inquiries.write notifications.read notifications.write',
     state,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
@@ -140,11 +145,8 @@ export async function fetchUserProfile(
       ? [rawRole]
       : []
 
-  const org = (claims.organization ?? claims.org) as
-    | Record<string, { name: string }>
-    | undefined
-  const tenantId = org ? Object.keys(org)[0] : ''
-  const tenantName = org && tenantId ? org[tenantId].name : ''
+  const tenantId = String(claims.org_id ?? '')
+  const tenantName = String(claims.org_name ?? '')
 
   return {
     id: claims.sub,
@@ -186,11 +188,8 @@ export function parseUserFromToken(token: string): User {
       ? [rawRole]
       : []
 
-  const org = (claims.organization ?? claims.org) as
-    | Record<string, { name: string }>
-    | undefined
-  const tenantId = org ? Object.keys(org)[0] : ''
-  const tenantName = org && tenantId ? org[tenantId].name : ''
+  const tenantId = String(claims.org_id ?? '')
+  const tenantName = String(claims.org_name ?? '')
 
   return {
     id: claims.sub as string,

@@ -70,13 +70,24 @@ export function NotificationBell() {
     if (!user) return
     const unsubscribe = subscribe(
       'NotificationCreated',
-      (envelope: { payload?: { title: string } }) => {
+      (envelope) => {
+        // Optimistically bump the unread count immediately
+        queryClient.setQueryData<number>(
+          ['notifications', 'unread-count'],
+          (old) => (old ?? 0) + 1,
+        )
+        // Then refetch both queries for accurate data
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
         queryClient.invalidateQueries({
           queryKey: ['notifications', 'unread-count'],
         })
         if (document.visibilityState === 'visible') {
-          toast(envelope.payload?.title ?? 'New notification')
+          const payload = envelope.payload as
+            | Record<string, unknown>
+            | undefined
+          const title =
+            (payload?.title ?? payload?.Title) as string | undefined
+          toast(title ?? 'New notification')
         }
       },
     )
@@ -87,7 +98,7 @@ export function NotificationBell() {
 
   const handleClick = useCallback(
     async (notification: Notification) => {
-      if (!notification.readAt) {
+      if (!notification.isRead) {
         await markNotificationRead({ data: { id: notification.id } })
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
         queryClient.invalidateQueries({
@@ -146,14 +157,14 @@ export function NotificationBell() {
                 key={n.id}
                 onClick={() => handleClick(n)}
                 className={`w-full px-4 py-3 text-left transition-colors hover:bg-background-secondary ${
-                  n.readAt ? 'opacity-60' : ''
+                  n.isRead ? 'opacity-60' : ''
                 }`}
               >
                 <p className="text-sm font-medium text-text-primary">
                   {n.title}
                 </p>
                 <p className="mt-0.5 text-xs text-text-secondary line-clamp-2">
-                  {n.body}
+                  {n.message}
                 </p>
                 <p className="mt-1 text-xs text-text-secondary">
                   {timeAgo(n.createdAt)}

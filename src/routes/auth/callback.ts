@@ -99,7 +99,7 @@ export const Route = createFileRoute('/auth/callback')({
           for (const c of clearHeaders) headers.append('Set-Cookie', c)
           return new Response(null, { status: 302, headers })
         } catch (err) {
-          console.error('[auth/callback] Token exchange failed:', err)
+          console.error('[auth/callback] Token exchange failed:', err instanceof Error ? err.message : String(err))
           return errorRedirect('auth_failed')
         }
       },

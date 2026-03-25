@@ -28,6 +28,7 @@ import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/s
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications.index'
 import { Route as DashboardInquiriesIndexRouteImport } from './routes/dashboard/inquiries.index'
 import { Route as DashboardInquiriesIdRouteImport } from './routes/dashboard/inquiries.$id'
+import { Route as ApiNotificationsStreamRouteImport } from './routes/api/notifications/stream'
 
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
@@ -125,6 +126,11 @@ const DashboardInquiriesIdRoute = DashboardInquiriesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DashboardInquiriesRoute,
 } as any)
+const ApiNotificationsStreamRoute = ApiNotificationsStreamRouteImport.update({
+  id: '/api/notifications/stream',
+  path: '/api/notifications/stream',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog': typeof BlogIndexRoute
   '/projects': typeof ProjectsIndexRoute
+  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
+    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
     | '/dashboard/notifications/'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog'
     | '/projects'
+    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
+    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
     | '/dashboard/notifications/'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
+  ApiNotificationsStreamRoute: typeof ApiNotificationsStreamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -403,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInquiriesIdRouteImport
       parentRoute: typeof DashboardInquiriesRoute
     }
+    '/api/notifications/stream': {
+      id: '/api/notifications/stream'
+      path: '/api/notifications/stream'
+      fullPath: '/api/notifications/stream'
+      preLoaderRoute: typeof ApiNotificationsStreamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -460,6 +480,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsSlugRoute: ProjectsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
+  ApiNotificationsStreamRoute: ApiNotificationsStreamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

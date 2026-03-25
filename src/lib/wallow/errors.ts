@@ -42,6 +42,19 @@ export class WallowError extends Error {
   get isUnauthorized(): boolean {
     return this.status === 401
   }
+
+  /** Safe JSON representation that omits traceId and sanitizes validation details */
+  toJSON(): Record<string, unknown> {
+    const json: Record<string, unknown> = {
+      status: this.status,
+      code: this.code,
+      message: this.isValidation ? 'Validation failed' : this.message,
+    }
+    if (this.validationErrors) {
+      json.validationErrors = this.validationErrors
+    }
+    return json
+  }
 }
 
 /** Type guard that checks whether an unknown value is a WallowError */

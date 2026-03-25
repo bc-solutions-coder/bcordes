@@ -6,16 +6,17 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import {
+  AlertTriangle,
   Bell,
+  CheckCheck,
   CheckSquare,
   ClipboardList,
   CreditCard,
+  Loader2,
   Mail,
   Megaphone,
+  MessageCircleReply,
   MessageSquare,
-  AlertTriangle,
-  CheckCheck,
-  Loader2,
 } from 'lucide-react'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
@@ -34,6 +35,7 @@ import type { Notification } from '@/lib/wallow/types'
 const notificationTypes = [
   'TaskAssigned',
   'InquirySubmitted',
+  'InquiryComment',
   'SystemAlert',
   'Announcement',
   'BillingInvoice',
@@ -45,6 +47,7 @@ type NotificationType = (typeof notificationTypes)[number]
 const typeIcon: Record<NotificationType, typeof Bell> = {
   TaskAssigned: ClipboardList,
   InquirySubmitted: Mail,
+  InquiryComment: MessageCircleReply,
   SystemAlert: AlertTriangle,
   Announcement: Megaphone,
   BillingInvoice: CreditCard,
@@ -54,6 +57,7 @@ const typeIcon: Record<NotificationType, typeof Bell> = {
 const typeLabels: Record<NotificationType, string> = {
   TaskAssigned: 'Tasks',
   InquirySubmitted: 'Inquiries',
+  InquiryComment: 'Inquiry Replies',
   SystemAlert: 'Alerts',
   Announcement: 'Announcements',
   BillingInvoice: 'Billing',
@@ -124,7 +128,7 @@ function NotificationsIndexPage() {
   const filteredNotifications = useMemo(() => {
     let result = notifications
     if (unreadOnly) {
-      result = result.filter((n) => !n.readAt)
+      result = result.filter((n) => !n.isRead)
     }
     if (activeType) {
       result = result.filter((n) => n.type === activeType)
@@ -133,7 +137,7 @@ function NotificationsIndexPage() {
   }, [notifications, unreadOnly, activeType])
 
   const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.readAt).length,
+    () => notifications.filter((n) => !n.isRead).length,
     [notifications],
   )
 
@@ -153,7 +157,7 @@ function NotificationsIndexPage() {
 
   const handleRowClick = useCallback(
     async (notification: Notification) => {
-      if (!notification.readAt) {
+      if (!notification.isRead) {
         markReadMutation.mutate(notification.id)
       }
       const route = getNotificationRoute(notification)
@@ -297,7 +301,7 @@ function NotificationsIndexPage() {
             {filteredNotifications.map((notification) => {
               const IconComponent =
                 typeIcon[notification.type as NotificationType] ?? Bell
-              const isUnread = !notification.readAt
+              const isUnread = !notification.isRead
 
               return (
                 <div
@@ -348,7 +352,7 @@ function NotificationsIndexPage() {
                       )}
                     </div>
                     <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
-                      {notification.body}
+                      {notification.message}
                     </p>
                   </div>
 

@@ -83,8 +83,7 @@ export async function createWallowClient(): Promise<WallowClient> {
       try {
         problem = await response.json()
         console.error(
-          `[wallow] ${method} ${path} → ${response.status}`,
-          problem,
+          `[wallow] ${method} ${path} → ${problem.status} ${problem.code ?? ''} ${problem.title}`,
         )
       } catch {
         console.error(

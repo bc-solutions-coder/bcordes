@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
 
 import { submitInquiry } from '~/server-fns/inquiries'
+import { useUser } from '~/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -92,6 +93,7 @@ const timelineOptions = [
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const { data: user } = useUser()
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -106,6 +108,15 @@ export function ContactForm() {
       message: '',
     },
   })
+
+  useEffect(() => {
+    if (user?.email) {
+      form.setValue('email', user.email)
+    }
+    if (user?.name) {
+      form.setValue('name', user.name)
+    }
+  }, [user?.email, user?.name, form])
 
   async function onSubmit(data: ContactFormValues) {
     setIsSubmitting(true)
@@ -190,7 +201,8 @@ export function ContactForm() {
                 <FormControl>
                   <Input
                     placeholder="John Doe"
-                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50"
+                    disabled={!!user?.name}
+                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
                     {...field}
                   />
                 </FormControl>
@@ -211,7 +223,8 @@ export function ContactForm() {
                   <Input
                     type="email"
                     placeholder="john@example.com"
-                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50"
+                    disabled={!!user?.email}
+                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
                     {...field}
                   />
                 </FormControl>
@@ -272,7 +285,7 @@ export function ContactForm() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
+                    <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
                       <SelectValue placeholder="Select project type" />
                     </SelectTrigger>
                   </FormControl>
@@ -306,7 +319,7 @@ export function ContactForm() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
+                    <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
                       <SelectValue placeholder="Select budget range" />
                     </SelectTrigger>
                   </FormControl>
@@ -338,7 +351,7 @@ export function ContactForm() {
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
+                  <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
                     <SelectValue placeholder="Select timeline" />
                   </SelectTrigger>
                 </FormControl>
