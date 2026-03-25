@@ -9,6 +9,7 @@ import {
   randomState,
   refreshTokenGrant,
 } from 'openid-client'
+import { userFromClaims } from './claims'
 import type { Configuration } from 'openid-client'
 import type { User } from './types'
 
@@ -138,29 +139,7 @@ export async function fetchUserProfile(
   const config = await getConfig()
   const claims = await fetchUserInfo(config, accessToken, expectedSubject)
 
-  const rawRole = claims.role as unknown
-  const roles: Array<string> = Array.isArray(rawRole)
-    ? (rawRole as Array<string>)
-    : typeof rawRole === 'string'
-      ? [rawRole]
-      : []
-
-  const tenantId = String(claims.org_id ?? '')
-  const tenantName = String(claims.org_name ?? '')
-
-  return {
-    id: claims.sub,
-    name: ((claims.name ??
-      claims.preferred_username ??
-      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
-      (claims.email as string) ||
-      'User'),
-    email: String(claims.email ?? ''),
-    roles,
-    permissions: [],
-    tenantId,
-    tenantName,
-  }
+  return userFromClaims(claims as Record<string, unknown>)
 }
 
 /**
@@ -180,29 +159,5 @@ export function parseUserFromToken(token: string): User {
     'base64',
   ).toString('utf-8')
   const claims = JSON.parse(json) as Record<string, unknown>
-
-  const rawRole = claims.role
-  const roles: Array<string> = Array.isArray(rawRole)
-    ? (rawRole as Array<string>)
-    : typeof rawRole === 'string'
-      ? [rawRole]
-      : []
-
-  const tenantId = String(claims.org_id ?? '')
-  const tenantName = String(claims.org_name ?? '')
-
-  return {
-    id: claims.sub as string,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- claims are Record<string, unknown>
-    name: ((claims.name ??
-      claims.preferred_username ??
-      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
-      (claims.email as string) ||
-      'User') as string,
-    email: String(claims.email ?? ''),
-    roles,
-    permissions: [],
-    tenantId,
-    tenantName,
-  }
+  return userFromClaims(claims)
 }

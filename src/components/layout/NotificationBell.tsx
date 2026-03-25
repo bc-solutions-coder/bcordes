@@ -21,20 +21,8 @@ import {
   markNotificationRead,
 } from '@/server-fns/notifications'
 import { getNotificationRoute } from '@/lib/notifications/routing'
+import { formatRelativeTime } from '@/lib/format'
 import type { Notification } from '@/lib/wallow/types'
-
-function timeAgo(dateStr: string): string {
-  const seconds = Math.floor(
-    (Date.now() - new Date(dateStr).getTime()) / 1000,
-  )
-  if (seconds < 60) return 'just now'
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-  const days = Math.floor(hours / 24)
-  return `${days}d ago`
-}
 
 export function NotificationBell() {
   const { user } = useUser()
@@ -167,7 +155,7 @@ export function NotificationBell() {
                   {n.message}
                 </p>
                 <p className="mt-1 text-xs text-text-secondary">
-                  {timeAgo(n.createdAt)}
+                  {formatRelativeTime(n.createdAt)}
                 </p>
               </button>
             ))

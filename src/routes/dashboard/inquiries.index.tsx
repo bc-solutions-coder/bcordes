@@ -6,6 +6,7 @@ import { serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
 import { getAuthUser } from '@/lib/auth/middleware'
 import { useSignalR } from '@/hooks/useSignalR'
+import { formatDateTime } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -65,19 +66,6 @@ const projectTypeLabels: Record<string, string> = {
   consulting: 'Consulting',
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-function formatDate(date: string): string {
-  const d = new Date(date)
-  const month = MONTHS[d.getMonth()]
-  const day = d.getDate()
-  const year = d.getFullYear()
-  const h = d.getHours()
-  const m = d.getMinutes().toString().padStart(2, '0')
-  const ampm = h >= 12 ? 'PM' : 'AM'
-  const hour = (h % 12 || 12).toString().padStart(2, '0')
-  return `${month} ${day}, ${year}, ${hour}:${m} ${ampm}`
-}
 
 function DashboardInquiriesPage() {
   const { inquiries, isAdmin } = Route.useLoaderData()
@@ -205,7 +193,7 @@ function DashboardInquiriesPage() {
                       {inquiry.budgetRange || '-'}
                     </TableCell>
                     <TableCell className="text-text-secondary whitespace-nowrap">
-                      {formatDate(inquiry.createdAt)}
+                      {formatDateTime(inquiry.createdAt)}
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       {isAdmin ? (

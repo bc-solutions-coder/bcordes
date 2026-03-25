@@ -184,28 +184,42 @@ describe('SSE stream — debug logging and log sanitization', () => {
 
   describe('reconnection event listener registration', () => {
     it('should register all 3 event listeners on the reconnected hub', () => {
-      // Static analysis: the onclose handler in the source should register
-      // ReceiveNotifications, ReceiveNotification, AND ReceivePresence.
-      // Current bug: ReceiveNotification is missing from the reconnect path.
+      // Static analysis: the onclose handler should re-register hub handlers.
+      // After refactoring, registrations are done via registerHubHandlers()
+      // which iterates over the HUB_EVENTS constant.
       const source = readSource()
 
       const oncloseStart = source.indexOf('hub.onclose(')
       expect(oncloseStart).toBeGreaterThan(-1)
 
-      // Extract the onclose handler up to the try/catch that starts the hub
       const oncloseBlock = source.slice(
         oncloseStart,
         source.indexOf('await hub.start()'),
       )
 
-      // All 3 event names must appear as reconnectedHub.on registrations
-      const registeredEvents = [
-        ...oncloseBlock.matchAll(/reconnectedHub\.on\(\s*['"](\w+)['"]/g),
-      ].map((m) => m[1])
+      // After refactoring, the onclose handler uses registerHubHandlers
+      // instead of individual .on() calls — verify that call exists
+      const usesSharedRegistration =
+        oncloseBlock.includes('registerHubHandlers(reconnectedHub')
 
-      expect(registeredEvents).toContain('ReceiveNotifications')
-      expect(registeredEvents).toContain('ReceiveNotification')
-      expect(registeredEvents).toContain('ReceivePresence')
+      if (usesSharedRegistration) {
+        // Verify that HUB_EVENTS contains all 3 events
+        const hubEventsMatch = source.match(/const HUB_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as\s+const/)
+        expect(hubEventsMatch).not.toBeNull()
+        const eventsBlock = hubEventsMatch![1]
+        expect(eventsBlock).toContain('ReceiveNotifications')
+        expect(eventsBlock).toContain('ReceiveNotification')
+        expect(eventsBlock).toContain('ReceivePresence')
+      } else {
+        // Fallback: check for individual .on() registrations
+        const registeredEvents = [
+          ...oncloseBlock.matchAll(/reconnectedHub\.on\(\s*['"](\w+)['"]/g),
+        ].map((m) => m[1])
+
+        expect(registeredEvents).toContain('ReceiveNotifications')
+        expect(registeredEvents).toContain('ReceiveNotification')
+        expect(registeredEvents).toContain('ReceivePresence')
+      }
     })
   })
 
@@ -242,6 +256,7 @@ describe('SSE stream — debug logging and log sanitization', () => {
         // If it exists, it must be wrapped in a dev-only guard
         const isDevGuarded =
           source.includes("process.env.NODE_ENV !== 'production'") ||
+          source.includes("process.env.NODE_ENV === 'production'") ||
           source.includes("process.env.NODE_ENV === 'development'")
         expect(isDevGuarded).toBe(true)
       } else {

@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
-  useQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import {
   AlertTriangle,
   Bell,
   CheckCheck,
-  CheckSquare,
   ClipboardList,
   CreditCard,
   Loader2,
@@ -18,31 +17,26 @@ import {
   MessageCircleReply,
   MessageSquare,
 } from 'lucide-react'
+import type { Notification } from '@/lib/wallow/types'
+import type { NotificationType } from '@/hooks/useNotificationFilters'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchNotifications,
-  markNotificationRead,
   markAllNotificationsRead,
+  markNotificationRead,
 } from '@/server-fns/notifications'
 import { getNotificationRoute } from '@/lib/notifications/routing'
+import { formatRelativeTime } from '@/lib/format'
 import { useSignalR } from '@/hooks/useSignalR'
-import { Button } from '@/components/ui/button'
+import {
+  notificationTypes,
+  useNotificationFilters,
+} from '@/hooks/useNotificationFilters'
+import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { Notification } from '@/lib/wallow/types'
-
-const notificationTypes = [
-  'TaskAssigned',
-  'InquirySubmitted',
-  'InquiryComment',
-  'SystemAlert',
-  'Announcement',
-  'BillingInvoice',
-  'Mention',
-] as const
-
-type NotificationType = (typeof notificationTypes)[number]
 
 const typeIcon: Record<NotificationType, typeof Bell> = {
   TaskAssigned: ClipboardList,
@@ -64,22 +58,6 @@ const typeLabels: Record<NotificationType, string> = {
   Mention: 'Mentions',
 }
 
-function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr)
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffSec = Math.floor(diffMs / 1000)
-  const diffMin = Math.floor(diffSec / 60)
-  const diffHr = Math.floor(diffMin / 60)
-  const diffDay = Math.floor(diffHr / 24)
-
-  if (diffSec < 60) return 'just now'
-  if (diffMin < 60) return `${diffMin}m ago`
-  if (diffHr < 24) return `${diffHr}h ago`
-  if (diffDay < 7) return `${diffDay}d ago`
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
 export const Route = createFileRoute('/dashboard/notifications/')({
   beforeLoad: () =>
     serverRequireAuth({ data: { returnTo: '/dashboard/notifications' } }),
@@ -96,25 +74,30 @@ function NotificationsIndexPage() {
   const queryClient = useQueryClient()
   const { subscribe } = useSignalR()
 
-  const [unreadOnly, setUnreadOnly] = useState(false)
-  const [activeType, setActiveType] = useState<NotificationType | null>(null)
-  const [page, setPage] = useState(1)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-
-  const queryKey = useMemo(
-    () => ['notifications', { page, type: activeType, unreadOnly }] as const,
-    [page, activeType, unreadOnly],
-  )
-
   const { data: notifications = initialNotifications } = useQuery({
-    queryKey,
+    queryKey: ['notifications'],
     queryFn: () => fetchNotifications(),
-    initialData: page === 1 && !activeType && !unreadOnly
-      ? initialNotifications
-      : undefined,
+    initialData: initialNotifications,
   })
 
-  // Subscribe to real-time notification events
+  const {
+    unreadOnly,
+    activeType,
+    page,
+    setPage,
+    filtered: filteredNotifications,
+    unreadCount,
+    handleTabChange,
+    handleTypeFilter,
+  } = useNotificationFilters(notifications)
+
+  const {
+    selectedIds,
+    allSelected,
+    selectAll,
+    selectOne,
+  } = useNotificationSelection(filteredNotifications)
+
   useEffect(() => {
     const unsubs = [
       subscribe('NotificationCreated', () => {
@@ -123,23 +106,6 @@ function NotificationsIndexPage() {
     ]
     return () => unsubs.forEach((unsub) => unsub())
   }, [subscribe, queryClient])
-
-  // Filter notifications client-side
-  const filteredNotifications = useMemo(() => {
-    let result = notifications
-    if (unreadOnly) {
-      result = result.filter((n) => !n.isRead)
-    }
-    if (activeType) {
-      result = result.filter((n) => n.type === activeType)
-    }
-    return result
-  }, [notifications, unreadOnly, activeType])
-
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.isRead).length,
-    [notifications],
-  )
 
   const markReadMutation = useMutation({
     mutationFn: (id: string) => markNotificationRead({ data: { id } }),
@@ -156,51 +122,14 @@ function NotificationsIndexPage() {
   })
 
   const handleRowClick = useCallback(
-    async (notification: Notification) => {
+    (notification: Notification) => {
       if (!notification.isRead) {
         markReadMutation.mutate(notification.id)
       }
-      const route = getNotificationRoute(notification)
-      navigate({ to: route })
+      navigate({ to: getNotificationRoute(notification) })
     },
     [markReadMutation, navigate],
   )
-
-  const allSelected =
-    filteredNotifications.length > 0 &&
-    filteredNotifications.every((n) => selectedIds.has(n.id))
-
-  function handleSelectAll(checked: boolean) {
-    if (checked) {
-      setSelectedIds(new Set(filteredNotifications.map((n) => n.id)))
-    } else {
-      setSelectedIds(new Set())
-    }
-  }
-
-  function handleSelectOne(id: string, checked: boolean) {
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (checked) {
-        next.add(id)
-      } else {
-        next.delete(id)
-      }
-      return next
-    })
-  }
-
-  function handleTabChange(value: string) {
-    setUnreadOnly(value === 'unread')
-    setPage(1)
-    setSelectedIds(new Set())
-  }
-
-  function handleTypeFilter(type: NotificationType) {
-    setActiveType((prev) => (prev === type ? null : type))
-    setPage(1)
-    setSelectedIds(new Set())
-  }
 
   return (
     <div className="min-h-screen bg-background-primary">
@@ -258,7 +187,7 @@ function NotificationsIndexPage() {
           <div className="mb-4 flex items-center gap-4 rounded-lg border border-border-default bg-background-secondary px-4 py-2">
             <Checkbox
               checked={allSelected}
-              onCheckedChange={(checked) => handleSelectAll(!!checked)}
+              onCheckedChange={(checked) => selectAll(!!checked)}
               aria-label="Select all notifications"
             />
             <span className="text-sm text-text-secondary">
@@ -300,7 +229,7 @@ function NotificationsIndexPage() {
           <div className="overflow-hidden rounded-lg border border-border-default bg-background-secondary">
             {filteredNotifications.map((notification) => {
               const IconComponent =
-                typeIcon[notification.type as NotificationType] ?? Bell
+                typeIcon[notification.type as NotificationType]
               const isUnread = !notification.isRead
 
               return (
@@ -326,7 +255,7 @@ function NotificationsIndexPage() {
                     <Checkbox
                       checked={selectedIds.has(notification.id)}
                       onCheckedChange={(checked) =>
-                        handleSelectOne(notification.id, !!checked)
+                        selectOne(notification.id, !!checked)
                       }
                       aria-label={`Select notification: ${notification.title}`}
                     />
