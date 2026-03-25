@@ -6,10 +6,9 @@ import {
 } from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
 import { WallowError } from './errors'
-import type {Configuration} from 'openid-client';
-import type { ProblemDetails } from './types'
-
-const BASE_URL = process.env.WALLOW_API_URL!
+import { parseProblemDetails, parseRetryDelay } from './request'
+import { WALLOW_BASE_URL } from './config'
+import type {Configuration} from 'openid-client'
 
 interface TokenCache {
   accessToken: string
@@ -76,7 +75,7 @@ async function request(
   const token = await getServiceToken()
 
   const doFetch = (accessToken: string) =>
-    fetch(`${BASE_URL}${path}`, {
+    fetch(`${WALLOW_BASE_URL}${path}`, {
       method,
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -88,26 +87,14 @@ async function request(
   let response = await doFetch(token)
 
   if (response.status === 429) {
-    const retryAfter = response.headers.get('Retry-After')
-    const ms = retryAfter ? Number(retryAfter) * 1000 : 1000
-    await new Promise((resolve) => setTimeout(resolve, ms))
+    await new Promise((resolve) =>
+      setTimeout(resolve, parseRetryDelay(response)),
+    )
     response = await doFetch(token)
   }
 
   if (!response.ok) {
-    let problem: ProblemDetails
-    try {
-      problem = await response.json()
-    } catch {
-      problem = {
-        type: `https://httpstatuses.com/${response.status}`,
-        title: response.statusText || 'Request Failed',
-        status: response.status,
-        detail: `Wallow API returned ${response.status}`,
-        traceId: '',
-        code: `HTTP_${response.status}`,
-      }
-    }
+    const problem = await parseProblemDetails(response, method, path)
     setResponseStatus(problem.status)
     throw new WallowError(problem)
   }

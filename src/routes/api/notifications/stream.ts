@@ -8,8 +8,7 @@ import type { HubConnection } from '@microsoft/signalr'
 import type { RealtimeEnvelope } from '~/lib/wallow/types'
 import { getSession } from '~/lib/auth/session'
 import { refreshToken } from '~/lib/auth/oidc'
-
-const WALLOW_API_URL = process.env.WALLOW_API_URL!
+import { WALLOW_BASE_URL } from '~/lib/wallow/config'
 
 const HUB_EVENTS = [
   'ReceiveNotifications',
@@ -19,7 +18,7 @@ const HUB_EVENTS = [
 
 function buildHubConnection(accessToken: string): HubConnection {
   return new HubConnectionBuilder()
-    .withUrl(`${WALLOW_API_URL}/hubs/realtime`, {
+    .withUrl(`${WALLOW_BASE_URL}/hubs/realtime`, {
       transport: HttpTransportType.WebSockets,
       accessTokenFactory: () => accessToken,
     })

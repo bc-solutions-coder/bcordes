@@ -6,6 +6,7 @@ import { Link } from '@tanstack/react-router'
 import { MobileNav } from './MobileNav'
 import { NotificationBell } from './NotificationBell'
 import { UserMenu } from './UserMenu'
+import { NAV_LINKS } from '@/config/navigation'
 import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
@@ -16,19 +17,15 @@ import {
 } from '@/components/ui/navigation-menu'
 
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
-  { href: '/resume', label: 'Resume' },
-] as const
-
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 0)
+      setScrolled((prev) => {
+        const next = window.scrollY > 0
+        return prev === next ? prev : next
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -62,7 +59,7 @@ export function Header() {
         {/* Desktop Navigation */}
         <NavigationMenu className="hidden md:flex" viewport={false}>
           <NavigationMenuList className="gap-1">
-            {navLinks.map((link) => (
+            {NAV_LINKS.map((link) => (
               <NavigationMenuItem key={link.href}>
                 <NavigationMenuLink asChild>
                   <Link

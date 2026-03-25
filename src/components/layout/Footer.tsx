@@ -1,31 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Github, Linkedin, Mail } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
-
-const navigationLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'About', href: '/about' },
-  { name: 'Resume', href: '/resume' },
-]
-
-const socialLinks = [
-  {
-    name: 'GitHub',
-    href: 'https://github.com/BC-Solutions-Coder',
-    icon: Github,
-  },
-  {
-    name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/bryancordes',
-    icon: Linkedin,
-  },
-  {
-    name: 'Email',
-    href: 'mailto:BC@bcordes.dev',
-    icon: Mail,
-  },
-]
+import { NAV_LINKS, SOCIAL_LINKS } from '@/config/navigation'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -59,13 +34,13 @@ export function Footer() {
               Navigation
             </h3>
             <ul className="space-y-3">
-              {navigationLinks.map((link) => (
-                <li key={link.name}>
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
                   <Link
                     to={link.href}
                     className="text-sm text-white/70 hover:text-[#a8e6a0] transition-colors duration-200"
                   >
-                    {link.name}
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -76,11 +51,11 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white mb-4">Connect</h3>
             <div className="flex gap-4">
-              {socialLinks.map((link) => {
+              {SOCIAL_LINKS.map((link) => {
                 const IconComponent = link.icon
                 return (
                   <a
-                    key={link.name}
+                    key={link.label}
                     href={link.href}
                     target={
                       link.href.startsWith('mailto:') ? undefined : '_blank'
@@ -91,7 +66,7 @@ export function Footer() {
                         : 'noopener noreferrer'
                     }
                     className="text-white/70 hover:text-[#a8e6a0] transition-colors duration-200"
-                    aria-label={link.name}
+                    aria-label={link.label}
                   >
                     <IconComponent className="h-5 w-5" />
                   </a>

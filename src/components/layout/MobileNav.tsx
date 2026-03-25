@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
 
+import { NAV_LINKS } from '@/config/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -13,13 +14,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { useUser } from '@/hooks/useUser'
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
-  { href: '/resume', label: 'Resume' },
-] as const
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
@@ -47,7 +41,7 @@ export function MobileNav() {
           </SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-2 pt-6">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               to={link.href}

@@ -5,27 +5,12 @@ import { createWallowClient } from '@/lib/wallow/client'
 import { serviceClient } from '@/lib/wallow/service-client'
 import { getSession } from '@/lib/auth/session'
 import { requireAdmin } from '@/lib/auth/middleware'
-
-/** Map API PascalCase status values to frontend lowercase */
-const statusToFrontend: Record<string, string> = {
-  New: 'new',
-  Reviewed: 'reviewed',
-  Contacted: 'contacted',
-  Closed: 'closed',
-}
-
-/** Map frontend lowercase status values to API PascalCase */
-const statusToApi: Record<string, string> = {
-  new: 'New',
-  reviewed: 'Reviewed',
-  contacted: 'Contacted',
-  closed: 'Closed',
-}
+import { STATUS_TO_API, STATUS_TO_FRONTEND } from '@/config/inquiries'
 
 function normalizeInquiryStatus(inquiry: Inquiry): Inquiry {
   return {
     ...inquiry,
-    status: statusToFrontend[inquiry.status] ?? inquiry.status.toLowerCase(),
+    status: STATUS_TO_FRONTEND[inquiry.status] ?? inquiry.status.toLowerCase(),
   }
 }
 
@@ -88,7 +73,7 @@ export const updateInquiryStatus = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     await requireAdmin()
     const client = await createWallowClient()
-    const apiStatus = statusToApi[data.status] ?? data.status
+    const apiStatus = STATUS_TO_API[data.status] ?? data.status
     const response = await client.patch(`/api/v1/inquiries/${data.id}/status`, {
       newStatus: apiStatus,
     })

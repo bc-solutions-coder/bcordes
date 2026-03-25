@@ -3,9 +3,8 @@ import { getSession, setSession, withRefreshLock } from '../auth/session'
 import { parseUserFromToken, refreshToken } from '../auth/oidc'
 import { WallowError } from './errors'
 import { isAuthRedirect, parseProblemDetails, parseRetryDelay } from './request'
+import { WALLOW_BASE_URL } from './config'
 import type { SessionData } from '../auth/types'
-
-const BASE_URL = process.env.WALLOW_API_URL!
 
 interface WallowClient {
   get: (path: string) => Promise<Response>
@@ -40,7 +39,7 @@ function doFetch(
   body?: unknown,
 ): Promise<Response> {
   return fetch(
-    `${BASE_URL}${path}`,
+    `${WALLOW_BASE_URL}${path}`,
     buildFetchOptions(method, accessToken, path, body),
   )
 }

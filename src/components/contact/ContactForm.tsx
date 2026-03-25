@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import type { Control, FieldPath, FieldValues } from 'react-hook-form'
 
 import { submitInquiry } from '~/server-fns/inquiries'
 import { useUser } from '~/hooks/useUser'
@@ -89,6 +90,59 @@ const timelineOptions = [
   { value: '3-6 months', label: '3 - 6 months' },
   { value: '6+ months', label: '6+ months' },
 ] as const
+
+function SelectFormField<TFieldValues extends FieldValues>({
+  control,
+  name,
+  label,
+  placeholder,
+  options,
+  required,
+}: {
+  control: Control<TFieldValues>
+  name: FieldPath<TFieldValues>
+  label: string
+  placeholder: string
+  options: ReadonlyArray<{ readonly value: string; readonly label: string }>
+  required?: boolean
+}) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="text-text-primary">
+            {label}{' '}
+            {required && <span className="text-accent-primary">*</span>}
+          </FormLabel>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger
+                tabIndex={0}
+                className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary"
+              >
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="border-border-default bg-background-secondary">
+              {options.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="text-text-primary focus:bg-accent-primary/20 focus:text-accent-secondary"
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -272,104 +326,32 @@ export function ContactForm() {
         />
 
         <div className="grid gap-6 sm:grid-cols-2">
-          <FormField
+          <SelectFormField
             control={form.control}
             name="projectType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-text-primary">
-                  Project Type <span className="text-accent-primary">*</span>
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
-                      <SelectValue placeholder="Select project type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="border-border-default bg-background-secondary">
-                    {projectTypeOptions.map((option) => (
-                      <SelectItem
-                        key={option.value}
-                        value={option.value}
-                        className="text-text-primary focus:bg-accent-primary/20 focus:text-accent-secondary"
-                      >
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Project Type"
+            placeholder="Select project type"
+            options={projectTypeOptions}
+            required
           />
 
-          <FormField
+          <SelectFormField
             control={form.control}
             name="budgetRange"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-text-primary">
-                  Budget Range <span className="text-accent-primary">*</span>
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
-                      <SelectValue placeholder="Select budget range" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="border-border-default bg-background-secondary">
-                    {budgetOptions.map((option) => (
-                      <SelectItem
-                        key={option.value}
-                        value={option.value}
-                        className="text-text-primary focus:bg-accent-primary/20 focus:text-accent-secondary"
-                      >
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Budget Range"
+            placeholder="Select budget range"
+            options={budgetOptions}
+            required
           />
         </div>
 
-        <FormField
+        <SelectFormField
           control={form.control}
           name="timeline"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-text-primary">
-                Timeline <span className="text-accent-primary">*</span>
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger tabIndex={0} className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary">
-                    <SelectValue placeholder="Select timeline" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="border-border-default bg-background-secondary">
-                  {timelineOptions.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      className="text-text-primary focus:bg-accent-primary/20 focus:text-accent-secondary"
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Timeline"
+          placeholder="Select timeline"
+          options={timelineOptions}
+          required
         />
 
         <FormField

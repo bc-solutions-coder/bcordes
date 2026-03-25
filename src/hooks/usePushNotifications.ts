@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   deregisterPushDevice,
@@ -57,13 +57,16 @@ export function usePushNotifications() {
       return registerPushDevice({
         data: {
           endpoint: json.endpoint!,
-          p256dh: json.keys!.p256dh!,
-          auth: json.keys!.auth!,
+          p256dh: json.keys!.p256dh,
+          auth: json.keys!.auth,
         },
       })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['push-devices'] })
+    },
+    onError: (error) => {
+      console.error('Failed to enable push notifications:', error)
     },
   })
 
@@ -77,6 +80,9 @@ export function usePushNotifications() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['push-devices'] })
     },
+    onError: (error) => {
+      console.error('Failed to disable push notifications:', error)
+    },
   })
 
   const testMutation = useMutation({
@@ -84,41 +90,17 @@ export function usePushNotifications() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['push-devices'] })
     },
-  })
-
-  const enable = useCallback(async () => {
-    try {
-      await enableMutation.mutateAsync()
-    } catch (error) {
-      console.error('Failed to enable push notifications:', error)
-      throw error
-    }
-  }, [enableMutation])
-
-  const disable = useCallback(async () => {
-    try {
-      await disableMutation.mutateAsync()
-    } catch (error) {
-      console.error('Failed to disable push notifications:', error)
-      throw error
-    }
-  }, [disableMutation])
-
-  const sendTest = useCallback(async () => {
-    try {
-      await testMutation.mutateAsync()
-    } catch (error) {
+    onError: (error) => {
       console.error('Failed to send test push:', error)
-      throw error
-    }
-  }, [testMutation])
+    },
+  })
 
   return {
     isSupported,
     permission,
     isRegistered,
-    enable,
-    disable,
-    sendTest,
+    enable: enableMutation.mutateAsync,
+    disable: disableMutation.mutateAsync,
+    sendTest: testMutation.mutateAsync,
   }
 }

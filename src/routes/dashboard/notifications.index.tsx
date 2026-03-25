@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
   useMutation,
@@ -25,9 +25,10 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from '@/server-fns/notifications'
+import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
 import { formatRelativeTime } from '@/lib/format'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useSignalREvents } from '@/hooks/useSignalREvents'
 import {
   notificationTypes,
   useNotificationFilters,
@@ -38,24 +39,94 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-const typeIcon: Record<NotificationType, typeof Bell> = {
-  TaskAssigned: ClipboardList,
-  InquirySubmitted: Mail,
-  InquiryComment: MessageCircleReply,
-  SystemAlert: AlertTriangle,
-  Announcement: Megaphone,
-  BillingInvoice: CreditCard,
-  Mention: MessageSquare,
+interface NotificationRowProps {
+  notification: Notification
+  selectedIds: ReadonlySet<string>
+  onSelect: (id: string, checked: boolean) => void
+  onClick: (notification: Notification) => void
 }
 
-const typeLabels: Record<NotificationType, string> = {
-  TaskAssigned: 'Tasks',
-  InquirySubmitted: 'Inquiries',
-  InquiryComment: 'Inquiry Replies',
-  SystemAlert: 'Alerts',
-  Announcement: 'Announcements',
-  BillingInvoice: 'Billing',
-  Mention: 'Mentions',
+function NotificationRow({
+  notification,
+  selectedIds,
+  onSelect,
+  onClick,
+}: NotificationRowProps) {
+  const typeConfig = (
+    NOTIFICATION_TYPE_CONFIG as Partial<
+      Record<string, (typeof NOTIFICATION_TYPE_CONFIG)[NotificationType]>
+    >
+  )[notification.type]
+  const IconComponent = typeConfig?.icon ?? Bell
+  const isUnread = !notification.isRead
+
+  return (
+    <div
+      className={`flex cursor-pointer items-start gap-4 border-b border-border-default px-4 py-3 transition-colors hover:bg-background-primary/50 last:border-b-0 ${
+        isUnread ? 'bg-blue-500/5' : ''
+      }`}
+      onClick={() => onClick(notification)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick(notification)
+        }
+      }}
+    >
+      <div className="pt-1" onClick={(e) => e.stopPropagation()}>
+        <Checkbox
+          checked={selectedIds.has(notification.id)}
+          onCheckedChange={(checked) =>
+            onSelect(notification.id, !!checked)
+          }
+          aria-label={`Select notification: ${notification.title}`}
+        />
+      </div>
+
+      <div className="flex-shrink-0 pt-0.5">
+        <IconComponent className="h-5 w-5 text-text-tertiary" />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-sm ${
+              isUnread
+                ? 'font-semibold text-text-primary'
+                : 'font-medium text-text-secondary'
+            }`}
+          >
+            {notification.title}
+          </span>
+          {isUnread && (
+            <span className="h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
+          )}
+        </div>
+        <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
+          {notification.message}
+        </p>
+      </div>
+
+      <span className="flex-shrink-0 whitespace-nowrap text-xs text-text-tertiary">
+        {formatRelativeTime(notification.createdAt)}
+      </span>
+    </div>
+  )
+}
+
+const NOTIFICATION_TYPE_CONFIG: Record<
+  NotificationType,
+  { icon: typeof Bell; label: string }
+> = {
+  TaskAssigned: { icon: ClipboardList, label: 'Tasks' },
+  InquirySubmitted: { icon: Mail, label: 'Inquiries' },
+  InquiryComment: { icon: MessageCircleReply, label: 'Inquiry Replies' },
+  SystemAlert: { icon: AlertTriangle, label: 'Alerts' },
+  Announcement: { icon: Megaphone, label: 'Announcements' },
+  BillingInvoice: { icon: CreditCard, label: 'Billing' },
+  Mention: { icon: MessageSquare, label: 'Mentions' },
 }
 
 export const Route = createFileRoute('/dashboard/notifications/')({
@@ -72,8 +143,6 @@ function NotificationsIndexPage() {
   const { notifications: initialNotifications } = Route.useLoaderData()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { subscribe } = useSignalR()
-
   const { data: notifications = initialNotifications } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => fetchNotifications(),
@@ -98,26 +167,21 @@ function NotificationsIndexPage() {
     selectOne,
   } = useNotificationSelection(filteredNotifications)
 
-  useEffect(() => {
-    const unsubs = [
-      subscribe('NotificationCreated', () => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      }),
-    ]
-    return () => unsubs.forEach((unsub) => unsub())
-  }, [subscribe, queryClient])
+  useSignalREvents({
+    NotificationCreated: () => invalidateNotifications(queryClient),
+  })
 
   const markReadMutation = useMutation({
     mutationFn: (id: string) => markNotificationRead({ data: { id } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      invalidateNotifications(queryClient)
     },
   })
 
   const markAllReadMutation = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      invalidateNotifications(queryClient)
     },
   })
 
@@ -177,7 +241,7 @@ function NotificationsIndexPage() {
                   : 'border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary'
               }
             >
-              {typeLabels[type]}
+              {NOTIFICATION_TYPE_CONFIG[type].label}
             </Button>
           ))}
         </div>
@@ -227,70 +291,15 @@ function NotificationsIndexPage() {
           </div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-border-default bg-background-secondary">
-            {filteredNotifications.map((notification) => {
-              const IconComponent =
-                typeIcon[notification.type as NotificationType]
-              const isUnread = !notification.isRead
-
-              return (
-                <div
-                  key={notification.id}
-                  className={`flex cursor-pointer items-start gap-4 border-b border-border-default px-4 py-3 transition-colors hover:bg-background-primary/50 last:border-b-0 ${
-                    isUnread ? 'bg-blue-500/5' : ''
-                  }`}
-                  onClick={() => handleRowClick(notification)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleRowClick(notification)
-                    }
-                  }}
-                >
-                  <div
-                    className="pt-1"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Checkbox
-                      checked={selectedIds.has(notification.id)}
-                      onCheckedChange={(checked) =>
-                        selectOne(notification.id, !!checked)
-                      }
-                      aria-label={`Select notification: ${notification.title}`}
-                    />
-                  </div>
-
-                  <div className="flex-shrink-0 pt-0.5">
-                    <IconComponent className="h-5 w-5 text-text-tertiary" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-sm ${
-                          isUnread
-                            ? 'font-semibold text-text-primary'
-                            : 'font-medium text-text-secondary'
-                        }`}
-                      >
-                        {notification.title}
-                      </span>
-                      {isUnread && (
-                        <span className="h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
-                      )}
-                    </div>
-                    <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
-                      {notification.message}
-                    </p>
-                  </div>
-
-                  <span className="flex-shrink-0 whitespace-nowrap text-xs text-text-tertiary">
-                    {formatRelativeTime(notification.createdAt)}
-                  </span>
-                </div>
-              )
-            })}
+            {filteredNotifications.map((notification) => (
+              <NotificationRow
+                key={notification.id}
+                notification={notification}
+                selectedIds={selectedIds}
+                onSelect={selectOne}
+                onClick={handleRowClick}
+              />
+            ))}
           </div>
         )}
 

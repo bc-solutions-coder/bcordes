@@ -1,26 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, createFileRoute, useRouter } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
 import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
-import { serverRequireAuth } from '@/server-fns/auth'
+import { formatDateTime } from '@/lib/format'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchInquiry,
   fetchInquiryComments,
   submitInquiryComment,
 } from '@/server-fns/inquiries'
-import { getAuthUser } from '@/lib/auth/middleware'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useSignalREvents } from '@/hooks/useSignalREvents'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
-
-const fetchCurrentUserRoles = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    const user = await getAuthUser()
-    return { roles: user?.roles ?? [] }
-  },
-)
 
 export const Route = createFileRoute('/dashboard/inquiries/$id')({
   beforeLoad: () =>
@@ -45,31 +37,17 @@ const statusColors: Record<string, string> = {
   closed: 'bg-red-500/10 text-red-500 border-red-500/20',
 }
 
-function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
 function InquiryDetailPage() {
   const { inquiry, comments, isAdmin } = Route.useLoaderData()
   const router = useRouter()
-  const { subscribe } = useSignalR()
   const [commentText, setCommentText] = useState('')
   const [isInternal, setIsInternal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    const unsubs = [
-      subscribe('InquiryStatusUpdated', () => router.invalidate()),
-      subscribe('InquiryCommentAdded', () => router.invalidate()),
-    ]
-    return () => unsubs.forEach((unsub) => unsub())
-  }, [subscribe, router])
+  useSignalREvents({
+    InquiryStatusUpdated: () => router.invalidate(),
+    InquiryCommentAdded: () => router.invalidate(),
+  })
   const visibleComments = isAdmin
     ? comments
     : comments.filter((c) => !c.isInternal)
@@ -151,7 +129,7 @@ function InquiryDetailPage() {
                 Submitted
               </dt>
               <dd className="mt-1 text-text-primary">
-                {formatDate(inquiry.createdAt)}
+                {formatDateTime(inquiry.createdAt)}
               </dd>
             </div>
           </dl>
@@ -196,7 +174,7 @@ function InquiryDetailPage() {
                         </Badge>
                       )}
                       <span className="text-text-tertiary">
-                        {formatDate(comment.createdAt)}
+                        {formatDateTime(comment.createdAt)}
                       </span>
                     </div>
                   </div>
