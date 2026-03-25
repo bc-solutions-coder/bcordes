@@ -28,6 +28,28 @@ vi.mock('@tanstack/react-start/server', () => ({
   deleteCookie: (...args: Array<unknown>) => mockDeleteCookie(...args),
 }))
 
+// ---------------------------------------------------------------------------
+// Valkey mock
+// ---------------------------------------------------------------------------
+
+const mockRedisGet = vi.fn()
+const mockRedisSet = vi.fn()
+const mockRedisDel = vi.fn()
+
+const mockRedisClient = {
+  get: mockRedisGet,
+  set: mockRedisSet,
+  del: mockRedisDel,
+}
+
+vi.mock('~/lib/valkey', () => ({
+  getValkey: vi.fn(() => mockRedisClient),
+  keys: {
+    session: (id: string) => 'bcordes:session:' + id,
+    sessionLock: (id: string) => 'bcordes:lock:session:' + id,
+  },
+}))
+
 const {
   getSession,
   setSession,
@@ -91,7 +113,92 @@ describe('SESSION_SECRET validation', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Tests — getSession
+// Tests — setSession (Valkey-backed)
+// ---------------------------------------------------------------------------
+
+describe('setSession', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('calls seal with session ID and secret', async () => {
+    const data = makeSessionData({ sessionId: 'seal-test-id' })
+    mockSeal.mockResolvedValue('sealed-value')
+    mockRedisSet.mockResolvedValue('OK')
+
+    await setSession(data)
+
+    expect(mockSeal).toHaveBeenCalledWith(
+      'seal-test-id',
+      expect.any(String),
+      {},
+    )
+  })
+
+  it('calls setCookie with httpOnly: true', async () => {
+    const data = makeSessionData()
+    mockSeal.mockResolvedValue('sealed-value')
+    mockRedisSet.mockResolvedValue('OK')
+
+    await setSession(data)
+
+    expect(mockSetCookie).toHaveBeenCalledWith(
+      '__session',
+      'sealed-value',
+      expect.objectContaining({ httpOnly: true }),
+    )
+  })
+
+  it('calls redis set with session key, JSON data, EX, and 86400', async () => {
+    const data = makeSessionData({ sessionId: 'valkey-set-id' })
+    mockSeal.mockResolvedValue('sealed-value')
+    mockRedisSet.mockResolvedValue('OK')
+
+    await setSession(data)
+
+    expect(mockRedisSet).toHaveBeenCalledWith(
+      'bcordes:session:valkey-set-id',
+      JSON.stringify(data),
+      'EX',
+      86400,
+    )
+  })
+
+  it('sets secure: false when NODE_ENV is not production', async () => {
+    vi.stubEnv('NODE_ENV', 'test')
+    const data = makeSessionData()
+    mockSeal.mockResolvedValue('sealed-value')
+    mockRedisSet.mockResolvedValue('OK')
+
+    await setSession(data)
+
+    expect(mockSetCookie).toHaveBeenCalledWith(
+      '__session',
+      'sealed-value',
+      expect.objectContaining({ secure: false }),
+    )
+  })
+
+  it('sets secure: true when NODE_ENV is production', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    const data = makeSessionData()
+    mockSeal.mockResolvedValue('sealed-value')
+    mockRedisSet.mockResolvedValue('OK')
+
+    await setSession(data)
+
+    expect(mockSetCookie).toHaveBeenCalledWith(
+      '__session',
+      'sealed-value',
+      expect.objectContaining({ secure: true }),
+    )
+
+    vi.stubEnv('NODE_ENV', 'test')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Tests — getSession (Valkey-backed)
 // ---------------------------------------------------------------------------
 
 describe('getSession', () => {
@@ -117,114 +224,34 @@ describe('getSession', () => {
     expect(result).toBeNull()
   })
 
-  it('returns null when unsealed session ID is not in the store', async () => {
+  it('calls redis get with session key and parses JSON result', async () => {
+    const data = makeSessionData({ sessionId: 'valkey-get-id' })
+    mockGetCookie.mockReturnValue('sealed-cookie-value')
+    mockUnseal.mockResolvedValue('valkey-get-id')
+    mockRedisGet.mockResolvedValue(JSON.stringify(data))
+
+    const result = await getSession()
+
+    expect(mockRedisGet).toHaveBeenCalledWith('bcordes:session:valkey-get-id')
+    expect(result).toEqual(data)
+  })
+
+  it('returns null when redis get returns null (cache miss)', async () => {
     mockGetCookie.mockReturnValue('sealed-cookie-value')
     mockUnseal.mockResolvedValue('non-existent-session-id')
+    mockRedisGet.mockResolvedValue(null)
 
     const result = await getSession()
 
+    expect(mockRedisGet).toHaveBeenCalledWith(
+      'bcordes:session:non-existent-session-id',
+    )
     expect(result).toBeNull()
   })
-
-  it('returns stored SessionData on valid seal/store hit', async () => {
-    const data = makeSessionData({ sessionId: 'stored-id' })
-
-    // First store it via setSession
-    mockSeal.mockResolvedValue('sealed-stored-id')
-    await setSession(data)
-
-    // Now retrieve it
-    mockGetCookie.mockReturnValue('sealed-stored-id')
-    mockUnseal.mockResolvedValue('stored-id')
-
-    const result = await getSession()
-
-    expect(result).toEqual(data)
-  })
 })
 
 // ---------------------------------------------------------------------------
-// Tests — setSession
-// ---------------------------------------------------------------------------
-
-describe('setSession', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('calls seal with session ID and secret', async () => {
-    const data = makeSessionData({ sessionId: 'seal-test-id' })
-    mockSeal.mockResolvedValue('sealed-value')
-
-    await setSession(data)
-
-    expect(mockSeal).toHaveBeenCalledWith(
-      'seal-test-id',
-      expect.any(String),
-      {},
-    )
-  })
-
-  it('calls setCookie with httpOnly: true', async () => {
-    const data = makeSessionData()
-    mockSeal.mockResolvedValue('sealed-value')
-
-    await setSession(data)
-
-    expect(mockSetCookie).toHaveBeenCalledWith(
-      '__session',
-      'sealed-value',
-      expect.objectContaining({ httpOnly: true }),
-    )
-  })
-
-  it('sets secure: false when NODE_ENV is not production', async () => {
-    vi.stubEnv('NODE_ENV', 'test')
-    const data = makeSessionData()
-    mockSeal.mockResolvedValue('sealed-value')
-
-    await setSession(data)
-
-    expect(mockSetCookie).toHaveBeenCalledWith(
-      '__session',
-      'sealed-value',
-      expect.objectContaining({ secure: false }),
-    )
-  })
-
-  it('sets secure: true when NODE_ENV is production', async () => {
-    vi.stubEnv('NODE_ENV', 'production')
-    const data = makeSessionData()
-    mockSeal.mockResolvedValue('sealed-value')
-
-    await setSession(data)
-
-    expect(mockSetCookie).toHaveBeenCalledWith(
-      '__session',
-      'sealed-value',
-      expect.objectContaining({ secure: true }),
-    )
-
-    vi.stubEnv('NODE_ENV', 'test')
-  })
-
-  it('stores data in module-level Map (retrievable via getSession)', async () => {
-    const data = makeSessionData({ sessionId: 'map-test-id' })
-    mockSeal.mockResolvedValue('sealed-map-test')
-
-    await setSession(data)
-
-    // Verify by retrieving
-    mockGetCookie.mockReturnValue('sealed-map-test')
-    mockUnseal.mockResolvedValue('map-test-id')
-
-    const result = await getSession()
-    expect(result).toEqual(data)
-  })
-})
-
-// ---------------------------------------------------------------------------
-// Tests — sealSessionCookie
+// Tests — sealSessionCookie (Valkey-backed)
 // ---------------------------------------------------------------------------
 
 describe('sealSessionCookie', () => {
@@ -234,6 +261,7 @@ describe('sealSessionCookie', () => {
 
   it('returns a cookie header string containing __session=', async () => {
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -243,6 +271,7 @@ describe('sealSessionCookie', () => {
 
   it('includes HttpOnly in the cookie header', async () => {
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -252,6 +281,7 @@ describe('sealSessionCookie', () => {
 
   it('includes Path=/ in the cookie header', async () => {
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -261,6 +291,7 @@ describe('sealSessionCookie', () => {
 
   it('includes SameSite=Lax in the cookie header', async () => {
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -270,6 +301,7 @@ describe('sealSessionCookie', () => {
 
   it('includes Max-Age=86400 in the cookie header', async () => {
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -280,6 +312,7 @@ describe('sealSessionCookie', () => {
   it('includes Secure when NODE_ENV is production', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -292,6 +325,7 @@ describe('sealSessionCookie', () => {
   it('omits Secure when NODE_ENV is not production', async () => {
     vi.stubEnv('NODE_ENV', 'test')
     mockSeal.mockResolvedValue('sealed-cookie')
+    mockRedisSet.mockResolvedValue('OK')
     const data = makeSessionData()
 
     const cookie = await sealSessionCookie(data)
@@ -301,23 +335,24 @@ describe('sealSessionCookie', () => {
     expect(parts).not.toContain('Secure')
   })
 
-  it('stores session data in module-level Map', async () => {
+  it('stores session data in Valkey via redis set', async () => {
     const data = makeSessionData({ sessionId: 'seal-cookie-store-id' })
     mockSeal.mockResolvedValue('sealed-for-store')
+    mockRedisSet.mockResolvedValue('OK')
 
     await sealSessionCookie(data)
 
-    // Verify by retrieving
-    mockGetCookie.mockReturnValue('sealed-for-store')
-    mockUnseal.mockResolvedValue('seal-cookie-store-id')
-
-    const result = await getSession()
-    expect(result).toEqual(data)
+    expect(mockRedisSet).toHaveBeenCalledWith(
+      'bcordes:session:seal-cookie-store-id',
+      JSON.stringify(data),
+      'EX',
+      86400,
+    )
   })
 })
 
 // ---------------------------------------------------------------------------
-// Tests — clearSession
+// Tests — clearSession (Valkey-backed)
 // ---------------------------------------------------------------------------
 
 describe('clearSession', () => {
@@ -342,26 +377,16 @@ describe('clearSession', () => {
     expect(mockDeleteCookie).toHaveBeenCalledWith('__session', { path: '/' })
   })
 
-  it('attempts to unseal and remove from store when cookie exists', async () => {
-    // First store a session
-    const data = makeSessionData({ sessionId: 'clear-test-id' })
-    mockSeal.mockResolvedValue('sealed-clear-test')
-    await setSession(data)
-
-    // Now clear it
+  it('calls redis del with session key when cookie exists', async () => {
     mockGetCookie.mockReturnValue('sealed-clear-test')
     mockUnseal.mockResolvedValue('clear-test-id')
+    mockRedisDel.mockResolvedValue(1)
 
     clearSession()
 
-    expect(mockDeleteCookie).toHaveBeenCalledWith('__session', { path: '/' })
-
     // Wait for the async unseal to complete
-    await vi.waitFor(async () => {
-      mockGetCookie.mockReturnValue('sealed-clear-test')
-      mockUnseal.mockResolvedValue('clear-test-id')
-      const result = await getSession()
-      expect(result).toBeNull()
+    await vi.waitFor(() => {
+      expect(mockRedisDel).toHaveBeenCalledWith('bcordes:session:clear-test-id')
     })
   })
 
@@ -377,95 +402,98 @@ describe('clearSession', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Tests — withRefreshLock (existing tests)
+// Tests — withRefreshLock (Valkey-backed distributed lock)
 // ---------------------------------------------------------------------------
 
 describe('withRefreshLock', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('executes the callback and returns its resolved value', async () => {
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
+
     const result = await withRefreshLock('session-1', () =>
       Promise.resolve('token-abc'),
     )
     expect(result).toBe('token-abc')
   })
 
-  it('shares the same in-flight promise for concurrent calls with the same sessionId', async () => {
-    let resolve!: (value: string) => void
-    const pending = new Promise<string>((r) => {
-      resolve = r
-    })
-    const callback = vi.fn(() => pending)
+  it('acquires a distributed lock with NX and EX on first invocation', async () => {
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
 
-    const first = withRefreshLock('session-2', callback)
-    const second = withRefreshLock('session-2', callback)
+    await withRefreshLock('session-lock-1', () => Promise.resolve('done'))
 
-    resolve('shared-result')
+    expect(mockRedisSet).toHaveBeenCalledWith(
+      'bcordes:lock:session:session-lock-1',
+      expect.any(String),
+      'NX',
+      'EX',
+      expect.any(Number),
+    )
+  })
 
-    const [r1, r2] = await Promise.all([first, second])
-    expect(r1).toBe('shared-result')
-    expect(r2).toBe('shared-result')
-    expect(callback).toHaveBeenCalledTimes(1)
+  it('does not invoke the callback when lock is already held (NX returns null)', async () => {
+    // First call acquires the lock
+    mockRedisSet.mockResolvedValueOnce('OK')
+    mockRedisDel.mockResolvedValue(1)
+
+    const callbackA = vi.fn(() => Promise.resolve('first'))
+    const callbackB = vi.fn(() => Promise.resolve('second'))
+
+    await withRefreshLock('session-lock-2', callbackA)
+
+    // Second call fails to acquire lock (NX returns null)
+    mockRedisSet.mockResolvedValueOnce(null)
+
+    // The second call should not invoke its callback
+    await withRefreshLock('session-lock-2', callbackB)
+
+    expect(callbackA).toHaveBeenCalledTimes(1)
+    expect(callbackB).not.toHaveBeenCalled()
   })
 
   it('runs independently for different sessionIds', async () => {
-    let resolveA!: (value: string) => void
-    let resolveB!: (value: string) => void
-    const pendingA = new Promise<string>((r) => {
-      resolveA = r
-    })
-    const pendingB = new Promise<string>((r) => {
-      resolveB = r
-    })
-    const callbackA = vi.fn(() => pendingA)
-    const callbackB = vi.fn(() => pendingB)
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
 
-    const promiseA = withRefreshLock('session-a', callbackA)
-    const promiseB = withRefreshLock('session-b', callbackB)
+    const callbackA = vi.fn(() => Promise.resolve('result-a'))
+    const callbackB = vi.fn(() => Promise.resolve('result-b'))
+
+    const rA = await withRefreshLock('session-a', callbackA)
+    const rB = await withRefreshLock('session-b', callbackB)
 
     expect(callbackA).toHaveBeenCalledTimes(1)
     expect(callbackB).toHaveBeenCalledTimes(1)
-
-    resolveA('result-a')
-    resolveB('result-b')
-
-    const [rA, rB] = await Promise.all([promiseA, promiseB])
     expect(rA).toBe('result-a')
     expect(rB).toBe('result-b')
   })
 
-  it('removes the lock entry after callback resolves so next call runs fresh', async () => {
-    const callbackFirst = vi.fn(() => Promise.resolve('first'))
-    const callbackSecond = vi.fn(() => Promise.resolve('second'))
+  it('releases the lock after callback resolves', async () => {
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
 
-    const r1 = await withRefreshLock('session-3', callbackFirst)
-    expect(r1).toBe('first')
-    expect(callbackFirst).toHaveBeenCalledTimes(1)
+    await withRefreshLock('session-release', () => Promise.resolve('done'))
 
-    const r2 = await withRefreshLock('session-3', callbackSecond)
-    expect(r2).toBe('second')
-    expect(callbackSecond).toHaveBeenCalledTimes(1)
+    expect(mockRedisDel).toHaveBeenCalledWith(
+      'bcordes:lock:session:session-release',
+    )
   })
 
-  it('propagates rejection to all waiters and cleans up the lock entry', async () => {
-    let reject!: (error: Error) => void
-    const pending = new Promise<string>((_, r) => {
-      reject = r
-    })
-    const callback = vi.fn(() => pending)
-
-    const first = withRefreshLock('session-4', callback)
-    const second = withRefreshLock('session-4', callback)
+  it('propagates rejection and still releases the lock', async () => {
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
 
     const error = new Error('refresh failed')
-    reject(error)
 
-    await expect(first).rejects.toThrow('refresh failed')
-    await expect(second).rejects.toThrow('refresh failed')
-    expect(callback).toHaveBeenCalledTimes(1)
+    await expect(
+      withRefreshLock('session-err', () => Promise.reject(error)),
+    ).rejects.toThrow('refresh failed')
 
-    // Lock should be cleaned up — a new call should invoke the callback
-    const recovery = vi.fn(() => Promise.resolve('recovered'))
-    const r3 = await withRefreshLock('session-4', recovery)
-    expect(r3).toBe('recovered')
-    expect(recovery).toHaveBeenCalledTimes(1)
+    expect(mockRedisDel).toHaveBeenCalledWith(
+      'bcordes:lock:session:session-err',
+    )
   })
 })

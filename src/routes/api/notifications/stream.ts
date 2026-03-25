@@ -1,56 +1,57 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  HttpTransportType,
-  HubConnectionBuilder,
-  LogLevel,
-} from '@microsoft/signalr'
-import type { HubConnection } from '@microsoft/signalr'
 import type { RealtimeEnvelope } from '~/lib/wallow/types'
 import { getSession } from '~/lib/auth/session'
 import { refreshToken } from '~/lib/auth/oidc'
 import { WALLOW_BASE_URL } from '~/lib/wallow/config'
 
-const HUB_EVENTS = [
-  'ReceiveNotifications',
-  'ReceiveNotification',
-  'ReceivePresence',
-] as const
+const KEEPALIVE_INTERVAL_MS = 30_000
+const MAX_STREAM_DURATION_MS = 4 * 60 * 60 * 1_000 // 4 hours
 
-function buildHubConnection(accessToken: string): HubConnection {
-  return new HubConnectionBuilder()
-    .withUrl(`${WALLOW_BASE_URL}/hubs/realtime`, {
-      transport: HttpTransportType.WebSockets,
-      accessTokenFactory: () => accessToken,
-    })
-    .withAutomaticReconnect()
-    .configureLogging(
-      process.env.NODE_ENV === 'production' ? LogLevel.Warning : LogLevel.Debug,
+/** Manages open SSE connections and supports graceful SIGTERM drain. */
+export class SseManager {
+  readonly connections = new Set<ReadableStreamDefaultController<Uint8Array>>()
+  private _draining = false
+
+  get draining(): boolean {
+    return this._draining
+  }
+
+  register(controller: ReadableStreamDefaultController<Uint8Array>): void {
+    this.connections.add(controller)
+  }
+
+  unregister(controller: ReadableStreamDefaultController<Uint8Array>): void {
+    this.connections.delete(controller)
+  }
+
+  drain(): void {
+    this._draining = true
+    const encoder = new TextEncoder()
+    const msg = encoder.encode(
+      `event: reconnect\ndata: ${JSON.stringify({ reason: 'shutdown' })}\n\n`,
     )
-    .build()
-}
-
-function registerHubHandlers(
-  hub: HubConnection,
-  handler: (envelope: RealtimeEnvelope) => void,
-): void {
-  for (const event of HUB_EVENTS) {
-    hub.on(event, handler)
+    for (const controller of this.connections) {
+      try {
+        controller.enqueue(msg)
+        controller.close()
+      } catch {
+        // already closed
+      }
+    }
+    this.connections.clear()
   }
 }
 
-function wrapWithDevLogging(hub: HubConnection): void {
-  if (process.env.NODE_ENV === 'production') return
-  const origOn = hub.on.bind(hub)
-  hub.on = (methodName: string, handler: (...args: Array<unknown>) => void) => {
-    return origOn(methodName, (...args: Array<unknown>) => {
-      console.log(
-        `[sse] hub.on("${methodName}"):`,
-        JSON.stringify(args).slice(0, 300),
-      )
-      handler(...args)
-    })
-  }
+export const sseManager = new SseManager()
+
+/** Install the SIGTERM drain handler. Call once at startup. */
+export function installSigtermHandler(): void {
+  process.once('SIGTERM', () => {
+    sseManager.drain()
+  })
 }
+
+export { MAX_STREAM_DURATION_MS }
 
 export const Route = createFileRoute('/api/notifications/stream')({
   server: {
@@ -61,71 +62,220 @@ export const Route = createFileRoute('/api/notifications/stream')({
           return new Response('Unauthorized', { status: 401 })
         }
 
-        const hub = buildHubConnection(session.accessToken)
+        if (sseManager.draining) {
+          return new Response('Service Unavailable', { status: 503 })
+        }
+
         let closed = false
         let keepaliveTimer: ReturnType<typeof setInterval> | undefined
+        let maxDurationTimer: ReturnType<typeof setTimeout> | undefined
+        let upstreamReader: ReadableStreamDefaultReader<Uint8Array> | null =
+          null
+        let streamController: ReadableStreamDefaultController<Uint8Array>
+        const encoder = new TextEncoder()
 
-        const KEEPALIVE_INTERVAL_MS = 30_000
+        // Message queue + pull resolver for backpressure-aware delivery.
+        // Only the most recent keepalive is retained (coalesced) so that
+        // high-priority events (reconnect, upstream data) are not buried
+        // behind hundreds of unread keepalives.
+        let pullResolve: (() => void) | null = null
+        let latestKeepalive: Uint8Array | null = null
+        let shouldClose = false
 
-        const stream = new ReadableStream({
-          async start(controller) {
-            const encoder = new TextEncoder()
+        function enqueueOrBuffer(
+          controller: ReadableStreamDefaultController<Uint8Array>,
+          chunk: Uint8Array,
+          isKeepalive = false,
+        ) {
+          if (closed) return
+          if (isKeepalive) {
+            // Coalesce: only keep the latest keepalive
+            latestKeepalive = chunk
+          } else {
+            // Non-keepalive: enqueue directly (upstream data, connected, reconnect)
+            try {
+              controller.enqueue(chunk)
+            } catch {
+              // Client disconnected
+            }
+          }
+          if (pullResolve) {
+            const resolve = pullResolve
+            pullResolve = null
+            resolve()
+          }
+        }
+
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            streamController = controller
+            sseManager.register(controller)
 
             function send(envelope: RealtimeEnvelope) {
               if (closed) return
-              try {
-                const data = JSON.stringify(envelope)
-                controller.enqueue(
-                  encoder.encode(`event: ${envelope.type}\ndata: ${data}\n\n`),
-                )
-              } catch {
-                // Client disconnected
-              }
+              const data = JSON.stringify(envelope)
+              enqueueOrBuffer(
+                controller,
+                encoder.encode(`event: ${envelope.type}\ndata: ${data}\n\n`),
+              )
             }
 
             keepaliveTimer = setInterval(() => {
               if (closed) return
+              enqueueOrBuffer(
+                controller,
+                encoder.encode(': keepalive\n\n'),
+                true,
+              )
+            }, KEEPALIVE_INTERVAL_MS)
+
+            maxDurationTimer = setTimeout(() => {
+              if (closed) return
+              clearInterval(keepaliveTimer)
+              latestKeepalive = null // discard any pending keepalive
+              enqueueOrBuffer(
+                controller,
+                encoder.encode(
+                  `event: reconnect\ndata: ${JSON.stringify({ reason: 'max-duration' })}\n\n`,
+                ),
+              )
+              shouldClose = true
+              // If pull is waiting, it will close after delivering the reconnect
+              if (pullResolve) {
+                const resolve = pullResolve
+                pullResolve = null
+                resolve()
+              }
+            }, MAX_STREAM_DURATION_MS)
+
+            async function connectUpstream(accessToken: string) {
+              const response = await fetch(
+                `${WALLOW_BASE_URL}/api/v1/notifications/stream`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'text/event-stream',
+                  },
+                  signal: AbortSignal.timeout(0), // no fetch-level timeout; SSE is long-lived
+                },
+              )
+
+              if (!response.ok || !response.body) {
+                throw new Error(
+                  `Upstream SSE failed: ${response.status} ${response.statusText}`,
+                )
+              }
+
+              return response.body.getReader()
+            }
+
+            async function pipeUpstream(
+              reader: ReadableStreamDefaultReader<Uint8Array>,
+            ) {
+              const decoder = new TextDecoder()
+              let buffer = ''
+
               try {
-                controller.enqueue(encoder.encode(': keepalive\n\n'))
+                while (!closed) {
+                  const { value, done } = await reader.read()
+                  if (done) break
+
+                  buffer += decoder.decode(value, { stream: true })
+
+                  // Parse complete SSE messages from the buffer
+                  const messages = buffer.split('\n\n')
+                  buffer = messages.pop()! // keep incomplete last chunk
+
+                  for (const msg of messages) {
+                    if (!msg.trim() || msg.trim().startsWith(':')) continue
+
+                    const dataLine = msg
+                      .split('\n')
+                      .find((l) => l.startsWith('data:'))
+                    if (!dataLine) continue
+
+                    try {
+                      const envelope: RealtimeEnvelope = JSON.parse(
+                        dataLine.slice(5).trim(),
+                      )
+                      send(envelope)
+                    } catch {
+                      // Forward raw if not parseable as envelope
+                      enqueueOrBuffer(controller, encoder.encode(`${msg}\n\n`))
+                    }
+                  }
+                }
+              } catch {
+                // Upstream disconnected
+              }
+            }
+
+            // Use void to handle the async start logic
+            void (async () => {
+              try {
+                upstreamReader = await connectUpstream(session.accessToken)
+                console.log('[sse] upstream connected')
+                enqueueOrBuffer(controller, encoder.encode(': connected\n\n'))
+
+                await pipeUpstream(upstreamReader)
+
+                // Upstream ended — attempt reconnect with refreshed token
+                if (!closed && session.refreshToken) {
+                  try {
+                    const tokens = await refreshToken(session.refreshToken)
+                    upstreamReader = await connectUpstream(tokens.accessToken)
+                    console.log('[sse] upstream reconnected')
+                    await pipeUpstream(upstreamReader)
+                  } catch {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- closed is mutated in cancel()
+                    if (!closed) controller.close()
+                  }
+                } else if (!closed) {
+                  controller.close()
+                }
+              } catch (err) {
+                console.error('[sse] upstream connection failed', err)
+                clearInterval(keepaliveTimer)
+                controller.close()
+              }
+            })()
+          },
+          pull() {
+            // Deliver any pending keepalive
+            if (latestKeepalive) {
+              const chunk = latestKeepalive
+              latestKeepalive = null
+              try {
+                streamController.enqueue(chunk)
               } catch {
                 // Client disconnected
               }
-            }, KEEPALIVE_INTERVAL_MS)
-
-            wrapWithDevLogging(hub)
-            registerHubHandlers(hub, send)
-
-            hub.onclose(async () => {
-              if (closed) return
-              if (!session.refreshToken) return
-
-              try {
-                const tokens = await refreshToken(session.refreshToken)
-                const reconnectedHub = buildHubConnection(tokens.accessToken)
-                registerHubHandlers(reconnectedHub, send)
-                await reconnectedHub.start()
-                console.log('[sse] reconnected to hub')
-              } catch {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- closed is mutated in cancel()
-                if (!closed) controller.close()
-              }
-            })
-
-            try {
-              await hub.start()
-              console.log('[sse] hub connected')
-              controller.enqueue(encoder.encode(': connected\n\n'))
-            } catch (err) {
-              console.error('[sse] hub connection failed', err)
-              clearInterval(keepaliveTimer)
-              controller.close()
+              return
             }
+            if (shouldClose) {
+              try {
+                streamController.close()
+              } catch {
+                // already closed
+              }
+              return
+            }
+            // Wait for the next push
+            return new Promise<void>((resolve) => {
+              pullResolve = resolve
+            })
           },
           cancel() {
-            console.log('[sse] client disconnected, stopping hub')
+            console.log('[sse] client disconnected')
             closed = true
             clearInterval(keepaliveTimer)
-            hub.stop()
+            clearTimeout(maxDurationTimer)
+            sseManager.unregister(streamController)
+            if (pullResolve) {
+              pullResolve()
+              pullResolve = null
+            }
+            upstreamReader?.cancel().catch(() => {})
           },
         })
 

@@ -10,6 +10,23 @@ vi.mock('openid-client', () => ({
   discovery: (...args: Array<unknown>) => mockDiscovery(...args),
 }))
 
+const mockRedisGet = vi.fn().mockResolvedValue(null)
+const mockRedisSet = vi.fn().mockResolvedValue('OK')
+const mockRedisDel = vi.fn().mockResolvedValue(1)
+
+vi.mock('~/lib/valkey', () => ({
+  getValkey: vi.fn(() => ({
+    get: mockRedisGet,
+    set: mockRedisSet,
+    del: mockRedisDel,
+  })),
+  keys: {
+    serviceToken: () => 'bcordes:service-token',
+    serviceTokenLock: () => 'bcordes:lock:service-token',
+    oidcConfig: () => 'bcordes:oidc-config',
+  },
+}))
+
 describe('service client — 401 retry', () => {
   const originalEnv = { ...process.env }
   let fetchSpy: ReturnType<typeof vi.fn>

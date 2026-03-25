@@ -33,6 +33,21 @@ vi.mock('@/lib/auth/oidc', () => ({
   fetchUserProfile: mockFetchUserProfile,
 }))
 
+vi.mock('~/lib/valkey', () => ({
+  getValkey: vi.fn(() => ({
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue('OK'),
+    del: vi.fn().mockResolvedValue(1),
+  })),
+  keys: {
+    session: (id: string) => 'bcordes:session:' + id,
+    sessionLock: (id: string) => 'bcordes:lock:session:' + id,
+    serviceToken: () => 'bcordes:service-token',
+    serviceTokenLock: () => 'bcordes:lock:service-token',
+    oidcConfig: () => 'bcordes:oidc-config',
+  },
+}))
+
 // ---------------------------------------------------------------------------
 // Fixtures
 // ---------------------------------------------------------------------------

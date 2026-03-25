@@ -8,16 +8,11 @@ import { WallowError } from './errors'
 import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
 import { WALLOW_BASE_URL } from './config'
 import type { Configuration } from 'openid-client'
-
-interface TokenCache {
-  accessToken: string
-  expiresAt: number // unix seconds
-}
+import { getValkey, keys } from '~/lib/valkey'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
 let configPromise: Promise<Configuration> | null = null
-let tokenCache: TokenCache | null = null
 let inflightRefresh: Promise<string> | null = null
 
 function getConfig(): Promise<Configuration> {
@@ -40,30 +35,50 @@ function getConfig(): Promise<Configuration> {
 
 async function getServiceToken(): Promise<string> {
   const now = Math.floor(Date.now() / 1000)
+  const redis = getValkey()
 
-  if (tokenCache && tokenCache.expiresAt - 30 > now) {
-    return tokenCache.accessToken
+  // Check Valkey cache first
+  const cached = await redis.get(keys.serviceToken())
+  if (cached) {
+    const parsed = JSON.parse(cached) as {
+      accessToken: string
+      expiresAt: number
+    }
+    if (parsed.expiresAt - 30 > now) {
+      return parsed.accessToken
+    }
   }
 
+  // Deduplicate concurrent in-process refreshes
   if (inflightRefresh) {
     return inflightRefresh
   }
 
-  inflightRefresh = fetchServiceToken().finally(() => {
+  inflightRefresh = (async () => {
+    // Acquire lock
+    await redis.set(keys.serviceTokenLock(), '1', 'NX', 'EX', 10)
+
+    const config = await getConfig()
+    const tokens = await clientCredentialsGrant(config, {
+      scope: 'inquiries.write inquiries.read',
+    })
+    const expiresIn = tokens.expires_in ?? 3600
+    const expiresAt = Math.floor(Date.now() / 1000) + expiresIn
+    const ttl = Math.max(expiresIn - 30, 1)
+
+    await redis.set(
+      keys.serviceToken(),
+      JSON.stringify({ accessToken: tokens.access_token, expiresAt }),
+      'EX',
+      ttl,
+    )
+
+    return tokens.access_token
+  })().finally(() => {
     inflightRefresh = null
   })
 
   return inflightRefresh
-}
-
-async function fetchServiceToken(): Promise<string> {
-  const config = await getConfig()
-  const tokens = await clientCredentialsGrant(config, {
-    scope: 'inquiries.write inquiries.read',
-  })
-  const expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in ?? 3600)
-  tokenCache = { accessToken: tokens.access_token, expiresAt }
-  return tokenCache.accessToken
 }
 
 const REQUEST_TIMEOUT_MS = 30_000
@@ -96,7 +111,7 @@ async function request(
 
   // 401 — invalidate cached token, fetch a new one, retry once
   if (response.status === 401) {
-    tokenCache = null
+    await getValkey().del(keys.serviceToken())
     const freshToken = await getServiceToken()
     try {
       response = await doFetch(freshToken)

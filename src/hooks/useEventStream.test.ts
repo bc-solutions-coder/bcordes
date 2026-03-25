@@ -91,19 +91,19 @@ afterEach(() => {
 /* ------------------------------------------------------------------ */
 
 async function importHook() {
-  const mod = await import('./useSignalR')
-  return mod.useSignalR
+  const mod = await import('./useEventStream')
+  return mod.useEventStream
 }
 
 /* ------------------------------------------------------------------ */
 /*  Tests                                                               */
 /* ------------------------------------------------------------------ */
 
-describe('useSignalR', () => {
+describe('useEventStream', () => {
   it('starts connection on mount and transitions connecting -> connected', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     // Should be connecting initially
     expect(result.current.status).toBe('connecting')
@@ -119,10 +119,10 @@ describe('useSignalR', () => {
   })
 
   it('dispatches generic message events to type-matched subscribers', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
     const handler = vi.fn()
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     // Subscribe
     act(() => {
@@ -149,10 +149,10 @@ describe('useSignalR', () => {
   })
 
   it('dispatches named SSE events to type-matched subscribers', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
     const handler = vi.fn()
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     act(() => {
       result.current.subscribe('NotificationCreated', handler)
@@ -178,10 +178,10 @@ describe('useSignalR', () => {
   })
 
   it('does not dispatch to handlers for non-matching types', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
     const handler = vi.fn()
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     act(() => {
       result.current.subscribe('TaskAssigned', handler)
@@ -206,11 +206,11 @@ describe('useSignalR', () => {
   })
 
   it('unsubscribe removes the handler', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
     const handler = vi.fn()
     let unsubscribe: () => void
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     act(() => {
       unsubscribe = result.current.subscribe('SystemAlert', handler)
@@ -255,9 +255,9 @@ describe('useSignalR', () => {
     })
 
     it('reconnects with exponential backoff on error', async () => {
-      const useSignalR = await importHook()
+      const useEventStream = await importHook()
 
-      const { result } = renderHook(() => useSignalR())
+      const { result } = renderHook(() => useEventStream())
 
       // First connection
       expect(mockEventSources).toHaveLength(1)
@@ -309,9 +309,9 @@ describe('useSignalR', () => {
     })
 
     it('increases backoff delay for consecutive failures', async () => {
-      const useSignalR = await importHook()
+      const useEventStream = await importHook()
 
-      renderHook(() => useSignalR())
+      renderHook(() => useEventStream())
 
       // First connection attempt already happened
       expect(mockEventSources).toHaveLength(1)
@@ -359,9 +359,9 @@ describe('useSignalR', () => {
     })
 
     it('caps backoff at 30 seconds', async () => {
-      const useSignalR = await importHook()
+      const useEventStream = await importHook()
 
-      renderHook(() => useSignalR())
+      renderHook(() => useEventStream())
 
       // Fail many times to exceed 30s cap
       // attempt 0: 1s, 1: 2s, 2: 4s, 3: 8s, 4: 16s, 5: 30s (capped)
@@ -397,9 +397,9 @@ describe('useSignalR', () => {
 
   it('closes EventSource and clears timers on unmount', async () => {
     vi.useFakeTimers()
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
-    const { result, unmount } = renderHook(() => useSignalR())
+    const { result, unmount } = renderHook(() => useEventStream())
 
     const es = latestES()
 
@@ -416,9 +416,9 @@ describe('useSignalR', () => {
 
   it('clears reconnect timer on unmount during backoff', async () => {
     vi.useFakeTimers()
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
-    const { unmount } = renderHook(() => useSignalR())
+    const { unmount } = renderHook(() => useEventStream())
 
     // Trigger error to start reconnect timer
     act(() => {
@@ -438,11 +438,359 @@ describe('useSignalR', () => {
     vi.useRealTimers()
   })
 
+  describe('attempt cap', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('stops reconnecting after 10 consecutive errors', async () => {
+      const useEventStream = await importHook()
+
+      renderHook(() => useEventStream())
+
+      // Initial connection is attempt 0
+      expect(mockEventSources).toHaveLength(1)
+
+      // Fail 10 times, advancing through each backoff
+      for (let i = 0; i < 10; i++) {
+        act(() => {
+          fireError(latestES())
+        })
+        const delay = Math.min(1000 * Math.pow(2, i), 30000)
+        act(() => {
+          vi.advanceTimersByTime(delay)
+        })
+      }
+
+      const countAfter10Failures = mockEventSources.length
+
+      // The 11th error should NOT schedule another reconnect
+      act(() => {
+        fireError(latestES())
+      })
+
+      // Advance well past any possible backoff
+      act(() => {
+        vi.advanceTimersByTime(120000)
+      })
+
+      // No new EventSource should have been created
+      expect(mockEventSources).toHaveLength(countAfter10Failures)
+    })
+  })
+
+  describe('connection timeout', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('closes EventSource and transitions to reconnecting after 10s timeout when onopen never fires', async () => {
+      const useEventStream = await importHook()
+
+      const { result } = renderHook(() => useEventStream())
+
+      expect(result.current.status).toBe('connecting')
+      const es = latestES()
+
+      // Do NOT fire onopen — simulate a hung connection
+      // After 10 seconds the hook should close the EventSource and start reconnecting
+      act(() => {
+        vi.advanceTimersByTime(10000)
+      })
+
+      expect(es.close).toHaveBeenCalled()
+      expect(
+        result.current.status === 'reconnecting' ||
+          result.current.status === 'disconnected',
+      ).toBe(true)
+
+      // A new EventSource should eventually be created
+      act(() => {
+        vi.advanceTimersByTime(30000)
+      })
+      expect(mockEventSources.length).toBeGreaterThan(1)
+    })
+  })
+
+  describe('visibility-aware reconnect', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('reconnects immediately when tab becomes visible while disconnected', async () => {
+      const useEventStream = await importHook()
+
+      const { result } = renderHook(() => useEventStream())
+
+      // Connect then disconnect
+      act(() => {
+        fireOpen(latestES())
+      })
+      act(() => {
+        fireError(latestES())
+      })
+      expect(result.current.status).toBe('disconnected')
+
+      const countBeforeVisible = mockEventSources.length
+
+      // Simulate tab becoming visible
+      Object.defineProperty(document, 'visibilityState', {
+        value: 'visible',
+        writable: true,
+        configurable: true,
+      })
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'))
+      })
+
+      // Should trigger an immediate reconnect (no waiting for backoff timer)
+      expect(mockEventSources.length).toBeGreaterThan(countBeforeVisible)
+    })
+
+    it('resets attempts and reconnects when visible after max attempts reached', async () => {
+      const useEventStream = await importHook()
+
+      const { result } = renderHook(() => useEventStream())
+
+      // Exhaust all 10 attempts
+      for (let i = 0; i < 10; i++) {
+        act(() => {
+          fireError(latestES())
+        })
+        const delay = Math.min(1000 * Math.pow(2, i), 30000)
+        act(() => {
+          vi.advanceTimersByTime(delay)
+        })
+      }
+
+      // One more error — should be at the cap now
+      act(() => {
+        fireError(latestES())
+      })
+      act(() => {
+        vi.advanceTimersByTime(120000)
+      })
+
+      const countAtMax = mockEventSources.length
+
+      // Simulate tab becoming visible
+      Object.defineProperty(document, 'visibilityState', {
+        value: 'visible',
+        writable: true,
+        configurable: true,
+      })
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'))
+      })
+
+      // Should reset attempts and create a new connection
+      expect(mockEventSources.length).toBeGreaterThan(countAtMax)
+      expect(result.current.status).toBe('connecting')
+    })
+  })
+
+  describe('reconnect SSE event', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('resets attempt counter and schedules fresh connection on named reconnect event', async () => {
+      const useEventStream = await importHook()
+
+      const { result } = renderHook(() => useEventStream())
+
+      act(() => {
+        fireOpen(latestES())
+      })
+      expect(result.current.status).toBe('connected')
+
+      // Simulate several consecutive failures to bump the attempt counter
+      act(() => {
+        fireError(latestES())
+      })
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      act(() => {
+        fireError(latestES())
+      })
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      act(() => {
+        fireOpen(latestES())
+      })
+
+      const countBefore = mockEventSources.length
+
+      // Server sends a named 'reconnect' SSE event
+      act(() => {
+        fireNamedEvent(latestES(), 'reconnect', {
+          type: 'reconnect',
+          module: 'system',
+          payload: {},
+          timestamp: '2026-03-25T00:00:00Z',
+        })
+      })
+
+      // The hook should close the current connection and schedule a fresh one
+      // with the attempt counter reset to 0 (so delay should be 1000ms = 2^0 * 1000)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+
+      expect(mockEventSources.length).toBeGreaterThan(countBefore)
+      // Verify it used the reset delay (1s, not escalated)
+      expect(result.current.status).toBe('connecting')
+    })
+  })
+
+  describe('BroadcastChannel leader election', () => {
+    let MockBroadcastChannelClass: ReturnType<typeof vi.fn>
+    let mockChannelInstances: Array<{
+      name: string
+      postMessage: ReturnType<typeof vi.fn>
+      close: ReturnType<typeof vi.fn>
+      onmessage: ((ev: MessageEvent) => void) | null
+    }>
+
+    beforeEach(() => {
+      vi.useFakeTimers()
+      mockChannelInstances = []
+      MockBroadcastChannelClass = vi.fn((name: string) => {
+        const instance = {
+          name,
+          postMessage: vi.fn(),
+          close: vi.fn(),
+          onmessage: null as ((ev: MessageEvent) => void) | null,
+        }
+        mockChannelInstances.push(instance)
+        return instance
+      })
+      vi.stubGlobal('BroadcastChannel', MockBroadcastChannelClass)
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    function latestChannel() {
+      return mockChannelInstances[mockChannelInstances.length - 1]
+    }
+
+    it('only one EventSource is created when useEventStream is mounted — the tab becomes leader', async () => {
+      const useEventStream = await importHook()
+
+      renderHook(() => useEventStream())
+
+      // The mounting tab should become leader and create exactly one EventSource
+      expect(mockEventSources).toHaveLength(1)
+      expect(latestES().url).toBe('/api/notifications/stream')
+    })
+
+    it('a follower promotes itself to leader after 7s without heartbeat', async () => {
+      const useEventStream = await importHook()
+
+      // Mount the hook — it should detect an existing leader via BroadcastChannel
+      // and NOT create an EventSource (follower mode)
+      renderHook(() => useEventStream())
+
+      // Simulate being a follower: the hook should not have created an EventSource
+      // if it detected another leader. Since the current implementation always creates one,
+      // this test verifies the future behavior where a follower tab defers.
+      // For now: we expect the follower to promote itself after 7s of no heartbeats.
+
+      const channel = latestChannel()
+      expect(channel).toBeDefined()
+
+      // Simulate the follower receiving no heartbeat for 7 seconds
+      const countBefore = mockEventSources.length
+
+      act(() => {
+        vi.advanceTimersByTime(7000)
+      })
+
+      // After 7s without heartbeat, the follower should promote itself and create an EventSource
+      expect(mockEventSources.length).toBeGreaterThan(countBefore)
+    })
+
+    it('an event message on BroadcastChannel calls follower subscribers without an open EventSource', async () => {
+      const useEventStream = await importHook()
+
+      const handler = vi.fn()
+      const { result } = renderHook(() => useEventStream())
+
+      act(() => {
+        result.current.subscribe('NotificationCreated', handler)
+      })
+
+      const channel = latestChannel()
+      expect(channel).toBeDefined()
+      expect(channel.onmessage).toBeTypeOf('function')
+
+      const envelope: RealtimeEnvelope = {
+        type: 'NotificationCreated',
+        module: 'notifications',
+        payload: { id: '99' },
+        timestamp: '2026-03-25T00:00:00Z',
+      }
+
+      // Simulate receiving an event via BroadcastChannel (relayed by the leader tab)
+      act(() => {
+        channel.onmessage!(
+          new MessageEvent('message', {
+            data: { type: 'event', envelope },
+          }),
+        )
+      })
+
+      // The follower's subscriber should be called even though it has no EventSource
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(handler).toHaveBeenCalledWith(envelope)
+    })
+
+    it('on leader unmount, postMessage is called with { type: "leader-resign" }', async () => {
+      const useEventStream = await importHook()
+
+      const { unmount } = renderHook(() => useEventStream())
+
+      act(() => {
+        fireOpen(latestES())
+      })
+
+      const channel = latestChannel()
+      expect(channel).toBeDefined()
+
+      unmount()
+
+      // On unmount, the leader should broadcast a resign message
+      expect(channel.postMessage).toHaveBeenCalledWith({
+        type: 'leader-resign',
+      })
+    })
+  })
+
   it('ignores malformed message data gracefully', async () => {
-    const useSignalR = await importHook()
+    const useEventStream = await importHook()
 
     const handler = vi.fn()
-    const { result } = renderHook(() => useSignalR())
+    const { result } = renderHook(() => useEventStream())
 
     act(() => {
       result.current.subscribe('Foo', handler)

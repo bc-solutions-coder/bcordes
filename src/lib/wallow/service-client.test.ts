@@ -17,6 +17,25 @@ vi.mock('@tanstack/react-start/server', () => ({
   setResponseStatus: vi.fn(),
 }))
 
+const mockRedisGet = vi.fn()
+const mockRedisSet = vi.fn()
+const mockRedisDel = vi.fn()
+
+const mockRedis = {
+  get: mockRedisGet,
+  set: mockRedisSet,
+  del: mockRedisDel,
+}
+
+vi.mock('~/lib/valkey', () => ({
+  getValkey: vi.fn(() => mockRedis),
+  keys: {
+    serviceToken: () => 'bcordes:service-token',
+    serviceTokenLock: () => 'bcordes:lock:service-token',
+    oidcConfig: () => 'bcordes:oidc-config',
+  },
+}))
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -66,32 +85,64 @@ describe('service-client', () => {
 
     mockDiscovery.mockResolvedValue(FAKE_CONFIG)
     mockClientCredentialsGrant.mockResolvedValue(tokenResponse('tok-initial'))
+
+    // Default: Valkey cache is empty
+    mockRedisGet.mockResolvedValue(null)
+    mockRedisSet.mockResolvedValue('OK')
+    mockRedisDel.mockResolvedValue(1)
   })
 
   describe('getServiceToken (via serviceClient.get)', () => {
-    it('fetches token on first call', async () => {
+    it('checks Valkey cache first, misses, fetches token via clientCredentialsGrant, then caches in Valkey', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
 
       const client = await loadModule()
       await client.get('/test')
 
+      // Should check Valkey for cached token
+      expect(mockRedisGet).toHaveBeenCalledWith('bcordes:service-token')
+      // Cache miss → fetch via OIDC
       expect(mockDiscovery).toHaveBeenCalledOnce()
       expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
+      // Should store token in Valkey
+      expect(mockRedisSet).toHaveBeenCalledWith(
+        'bcordes:service-token',
+        expect.stringContaining('tok-initial'),
+        'EX',
+        expect.any(Number),
+      )
       expect(fetchMock).toHaveBeenCalledOnce()
       expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe(
         'Bearer tok-initial',
       )
     })
 
-    it('reuses cached token when not expired', async () => {
+    it('returns cached token from Valkey without calling clientCredentialsGrant', async () => {
+      // Valkey returns a cached token (valid, not expired)
+      const cachedPayload = JSON.stringify({
+        accessToken: 'tok-cached',
+        expiresAt: Math.floor(Date.now() / 1000) + 3600,
+      })
+      mockRedisGet.mockResolvedValue(cachedPayload)
+
       fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
 
       const client = await loadModule()
       await client.get('/first')
       await client.get('/second')
 
-      expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
+      // Should have checked Valkey
+      expect(mockRedisGet).toHaveBeenCalledWith('bcordes:service-token')
+      // Should NOT have called clientCredentialsGrant since Valkey had a valid token
+      expect(mockClientCredentialsGrant).not.toHaveBeenCalled()
       expect(fetchMock).toHaveBeenCalledTimes(2)
+      // Both calls should use the cached token
+      expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe(
+        'Bearer tok-cached',
+      )
+      expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe(
+        'Bearer tok-cached',
+      )
     })
 
     it('fetches fresh token when cached token is expired', async () => {
@@ -113,8 +164,66 @@ describe('service-client', () => {
     })
   })
 
+  describe('Valkey lock for concurrent refresh', () => {
+    it('acquires lock with NX before refreshing token', async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
+
+      const client = await loadModule()
+      await client.get('/test')
+
+      // Should attempt to acquire the lock key with NX
+      expect(mockRedisSet).toHaveBeenCalledWith(
+        'bcordes:lock:service-token',
+        expect.any(String),
+        'NX',
+        'EX',
+        expect.any(Number),
+      )
+    })
+
+    it('two concurrent getServiceToken calls share one clientCredentialsGrant via Valkey lock', async () => {
+      let resolveGrant!: (value: ReturnType<typeof tokenResponse>) => void
+      mockClientCredentialsGrant.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveGrant = resolve
+          }),
+      )
+
+      fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
+
+      const client = await loadModule()
+
+      // Fire two concurrent requests — both will wait on the same inflight grant
+      const p1 = client.get('/a')
+      const p2 = client.get('/b')
+
+      // Allow a microtask tick so both requests enter getServiceToken
+      await new Promise((r) => setTimeout(r, 0))
+
+      // Only one grant call should have been made
+      expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
+
+      // Resolve the grant
+      resolveGrant(tokenResponse('tok-shared'))
+
+      await Promise.all([p1, p2])
+
+      // Still only one grant call
+      expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
+      // Both fetches used the same token
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+      expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe(
+        'Bearer tok-shared',
+      )
+      expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe(
+        'Bearer tok-shared',
+      )
+    })
+  })
+
   describe('401 retry', () => {
-    it('clears token cache, fetches fresh token, retries on 401', async () => {
+    it('deletes cached token from Valkey on 401, fetches fresh token, and retries', async () => {
       mockClientCredentialsGrant
         .mockResolvedValueOnce(tokenResponse('tok-stale'))
         .mockResolvedValueOnce(tokenResponse('tok-refreshed'))
@@ -126,6 +235,8 @@ describe('service-client', () => {
       const client = await loadModule()
       await client.get('/protected')
 
+      // Should delete the cached token from Valkey on 401
+      expect(mockRedisDel).toHaveBeenCalledWith('bcordes:service-token')
       // Two grant calls: initial + refresh after 401
       expect(mockClientCredentialsGrant).toHaveBeenCalledTimes(2)
       // Two fetch calls: first 401, second 200
@@ -165,48 +276,6 @@ describe('service-client', () => {
       const client = await loadModule()
       await expect(client.get('/test')).rejects.toThrow(
         'OIDC_ISSUER environment variable is not set',
-      )
-    })
-  })
-
-  describe('concurrent inflight refresh', () => {
-    it('only calls clientCredentialsGrant once for concurrent requests', async () => {
-      let resolveGrant!: (value: ReturnType<typeof tokenResponse>) => void
-      mockClientCredentialsGrant.mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            resolveGrant = resolve
-          }),
-      )
-
-      fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
-
-      const client = await loadModule()
-
-      // Fire two concurrent requests — both will wait on the same inflight grant
-      const p1 = client.get('/a')
-      const p2 = client.get('/b')
-
-      // Allow a microtask tick so both requests enter getServiceToken
-      await new Promise((r) => setTimeout(r, 0))
-
-      // Only one grant call should have been made
-      expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
-
-      // Resolve the grant
-      resolveGrant(tokenResponse('tok-shared'))
-
-      await Promise.all([p1, p2])
-
-      // Still only one grant call
-      expect(mockClientCredentialsGrant).toHaveBeenCalledOnce()
-      // Both fetches used the same token
-      expect(fetchMock).toHaveBeenCalledTimes(2)
-      expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe(
-        'Bearer tok-shared',
-      )
-      expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe(
-        'Bearer tok-shared',
       )
     })
   })
