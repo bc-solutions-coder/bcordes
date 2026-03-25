@@ -76,4 +76,16 @@ describe('security-headers middleware', () => {
     expect(policy).toContain('microphone=()')
     expect(policy).toContain('geolocation=()')
   })
+
+  it('should set Cross-Origin-Opener-Policy to same-origin', () => {
+    callMiddleware()
+    const headers = getSetHeaders()
+    expect(headers['Cross-Origin-Opener-Policy']).toBe('same-origin')
+  })
+
+  it('should set Cross-Origin-Embedder-Policy to require-corp', () => {
+    callMiddleware()
+    const headers = getSetHeaders()
+    expect(headers['Cross-Origin-Embedder-Policy']).toBe('require-corp')
+  })
 })
