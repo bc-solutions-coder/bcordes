@@ -34,3 +34,27 @@ describe('CSRF token — session storage', () => {
     expect(session.csrfToken).toBe('abc123')
   })
 })
+
+describe('CSRF token — server function', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    process.env.SESSION_SECRET = 'a]zV-*M8WG#aNrqd,1>dC&.7[Px4bxgf'
+  })
+
+  it('getCsrfToken server function should exist and be exported', async () => {
+    const mod = await import('@/server-fns/csrf')
+    expect(mod.getCsrfToken).toBeDefined()
+  })
+})
+
+describe('CSRF token — validation', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    process.env.SESSION_SECRET = 'a]zV-*M8WG#aNrqd,1>dC&.7[Px4bxgf'
+  })
+
+  it('should export a validateCsrfToken function', async () => {
+    const mod = await import('@/server/middleware/csrf-validation')
+    expect(mod.validateCsrfToken).toBeDefined()
+  })
+})
