@@ -40,4 +40,6 @@ export interface SessionData {
   user: User
   /** Incremented on each refresh to detect stale reads */
   version: number
+  /** CSRF synchronizer token for subdomain attack protection */
+  csrfToken?: string
 }

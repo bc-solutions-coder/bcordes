@@ -1,4 +1,4 @@
-import { timingSafeEqual } from 'node:crypto'
+import { timingSafeEqual, randomBytes } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
 import type { SessionData } from '~/lib/auth/types'
 import { exchangeCode, fetchUserProfile } from '~/lib/auth/oidc'
@@ -91,6 +91,7 @@ export const Route = createFileRoute('/auth/callback')({
             expiresAt,
             user,
             version: 1,
+            csrfToken: randomBytes(32).toString('hex'),
           }
 
           const sessionCookie = await sealSessionCookie(sessionData)
