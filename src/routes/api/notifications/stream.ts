@@ -24,9 +24,7 @@ function buildHubConnection(accessToken: string): HubConnection {
     })
     .withAutomaticReconnect()
     .configureLogging(
-      process.env.NODE_ENV === 'production'
-        ? LogLevel.Warning
-        : LogLevel.Debug,
+      process.env.NODE_ENV === 'production' ? LogLevel.Warning : LogLevel.Debug,
     )
     .build()
 }
@@ -43,10 +41,7 @@ function registerHubHandlers(
 function wrapWithDevLogging(hub: HubConnection): void {
   if (process.env.NODE_ENV === 'production') return
   const origOn = hub.on.bind(hub)
-  hub.on = (
-    methodName: string,
-    handler: (...args: Array<unknown>) => void,
-  ) => {
+  hub.on = (methodName: string, handler: (...args: Array<unknown>) => void) => {
     return origOn(methodName, (...args: Array<unknown>) => {
       console.log(
         `[sse] hub.on("${methodName}"):`,
@@ -68,6 +63,9 @@ export const Route = createFileRoute('/api/notifications/stream')({
 
         const hub = buildHubConnection(session.accessToken)
         let closed = false
+        let keepaliveTimer: ReturnType<typeof setInterval> | undefined
+
+        const KEEPALIVE_INTERVAL_MS = 30_000
 
         const stream = new ReadableStream({
           async start(controller) {
@@ -78,14 +76,21 @@ export const Route = createFileRoute('/api/notifications/stream')({
               try {
                 const data = JSON.stringify(envelope)
                 controller.enqueue(
-                  encoder.encode(
-                    `event: ${envelope.type}\ndata: ${data}\n\n`,
-                  ),
+                  encoder.encode(`event: ${envelope.type}\ndata: ${data}\n\n`),
                 )
               } catch {
                 // Client disconnected
               }
             }
+
+            keepaliveTimer = setInterval(() => {
+              if (closed) return
+              try {
+                controller.enqueue(encoder.encode(': keepalive\n\n'))
+              } catch {
+                // Client disconnected
+              }
+            }, KEEPALIVE_INTERVAL_MS)
 
             wrapWithDevLogging(hub)
             registerHubHandlers(hub, send)
@@ -95,12 +100,8 @@ export const Route = createFileRoute('/api/notifications/stream')({
               if (!session.refreshToken) return
 
               try {
-                const tokens = await refreshToken(
-                  session.refreshToken,
-                )
-                const reconnectedHub = buildHubConnection(
-                  tokens.accessToken,
-                )
+                const tokens = await refreshToken(session.refreshToken)
+                const reconnectedHub = buildHubConnection(tokens.accessToken)
                 registerHubHandlers(reconnectedHub, send)
                 await reconnectedHub.start()
                 console.log('[sse] reconnected to hub')
@@ -116,12 +117,14 @@ export const Route = createFileRoute('/api/notifications/stream')({
               controller.enqueue(encoder.encode(': connected\n\n'))
             } catch (err) {
               console.error('[sse] hub connection failed', err)
+              clearInterval(keepaliveTimer)
               controller.close()
             }
           },
           cancel() {
             console.log('[sse] client disconnected, stopping hub')
             closed = true
+            clearInterval(keepaliveTimer)
             hub.stop()
           },
         })
