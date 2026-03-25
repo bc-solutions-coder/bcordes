@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockClientCredentialsGrant = vi.fn()
 const mockDiscovery = vi.fn()
 
 vi.mock('openid-client', () => ({
   allowInsecureRequests: Symbol('allowInsecureRequests'),
-  clientCredentialsGrant: (...args: unknown[]) => mockClientCredentialsGrant(...args),
-  discovery: (...args: unknown[]) => mockDiscovery(...args),
+  clientCredentialsGrant: (...args: Array<unknown>) =>
+    mockClientCredentialsGrant(...args),
+  discovery: (...args: Array<unknown>) => mockDiscovery(...args),
 }))
 
 describe('service client — 401 retry', () => {
@@ -20,7 +21,9 @@ describe('service client — 401 retry', () => {
     process.env.OIDC_SERVICE_CLIENT_SECRET = 'svc-secret'
     process.env.WALLOW_API_URL = 'https://api.test.local'
 
-    const fakeConfig = { serverMetadata: () => ({ issuer: 'https://auth.test.local' }) }
+    const fakeConfig = {
+      serverMetadata: () => ({ issuer: 'https://auth.test.local' }),
+    }
     mockDiscovery.mockResolvedValue(fakeConfig)
 
     fetchSpy = vi.fn()
@@ -48,7 +51,9 @@ describe('service client — 401 retry', () => {
     // First call returns 401, second succeeds
     fetchSpy
       .mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }))
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ ok: true }), { status: 200 }),
+      )
 
     const { serviceClient } = await import('@/lib/wallow/service-client')
     const response = await serviceClient.get('/api/v1/test')

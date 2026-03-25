@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import securityHeaders from '@/server/middleware/security-headers'
 
 // Mock h3 so we can capture what the middleware does
 const mockSetHeaders = vi.fn()
@@ -6,11 +7,8 @@ const mockEvent = { node: { req: {}, res: {} } }
 
 vi.mock('h3', () => ({
   defineEventHandler: (handler: (event: unknown) => void) => handler,
-  setHeaders: (...args: unknown[]) => mockSetHeaders(...args),
+  setHeaders: (...args: Array<unknown>) => mockSetHeaders(...args),
 }))
-
-// Import after mocking
-import securityHeaders from '@/server/middleware/security-headers'
 
 describe('security-headers middleware', () => {
   beforeEach(() => {
@@ -24,9 +22,7 @@ describe('security-headers middleware', () => {
 
   function getSetHeaders(): Record<string, string> {
     // setHeaders should have been called with (event, headersObject)
-    const call = mockSetHeaders.mock.calls[0]
-    if (!call) return {}
-    return call[1] as Record<string, string>
+    return (mockSetHeaders.mock.calls[0]?.[1] ?? {}) as Record<string, string>
   }
 
   it('should call setHeaders on the event', () => {

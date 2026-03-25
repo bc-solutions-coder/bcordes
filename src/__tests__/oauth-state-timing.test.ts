@@ -1,14 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { describe, expect, it } from 'vitest'
 
-const SOURCE_PATH = resolve(
-  __dirname,
-  '..',
-  'routes',
-  'auth',
-  'callback.ts',
-)
+const SOURCE_PATH = resolve(__dirname, '..', 'routes', 'auth', 'callback.ts')
 
 function readSource(): string {
   return readFileSync(SOURCE_PATH, 'utf-8')
@@ -21,7 +15,12 @@ describe('OAuth callback — timing-safe state comparison', () => {
     // Must not use === for state comparison
     const stateComparisonLine = source
       .split('\n')
-      .find((line) => line.includes('state') && line.includes('storedState') && line.includes('==='))
+      .find(
+        (line) =>
+          line.includes('state') &&
+          line.includes('storedState') &&
+          line.includes('==='),
+      )
 
     expect(stateComparisonLine).toBeUndefined()
 
@@ -31,6 +30,8 @@ describe('OAuth callback — timing-safe state comparison', () => {
 
   it('should import timingSafeEqual from node:crypto', () => {
     const source = readSource()
-    expect(source).toMatch(/import.*timingSafeEqual.*from\s+['"]node:crypto['"]/)
+    expect(source).toMatch(
+      /import.*timingSafeEqual.*from\s+['"]node:crypto['"]/,
+    )
   })
 })

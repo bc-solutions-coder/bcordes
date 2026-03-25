@@ -1,14 +1,13 @@
 import {
-  
   allowInsecureRequests,
   clientCredentialsGrant,
-  discovery
+  discovery,
 } from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
 import { WallowError } from './errors'
 import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
 import { WALLOW_BASE_URL } from './config'
-import type {Configuration} from 'openid-client'
+import type { Configuration } from 'openid-client'
 
 interface TokenCache {
   accessToken: string

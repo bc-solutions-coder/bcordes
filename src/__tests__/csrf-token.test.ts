@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SessionData, User } from '@/lib/auth/types'
 
 describe('CSRF token — session storage', () => {
@@ -13,7 +13,7 @@ describe('CSRF token — session storage', () => {
     process.env = { ...originalEnv }
   })
 
-  it('SessionData type should include optional csrfToken field', async () => {
+  it('SessionData type should include optional csrfToken field', () => {
     const session: SessionData = {
       sessionId: 'test-sess',
       accessToken: 'at',

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { WallowError } from '@/lib/wallow/errors'
 
 describe('WallowError user-facing messages', () => {

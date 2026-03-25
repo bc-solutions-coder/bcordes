@@ -1,4 +1,4 @@
-import { timingSafeEqual, randomBytes } from 'node:crypto'
+import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
 import type { SessionData } from '~/lib/auth/types'
 import { exchangeCode, fetchUserProfile } from '~/lib/auth/oidc'
@@ -106,7 +106,10 @@ export const Route = createFileRoute('/auth/callback')({
           for (const c of clearHeaders) headers.append('Set-Cookie', c)
           return new Response(null, { status: 302, headers })
         } catch (err) {
-          console.error('[auth/callback] Token exchange failed:', err instanceof Error ? err.message : String(err))
+          console.error(
+            '[auth/callback] Token exchange failed:',
+            err instanceof Error ? err.message : String(err),
+          )
           return errorRedirect('auth_failed')
         }
       },
