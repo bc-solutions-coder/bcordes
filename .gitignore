@@ -10,6 +10,8 @@ count.txt
 .wrangler
 .output
 coverage
+test-results
+playwright-report
 .vinxi
 todos.json
 

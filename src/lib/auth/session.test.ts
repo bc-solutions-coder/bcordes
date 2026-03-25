@@ -428,10 +428,10 @@ describe('withRefreshLock', () => {
 
     expect(mockRedisSet).toHaveBeenCalledWith(
       'bcordes:lock:session:session-lock-1',
-      expect.any(String),
-      'NX',
+      '1',
       'EX',
-      expect.any(Number),
+      10,
+      'NX',
     )
   })
 
