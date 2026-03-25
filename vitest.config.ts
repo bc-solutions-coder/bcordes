@@ -29,6 +29,7 @@ export default defineConfig({
         'src/**/*.test.{ts,tsx}',
         'src/**/*.stories.{ts,tsx}',
         'src/routeTree.gen.ts',
+        'src/**/types.ts',
       ],
     },
   },
