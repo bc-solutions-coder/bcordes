@@ -6,7 +6,7 @@ import {
 } from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
 import { WallowError } from './errors'
-import { parseProblemDetails, parseRetryDelay } from './request'
+import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
 import { WALLOW_BASE_URL } from './config'
 import type {Configuration} from 'openid-client'
 
@@ -67,6 +67,8 @@ async function fetchServiceToken(): Promise<string> {
   return tokenCache.accessToken
 }
 
+const REQUEST_TIMEOUT_MS = 30_000
+
 async function request(
   method: string,
   path: string,
@@ -77,6 +79,7 @@ async function request(
   const doFetch = (accessToken: string) =>
     fetch(`${WALLOW_BASE_URL}${path}`, {
       method,
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...(body !== undefined && { 'Content-Type': 'application/json' }),
@@ -84,13 +87,34 @@ async function request(
       ...(body !== undefined && { body: JSON.stringify(body) }),
     })
 
-  let response = await doFetch(token)
+  let response: Response
+
+  try {
+    response = await doFetch(token)
+  } catch (err) {
+    throw toNetworkError(err, method, path)
+  }
+
+  // 401 — invalidate cached token, fetch a new one, retry once
+  if (response.status === 401) {
+    tokenCache = null
+    const freshToken = await getServiceToken()
+    try {
+      response = await doFetch(freshToken)
+    } catch (err) {
+      throw toNetworkError(err, method, path)
+    }
+  }
 
   if (response.status === 429) {
     await new Promise((resolve) =>
       setTimeout(resolve, parseRetryDelay(response)),
     )
-    response = await doFetch(token)
+    try {
+      response = await doFetch(await getServiceToken())
+    } catch (err) {
+      throw toNetworkError(err, method, path)
+    }
   }
 
   if (!response.ok) {
