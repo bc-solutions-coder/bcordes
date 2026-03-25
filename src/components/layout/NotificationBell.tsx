@@ -20,6 +20,7 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from '@/server-fns/notifications'
+import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
 import { formatRelativeTime } from '@/lib/format'
 import type { Notification } from '@/lib/wallow/types'
@@ -47,10 +48,7 @@ export function NotificationBell() {
   const markAllRead = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      queryClient.invalidateQueries({
-        queryKey: ['notifications', 'unread-count'],
-      })
+      invalidateNotifications(queryClient)
     },
   })
 
@@ -65,10 +63,7 @@ export function NotificationBell() {
           (old) => (old ?? 0) + 1,
         )
         // Then refetch both queries for accurate data
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        queryClient.invalidateQueries({
-          queryKey: ['notifications', 'unread-count'],
-        })
+        invalidateNotifications(queryClient)
         if (document.visibilityState === 'visible') {
           const payload = envelope.payload as
             | Record<string, unknown>
@@ -88,10 +83,7 @@ export function NotificationBell() {
     async (notification: Notification) => {
       if (!notification.isRead) {
         await markNotificationRead({ data: { id: notification.id } })
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        queryClient.invalidateQueries({
-          queryKey: ['notifications', 'unread-count'],
-        })
+        invalidateNotifications(queryClient)
       }
       navigate({ to: getNotificationRoute(notification) })
     },
