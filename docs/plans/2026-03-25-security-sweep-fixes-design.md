@@ -5,7 +5,7 @@ Status: Approved
 
 ## Overview
 
-Follow-up fixes from a comprehensive security sweep of the bcordes application. Addresses 10 findings across SSE hardening, dependency vulnerabilities, authorization error handling, security headers, OAuth hardening, retry logic, and CSRF protection.
+Follow-up fixes from a comprehensive security sweep of the bcordes application. Originally identified 10 findings; 3 were already resolved by the security hardening commit (79344d4): SSE debug logging (gated behind NODE_ENV), missing SSE reconnect listener (uses shared HUB_EVENTS + registerHubHandlers), and Retry-After support (parseRetryDelay already implemented in both clients). The remaining 7 items are addressed below.
 
 ## Section 1: SSE Stream Hardening
 
