@@ -147,7 +147,7 @@ function SelectFormField<TFieldValues extends FieldValues>({
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const { data: user } = useUser()
+  const { user } = useUser()
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
