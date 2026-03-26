@@ -3,7 +3,7 @@ import {
   getAuthorizationUrl,
   randomPKCECodeVerifier,
   randomState,
-} from '~/lib/auth/oidc'
+} from '@/lib/auth/oidc'
 
 export const Route = createFileRoute('/auth/login')({
   server: {

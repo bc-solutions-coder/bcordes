@@ -1,11 +1,11 @@
-import { Badge } from '~/components/ui/badge'
-import { FadeInView } from '~/components/shared/FadeInView'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 export function AboutHero() {
   return (
     <section className="relative py-20 overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background-primary via-background-secondary to-background-primary" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary to-background" />
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6">
@@ -14,18 +14,18 @@ export function AboutHero() {
           <FadeInView delay={0}>
             <div className="relative flex-shrink-0">
               {/* Outer glow ring */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary blur-md opacity-50" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-primary blur-md opacity-50" />
 
               {/* Profile photo */}
               <img
                 src="/profile-picture.png"
                 alt="Bryan Cordes"
-                className="relative w-40 h-40 rounded-full object-cover border-4 border-background-tertiary"
+                className="relative w-40 h-40 rounded-full object-cover border-4 border-muted"
               />
 
               {/* Status indicator */}
-              <div className="absolute bottom-2 right-2 w-6 h-6 bg-accent-secondary rounded-full border-4 border-background-primary">
-                <span className="absolute inset-0 rounded-full bg-accent-secondary animate-ping opacity-75" />
+              <div className="absolute bottom-2 right-2 w-6 h-6 bg-primary rounded-full border-4 border-background">
+                <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
               </div>
             </div>
           </FadeInView>
@@ -35,26 +35,26 @@ export function AboutHero() {
             <FadeInView delay={100}>
               <Badge
                 variant="outline"
-                className="mb-4 border-accent-primary/50 text-accent-secondary bg-accent-primary/10 px-3 py-1"
+                className="mb-4 border-primary/50 text-primary bg-primary/10 px-3 py-1"
               >
                 About Me
               </Badge>
             </FadeInView>
 
             <FadeInView delay={200}>
-              <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-2">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
                 Bryan Cordes
               </h1>
             </FadeInView>
 
             <FadeInView delay={300}>
-              <p className="text-xl md:text-2xl text-accent-secondary font-medium mb-4">
+              <p className="text-xl md:text-2xl text-primary font-medium mb-4">
                 Full-Stack Software Engineer
               </p>
             </FadeInView>
 
             <FadeInView delay={400}>
-              <p className="text-text-secondary text-lg leading-relaxed max-w-xl mb-6">
+              <p className="text-foreground-secondary text-lg leading-relaxed max-w-xl mb-6">
                 I'm a passionate software engineer with a love for building
                 elegant, scalable solutions. With over six years of experience
                 across the full stack, I specialize in turning complex problems
@@ -65,9 +65,9 @@ export function AboutHero() {
             </FadeInView>
 
             <FadeInView delay={500}>
-              <div className="flex items-center justify-center md:justify-start gap-2 text-text-tertiary">
+              <div className="flex items-center justify-center md:justify-start gap-2 text-muted-foreground">
                 <svg
-                  className="w-5 h-5 text-accent-primary"
+                  className="w-5 h-5 text-primary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

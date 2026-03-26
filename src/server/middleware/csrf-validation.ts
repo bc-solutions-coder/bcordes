@@ -1,6 +1,6 @@
 import { timingSafeEqual } from 'node:crypto'
 import { createError, defineEventHandler, getRequestHeader } from 'h3'
-import { getSession } from '~/lib/auth/session'
+import { getSession } from '@/lib/auth/session'
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
 

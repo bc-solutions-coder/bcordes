@@ -18,7 +18,7 @@ const mockRedisGet = vi.fn().mockResolvedValue(null)
 const mockRedisSet = vi.fn().mockResolvedValue('OK')
 const mockRedisDel = vi.fn().mockResolvedValue(1)
 
-vi.mock('~/lib/valkey', () => ({
+vi.mock('@/lib/valkey', () => ({
   getValkey: vi.fn(() => ({
     get: mockRedisGet,
     set: mockRedisSet,

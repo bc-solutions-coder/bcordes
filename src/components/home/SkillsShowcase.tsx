@@ -1,4 +1,4 @@
-import { FadeInView } from '~/components/shared/FadeInView'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 interface SkillCategory {
   name: string
@@ -33,15 +33,15 @@ const skillCategories: Array<SkillCategory> = [
 
 export function SkillsShowcase() {
   return (
-    <section className="py-24 bg-background-secondary">
+    <section className="py-24 bg-secondary">
       <div className="max-w-6xl mx-auto px-6">
         {/* Section header */}
         <FadeInView delay={0}>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Technologies & Skills
             </h2>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+            <p className="text-lg text-foreground-secondary max-w-2xl mx-auto">
               A comprehensive toolkit built over years of professional
               experience
             </p>
@@ -53,16 +53,16 @@ export function SkillsShowcase() {
           {skillCategories.map((category, categoryIndex) => (
             <FadeInView key={category.name} delay={100 + categoryIndex * 100}>
               <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="h-1 bg-accent-primary" />
+                <div className="h-1 bg-primary" />
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-text-primary mb-4">
+                  <h3 className="text-base font-bold text-foreground mb-4">
                     {category.name}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="px-3 py-1 rounded-full bg-white border border-border-default text-sm font-medium text-text-primary hover:border-accent-primary hover:bg-accent-primary/10 hover:text-accent-primary transition-all duration-200 cursor-default"
+                        className="px-3 py-1 rounded-full bg-white border border-border text-sm font-medium text-foreground hover:border-primary hover:bg-primary/10 hover:text-primary transition-all duration-200 cursor-default"
                       >
                         {skill}
                       </span>

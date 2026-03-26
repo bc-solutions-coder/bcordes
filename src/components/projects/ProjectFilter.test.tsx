@@ -68,15 +68,15 @@ describe('ProjectFilter', () => {
       const reactBadge = screen.getByText('React')
       const allBadge = screen.getByText('All')
 
-      expect(reactBadge.className).toContain('bg-accent-primary')
-      expect(allBadge.className).toContain('border-border-default')
+      expect(reactBadge.className).toContain('bg-primary')
+      expect(allBadge.className).toContain('border-border')
     })
 
     it('renders "All" badge as selected when no tag is selected', () => {
       renderFilter({ selectedTag: null })
 
       const allBadge = screen.getByText('All')
-      expect(allBadge.className).toContain('bg-accent-primary')
+      expect(allBadge.className).toContain('bg-primary')
     })
   })
 
@@ -108,14 +108,14 @@ describe('ProjectFilter', () => {
       renderFilter({ selectedYear: 2024 })
 
       const yearBadge = screen.getByText('2024')
-      expect(yearBadge.className).toContain('bg-accent-primary')
+      expect(yearBadge.className).toContain('bg-primary')
     })
 
     it('renders "All Years" as selected when no year is selected', () => {
       renderFilter({ selectedYear: null })
 
       const allYearsBadge = screen.getByText('All Years')
-      expect(allYearsBadge.className).toContain('bg-accent-primary')
+      expect(allYearsBadge.className).toContain('bg-primary')
     })
   })
 

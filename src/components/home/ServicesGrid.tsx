@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '~/components/ui/card'
-import { FadeInView } from '~/components/shared/FadeInView'
+} from '@/components/ui/shadcn/card'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 interface Service {
   icon: LucideIcon
@@ -42,15 +42,15 @@ const services: Array<Service> = [
 
 export function ServicesGrid() {
   return (
-    <section className="py-24 bg-background-secondary">
+    <section className="py-24 bg-secondary">
       <div className="max-w-6xl mx-auto px-6">
         {/* Section header */}
         <FadeInView delay={0}>
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               What I Do
             </h2>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+            <p className="text-lg text-foreground-secondary max-w-2xl mx-auto">
               Delivering comprehensive software solutions tailored to your
               business needs
             </p>
@@ -61,15 +61,15 @@ export function ServicesGrid() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <FadeInView key={service.title} delay={100 + index * 100}>
-              <Card className="group h-full bg-white border-l-4 border-accent-decorative shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+              <Card className="group h-full bg-white border-l-4 border-decorative shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-accent-light flex items-center justify-center mb-4">
-                    <service.icon className="w-6 h-6 text-accent-primary" />
+                  <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-4">
+                    <service.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl text-text-primary">
+                  <CardTitle className="text-xl text-foreground">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-text-secondary leading-relaxed">
+                  <CardDescription className="text-foreground-secondary leading-relaxed">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
@@ -78,7 +78,7 @@ export function ServicesGrid() {
                     {service.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="px-3 py-1 text-xs font-semibold rounded-md bg-accent-light text-accent-primary"
+                        className="px-3 py-1 text-xs font-semibold rounded-md bg-secondary text-primary"
                       >
                         {skill}
                       </span>

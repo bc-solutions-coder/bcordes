@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@/components/ui/shadcn/badge'
 import { cn } from '@/lib/utils'
 
 interface ProjectFilterProps {
@@ -24,7 +24,7 @@ export function ProjectFilter({
     <div className={cn('space-y-6', className)}>
       {/* Tags Filter */}
       <div>
-        <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-text-tertiary">
+        <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
           Filter by Technology
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -33,7 +33,7 @@ export function ProjectFilter({
             onClick={() => onTagChange(null)}
             className={cn(
               'cursor-pointer transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
             )}
           >
             <Badge
@@ -41,8 +41,8 @@ export function ProjectFilter({
               className={cn(
                 'px-3 py-1',
                 selectedTag === null
-                  ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
+                  ? 'bg-primary text-white hover:bg-primary'
+                  : 'border-border text-foreground-secondary hover:border-primary/50 hover:text-foreground',
               )}
             >
               All
@@ -55,7 +55,7 @@ export function ProjectFilter({
               onClick={() => onTagChange(tag)}
               className={cn(
                 'cursor-pointer transition-all duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
               )}
             >
               <Badge
@@ -63,8 +63,8 @@ export function ProjectFilter({
                 className={cn(
                   'px-3 py-1',
                   selectedTag === tag
-                    ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
+                    ? 'bg-primary text-white hover:bg-primary'
+                    : 'border-border text-foreground-secondary hover:border-primary/50 hover:text-foreground',
                 )}
               >
                 {tag}
@@ -76,7 +76,7 @@ export function ProjectFilter({
 
       {/* Years Filter */}
       <div>
-        <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-text-tertiary">
+        <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
           Filter by Year
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -85,7 +85,7 @@ export function ProjectFilter({
             onClick={() => onYearChange(null)}
             className={cn(
               'cursor-pointer transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
             )}
           >
             <Badge
@@ -93,8 +93,8 @@ export function ProjectFilter({
               className={cn(
                 'px-3 py-1',
                 selectedYear === null
-                  ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                  : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
+                  ? 'bg-primary text-white hover:bg-primary'
+                  : 'border-border text-foreground-secondary hover:border-primary/50 hover:text-foreground',
               )}
             >
               All Years
@@ -107,7 +107,7 @@ export function ProjectFilter({
               onClick={() => onYearChange(year)}
               className={cn(
                 'cursor-pointer transition-all duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary rounded-full',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
               )}
             >
               <Badge
@@ -115,8 +115,8 @@ export function ProjectFilter({
                 className={cn(
                   'px-3 py-1',
                   selectedYear === year
-                    ? 'bg-accent-primary text-white hover:bg-accent-secondary'
-                    : 'border-border-default text-text-secondary hover:border-accent-primary/50 hover:text-text-primary',
+                    ? 'bg-primary text-white hover:bg-primary'
+                    : 'border-border text-foreground-secondary hover:border-primary/50 hover:text-foreground',
                 )}
               >
                 {year}

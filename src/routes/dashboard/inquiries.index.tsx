@@ -5,8 +5,8 @@ import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
 import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
 import { formatDateTime } from '@/lib/format'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Table,
   TableBody,
@@ -14,14 +14,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/shadcn/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/shadcn/select'
 import { STATUS_COLORS, STATUS_LABELS } from '@/config/inquiries'
 
 export const Route = createFileRoute('/dashboard/inquiries/')({
@@ -75,15 +75,13 @@ function DashboardInquiriesPage() {
   const newCount = inquiries.filter((c) => c.status === 'new').length
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border-default bg-background-secondary">
+      <header className="border-b border-border bg-secondary">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <Mail className="h-6 w-6 text-accent-secondary" />
-            <h1 className="text-xl font-semibold text-text-primary">
-              Messages
-            </h1>
+            <Mail className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-semibold text-foreground">Messages</h1>
             {newCount > 0 && (
               <Badge className="bg-blue-500/10 text-blue-500 border-blue-500/20">
                 {newCount} new
@@ -95,7 +93,7 @@ function DashboardInquiriesPage() {
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary"
+            className="border-border text-foreground-secondary hover:text-foreground hover:bg-background"
           >
             <RefreshCw
               className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}
@@ -108,38 +106,44 @@ function DashboardInquiriesPage() {
       {/* Content */}
       <main className="mx-auto max-w-7xl px-6 py-8">
         {inquiries.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-border-default bg-background-secondary py-16">
-            <Mail className="mb-4 h-12 w-12 text-text-tertiary" />
-            <h2 className="mb-2 text-lg font-medium text-text-primary">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary py-16">
+            <Mail className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h2 className="mb-2 text-lg font-medium text-foreground">
               No messages yet
             </h2>
-            <p className="text-text-secondary">
+            <p className="text-foreground-secondary">
               {isAdmin
                 ? 'Contact form submissions will appear here.'
                 : 'Inquiries you submit will appear here.'}
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border-default bg-background-secondary">
+          <div className="overflow-hidden rounded-lg border border-border bg-secondary">
             <Table>
               <TableHeader>
-                <TableRow className="border-border-default hover:bg-transparent">
-                  <TableHead className="text-text-tertiary">Name</TableHead>
-                  <TableHead className="text-text-tertiary">Email</TableHead>
-                  <TableHead className="text-text-tertiary">Company</TableHead>
-                  <TableHead className="text-text-tertiary">
+                <TableRow className="border-border hover:bg-transparent">
+                  <TableHead className="text-muted-foreground">Name</TableHead>
+                  <TableHead className="text-muted-foreground">Email</TableHead>
+                  <TableHead className="text-muted-foreground">
+                    Company
+                  </TableHead>
+                  <TableHead className="text-muted-foreground">
                     Project Type
                   </TableHead>
-                  <TableHead className="text-text-tertiary">Budget</TableHead>
-                  <TableHead className="text-text-tertiary">Date</TableHead>
-                  <TableHead className="text-text-tertiary">Status</TableHead>
+                  <TableHead className="text-muted-foreground">
+                    Budget
+                  </TableHead>
+                  <TableHead className="text-muted-foreground">Date</TableHead>
+                  <TableHead className="text-muted-foreground">
+                    Status
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {inquiries.map((inquiry) => (
                   <TableRow
                     key={inquiry.id}
-                    className="cursor-pointer border-border-default transition-colors hover:bg-background-primary/50"
+                    className="cursor-pointer border-border transition-colors hover:bg-background/50"
                     onClick={() =>
                       router.navigate({
                         to: '/dashboard/inquiries/$id',
@@ -147,25 +151,25 @@ function DashboardInquiriesPage() {
                       })
                     }
                   >
-                    <TableCell className="font-medium text-text-primary">
+                    <TableCell className="font-medium text-foreground">
                       {inquiry.name}
                     </TableCell>
-                    <TableCell className="text-text-secondary">
+                    <TableCell className="text-foreground-secondary">
                       {inquiry.email}
                     </TableCell>
-                    <TableCell className="text-text-secondary">
+                    <TableCell className="text-foreground-secondary">
                       {inquiry.company || '-'}
                     </TableCell>
-                    <TableCell className="text-text-secondary">
+                    <TableCell className="text-foreground-secondary">
                       {inquiry.projectType
                         ? (projectTypeLabels[inquiry.projectType] ??
                           inquiry.projectType)
                         : '-'}
                     </TableCell>
-                    <TableCell className="text-text-secondary">
+                    <TableCell className="text-foreground-secondary">
                       {inquiry.budgetRange || '-'}
                     </TableCell>
-                    <TableCell className="text-text-secondary whitespace-nowrap">
+                    <TableCell className="text-foreground-secondary whitespace-nowrap">
                       {formatDateTime(inquiry.createdAt)}
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
@@ -182,28 +186,25 @@ function DashboardInquiriesPage() {
                           >
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-background-secondary border-border-default">
-                            <SelectItem
-                              value="new"
-                              className="text-text-primary"
-                            >
+                          <SelectContent className="bg-secondary border-border">
+                            <SelectItem value="new" className="text-foreground">
                               New
                             </SelectItem>
                             <SelectItem
                               value="reviewed"
-                              className="text-text-primary"
+                              className="text-foreground"
                             >
                               Reviewed
                             </SelectItem>
                             <SelectItem
                               value="contacted"
-                              className="text-text-primary"
+                              className="text-foreground"
                             >
                               Contacted
                             </SelectItem>
                             <SelectItem
                               value="closed"
-                              className="text-text-primary"
+                              className="text-foreground"
                             >
                               Closed
                             </SelectItem>
@@ -227,7 +228,7 @@ function DashboardInquiriesPage() {
 
         {/* Summary */}
         {inquiries.length > 0 && (
-          <div className="mt-4 text-sm text-text-tertiary">
+          <div className="mt-4 text-sm text-muted-foreground">
             Showing {inquiries.length} message
             {inquiries.length !== 1 ? 's' : ''}
           </div>

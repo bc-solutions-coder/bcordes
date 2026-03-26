@@ -30,10 +30,10 @@ import {
 } from '@/hooks/useNotificationFilters'
 import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 import { NotificationRow } from '@/components/dashboard/NotificationRow'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { Button } from '@/components/ui/shadcn/button'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs'
 
 const NOTIFICATION_TYPE_CONFIG: Record<
   NotificationType,
@@ -118,13 +118,13 @@ function NotificationsIndexPage() {
   )
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border-default bg-background-secondary">
+      <header className="border-b border-border bg-secondary">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <Bell className="h-6 w-6 text-accent-secondary" />
-            <h1 className="text-xl font-semibold text-text-primary">
+            <Bell className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-semibold text-foreground">
               Notifications
             </h1>
             {unreadCount > 0 && (
@@ -160,7 +160,7 @@ function NotificationsIndexPage() {
               className={
                 activeType === type
                   ? ''
-                  : 'border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary'
+                  : 'border-border text-foreground-secondary hover:text-foreground hover:bg-background'
               }
             >
               {NOTIFICATION_TYPE_CONFIG[type].label}
@@ -170,13 +170,13 @@ function NotificationsIndexPage() {
 
         {/* Bulk actions toolbar */}
         {filteredNotifications.length > 0 && (
-          <div className="mb-4 flex items-center gap-4 rounded-lg border border-border-default bg-background-secondary px-4 py-2">
+          <div className="mb-4 flex items-center gap-4 rounded-lg border border-border bg-secondary px-4 py-2">
             <Checkbox
               checked={allSelected}
               onCheckedChange={(checked) => selectAll(!!checked)}
               aria-label="Select all notifications"
             />
-            <span className="text-sm text-text-secondary">
+            <span className="text-sm text-foreground-secondary">
               {selectedIds.size > 0
                 ? `${selectedIds.size} selected`
                 : 'Select all'}
@@ -186,7 +186,7 @@ function NotificationsIndexPage() {
               size="sm"
               onClick={() => markAllReadMutation.mutate()}
               disabled={markAllReadMutation.isPending || unreadCount === 0}
-              className="ml-auto border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary"
+              className="ml-auto border-border text-foreground-secondary hover:text-foreground hover:bg-background"
             >
               {markAllReadMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -200,19 +200,19 @@ function NotificationsIndexPage() {
 
         {/* Notification list */}
         {filteredNotifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-border-default bg-background-secondary py-16">
-            <Bell className="mb-4 h-12 w-12 text-text-tertiary" />
-            <h2 className="mb-2 text-lg font-medium text-text-primary">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary py-16">
+            <Bell className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h2 className="mb-2 text-lg font-medium text-foreground">
               No notifications
             </h2>
-            <p className="text-text-secondary">
+            <p className="text-foreground-secondary">
               {unreadOnly
                 ? 'You have no unread notifications.'
                 : 'You have no notifications yet.'}
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border-default bg-background-secondary">
+          <div className="overflow-hidden rounded-lg border border-border bg-secondary">
             {filteredNotifications.map((notification) => (
               <NotificationRow
                 key={notification.id}
@@ -232,7 +232,7 @@ function NotificationsIndexPage() {
             <Button
               variant="outline"
               onClick={() => setPage((p) => p + 1)}
-              className="border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary"
+              className="border-border text-foreground-secondary hover:text-foreground hover:bg-background"
             >
               Load more
             </Button>
@@ -241,7 +241,7 @@ function NotificationsIndexPage() {
 
         {/* Summary */}
         {filteredNotifications.length > 0 && (
-          <div className="mt-4 text-sm text-text-tertiary">
+          <div className="mt-4 text-sm text-muted-foreground">
             Showing {filteredNotifications.length} notification
             {filteredNotifications.length !== 1 ? 's' : ''}
           </div>

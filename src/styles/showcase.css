@@ -1,0 +1,112 @@
+/* Showcase Content Styles — for markdown-rendered HTML elements */
+.showcase-content {
+  max-width: none;
+  color: var(--foreground-secondary);
+  line-height: 1.75;
+}
+
+.showcase-content h2 {
+  color: var(--foreground);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+}
+
+.showcase-content h3 {
+  color: var(--foreground);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.showcase-content h4 {
+  color: var(--foreground);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.showcase-content p {
+  color: var(--foreground-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.showcase-content strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.showcase-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.showcase-content a:hover {
+  color: var(--primary-hover);
+}
+
+.showcase-content ul,
+.showcase-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.showcase-content ul {
+  list-style-type: disc;
+}
+
+.showcase-content ol {
+  list-style-type: decimal;
+}
+
+.showcase-content li {
+  color: var(--foreground-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.showcase-content li strong {
+  color: var(--foreground);
+}
+
+.showcase-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+.showcase-content pre {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.showcase-content code {
+  font-size: 0.875rem;
+}
+
+.showcase-content p code {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.875em;
+}
+
+.showcase-content hr {
+  border-color: var(--border);
+  margin: 2rem 0;
+}
+
+.showcase-content h2:first-child {
+  margin-top: 0;
+}

@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { AboutHero } from '~/components/about/AboutHero'
-import { Timeline } from '~/components/about/Timeline'
-import { ValueIcon } from '~/components/about/ValueIcon'
-import { FadeInView } from '~/components/shared/FadeInView'
+import { AboutHero } from '@/components/about/AboutHero'
+import { Timeline } from '@/components/about/Timeline'
+import { ValueIcon } from '@/components/about/ValueIcon'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 export const Route = createFileRoute('/about')({ component: AboutPage })
 
@@ -53,13 +53,13 @@ function AboutPage() {
       <Timeline />
 
       {/* Values Section */}
-      <section className="py-20 px-6 bg-background-secondary">
+      <section className="py-20 px-6 bg-secondary">
         <div className="max-w-5xl mx-auto">
           <FadeInView delay={0}>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
               My Approach
             </h2>
-            <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
+            <p className="text-foreground-secondary text-center mb-12 max-w-xl mx-auto">
               The principles that guide my work and ensure successful project
               outcomes.
             </p>
@@ -68,19 +68,19 @@ function AboutPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {values.map((value, index) => (
               <FadeInView key={value.title} delay={100 + index * 100}>
-                <div className="bg-background-primary border border-border-default rounded-lg p-6 h-full hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/5 transition-all duration-300 group">
+                <div className="bg-background border border-border rounded-lg p-6 h-full hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                   {/* Icon */}
-                  <div className="w-14 h-14 rounded-lg bg-accent-primary/10 flex items-center justify-center text-accent-secondary mb-4 group-hover:bg-accent-primary/20 transition-colors duration-300">
+                  <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     {value.icon}
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-text-primary mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {value.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-text-secondary text-sm leading-relaxed">
+                  <p className="text-foreground-secondary text-sm leading-relaxed">
                     {value.description}
                   </p>
                 </div>
@@ -94,16 +94,16 @@ function AboutPage() {
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <FadeInView delay={0}>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Let's Build Something Great
             </h2>
-            <p className="text-text-secondary mb-8 max-w-xl mx-auto">
+            <p className="text-foreground-secondary mb-8 max-w-xl mx-auto">
               Interested in working together? I'd love to hear about your
               project and explore how I can help bring your vision to life.
             </p>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 bg-accent-primary hover:bg-accent-tertiary text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300"
             >
               Get in Touch
               <svg

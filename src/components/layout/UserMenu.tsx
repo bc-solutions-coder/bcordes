@@ -3,15 +3,15 @@
 import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut } from 'lucide-react'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@/components/ui/shadcn/avatar'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/shadcn/dropdown-menu'
 import { useUser } from '@/hooks/useUser'
 
 function getInitials(name: string | undefined) {
@@ -34,7 +34,7 @@ export function UserMenu() {
       <Button
         asChild
         variant="ghost"
-        className="hidden md:inline-flex text-text-secondary hover:text-accent-secondary"
+        className="hidden md:inline-flex text-foreground-secondary hover:text-primary"
       >
         <a href="/auth/login">Sign In</a>
       </Button>
@@ -46,10 +46,10 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="hidden md:inline-flex items-center gap-2 text-text-secondary hover:text-accent-secondary"
+          className="hidden md:inline-flex items-center gap-2 text-foreground-secondary hover:text-primary"
         >
           <Avatar className="h-7 w-7">
-            <AvatarFallback className="bg-accent-primary text-white text-xs">
+            <AvatarFallback className="bg-primary text-white text-xs">
               {getInitials(user.name)}
             </AvatarFallback>
           </Avatar>

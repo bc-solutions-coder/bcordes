@@ -155,3 +155,104 @@ describe('getBlogPostBySlug', () => {
     await expect(getBlogPostBySlug('broken')).rejects.toThrow('disk failure')
   })
 })
+
+describe('frontmatter parsing edge cases', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('parses "false" string values as boolean false', async () => {
+    const content = `---
+title: Draft Post
+date: 2026-01-15
+excerpt: A draft
+tags: [test]
+published: false
+---
+Some content here for the post.`
+
+    mockReadFile.mockResolvedValue(
+      content as unknown as Awaited<ReturnType<typeof readFile>>,
+    )
+
+    const post = await getBlogPostBySlug('draft')
+
+    expect(post).toBeNull()
+  })
+
+  it('coerces numeric frontmatter values to numbers', async () => {
+    const content = `---
+title: Post With Number
+date: 2026-01-15
+excerpt: Has a number field
+tags: [test]
+readingLevel: 42
+---
+Some content here for the post.`
+
+    mockReaddir.mockResolvedValue(['numeric.mdx'] as unknown as Awaited<
+      ReturnType<typeof readdir>
+    >)
+    mockReadFile.mockResolvedValue(
+      content as unknown as Awaited<ReturnType<typeof readFile>>,
+    )
+
+    const posts = await getBlogPosts()
+
+    expect(posts).toHaveLength(1)
+  })
+
+  it('strips quotes from quoted string values', async () => {
+    const content = `---
+title: "Quoted Title"
+date: 2026-01-15
+excerpt: 'Quoted excerpt'
+tags: [test]
+---
+Some content here for the post.`
+
+    mockReadFile.mockResolvedValue(
+      content as unknown as Awaited<ReturnType<typeof readFile>>,
+    )
+
+    const post = await getBlogPostBySlug('quoted')
+
+    expect(post).not.toBeNull()
+    expect(post!.frontmatter.title).toBe('Quoted Title')
+    expect(post!.frontmatter.excerpt).toBe('Quoted excerpt')
+  })
+
+  it('throws when required frontmatter field "title" is missing', async () => {
+    const content = `---
+date: 2026-01-15
+excerpt: No title
+tags: [test]
+---
+Content without a title.`
+
+    mockReadFile.mockResolvedValue(
+      content as unknown as Awaited<ReturnType<typeof readFile>>,
+    )
+
+    await expect(getBlogPostBySlug('no-title')).rejects.toThrow(
+      'Missing required frontmatter field "title" in no-title.mdx',
+    )
+  })
+
+  it('throws when required frontmatter field "tags" is missing', async () => {
+    const content = `---
+title: No Tags
+date: 2026-01-15
+excerpt: Missing tags
+---
+Content without tags.`
+
+    mockReadFile.mockResolvedValue(
+      content as unknown as Awaited<ReturnType<typeof readFile>>,
+    )
+
+    await expect(getBlogPostBySlug('no-tags')).rejects.toThrow(
+      'Missing required frontmatter field "tags" in no-tags.mdx',
+    )
+  })
+})

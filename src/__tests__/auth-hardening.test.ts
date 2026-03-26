@@ -33,7 +33,7 @@ vi.mock('@/lib/auth/oidc', () => ({
   fetchUserProfile: mockFetchUserProfile,
 }))
 
-vi.mock('~/lib/valkey', () => ({
+vi.mock('@/lib/valkey', () => ({
   getValkey: vi.fn(() => ({
     get: vi.fn().mockResolvedValue(null),
     set: vi.fn().mockResolvedValue('OK'),

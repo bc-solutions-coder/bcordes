@@ -5,7 +5,7 @@ import {
   setCookie,
 } from '@tanstack/react-start/server'
 import type { SessionData } from './types'
-import { getValkey, keys } from '~/lib/valkey'
+import { getValkey, keys } from '@/lib/valkey'
 
 const SESSION_SECRET = process.env.SESSION_SECRET!
 if (!SESSION_SECRET || SESSION_SECRET.length < 32) {

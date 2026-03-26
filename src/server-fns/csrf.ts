@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getSession } from '~/lib/auth/session'
+import { getSession } from '@/lib/auth/session'
 
 export const getCsrfToken = createServerFn({ method: 'GET' }).handler(
   async () => {

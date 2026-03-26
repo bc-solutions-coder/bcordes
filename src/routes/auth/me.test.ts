@@ -4,14 +4,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // Imports
 // ---------------------------------------------------------------------------
 
-import type { User } from '~/lib/auth/types'
-import { getAuthUser } from '~/lib/auth/middleware'
+import type { User } from '@/lib/auth/types'
+import { getAuthUser } from '@/lib/auth/middleware'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
 // ---------------------------------------------------------------------------
 
-vi.mock('~/lib/auth/middleware', () => ({
+vi.mock('@/lib/auth/middleware', () => ({
   getAuthUser: vi.fn(),
 }))
 

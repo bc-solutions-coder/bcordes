@@ -72,7 +72,7 @@ describe('SSE stream proxy', () => {
     oidcRefreshToken?: () => Promise<unknown>
     fetchOverride?: () => Promise<typeof mockFetchResponse>
   }) {
-    vi.doMock('~/lib/auth/session', () => ({
+    vi.doMock('@/lib/auth/session', () => ({
       getSession: vi.fn(() =>
         Promise.resolve(
           options && 'session' in options
@@ -85,7 +85,7 @@ describe('SSE stream proxy', () => {
       ),
     }))
 
-    vi.doMock('~/lib/auth/oidc', () => ({
+    vi.doMock('@/lib/auth/oidc', () => ({
       refreshToken: vi.fn(
         options?.oidcRefreshToken ??
           (() =>
@@ -96,7 +96,7 @@ describe('SSE stream proxy', () => {
       ),
     }))
 
-    vi.doMock('~/lib/wallow/config', () => ({
+    vi.doMock('@/lib/wallow/config', () => ({
       WALLOW_BASE_URL: 'https://api.test.local',
     }))
 

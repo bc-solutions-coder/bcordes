@@ -765,6 +765,39 @@ describe('useEventStream', () => {
       expect(handler).toHaveBeenCalledWith(envelope)
     })
 
+    it('follower promotes itself after receiving leader-resign message and timeout elapses', async () => {
+      const useEventStream = await importHook()
+
+      renderHook(() => useEventStream())
+
+      const channel = latestChannel()
+      expect(channel).toBeDefined()
+      expect(channel.onmessage).toBeTypeOf('function')
+
+      const countBefore = mockEventSources.length
+
+      // Simulate receiving a leader-resign message via BroadcastChannel
+      act(() => {
+        channel.onmessage!(
+          new MessageEvent('message', {
+            data: { type: 'leader-resign' },
+          }),
+        )
+      })
+
+      // No immediate promotion — must wait for LEADER_TIMEOUT_MS (7000ms)
+      act(() => {
+        vi.advanceTimersByTime(6999)
+      })
+      expect(mockEventSources.length).toBe(countBefore)
+
+      // After the full timeout, the follower should promote itself and create a new EventSource
+      act(() => {
+        vi.advanceTimersByTime(1)
+      })
+      expect(mockEventSources.length).toBeGreaterThan(countBefore)
+    })
+
     it('on leader unmount, postMessage is called with { type: "leader-resign" }', async () => {
       const useEventStream = await importHook()
 

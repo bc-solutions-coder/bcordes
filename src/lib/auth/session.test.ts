@@ -42,7 +42,7 @@ const mockRedisClient = {
   del: mockRedisDel,
 }
 
-vi.mock('~/lib/valkey', () => ({
+vi.mock('@/lib/valkey', () => ({
   getValkey: vi.fn(() => mockRedisClient),
   keys: {
     session: (id: string) => 'bcordes:session:' + id,

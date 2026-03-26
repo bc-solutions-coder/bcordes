@@ -1,4 +1,4 @@
-import { FadeInView } from '~/components/shared/FadeInView'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 interface TimelineEntry {
   period: string
@@ -45,10 +45,10 @@ export function Timeline() {
     <section className="py-20 px-6">
       <div className="max-w-3xl mx-auto">
         <FadeInView delay={0}>
-          <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
             Career Journey
           </h2>
-          <p className="text-text-secondary text-center mb-12 max-w-xl mx-auto">
+          <p className="text-foreground-secondary text-center mb-12 max-w-xl mx-auto">
             A timeline of my professional growth and the experiences that shaped
             my expertise.
           </p>
@@ -57,7 +57,7 @@ export function Timeline() {
         {/* Timeline Container */}
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent-primary via-accent-secondary to-accent-tertiary md:-translate-x-1/2" />
+          <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-primary to-primary-hover md:-translate-x-1/2" />
 
           {/* Timeline Entries */}
           <div className="space-y-12">
@@ -73,12 +73,12 @@ export function Timeline() {
                     <div
                       className={`w-full h-full rounded-full border-2 ${
                         entry.isCurrent
-                          ? 'bg-accent-secondary border-accent-secondary'
-                          : 'bg-background-primary border-accent-primary'
+                          ? 'bg-primary border-primary'
+                          : 'bg-background border-primary'
                       }`}
                     />
                     {entry.isCurrent && (
-                      <div className="absolute inset-0 rounded-full bg-accent-secondary animate-ping opacity-50" />
+                      <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-50" />
                     )}
                   </div>
 
@@ -88,31 +88,31 @@ export function Timeline() {
                       index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'
                     }`}
                   >
-                    <div className="bg-background-secondary border border-border-default rounded-lg p-6 hover:border-accent-primary/50 transition-colors duration-300">
+                    <div className="bg-secondary border border-border rounded-lg p-6 hover:border-primary/50 transition-colors duration-300">
                       {/* Period Badge */}
                       <div
                         className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-3 ${
                           entry.isCurrent
-                            ? 'bg-accent-primary/20 text-accent-secondary'
-                            : 'bg-background-tertiary text-text-tertiary'
+                            ? 'bg-primary/20 text-primary'
+                            : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         {entry.isCurrent && (
-                          <span className="w-2 h-2 rounded-full bg-accent-secondary" />
+                          <span className="w-2 h-2 rounded-full bg-primary" />
                         )}
                         {entry.period}
                       </div>
 
                       {/* Role & Company */}
-                      <h3 className="text-xl font-semibold text-text-primary mb-1">
+                      <h3 className="text-xl font-semibold text-foreground mb-1">
                         {entry.role}
                       </h3>
-                      <p className="text-accent-secondary font-medium mb-3">
+                      <p className="text-primary font-medium mb-3">
                         {entry.company}
                       </p>
 
                       {/* Description */}
-                      <p className="text-text-secondary text-sm leading-relaxed">
+                      <p className="text-foreground-secondary text-sm leading-relaxed">
                         {entry.description}
                       </p>
                     </div>

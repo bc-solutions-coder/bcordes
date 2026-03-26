@@ -32,7 +32,7 @@ vi.mock('@/components/layout/Footer', () => ({
   Footer: () => <div data-testid="footer">Footer</div>,
 }))
 
-vi.mock('@/components/ui/sonner', () => ({
+vi.mock('@/components/ui/shadcn/sonner', () => ({
   Toaster: () => <div data-testid="toaster">Toaster</div>,
 }))
 
@@ -179,7 +179,7 @@ describe('__root route', () => {
       vi.doMock('@/components/layout/Footer', () => ({
         Footer: () => <div data-testid="footer">Footer</div>,
       }))
-      vi.doMock('@/components/ui/sonner', () => ({
+      vi.doMock('@/components/ui/shadcn/sonner', () => ({
         Toaster: () => <div data-testid="toaster">Toaster</div>,
       }))
       vi.doMock('@/styles.css?url', () => ({ default: 'styles.css' }))

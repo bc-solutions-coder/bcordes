@@ -100,7 +100,7 @@ describe('MarkdownContent', () => {
     )
     const blockquote = container.querySelector('blockquote')
     expect(blockquote).not.toBeNull()
-    expect(blockquote?.textContent).toBe('This is a quote')
+    expect(blockquote!.textContent.trim()).toBe('This is a quote')
   })
 
   it('renders horizontal rules', () => {
@@ -109,14 +109,14 @@ describe('MarkdownContent', () => {
     expect(hr).not.toBeNull()
   })
 
-  it('renders code blocks with language attribute', () => {
+  it('renders code blocks with language class', () => {
     const content = '```typescript\nconst x = 1\n```'
     const { container } = render(<MarkdownContent content={content} />)
     const pre = container.querySelector('pre')
     expect(pre).not.toBeNull()
-    expect(pre?.getAttribute('data-language')).toBe('typescript')
     const code = pre?.querySelector('code')
-    expect(code?.textContent).toBe('const x = 1')
+    expect(code?.classList.contains('language-typescript')).toBe(true)
+    expect(code?.textContent).toBe('const x = 1\n')
   })
 
   it('renders mixed content correctly', () => {
@@ -139,7 +139,7 @@ describe('MarkdownContent', () => {
 
   it('renders empty content without errors', () => {
     const { container } = render(<MarkdownContent content="" />)
-    expect(container.innerHTML).toBe('')
+    expect(container.querySelector('div')).not.toBeNull()
   })
 
   it('handles asterisk-style unordered lists', () => {

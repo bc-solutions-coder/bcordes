@@ -5,14 +5,14 @@ import { LayoutDashboard, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
 
 import { NAV_LINKS } from '@/config/navigation'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
+} from '@/components/ui/shadcn/sheet'
 import { useUser } from '@/hooks/useUser'
 
 export function MobileNav() {
@@ -25,7 +25,7 @@ export function MobileNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden text-text-primary hover:text-accent-primary hover:bg-transparent"
+          className="md:hidden text-foreground hover:text-primary hover:bg-transparent"
           aria-label="Open navigation menu"
         >
           <Menu className="h-6 w-6" />
@@ -33,10 +33,10 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="w-[300px] bg-background-primary border-border-default"
+        className="w-[300px] bg-background border-border"
       >
-        <SheetHeader className="border-b border-border-default pb-4">
-          <SheetTitle className="text-text-primary text-left">
+        <SheetHeader className="border-b border-border pb-4">
+          <SheetTitle className="text-foreground text-left">
             Navigation
           </SheetTitle>
         </SheetHeader>
@@ -46,10 +46,10 @@ export function MobileNav() {
               key={link.href}
               to={link.href}
               onClick={() => setOpen(false)}
-              className="flex items-center px-4 py-3 text-lg font-medium text-text-secondary hover:text-accent-primary hover:bg-background-secondary rounded-md transition-colors"
+              className="flex items-center px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors"
               activeProps={{
                 className:
-                  'flex items-center px-4 py-3 text-lg font-medium text-accent-primary bg-background-secondary rounded-md transition-colors',
+                  'flex items-center px-4 py-3 text-lg font-medium text-primary bg-secondary rounded-md transition-colors',
               }}
             >
               {link.label}
@@ -58,7 +58,7 @@ export function MobileNav() {
           <div className="mt-6 px-4 flex flex-col gap-3">
             <Button
               asChild
-              className="w-full bg-accent-primary hover:bg-accent-tertiary text-white font-medium"
+              className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
             >
               <Link to="/contact" onClick={() => setOpen(false)}>
                 Get in Touch
@@ -69,7 +69,7 @@ export function MobileNav() {
                 <Link
                   to="/dashboard/inquiries"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-text-secondary hover:text-accent-primary hover:bg-background-secondary rounded-md transition-colors"
+                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors"
                 >
                   <LayoutDashboard className="h-5 w-5" />
                   Dashboard
@@ -83,7 +83,7 @@ export function MobileNav() {
                     document.body.appendChild(form)
                     form.submit()
                   }}
-                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-text-secondary hover:text-accent-primary hover:bg-background-secondary rounded-md transition-colors text-left"
+                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors text-left"
                 >
                   <LogOut className="h-5 w-5" />
                   Sign Out
@@ -93,7 +93,7 @@ export function MobileNav() {
               <Button
                 asChild
                 variant="outline"
-                className="w-full border-border-default text-text-secondary hover:text-accent-primary"
+                className="w-full border-border text-foreground-secondary hover:text-primary"
               >
                 <a href="/auth/login" onClick={() => setOpen(false)}>
                   Sign In

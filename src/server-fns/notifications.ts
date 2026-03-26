@@ -5,8 +5,8 @@ import type {
   NotificationSettings,
   PaginatedResponse,
   PushDevice,
-} from '~/lib/wallow/types'
-import { createWallowClient } from '~/lib/wallow/client'
+} from '@/lib/wallow/types'
+import { createWallowClient } from '@/lib/wallow/client'
 
 export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
   async () => {

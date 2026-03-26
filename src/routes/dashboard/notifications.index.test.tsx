@@ -7,6 +7,11 @@ import { renderWithProviders } from '@/test/helpers/render'
 // Mocks
 // ---------------------------------------------------------------------------
 
+const mockToast = { success: vi.fn(), error: vi.fn() }
+vi.mock('sonner', () => ({
+  toast: mockToast,
+}))
+
 const mockFetchNotifications = vi.fn()
 const mockMarkNotificationRead = vi.fn()
 const mockMarkAllNotificationsRead = vi.fn()
@@ -394,6 +399,77 @@ describe('notifications.index', () => {
       fireEvent.click(btn)
 
       expect(mockSetPage).toHaveBeenCalledOnce()
+      // Verify setPage receives an updater function that increments page
+      const updater = mockSetPage.mock.calls[0][0]
+      expect(typeof updater).toBe('function')
+      expect(updater(1)).toBe(2)
+      expect(updater(3)).toBe(4)
+    })
+
+    it('markAllRead onError calls toast.error with failure message', async () => {
+      const notifications = [makeNotification({ id: '1', isRead: false })]
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({ unreadCount: 1 }, notifications)
+      setupSelectionMock()
+
+      mockMarkAllNotificationsRead.mockRejectedValue(
+        new Error('Network failure'),
+      )
+
+      renderWithProviders(<NotificationsPage />)
+
+      const btn = screen.getByRole('button', { name: /mark all as read/i })
+      fireEvent.click(btn)
+
+      await vi.waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith(
+          'Failed to mark all as read: Network failure',
+        )
+      })
+    })
+
+    it('clicking an unread notification calls markNotificationRead', async () => {
+      const notification = makeNotification({
+        id: 'unread-1',
+        title: 'Unread notification',
+        isRead: false,
+      })
+      mockUseLoaderData.mockReturnValue({
+        notifications: [notification],
+      })
+      setupFiltersMock({}, [notification])
+      setupSelectionMock()
+
+      renderWithProviders(<NotificationsPage />)
+
+      fireEvent.click(screen.getByText('Unread notification'))
+
+      await vi.waitFor(() => {
+        expect(mockMarkNotificationRead).toHaveBeenCalledWith({
+          data: { id: 'unread-1' },
+        })
+      })
+      expect(mockNavigate).toHaveBeenCalled()
+    })
+
+    it('clicking a read notification does not call markNotificationRead', () => {
+      const notification = makeNotification({
+        id: 'read-1',
+        title: 'Read notification',
+        isRead: true,
+      })
+      mockUseLoaderData.mockReturnValue({
+        notifications: [notification],
+      })
+      setupFiltersMock({}, [notification])
+      setupSelectionMock()
+
+      renderWithProviders(<NotificationsPage />)
+
+      fireEvent.click(screen.getByText('Read notification'))
+
+      expect(mockMarkNotificationRead).not.toHaveBeenCalled()
+      expect(mockNavigate).toHaveBeenCalled()
     })
   })
 })

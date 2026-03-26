@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/components/ui/shadcn/separator'
 import { NAV_LINKS, SOCIAL_LINKS } from '@/config/navigation'
 
 export function Footer() {

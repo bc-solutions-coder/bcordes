@@ -95,6 +95,16 @@ describe('inquiries.index loader', () => {
     vi.clearAllMocks()
   })
 
+  it('beforeLoad calls serverRequireAuth with returnTo path', async () => {
+    mockServerRequireAuth.mockResolvedValue(undefined)
+
+    await routeConfig.beforeLoad()
+
+    expect(mockServerRequireAuth).toHaveBeenCalledWith({
+      data: { returnTo: '/dashboard/inquiries' },
+    })
+  })
+
   it('calls fetchMyInquiries and fetchCurrentUserRoles in parallel', async () => {
     mockFetchMyInquiries.mockResolvedValue([])
     mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user'] })
@@ -345,6 +355,62 @@ describe('DashboardInquiriesPage component', () => {
     // STATUS_LABELS has no 'in_progress' key, so it falls back to
     // inquiry.status.replace('_', ' ')
     expect(screen.getByText('in progress')).toBeTruthy()
+  })
+
+  it('clicking Refresh calls router.invalidate and re-enables button after', async () => {
+    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
+    let resolveInvalidate: () => void
+    mockRouterInvalidate.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveInvalidate = resolve
+        }),
+    )
+
+    renderWithProviders(<Component />)
+
+    const refreshBtn = screen.getByText('Refresh').closest('button')!
+    fireEvent.click(refreshBtn)
+
+    // Button should be disabled while refreshing
+    expect(refreshBtn.disabled).toBe(true)
+
+    // Resolve the invalidate promise
+    resolveInvalidate!()
+
+    await waitFor(() => {
+      expect(refreshBtn.disabled).toBe(false)
+    })
+
+    expect(mockRouterInvalidate).toHaveBeenCalledOnce()
+  })
+
+  it('handleRefresh clears isRefreshing even when invalidate rejects', async () => {
+    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
+    const error = new Error('invalidate failed')
+    mockRouterInvalidate.mockRejectedValue(error)
+
+    // Suppress the unhandled rejection from the async onClick handler
+    const onUnhandled = (event: unknown) => {
+      const e = event as { reason: unknown; preventDefault: () => void }
+      if (e.reason === error) e.preventDefault()
+    }
+    window.addEventListener('unhandledrejection', onUnhandled)
+    process.on('unhandledRejection', () => {})
+
+    renderWithProviders(<Component />)
+
+    const refreshBtn = screen.getByText('Refresh').closest('button')!
+    fireEvent.click(refreshBtn)
+
+    // After the rejected promise settles, button should be re-enabled
+    await waitFor(() => {
+      expect(refreshBtn.disabled).toBe(false)
+    })
+
+    expect(mockRouterInvalidate).toHaveBeenCalledOnce()
+    window.removeEventListener('unhandledrejection', onUnhandled)
+    process.removeAllListeners('unhandledRejection')
   })
 
   it('handles status change error gracefully', async () => {

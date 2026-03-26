@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import type { RealtimeEnvelope } from '~/lib/wallow/types'
-import { getSession } from '~/lib/auth/session'
-import { refreshToken } from '~/lib/auth/oidc'
-import { WALLOW_BASE_URL } from '~/lib/wallow/config'
+import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import { getSession } from '@/lib/auth/session'
+import { refreshToken } from '@/lib/auth/oidc'
+import { WALLOW_BASE_URL } from '@/lib/wallow/config'
 
 const KEEPALIVE_INTERVAL_MS = 30_000
 const MAX_STREAM_DURATION_MS = 4 * 60 * 60 * 1_000 // 4 hours

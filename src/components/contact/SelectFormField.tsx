@@ -6,14 +6,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/shadcn/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/shadcn/select'
 
 interface SelectOption {
   readonly value: string
@@ -43,24 +43,24 @@ export function SelectFormField<TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-text-primary">
-            {label} {required && <span className="text-accent-primary">*</span>}
+          <FormLabel className="text-foreground">
+            {label} {required && <span className="text-primary">*</span>}
           </FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger
                 tabIndex={0}
-                className="w-full border-border-default bg-background-secondary text-text-primary focus:border-accent-primary focus:ring-accent-primary/50 data-[placeholder]:text-text-tertiary"
+                className="w-full border-border bg-secondary text-foreground focus:border-primary focus:ring-primary/50 data-[placeholder]:text-muted-foreground"
               >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent className="border-border-default bg-background-secondary">
+            <SelectContent className="border-border bg-secondary">
               {options.map((option) => (
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  className="text-text-primary focus:bg-accent-primary/20 focus:text-accent-secondary"
+                  className="text-foreground focus:bg-primary/20 focus:text-primary"
                 >
                   {option.label}
                 </SelectItem>

@@ -225,4 +225,75 @@ describe('createWallowClient', () => {
       expect(wallowErr.status).toBe(503)
     }
   })
+
+  it('throws network error when retry fetch after 401 refresh throws', async () => {
+    const refreshedSession = createMockSession({
+      accessToken: 'refreshed-access-token',
+      refreshToken: 'refreshed-refresh-token',
+      version: 2,
+    })
+
+    mockGetSession.mockResolvedValue(session)
+
+    // First fetch returns 401, retry fetch throws network error
+    mockFetch
+      .mockResolvedValueOnce(jsonResponse({}, 401))
+      .mockRejectedValueOnce(new TypeError('fetch failed on retry'))
+
+    mockWithRefreshLock.mockImplementation(async (_id, fn) => {
+      mockRefreshToken.mockResolvedValue({
+        accessToken: 'refreshed-access-token',
+        refreshToken: 'refreshed-refresh-token',
+        idToken: 'refreshed-id-token',
+        expiresIn: 3600,
+      })
+      mockParseUserFromToken.mockReturnValue(session.user)
+      mockSetSession.mockResolvedValue(undefined)
+      return (fn as () => Promise<typeof refreshedSession>)()
+    })
+
+    const client = await createWallowClient()
+
+    try {
+      await client.get('/protected')
+      expect.fail('Expected WallowError to be thrown')
+    } catch (err) {
+      expect(err).toBeInstanceOf(WallowError)
+      const wallowErr = err as WallowError
+      expect(wallowErr.code).toBe('NETWORK_ERROR')
+      expect(wallowErr.status).toBe(503)
+    }
+
+    expect(mockFetch).toHaveBeenCalledTimes(2)
+  })
+
+  it('throws network error when retry fetch after 429 delay throws', async () => {
+    mockGetSession.mockResolvedValue(session)
+
+    const rateLimitResponse = new Response(null, {
+      status: 429,
+      headers: { 'Retry-After': '1' },
+    })
+
+    // First fetch returns 429, retry fetch throws network error
+    mockFetch
+      .mockResolvedValueOnce(rateLimitResponse)
+      .mockRejectedValueOnce(new TypeError('fetch failed on retry'))
+
+    const client = await createWallowClient()
+    const responsePromise = client.get('/rate-limited').catch((err) => {
+      expect(err).toBeInstanceOf(WallowError)
+      const wallowErr = err as WallowError
+      expect(wallowErr.code).toBe('NETWORK_ERROR')
+      expect(wallowErr.status).toBe(503)
+      return 'caught'
+    })
+
+    // Advance past the Retry-After delay (1s = 1000ms)
+    await vi.advanceTimersByTimeAsync(1000)
+
+    const result = await responsePromise
+    expect(result).toBe('caught')
+    expect(mockFetch).toHaveBeenCalledTimes(2)
+  })
 })
