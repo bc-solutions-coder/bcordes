@@ -27,6 +27,23 @@ export const Route = createFileRoute('/dashboard/inquiries/$id')({
     return { inquiry, comments, isAdmin }
   },
   component: InquiryDetailPage,
+  errorComponent: () => (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+      <h1 className="mb-2 text-8xl font-bold text-primary">404</h1>
+      <h2 className="mb-4 text-2xl font-semibold text-foreground">
+        Inquiry Not Found
+      </h2>
+      <p className="mb-8 max-w-md text-foreground-secondary">
+        This inquiry doesn't exist or you don't have permission to view it.
+      </p>
+      <Link
+        to="/dashboard/inquiries"
+        className="rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
+      >
+        Back to Inquiries
+      </Link>
+    </div>
+  ),
 })
 
 const statusColors: Record<string, string> = {

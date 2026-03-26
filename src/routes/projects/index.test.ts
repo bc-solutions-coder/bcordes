@@ -55,6 +55,37 @@ const fakeShowcases: Array<ShowcaseMeta> = [
 // Tests
 // ---------------------------------------------------------------------------
 
+describe('Route config', () => {
+  it('exports a route config with head', () => {
+    expect(routeModule.Route).toHaveProperty('head')
+  })
+
+  it('head returns correct meta tags', () => {
+    const head = (
+      routeModule.Route as unknown as { head: () => { meta: Array<unknown> } }
+    ).head()
+
+    expect(head).toHaveProperty('meta')
+    expect(head.meta).toEqual(
+      expect.arrayContaining([
+        { title: 'Projects | BC Solutions' },
+        {
+          name: 'description',
+          content:
+            'Showcasing projects and work across different industries and technologies.',
+        },
+        { property: 'og:title', content: 'Projects | BC Solutions' },
+        {
+          property: 'og:description',
+          content:
+            'Showcasing projects and work across different industries and technologies.',
+        },
+        { property: 'og:url', content: 'https://bcordes.dev/projects' },
+      ]),
+    )
+  })
+})
+
 describe('GET /projects/ loader', () => {
   beforeEach(() => {
     vi.clearAllMocks()

@@ -14,12 +14,10 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardNotificationsRouteImport } from './routes/dashboard/notifications'
 import { Route as DashboardInquiriesRouteImport } from './routes/dashboard/inquiries'
-import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthMeRouteImport } from './routes/auth/me'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
@@ -56,11 +54,6 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects/$slug',
   path: '/projects/$slug',
@@ -79,11 +72,6 @@ const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
 const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
   id: '/dashboard/inquiries',
   path: '/dashboard/inquiries',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthMeRoute = AuthMeRouteImport.update({
@@ -148,12 +136,10 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
-  '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
@@ -171,9 +157,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
-  '/blog': typeof BlogIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
@@ -192,12 +176,10 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
-  '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
@@ -217,12 +199,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/logout'
     | '/auth/me'
-    | '/blog/$slug'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
     | '/dashboard/settings'
     | '/projects/$slug'
-    | '/blog/'
     | '/projects/'
     | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
@@ -240,9 +220,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/logout'
     | '/auth/me'
-    | '/blog/$slug'
     | '/projects/$slug'
-    | '/blog'
     | '/projects'
     | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
@@ -260,12 +238,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/logout'
     | '/auth/me'
-    | '/blog/$slug'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
     | '/dashboard/settings'
     | '/projects/$slug'
-    | '/blog/'
     | '/projects/'
     | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
@@ -284,12 +260,10 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthLogoutRoute: typeof AuthLogoutRoute
   AuthMeRoute: typeof AuthMeRoute
-  BlogSlugRoute: typeof BlogSlugRoute
   DashboardInquiriesRoute: typeof DashboardInquiriesRouteWithChildren
   DashboardNotificationsRoute: typeof DashboardNotificationsRouteWithChildren
   DashboardSettingsRoute: typeof DashboardSettingsRouteWithChildren
   ProjectsSlugRoute: typeof ProjectsSlugRoute
-  BlogIndexRoute: typeof BlogIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiNotificationsStreamRoute: typeof ApiNotificationsStreamRoute
 }
@@ -331,13 +305,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/projects/$slug': {
       id: '/projects/$slug'
       path: '/projects/$slug'
@@ -364,13 +331,6 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/inquiries'
       fullPath: '/dashboard/inquiries'
       preLoaderRoute: typeof DashboardInquiriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/me': {
@@ -494,12 +454,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthLogoutRoute: AuthLogoutRoute,
   AuthMeRoute: AuthMeRoute,
-  BlogSlugRoute: BlogSlugRoute,
   DashboardInquiriesRoute: DashboardInquiriesRouteWithChildren,
   DashboardNotificationsRoute: DashboardNotificationsRouteWithChildren,
   DashboardSettingsRoute: DashboardSettingsRouteWithChildren,
   ProjectsSlugRoute: ProjectsSlugRoute,
-  BlogIndexRoute: BlogIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   ApiNotificationsStreamRoute: ApiNotificationsStreamRoute,
 }
