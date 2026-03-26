@@ -9,7 +9,7 @@ export interface ProblemDetails {
   errors?: Record<string, Array<string>>
 }
 
-/** Envelope for real-time SignalR messages from the Wallow backend */
+/** Envelope for real-time SSE messages from the Wallow backend */
 export interface RealtimeEnvelope {
   type: string
   module: string
@@ -86,7 +86,7 @@ export interface Notification {
   readAt: string | null
   createdAt: string
   updatedAt: string
-  /** Server-provided deep link (available on SignalR payloads, pending on REST DTO) */
+  /** Server-provided deep link (available on SSE payloads, pending on REST DTO) */
   actionUrl?: string
   entityId?: string
 }

@@ -1,8 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { cleanup, screen } from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
 import { renderWithProviders } from '@/test/helpers/render'
+
+if (!('ResizeObserver' in globalThis)) {
+  // @ts-expect-error polyfill for test environment
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
@@ -33,6 +42,7 @@ vi.mock('@/hooks/useEventStreamEvents', () => ({
   useEventStreamEvents: vi.fn(),
 }))
 
+const mockRouterInvalidate = vi.fn().mockResolvedValue(undefined)
 const mockUseLoaderData = vi.fn()
 
 vi.mock('@tanstack/react-router', async () => {
@@ -45,7 +55,7 @@ vi.mock('@tanstack/react-router', async () => {
       return route
     },
     useRouter: () => ({
-      invalidate: vi.fn(),
+      invalidate: mockRouterInvalidate,
       navigate: vi.fn(),
     }),
     Link: ({
@@ -400,5 +410,129 @@ describe('InquiryDetailPage component', () => {
     expect(screen.queryByText('Project Type')).toBeNull()
     expect(screen.queryByText('Budget')).toBeNull()
     expect(screen.queryByText('Timeline')).toBeNull()
+  })
+
+  it('submits a comment and clears the form', async () => {
+    mockSubmitInquiryComment.mockResolvedValue(undefined)
+    mockUseLoaderData.mockReturnValue({
+      inquiry: makeInquiry(),
+      comments: [],
+      isAdmin: false,
+    })
+
+    renderWithProviders(<Component />)
+
+    const textarea = screen.getByPlaceholderText('Write a comment...')
+    fireEvent.change(textarea, { target: { value: 'Hello world' } })
+
+    const sendButton = screen.getByText('Send')
+    fireEvent.click(sendButton)
+
+    await waitFor(() => {
+      expect(mockSubmitInquiryComment).toHaveBeenCalledWith({
+        data: {
+          id: TEST_ID,
+          content: 'Hello world',
+          isInternal: false,
+        },
+      })
+    })
+
+    // After successful submit, textarea should be cleared
+    await waitFor(() => {
+      expect(textarea).toHaveValue('')
+    })
+  })
+
+  it('does not submit when comment text is empty', () => {
+    mockUseLoaderData.mockReturnValue({
+      inquiry: makeInquiry(),
+      comments: [],
+      isAdmin: false,
+    })
+
+    renderWithProviders(<Component />)
+
+    const sendButton = screen.getByText('Send')
+    // Button should be disabled when textarea is empty
+    expect(sendButton).toBeDisabled()
+  })
+
+  it('handles comment submission error gracefully', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockSubmitInquiryComment.mockRejectedValue(new Error('Network error'))
+    mockUseLoaderData.mockReturnValue({
+      inquiry: makeInquiry(),
+      comments: [],
+      isAdmin: false,
+    })
+
+    renderWithProviders(<Component />)
+
+    const textarea = screen.getByPlaceholderText('Write a comment...')
+    fireEvent.change(textarea, { target: { value: 'A comment' } })
+
+    const sendButton = screen.getByText('Send')
+    fireEvent.click(sendButton)
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to submit comment:',
+        expect.any(Error),
+      )
+    })
+
+    consoleSpy.mockRestore()
+  })
+
+  it('toggles isInternal checkbox for admin users', async () => {
+    mockSubmitInquiryComment.mockResolvedValue(undefined)
+    mockUseLoaderData.mockReturnValue({
+      inquiry: makeInquiry(),
+      comments: [],
+      isAdmin: true,
+    })
+
+    renderWithProviders(<Component />)
+
+    // Click the checkbox to set isInternal=true
+    const checkbox = screen.getByRole('checkbox')
+    fireEvent.click(checkbox)
+
+    const textarea = screen.getByPlaceholderText('Write a comment...')
+    fireEvent.change(textarea, { target: { value: 'Internal note' } })
+
+    const sendButton = screen.getByText('Send')
+    fireEvent.click(sendButton)
+
+    await waitFor(() => {
+      expect(mockSubmitInquiryComment).toHaveBeenCalledWith({
+        data: {
+          id: TEST_ID,
+          content: 'Internal note',
+          isInternal: true,
+        },
+      })
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Tests — beforeLoad
+// ---------------------------------------------------------------------------
+
+describe('inquiries.$id beforeLoad', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('calls serverRequireAuth with returnTo path', async () => {
+    mockServerRequireAuth.mockResolvedValue(undefined)
+
+    await routeConfig.beforeLoad()
+
+    expect(mockServerRequireAuth).toHaveBeenCalledWith({
+      data: { returnTo: '/dashboard/inquiries' },
+    })
   })
 })

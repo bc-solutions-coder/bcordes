@@ -1,12 +1,11 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
-import type {ShowcaseMeta} from '@/content/projects';
+import type { ShowcaseMeta } from '@/content/projects'
 import {
-  
   getFeaturedShowcases,
   getShowcase,
   getShowcaseContent,
-  getShowcases
+  getShowcases,
 } from '@/content/projects'
 
 describe('project content data functions', () => {

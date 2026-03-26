@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useUser } from '@/hooks/useUser'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useEventStream } from '@/hooks/useEventStream'
 import {
   fetchNotifications,
   fetchUnreadCount,
@@ -29,7 +29,7 @@ export function NotificationBell() {
   const { user } = useUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { subscribe } = useSignalR()
+  const { subscribe } = useEventStream()
 
   const { data: notifications = [] } = useQuery<Array<Notification>>({
     queryKey: ['notifications'],

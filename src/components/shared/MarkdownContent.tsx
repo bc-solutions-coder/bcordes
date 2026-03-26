@@ -181,7 +181,11 @@ function processContent(content: string): Array<React.ReactNode> {
   return elements
 }
 
-export function MarkdownContent({ content }: { content: string }) {
+interface MarkdownContentProps {
+  content: string
+}
+
+export function MarkdownContent({ content }: MarkdownContentProps) {
   const elements = processContent(content)
   return <>{elements}</>
 }

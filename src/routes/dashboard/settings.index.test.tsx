@@ -231,5 +231,90 @@ describe('settings.index', () => {
         expect(mockPushState.sendTest).toHaveBeenCalledOnce()
       })
     })
+
+    // --- Lines 112-123: handlePushToggle success and error paths ---
+
+    it('handlePushToggle enables push notifications on checked=true', async () => {
+      mockPushState.isRegistered = false
+      mockPushState.isSupported = true
+      mockPushState.permission = 'default'
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      const pushLabel = screen.getByText('Push')
+      const pushRow = pushLabel.closest(
+        'div.flex.items-center.justify-between',
+      )!
+      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+
+      fireEvent.click(pushSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockPushState.enable).toHaveBeenCalledOnce()
+      })
+    })
+
+    it('handlePushToggle disables push notifications on checked=false', async () => {
+      mockPushState.isRegistered = true
+      mockPushState.isSupported = true
+      mockPushState.permission = 'default'
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      const pushLabel = screen.getByText('Push')
+      const pushRow = pushLabel.closest(
+        'div.flex.items-center.justify-between',
+      )!
+      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+
+      fireEvent.click(pushSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockPushState.disable).toHaveBeenCalledOnce()
+      })
+    })
+
+    it('handlePushToggle shows error toast on failure', async () => {
+      mockPushState.isRegistered = false
+      mockPushState.isSupported = true
+      mockPushState.permission = 'default'
+      mockPushState.enable.mockRejectedValue(new Error('push failed'))
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      const pushLabel = screen.getByText('Push')
+      const pushRow = pushLabel.closest(
+        'div.flex.items-center.justify-between',
+      )!
+      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+
+      fireEvent.click(pushSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockPushState.enable).toHaveBeenCalledOnce()
+      })
+    })
+
+    // --- Lines 130-131: handleSendTest error path ---
+
+    it('handleSendTest shows error toast on failure', async () => {
+      mockPushState.isRegistered = true
+      mockPushState.sendTest.mockRejectedValue(new Error('test send failed'))
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      const btn = screen.getByRole('button', {
+        name: 'Send test notification',
+      })
+      fireEvent.click(btn)
+
+      await vi.waitFor(() => {
+        expect(mockPushState.sendTest).toHaveBeenCalledOnce()
+      })
+    })
   })
 })

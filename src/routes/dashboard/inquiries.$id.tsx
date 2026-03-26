@@ -8,7 +8,7 @@ import {
   fetchInquiryComments,
   submitInquiryComment,
 } from '@/server-fns/inquiries'
-import { useSignalREvents } from '@/hooks/useSignalREvents'
+import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -44,7 +44,7 @@ function InquiryDetailPage() {
   const [isInternal, setIsInternal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useSignalREvents({
+  useEventStreamEvents({
     InquiryStatusUpdated: () => router.invalidate(),
     InquiryCommentAdded: () => router.invalidate(),
   })

@@ -10,6 +10,10 @@ vi.mock('openid-client', () => ({
   discovery: (...args: Array<unknown>) => mockDiscovery(...args),
 }))
 
+vi.mock('@tanstack/react-start/server', () => ({
+  setResponseStatus: vi.fn(),
+}))
+
 const mockRedisGet = vi.fn().mockResolvedValue(null)
 const mockRedisSet = vi.fn().mockResolvedValue('OK')
 const mockRedisDel = vi.fn().mockResolvedValue(1)
@@ -83,17 +87,27 @@ describe('service client — 401 retry', () => {
   })
 
   it('should not retry more than once on repeated 401', async () => {
+    vi.useFakeTimers()
+
     mockClientCredentialsGrant.mockResolvedValue({
       access_token: 'token-stale',
       expires_in: 3600,
     })
 
-    fetchSpy.mockResolvedValue(new Response('Unauthorized', { status: 401 }))
+    fetchSpy.mockImplementation(() =>
+      Promise.resolve(new Response('Unauthorized', { status: 401 })),
+    )
 
     const { serviceClient } = await import('@/lib/wallow/service-client')
 
-    await expect(serviceClient.get('/api/v1/test')).rejects.toThrow()
+    const promise = serviceClient.get('/api/v1/test').catch((e: unknown) => e)
+    await vi.runAllTimersAsync()
+
+    const error = await promise
+    expect(error).toBeInstanceOf(Error)
     // Should have tried twice: original + one retry
     expect(fetchSpy).toHaveBeenCalledTimes(2)
+
+    vi.useRealTimers()
   })
 })

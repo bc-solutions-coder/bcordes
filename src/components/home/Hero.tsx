@@ -2,7 +2,12 @@ import { Link } from '@tanstack/react-router'
 import { Button } from '~/components/ui/button'
 import { FadeInView } from '~/components/shared/FadeInView'
 
-const stats = [
+interface Stat {
+  value: string
+  label: string
+}
+
+const stats: Array<Stat> = [
   { value: '6+', label: 'Years Experience' },
   { value: '25+', label: 'Projects Delivered' },
   { value: '100%', label: 'Client Satisfaction' },

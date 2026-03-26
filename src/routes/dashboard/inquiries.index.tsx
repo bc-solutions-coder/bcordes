@@ -3,7 +3,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Mail, RefreshCw } from 'lucide-react'
 import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
-import { useSignalREvents } from '@/hooks/useSignalREvents'
+import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
 import { formatDateTime } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -49,7 +49,7 @@ function DashboardInquiriesPage() {
   const router = useRouter()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  useSignalREvents({
+  useEventStreamEvents({
     InquirySubmitted: () => router.invalidate(),
     InquiryStatusUpdated: () => router.invalidate(),
   })

@@ -15,8 +15,10 @@ const mockSendTestPush = vi.fn()
 
 vi.mock('@/server-fns/notifications', () => ({
   listPushDevices: (...args: Array<unknown>) => mockListPushDevices(...args),
-  fetchVapidPublicKey: (...args: Array<unknown>) => mockFetchVapidPublicKey(...args),
-  registerPushDevice: (...args: Array<unknown>) => mockRegisterPushDevice(...args),
+  fetchVapidPublicKey: (...args: Array<unknown>) =>
+    mockFetchVapidPublicKey(...args),
+  registerPushDevice: (...args: Array<unknown>) =>
+    mockRegisterPushDevice(...args),
   deregisterPushDevice: (...args: Array<unknown>) =>
     mockDeregisterPushDevice(...args),
   sendTestPush: (...args: Array<unknown>) => mockSendTestPush(...args),

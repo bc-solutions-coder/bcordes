@@ -1,6 +1,11 @@
 import { FadeInView } from '~/components/shared/FadeInView'
 
-const skillCategories = [
+interface SkillCategory {
+  name: string
+  skills: Array<string>
+}
+
+const skillCategories: Array<SkillCategory> = [
   {
     name: 'Frontend',
     skills: [

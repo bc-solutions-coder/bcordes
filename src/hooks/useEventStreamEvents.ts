@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import type { RealtimeEnvelope } from '@/lib/wallow/types'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useEventStream } from '@/hooks/useEventStream'
 
 type Handler = (envelope: RealtimeEnvelope) => void
 
-export function useSignalREvents(events: Record<string, Handler>) {
-  const { subscribe } = useSignalR()
+export function useEventStreamEvents(events: Record<string, Handler>) {
+  const { subscribe } = useEventStream()
 
   useEffect(() => {
     const unsubs = Object.entries(events).map(([event, handler]) =>

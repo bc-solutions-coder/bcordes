@@ -1,4 +1,8 @@
-export function ValueIcon({ d }: { d: string }) {
+interface ValueIconProps {
+  d: string
+}
+
+export function ValueIcon({ d }: ValueIconProps) {
   return (
     <svg
       className="w-8 h-8"

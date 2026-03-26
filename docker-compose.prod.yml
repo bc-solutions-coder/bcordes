@@ -15,6 +15,7 @@ services:
       - PORT=3000
       - NODE_ENV=production
       - WALLOW_API_URL=${WALLOW_API_URL:-https://api.wallow.dev}
+      - VALKEY_URL=${VALKEY_URL}
       - OIDC_ISSUER=${OIDC_ISSUER:-https://api.wallow.dev}
       - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
       - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
@@ -25,6 +26,23 @@ services:
     depends_on:
       wallow:
         condition: service_started
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ['CMD', 'wget', '-q', '--spider', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
     labels:
       - pangolin.proxy-resources.personal.name=personal
       - pangolin.proxy-resources.personal.full-domain=bcordes.dev
@@ -47,6 +65,14 @@ services:
         condition: service_healthy
       valkey:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
     labels:
       - pangolin.proxy-resources.wallow-api.name=wallow-api
       - pangolin.proxy-resources.wallow-api.full-domain=api.wallow.dev
@@ -67,6 +93,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
@@ -85,6 +119,14 @@ services:
       - valkey_data:/data
     environment:
       REDISCLI_AUTH: ${VALKEY_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
     healthcheck:
       test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s

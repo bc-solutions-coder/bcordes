@@ -12,8 +12,13 @@ import { getValkey, keys } from '~/lib/valkey'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
+const LOCK_TTL_SECONDS = 10
+const LOCK_POLL_MS = 100
+const LOCK_POLL_MAX_ATTEMPTS = Math.ceil(
+  (LOCK_TTL_SECONDS * 1000) / LOCK_POLL_MS,
+)
+
 let configPromise: Promise<Configuration> | null = null
-let inflightRefresh: Promise<string> | null = null
 
 function getConfig(): Promise<Configuration> {
   if (!configPromise) {
@@ -33,6 +38,47 @@ function getConfig(): Promise<Configuration> {
   return configPromise
 }
 
+async function refreshServiceToken(): Promise<string> {
+  const redis = getValkey()
+  const config = await getConfig()
+  const tokens = await clientCredentialsGrant(config, {
+    scope: 'inquiries.write inquiries.read',
+  })
+  const expiresIn = tokens.expires_in ?? 3600
+  const expiresAt = Math.floor(Date.now() / 1000) + expiresIn
+  const ttl = Math.max(expiresIn - 30, 1)
+
+  await redis.set(
+    keys.serviceToken(),
+    JSON.stringify({ accessToken: tokens.access_token, expiresAt }),
+    'EX',
+    ttl,
+  )
+
+  return tokens.access_token
+}
+
+async function pollForCachedToken(): Promise<string | null> {
+  const redis = getValkey()
+  const now = Math.floor(Date.now() / 1000)
+
+  for (let i = 0; i < LOCK_POLL_MAX_ATTEMPTS; i++) {
+    await new Promise((r) => setTimeout(r, LOCK_POLL_MS))
+    const cached = await redis.get(keys.serviceToken())
+    if (cached) {
+      const parsed = JSON.parse(cached) as {
+        accessToken: string
+        expiresAt: number
+      }
+      if (parsed.expiresAt - 30 > now) {
+        return parsed.accessToken
+      }
+    }
+  }
+
+  return null
+}
+
 async function getServiceToken(): Promise<string> {
   const now = Math.floor(Date.now() / 1000)
   const redis = getValkey()
@@ -49,36 +95,30 @@ async function getServiceToken(): Promise<string> {
     }
   }
 
-  // Deduplicate concurrent in-process refreshes
-  if (inflightRefresh) {
-    return inflightRefresh
+  // Try to acquire distributed lock
+  const acquired = await redis.set(
+    keys.serviceTokenLock(),
+    '1',
+    'EX',
+    LOCK_TTL_SECONDS,
+    'NX',
+  )
+
+  if (acquired === 'OK') {
+    // Won the lock — refresh and release
+    try {
+      return await refreshServiceToken()
+    } finally {
+      await redis.del(keys.serviceTokenLock())
+    }
   }
 
-  inflightRefresh = (async () => {
-    // Acquire lock
-    await redis.set(keys.serviceTokenLock(), '1', 'NX', 'EX', 10)
+  // Lost the lock — another instance is refreshing, poll for the result
+  const polled = await pollForCachedToken()
+  if (polled) return polled
 
-    const config = await getConfig()
-    const tokens = await clientCredentialsGrant(config, {
-      scope: 'inquiries.write inquiries.read',
-    })
-    const expiresIn = tokens.expires_in ?? 3600
-    const expiresAt = Math.floor(Date.now() / 1000) + expiresIn
-    const ttl = Math.max(expiresIn - 30, 1)
-
-    await redis.set(
-      keys.serviceToken(),
-      JSON.stringify({ accessToken: tokens.access_token, expiresAt }),
-      'EX',
-      ttl,
-    )
-
-    return tokens.access_token
-  })().finally(() => {
-    inflightRefresh = null
-  })
-
-  return inflightRefresh
+  // Lock expired without a cached token — try refreshing directly
+  return refreshServiceToken()
 }
 
 const REQUEST_TIMEOUT_MS = 30_000

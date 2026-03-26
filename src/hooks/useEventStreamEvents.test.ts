@@ -6,8 +6,8 @@ const mockUnsubscribe1 = vi.fn()
 const mockUnsubscribe2 = vi.fn()
 const mockSubscribe = vi.fn()
 
-vi.mock('@/hooks/useSignalR', () => ({
-  useSignalR: () => ({
+vi.mock('@/hooks/useEventStream', () => ({
+  useEventStream: () => ({
     subscribe: mockSubscribe,
     status: 'connected' as const,
   }),
@@ -20,9 +20,9 @@ beforeEach(() => {
     .mockReturnValueOnce(mockUnsubscribe2)
 })
 
-describe('useSignalREvents', () => {
+describe('useEventStreamEvents', () => {
   it('subscribes for each event key on mount', async () => {
-    const { useSignalREvents } = await import('./useSignalREvents')
+    const { useEventStreamEvents } = await import('./useEventStreamEvents')
 
     const handler1 = vi.fn()
     const handler2 = vi.fn()
@@ -31,7 +31,7 @@ describe('useSignalREvents', () => {
       TaskAssigned: handler2,
     }
 
-    renderHook(() => useSignalREvents(events))
+    renderHook(() => useEventStreamEvents(events))
 
     expect(mockSubscribe).toHaveBeenCalledTimes(2)
     expect(mockSubscribe).toHaveBeenCalledWith('NotificationCreated', handler1)
@@ -39,14 +39,14 @@ describe('useSignalREvents', () => {
   })
 
   it('calls unsubscribe functions on unmount', async () => {
-    const { useSignalREvents } = await import('./useSignalREvents')
+    const { useEventStreamEvents } = await import('./useEventStreamEvents')
 
     const events: Record<string, (envelope: RealtimeEnvelope) => void> = {
       NotificationCreated: vi.fn(),
       TaskAssigned: vi.fn(),
     }
 
-    const { unmount } = renderHook(() => useSignalREvents(events))
+    const { unmount } = renderHook(() => useEventStreamEvents(events))
 
     expect(mockUnsubscribe1).not.toHaveBeenCalled()
     expect(mockUnsubscribe2).not.toHaveBeenCalled()
@@ -62,10 +62,10 @@ describe('useSignalREvents', () => {
     const unsub = vi.fn()
     mockSubscribe.mockReturnValueOnce(unsub)
 
-    const { useSignalREvents } = await import('./useSignalREvents')
+    const { useEventStreamEvents } = await import('./useEventStreamEvents')
 
     const handler = vi.fn()
-    renderHook(() => useSignalREvents({ SystemAlert: handler }))
+    renderHook(() => useEventStreamEvents({ SystemAlert: handler }))
 
     expect(mockSubscribe).toHaveBeenCalledTimes(1)
     expect(mockSubscribe).toHaveBeenCalledWith('SystemAlert', handler)
@@ -74,9 +74,9 @@ describe('useSignalREvents', () => {
   it('handles empty events record', async () => {
     mockSubscribe.mockReset()
 
-    const { useSignalREvents } = await import('./useSignalREvents')
+    const { useEventStreamEvents } = await import('./useEventStreamEvents')
 
-    const { unmount } = renderHook(() => useSignalREvents({}))
+    const { unmount } = renderHook(() => useEventStreamEvents({}))
 
     expect(mockSubscribe).not.toHaveBeenCalled()
 

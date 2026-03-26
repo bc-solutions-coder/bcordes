@@ -4,7 +4,6 @@ import { cleanup, fireEvent, screen } from '@testing-library/react'
 import { MobileNav } from './MobileNav'
 import { renderWithProviders } from '@/test/helpers/render'
 
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,

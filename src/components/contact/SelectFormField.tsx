@@ -15,6 +15,20 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+interface SelectOption {
+  readonly value: string
+  readonly label: string
+}
+
+interface SelectFormFieldProps<TFieldValues extends FieldValues> {
+  control: Control<TFieldValues>
+  name: FieldPath<TFieldValues>
+  label: string
+  placeholder: string
+  options: ReadonlyArray<SelectOption>
+  required?: boolean
+}
+
 export function SelectFormField<TFieldValues extends FieldValues>({
   control,
   name,
@@ -22,14 +36,7 @@ export function SelectFormField<TFieldValues extends FieldValues>({
   placeholder,
   options,
   required,
-}: {
-  control: Control<TFieldValues>
-  name: FieldPath<TFieldValues>
-  label: string
-  placeholder: string
-  options: ReadonlyArray<{ readonly value: string; readonly label: string }>
-  required?: boolean
-}) {
+}: SelectFormFieldProps<TFieldValues>) {
   return (
     <FormField
       control={control}

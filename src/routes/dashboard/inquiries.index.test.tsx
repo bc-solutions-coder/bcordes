@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, screen } from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import type { Inquiry } from '@/lib/wallow/types'
 import { renderWithProviders } from '@/test/helpers/render'
 
@@ -41,12 +41,14 @@ vi.mock('@tanstack/react-router', async () => {
       return route
     },
     useRouter: () => ({
-      invalidate: vi.fn(),
-      navigate: vi.fn(),
+      invalidate: mockRouterInvalidate,
+      navigate: mockRouterNavigate,
     }),
   }
 })
 
+const mockRouterInvalidate = vi.fn().mockResolvedValue(undefined)
+const mockRouterNavigate = vi.fn()
 const mockUseLoaderData = vi.fn()
 
 // ---------------------------------------------------------------------------
@@ -279,5 +281,97 @@ describe('DashboardInquiriesPage component', () => {
     renderWithProviders(<Component />)
 
     expect(screen.getByText('Refresh')).toBeTruthy()
+  })
+
+  it('navigates to inquiry detail when row is clicked', () => {
+    const inquiries = [makeInquiry({ id: 'inq-click-1' })]
+    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
+
+    renderWithProviders(<Component />)
+
+    // Click the row (the name cell is part of the row)
+    const nameCell = screen.getByText('Jane Doe')
+    fireEvent.click(nameCell)
+
+    expect(mockRouterNavigate).toHaveBeenCalledWith({
+      to: '/dashboard/inquiries/$id',
+      params: { id: 'inq-click-1' },
+    })
+  })
+
+  it('falls back to raw projectType when no label mapping exists', () => {
+    const inquiries = [
+      makeInquiry({ id: '1', projectType: 'custom_unknown_type' }),
+    ]
+    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
+
+    renderWithProviders(<Component />)
+
+    expect(screen.getByText('custom_unknown_type')).toBeTruthy()
+  })
+
+  it('calls updateInquiryStatus when admin changes status via Select', async () => {
+    // Mock scrollIntoView for Radix Select
+    Element.prototype.scrollIntoView = vi.fn()
+    mockUpdateInquiryStatus.mockResolvedValue(undefined)
+    const inquiries = [makeInquiry({ id: 'inq-status-1', status: 'new' })]
+    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: true })
+
+    renderWithProviders(<Component />)
+
+    // Open the select dropdown
+    const combobox = screen.getByRole('combobox')
+    fireEvent.click(combobox)
+
+    // Select the 'Reviewed' option
+    await waitFor(() => {
+      const option = screen.getByText('Reviewed')
+      fireEvent.click(option)
+    })
+
+    await waitFor(() => {
+      expect(mockUpdateInquiryStatus).toHaveBeenCalledWith({
+        data: { id: 'inq-status-1', status: 'reviewed' },
+      })
+    })
+  })
+
+  it('falls back to raw status label for unknown status values (non-admin)', () => {
+    const inquiries = [makeInquiry({ id: '1', status: 'in_progress' })]
+    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
+
+    renderWithProviders(<Component />)
+
+    // STATUS_LABELS has no 'in_progress' key, so it falls back to
+    // inquiry.status.replace('_', ' ')
+    expect(screen.getByText('in progress')).toBeTruthy()
+  })
+
+  it('handles status change error gracefully', async () => {
+    // Mock scrollIntoView for Radix Select
+    Element.prototype.scrollIntoView = vi.fn()
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockUpdateInquiryStatus.mockRejectedValue(new Error('API error'))
+    const inquiries = [makeInquiry({ id: 'inq-err', status: 'new' })]
+    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: true })
+
+    renderWithProviders(<Component />)
+
+    const combobox = screen.getByRole('combobox')
+    fireEvent.click(combobox)
+
+    await waitFor(() => {
+      const option = screen.getByText('Closed')
+      fireEvent.click(option)
+    })
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to update status:',
+        expect.any(Error),
+      )
+    })
+
+    consoleSpy.mockRestore()
   })
 })

@@ -24,6 +24,7 @@ import { Route as AuthMeRouteImport } from './routes/auth/me'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings.index'
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications.index'
 import { Route as DashboardInquiriesIndexRouteImport } from './routes/dashboard/inquiries.index'
@@ -105,6 +106,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
+  '/api/health': typeof ApiHealthRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
+  '/api/health': typeof ApiHealthRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
+  '/api/health': typeof ApiHealthRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/resume'
+    | '/api/health'
     | '/auth/callback'
     | '/auth/login'
     | '/auth/logout'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/resume'
+    | '/api/health'
     | '/auth/callback'
     | '/auth/login'
     | '/auth/logout'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/resume'
+    | '/api/health'
     | '/auth/callback'
     | '/auth/login'
     | '/auth/logout'
@@ -267,6 +279,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   ResumeRoute: typeof ResumeRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthLogoutRoute: typeof AuthLogoutRoute
@@ -388,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/settings/': {
       id: '/dashboard/settings/'
       path: '/'
@@ -469,6 +489,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   ResumeRoute: ResumeRoute,
+  ApiHealthRoute: ApiHealthRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthLogoutRoute: AuthLogoutRoute,

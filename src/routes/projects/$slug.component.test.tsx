@@ -39,7 +39,8 @@ vi.mock('@/components/shared/FadeInView', () => ({
 
 vi.mock('@/content/projects', () => ({
   getShowcases: vi.fn(),
-  getShowcaseContent: (...args: Array<unknown>) => mockGetShowcaseContent(...args),
+  getShowcaseContent: (...args: Array<unknown>) =>
+    mockGetShowcaseContent(...args),
 }))
 
 vi.mock('lucide-react', () => ({

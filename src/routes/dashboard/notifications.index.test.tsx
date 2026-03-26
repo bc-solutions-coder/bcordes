@@ -302,5 +302,98 @@ describe('notifications.index', () => {
       fireEvent.click(screen.getByText('Click me'))
       expect(mockNavigate).toHaveBeenCalled()
     })
+
+    // --- Line 181: selectedIds.size > 0 shows "N selected" text ---
+
+    it('shows selected count when items are selected', () => {
+      const notifications = [
+        makeNotification({ id: '1' }),
+        makeNotification({ id: '2' }),
+      ]
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({}, notifications)
+      setupSelectionMock({ selectedIds: new Set(['1', '2']) })
+
+      renderWithProviders(<NotificationsPage />)
+
+      expect(screen.getByText('2 selected')).toBeTruthy()
+    })
+
+    it('shows "Select all" when no items are selected', () => {
+      const notifications = [makeNotification({ id: '1' })]
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({}, notifications)
+      setupSelectionMock({ selectedIds: new Set() })
+
+      renderWithProviders(<NotificationsPage />)
+
+      expect(screen.getByText('Select all')).toBeTruthy()
+    })
+
+    // --- Line 192: Loader2 spinner when markAllReadMutation.isPending ---
+
+    it('shows spinner when mark all read mutation is pending', async () => {
+      const notifications = [makeNotification({ id: '1', isRead: false })]
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({ unreadCount: 1 }, notifications)
+      setupSelectionMock()
+
+      // Make markAllNotificationsRead hang so isPending stays true
+      mockMarkAllNotificationsRead.mockReturnValue(new Promise(() => {}))
+
+      renderWithProviders(<NotificationsPage />)
+
+      const btn = screen.getByRole('button', { name: /mark all as read/i })
+      fireEvent.click(btn)
+
+      // Wait for React to re-render with isPending=true
+      await vi.waitFor(() => {
+        const spinner = btn.querySelector('.animate-spin')
+        expect(spinner).toBeTruthy()
+      })
+    })
+
+    // --- Lines 231-239: "Load more" button when filteredNotifications.length >= 20 ---
+
+    it('shows "Load more" button when 20 or more notifications', () => {
+      const notifications = Array.from({ length: 20 }, (_, i) =>
+        makeNotification({ id: `n-${i}`, title: `Notification ${i}` }),
+      )
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({}, notifications)
+      setupSelectionMock()
+
+      renderWithProviders(<NotificationsPage />)
+
+      expect(screen.getByRole('button', { name: 'Load more' })).toBeTruthy()
+    })
+
+    it('does not show "Load more" button when fewer than 20 notifications', () => {
+      const notifications = [makeNotification({ id: '1' })]
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({}, notifications)
+      setupSelectionMock()
+
+      renderWithProviders(<NotificationsPage />)
+
+      expect(screen.queryByRole('button', { name: 'Load more' })).toBeNull()
+    })
+
+    it('"Load more" calls setPage when clicked', () => {
+      const mockSetPage = vi.fn()
+      const notifications = Array.from({ length: 20 }, (_, i) =>
+        makeNotification({ id: `n-${i}`, title: `Notification ${i}` }),
+      )
+      mockUseLoaderData.mockReturnValue({ notifications })
+      setupFiltersMock({ setPage: mockSetPage }, notifications)
+      setupSelectionMock()
+
+      renderWithProviders(<NotificationsPage />)
+
+      const btn = screen.getByRole('button', { name: 'Load more' })
+      fireEvent.click(btn)
+
+      expect(mockSetPage).toHaveBeenCalledOnce()
+    })
   })
 })

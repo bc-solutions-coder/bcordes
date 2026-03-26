@@ -18,7 +18,12 @@ export const Route = createFileRoute('/blog/')({
   },
 })
 
-function BlogPostCard({ post, index }: { post: BlogPost; index: number }) {
+interface BlogPostCardProps {
+  post: BlogPost
+  index: number
+}
+
+function BlogPostCard({ post, index }: BlogPostCardProps) {
   return (
     <FadeInView delay={index * 100}>
       <Link
