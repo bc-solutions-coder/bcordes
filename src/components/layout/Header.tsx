@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
 import { MobileNav } from './MobileNav'
+import { NotificationBell } from './NotificationBell'
 import { UserMenu } from './UserMenu'
 import { Button } from '@/components/ui/button'
 import {
@@ -89,6 +90,7 @@ export function Header() {
           >
             <Link to="/contact">Get in Touch</Link>
           </Button>
+          <NotificationBell />
           <UserMenu />
           <MobileNav />
         </div>

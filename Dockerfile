@@ -37,14 +37,13 @@ FROM node:24-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Copy only what's needed to run
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-COPY --from=builder /app/node_modules ./node_modules
+# Copy only what's needed to run (Nitro bundles its own deps)
+COPY --from=builder /app/.output ./.output
 
-# Copy the built output from the builder
-COPY --from=builder /app/dist ./dist
+# Defaults for non-secret env vars — secrets should be passed at runtime
+ENV HOST=0.0.0.0
+ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["node", "dist/server/server.js"]
+CMD ["node", ".output/server/index.mjs"]

@@ -1,7 +1,7 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
-import { LayoutDashboard, LogOut, User as UserIcon } from 'lucide-react'
+import { LayoutDashboard, LogOut } from 'lucide-react'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -36,7 +36,7 @@ export function UserMenu() {
         variant="ghost"
         className="hidden md:inline-flex text-text-secondary hover:text-accent-secondary"
       >
-        <Link to="/login">Sign In</Link>
+        <a href="/auth/login">Sign In</a>
       </Button>
     )
   }
