@@ -16,12 +16,16 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as DashboardNotificationsRouteImport } from './routes/dashboard/notifications'
 import { Route as DashboardInquiriesRouteImport } from './routes/dashboard/inquiries'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthMeRouteImport } from './routes/auth/me'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings.index'
+import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications.index'
 import { Route as DashboardInquiriesIndexRouteImport } from './routes/dashboard/inquiries.index'
 import { Route as DashboardInquiriesIdRouteImport } from './routes/dashboard/inquiries.$id'
 
@@ -60,6 +64,16 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   path: '/projects/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/dashboard/settings',
+  path: '/dashboard/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
+  id: '/dashboard/notifications',
+  path: '/dashboard/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
   id: '/dashboard/inquiries',
   path: '/dashboard/inquiries',
@@ -90,6 +104,17 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardSettingsRoute,
+} as any)
+const DashboardNotificationsIndexRoute =
+  DashboardNotificationsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardNotificationsRoute,
+  } as any)
 const DashboardInquiriesIndexRoute = DashboardInquiriesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -112,11 +137,15 @@ export interface FileRoutesByFullPath {
   '/auth/me': typeof AuthMeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
+  '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
+  '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
+  '/dashboard/settings/': typeof DashboardSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -133,6 +162,8 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsIndexRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries': typeof DashboardInquiriesIndexRoute
+  '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
+  '/dashboard/settings': typeof DashboardSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -146,11 +177,15 @@ export interface FileRoutesById {
   '/auth/me': typeof AuthMeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
+  '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
+  '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
+  '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
+  '/dashboard/settings/': typeof DashboardSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -165,11 +200,15 @@ export interface FileRouteTypes {
     | '/auth/me'
     | '/blog/$slug'
     | '/dashboard/inquiries'
+    | '/dashboard/notifications'
+    | '/dashboard/settings'
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
+    | '/dashboard/notifications/'
+    | '/dashboard/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -186,6 +225,8 @@ export interface FileRouteTypes {
     | '/projects'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries'
+    | '/dashboard/notifications'
+    | '/dashboard/settings'
   id:
     | '__root__'
     | '/'
@@ -198,11 +239,15 @@ export interface FileRouteTypes {
     | '/auth/me'
     | '/blog/$slug'
     | '/dashboard/inquiries'
+    | '/dashboard/notifications'
+    | '/dashboard/settings'
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
+    | '/dashboard/notifications/'
+    | '/dashboard/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -216,6 +261,8 @@ export interface RootRouteChildren {
   AuthMeRoute: typeof AuthMeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   DashboardInquiriesRoute: typeof DashboardInquiriesRouteWithChildren
+  DashboardNotificationsRoute: typeof DashboardNotificationsRouteWithChildren
+  DashboardSettingsRoute: typeof DashboardSettingsRouteWithChildren
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -272,6 +319,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/dashboard/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/notifications': {
+      id: '/dashboard/notifications'
+      path: '/dashboard/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof DashboardNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/inquiries': {
       id: '/dashboard/inquiries'
       path: '/dashboard/inquiries'
@@ -314,6 +375,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/settings/': {
+      id: '/dashboard/settings/'
+      path: '/'
+      fullPath: '/dashboard/settings/'
+      preLoaderRoute: typeof DashboardSettingsIndexRouteImport
+      parentRoute: typeof DashboardSettingsRoute
+    }
+    '/dashboard/notifications/': {
+      id: '/dashboard/notifications/'
+      path: '/'
+      fullPath: '/dashboard/notifications/'
+      preLoaderRoute: typeof DashboardNotificationsIndexRouteImport
+      parentRoute: typeof DashboardNotificationsRoute
+    }
     '/dashboard/inquiries/': {
       id: '/dashboard/inquiries/'
       path: '/'
@@ -344,6 +419,31 @@ const DashboardInquiriesRouteChildren: DashboardInquiriesRouteChildren = {
 const DashboardInquiriesRouteWithChildren =
   DashboardInquiriesRoute._addFileChildren(DashboardInquiriesRouteChildren)
 
+interface DashboardNotificationsRouteChildren {
+  DashboardNotificationsIndexRoute: typeof DashboardNotificationsIndexRoute
+}
+
+const DashboardNotificationsRouteChildren: DashboardNotificationsRouteChildren =
+  {
+    DashboardNotificationsIndexRoute: DashboardNotificationsIndexRoute,
+  }
+
+const DashboardNotificationsRouteWithChildren =
+  DashboardNotificationsRoute._addFileChildren(
+    DashboardNotificationsRouteChildren,
+  )
+
+interface DashboardSettingsRouteChildren {
+  DashboardSettingsIndexRoute: typeof DashboardSettingsIndexRoute
+}
+
+const DashboardSettingsRouteChildren: DashboardSettingsRouteChildren = {
+  DashboardSettingsIndexRoute: DashboardSettingsIndexRoute,
+}
+
+const DashboardSettingsRouteWithChildren =
+  DashboardSettingsRoute._addFileChildren(DashboardSettingsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -355,6 +455,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthMeRoute: AuthMeRoute,
   BlogSlugRoute: BlogSlugRoute,
   DashboardInquiriesRoute: DashboardInquiriesRouteWithChildren,
+  DashboardNotificationsRoute: DashboardNotificationsRouteWithChildren,
+  DashboardSettingsRoute: DashboardSettingsRouteWithChildren,
   ProjectsSlugRoute: ProjectsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,

@@ -67,12 +67,35 @@ export interface InquiryCommentAddedPayload {
   isInternal: boolean
 }
 
+/** Generic paginated response from the Wallow backend */
+export interface PaginatedResponse<T> {
+  items: T[]
+  pageNumber: number
+  pageSize: number
+  totalCount: number
+}
+
 /** Notification delivered to a user via the Wallow backend */
 export interface Notification {
   id: string
   type: string
   title: string
   body: string
+  entityId?: string
+  metadata?: Record<string, string>
   readAt: string | null
+  createdAt: string
+}
+
+/** Per-channel notification preference */
+export interface NotificationSettings {
+  channelType: string
+  isEnabled: boolean
+}
+
+/** Registered push notification device */
+export interface PushDevice {
+  id: string
+  platform: string
   createdAt: string
 }
