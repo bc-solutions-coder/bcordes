@@ -4,7 +4,6 @@ import { formatDateTime, formatRelativeTime } from '@/lib/format'
 describe('formatRelativeTime', () => {
   beforeEach(() => {
     vi.useFakeTimers()
-    // Pin to 2026-03-25T12:00:00Z
     vi.setSystemTime(new Date('2026-03-25T12:00:00Z'))
   })
 
@@ -39,47 +38,38 @@ describe('formatRelativeTime', () => {
     expect(formatRelativeTime('2026-03-19T12:00:00Z')).toBe('6d ago')
   })
 
-  it('falls back to locale date for 7+ days', () => {
-    const result = formatRelativeTime('2026-03-10T12:00:00Z')
-    expect(result).toBe('Mar 10')
+  it('falls back to short date for 7+ days', () => {
+    expect(formatRelativeTime('2026-03-10T12:00:00Z')).toBe('Mar 10')
   })
 
-  it('falls back to locale date for much older dates', () => {
-    const result = formatRelativeTime('2025-06-15T12:00:00Z')
-    expect(result).toBe('Jun 15')
+  it('falls back to short date for much older dates', () => {
+    expect(formatRelativeTime('2025-06-15T12:00:00Z')).toBe('Jun 15')
   })
 })
 
 describe('formatDateTime', () => {
   it('formats a date as "Jan 5, 2025, 02:30 PM"', () => {
-    // Use a date that we construct with known local values
-    // formatDateTime uses local time, so create a Date and format it
     const d = new Date(2025, 0, 5, 14, 30)
-    const result = formatDateTime(d.toISOString())
-    expect(result).toBe('Jan 5, 2025, 02:30 PM')
+    expect(formatDateTime(d.toISOString())).toBe('Jan 5, 2025, 02:30 PM')
   })
 
   it('formats midnight as 12:00 AM', () => {
     const d = new Date(2026, 2, 25, 0, 0)
-    const result = formatDateTime(d.toISOString())
-    expect(result).toBe('Mar 25, 2026, 12:00 AM')
+    expect(formatDateTime(d.toISOString())).toBe('Mar 25, 2026, 12:00 AM')
   })
 
   it('formats noon as 12:00 PM', () => {
     const d = new Date(2026, 2, 25, 12, 0)
-    const result = formatDateTime(d.toISOString())
-    expect(result).toBe('Mar 25, 2026, 12:00 PM')
+    expect(formatDateTime(d.toISOString())).toBe('Mar 25, 2026, 12:00 PM')
   })
 
   it('pads minutes with leading zero', () => {
     const d = new Date(2026, 5, 1, 9, 5)
-    const result = formatDateTime(d.toISOString())
-    expect(result).toBe('Jun 1, 2026, 09:05 AM')
+    expect(formatDateTime(d.toISOString())).toBe('Jun 1, 2026, 09:05 AM')
   })
 
   it('handles PM hours correctly', () => {
     const d = new Date(2026, 11, 31, 23, 59)
-    const result = formatDateTime(d.toISOString())
-    expect(result).toBe('Dec 31, 2026, 11:59 PM')
+    expect(formatDateTime(d.toISOString())).toBe('Dec 31, 2026, 11:59 PM')
   })
 })
