@@ -1,0 +1,94 @@
+---
+title: 'Building a Modern Personal Site with TanStack Start'
+date: '2026-01-21'
+excerpt: 'A deep dive into the architecture decisions and lessons learned while building this portfolio site using TanStack Start, React, and MDX.'
+tags: [TanStack, React, TypeScript, Architecture]
+---
+
+## Why TanStack Start?
+
+When I set out to rebuild my personal site, I wanted something that felt modern without being over-engineered. After years of working with various frameworks, TanStack Start stood out for a few key reasons:
+
+**Type-safe routing** - Coming from projects where route params were runtime mysteries, having compile-time guarantees about my routes felt like a superpower. No more `params.id as string` gymnastics.
+
+**Server functions that just work** - The ability to write server-side code that integrates seamlessly with my React components simplified the mental model significantly. Data loading became declarative rather than imperative.
+
+**Progressive enhancement** - The site works without JavaScript, but lights up with it. This matters more than most developers think, especially for content-heavy pages like blog posts.
+
+## The MDX Decision
+
+I considered several approaches for content management:
+
+1. **Headless CMS** - Overkill for a personal site with infrequent updates
+2. **Database-backed content** - Added complexity without clear benefits
+3. **Plain Markdown files** - Simple but lacking component flexibility
+4. **MDX files** - The sweet spot
+
+MDX won because it offers the simplicity of writing in Markdown while preserving the ability to drop in React components when needed. Want to embed an interactive code demo? Just import it. Need a custom callout component? Done.
+
+The implementation is straightforward. Each content type (projects, blog posts) has its own directory under `src/content/`. A simple utility function parses the frontmatter and returns typed content objects.
+
+## Architecture Patterns That Worked
+
+### Colocated Server Functions
+
+Rather than creating separate API routes, I colocated server functions with their consuming components:
+
+```typescript
+const fetchBlogPosts = createServerFn({ method: 'GET' }).handler(async () => {
+  return getBlogPosts()
+})
+```
+
+This keeps related code together and makes the data flow obvious. When you open a route file, you see both the data requirements and the component that renders them.
+
+### Design Tokens Over Hardcoded Values
+
+Early in the project, I established a design token system. Every color, spacing value, and animation timing references a token. This made it trivial to maintain consistency and will make future theme changes painless.
+
+### Animation with Restraint
+
+The site uses subtle fade-in animations triggered by scroll position. But importantly, it respects `prefers-reduced-motion`. Accessibility isn't an afterthought - it's baked into the animation primitives:
+
+```typescript
+const prefersReducedMotion = useReducedMotion()
+
+// Animation only runs if user hasn't opted out
+className={cn(
+  prefersReducedMotion
+    ? 'opacity-100'
+    : isVisible ? 'opacity-100' : 'opacity-0'
+)}
+```
+
+## What I'd Do Differently
+
+**Start with a design system** - I created components ad-hoc initially, then had to refactor for consistency. Starting with a proper component library from day one would have saved time.
+
+**Write content first** - Designing pages before having real content leads to layouts that don't actually work well with real text. Write the content, then design around it.
+
+**Test the build early** - Some development shortcuts don't survive the build process. Running production builds regularly catches issues before they compound.
+
+## The Stack
+
+For the curious, here's the complete technical stack:
+
+- **Framework**: TanStack Start (React)
+- **Styling**: Tailwind CSS v4
+- **Language**: TypeScript (strict mode)
+- **Content**: MDX with custom parsing
+- **Backend**: Wallow API with PostgreSQL
+- **Deployment**: Docker with multi-stage builds
+
+## What's Next
+
+This site is a living project. Planned additions include:
+
+- Interactive project case studies with live demos
+- RSS feed for blog posts
+
+The beauty of building on a solid foundation is that adding features becomes additive rather than surgical. Each new page is just another file in the routes directory.
+
+---
+
+Building your own site from scratch teaches you things that using templates never will. I'd encourage any developer to try it - not for the portfolio value, but for the learning.
