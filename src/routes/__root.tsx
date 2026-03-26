@@ -8,7 +8,7 @@ import {
 
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
-import { Toaster } from '../components/ui/sonner'
+import { Toaster } from '../components/ui/shadcn/sonner'
 
 import appCss from '../styles.css?url'
 

@@ -5,8 +5,8 @@ import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
 import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
 import { formatDateTime } from '@/lib/format'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Table,
   TableBody,
@@ -14,14 +14,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/shadcn/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/shadcn/select'
 import { STATUS_COLORS, STATUS_LABELS } from '@/config/inquiries'
 
 export const Route = createFileRoute('/dashboard/inquiries/')({

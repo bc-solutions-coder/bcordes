@@ -30,10 +30,10 @@ import {
 } from '@/hooks/useNotificationFilters'
 import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 import { NotificationRow } from '@/components/dashboard/NotificationRow'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { Button } from '@/components/ui/shadcn/button'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs'
 
 const NOTIFICATION_TYPE_CONFIG: Record<
   NotificationType,

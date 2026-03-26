@@ -7,14 +7,14 @@ import { MobileNav } from './MobileNav'
 import { NotificationBell } from './NotificationBell'
 import { UserMenu } from './UserMenu'
 import { NAV_LINKS } from '@/config/navigation'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
+} from '@/components/ui/shadcn/navigation-menu'
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)

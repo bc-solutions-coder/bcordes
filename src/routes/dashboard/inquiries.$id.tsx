@@ -9,10 +9,10 @@ import {
   submitInquiryComment,
 } from '@/server-fns/inquiries'
 import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Badge } from '@/components/ui/shadcn/badge'
+import { Button } from '@/components/ui/shadcn/button'
+import { Textarea } from '@/components/ui/shadcn/textarea'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 
 export const Route = createFileRoute('/dashboard/inquiries/$id')({
   beforeLoad: () =>

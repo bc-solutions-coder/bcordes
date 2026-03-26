@@ -10,20 +10,20 @@ import {
   updateChannelSetting,
 } from '@/server-fns/notifications'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
+} from '@/components/ui/shadcn/card'
+import { Switch } from '@/components/ui/shadcn/switch'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@/components/ui/shadcn/tooltip'
 
 export const Route = createFileRoute('/dashboard/settings/')({
   beforeLoad: () =>

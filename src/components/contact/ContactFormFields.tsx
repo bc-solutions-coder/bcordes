@@ -6,9 +6,9 @@ import {
 } from './contact-form.schema'
 import type { UseFormReturn } from 'react-hook-form'
 import type { ContactFormValues } from './contact-form.schema'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/shadcn/button'
+import { Input } from '@/components/ui/shadcn/input'
+import { Textarea } from '@/components/ui/shadcn/textarea'
 import {
   Form,
   FormControl,
@@ -16,7 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/shadcn/form'
 
 interface ContactFormFieldsProps {
   form: UseFormReturn<ContactFormValues>

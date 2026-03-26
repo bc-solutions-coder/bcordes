@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import { FadeInView } from '@/components/shared/FadeInView'
 
 interface Stat {

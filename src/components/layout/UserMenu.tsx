@@ -3,15 +3,15 @@
 import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut } from 'lucide-react'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@/components/ui/shadcn/avatar'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/shadcn/dropdown-menu'
 import { useUser } from '@/hooks/useUser'
 
 function getInitials(name: string | undefined) {

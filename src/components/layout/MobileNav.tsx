@@ -5,14 +5,14 @@ import { LayoutDashboard, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
 
 import { NAV_LINKS } from '@/config/navigation'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
+} from '@/components/ui/shadcn/sheet'
 import { useUser } from '@/hooks/useUser'
 
 export function MobileNav() {

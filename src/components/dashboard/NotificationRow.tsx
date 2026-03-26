@@ -2,7 +2,7 @@ import { Bell } from 'lucide-react'
 import type { Notification } from '@/lib/wallow/types'
 import type { NotificationType } from '@/hooks/useNotificationFilters'
 import { formatRelativeTime } from '@/lib/format'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 
 export interface NotificationTypeConfig {
   icon: typeof Bell
