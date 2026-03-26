@@ -43,14 +43,14 @@ export function ContactFormFields({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-text-primary">
-                  Name <span className="text-accent-primary">*</span>
+                <FormLabel className="text-foreground">
+                  Name <span className="text-primary">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="John Doe"
                     disabled={disabledFields?.name}
-                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="border-border bg-secondary text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
                     {...field}
                   />
                 </FormControl>
@@ -64,15 +64,15 @@ export function ContactFormFields({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-text-primary">
-                  Email <span className="text-accent-primary">*</span>
+                <FormLabel className="text-foreground">
+                  Email <span className="text-primary">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     type="email"
                     placeholder="john@example.com"
                     disabled={disabledFields?.email}
-                    className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="border-border bg-secondary text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-70"
                     {...field}
                   />
                 </FormControl>
@@ -87,12 +87,12 @@ export function ContactFormFields({
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-text-primary">Phone</FormLabel>
+              <FormLabel className="text-foreground">Phone</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
                   placeholder="(555) 123-4567"
-                  className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50"
+                  className="border-border bg-secondary text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50"
                   {...field}
                 />
               </FormControl>
@@ -106,11 +106,11 @@ export function ContactFormFields({
           name="company"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-text-primary">Company</FormLabel>
+              <FormLabel className="text-foreground">Company</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Your company (optional)"
-                  className="border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50"
+                  className="border-border bg-secondary text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50"
                   {...field}
                 />
               </FormControl>
@@ -153,13 +153,13 @@ export function ContactFormFields({
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-text-primary">
-                Message <span className="text-accent-primary">*</span>
+              <FormLabel className="text-foreground">
+                Message <span className="text-primary">*</span>
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Tell me about your project..."
-                  className="min-h-32 resize-none border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary focus-visible:border-accent-primary focus-visible:ring-accent-primary/50"
+                  className="min-h-32 resize-none border-border bg-secondary text-foreground placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/50"
                   {...field}
                 />
               </FormControl>
@@ -171,7 +171,7 @@ export function ContactFormFields({
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-accent-primary text-white hover:bg-accent-tertiary focus-visible:ring-accent-primary/50 disabled:opacity-50 sm:w-auto"
+          className="w-full bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary/50 disabled:opacity-50 sm:w-auto"
         >
           {isSubmitting ? (
             <>

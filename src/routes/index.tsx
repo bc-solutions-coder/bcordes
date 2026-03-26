@@ -20,7 +20,7 @@ function HomePage() {
       <FeaturedWork showcases={showcases} />
       <SkillsShowcase />
 
-      <section className="bg-background-primary py-24">
+      <section className="bg-background py-24">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight">
             Let's Work Together
@@ -31,7 +31,7 @@ function HomePage() {
           </p>
           <Link
             to="/contact"
-            className="mt-8 inline-block rounded-lg bg-accent-primary px-8 py-3 text-white font-semibold"
+            className="mt-8 inline-block rounded-lg bg-primary px-8 py-3 text-white font-semibold"
           >
             Get in Touch
           </Link>

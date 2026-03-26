@@ -15,23 +15,23 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
   }
 
   return (
-    <section className="py-24 bg-background-primary">
+    <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         {/* Section header */}
         <FadeInView delay={0}>
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
                 Featured Work
               </h2>
-              <p className="text-lg text-text-secondary">
+              <p className="text-lg text-foreground-secondary">
                 Recent projects I'm proud of
               </p>
             </div>
             <Button
               asChild
               variant="ghost"
-              className="text-accent-primary hover:text-accent-tertiary hover:bg-accent-primary/10"
+              className="text-primary hover:text-primary-hover hover:bg-primary/10"
             >
               <Link to="/projects" className="flex items-center gap-2">
                 View all work
@@ -49,20 +49,20 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
                 key={showcase.slug}
                 to="/projects/$slug"
                 params={{ slug: showcase.slug }}
-                className="group block rounded-xl border-l-4 border-accent-decorative bg-background-primary p-6 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+                className="group block rounded-xl border-l-4 border-decorative bg-background p-6 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-block rounded-md bg-accent-light px-2 py-0.5 text-xs font-semibold text-accent-tertiary">
+                  <span className="inline-block rounded-md bg-secondary px-2 py-0.5 text-xs font-semibold text-primary-hover">
                     {showcase.year}
                   </span>
-                  <span className="text-sm text-text-tertiary">
+                  <span className="text-sm text-muted-foreground">
                     {showcase.client}
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                   {showcase.title}
                 </h3>
-                <p className="text-sm text-text-secondary line-clamp-2 mb-4">
+                <p className="text-sm text-foreground-secondary line-clamp-2 mb-4">
                   {showcase.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -70,7 +70,7 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
                     <Badge
                       key={tag}
                       variant="secondary"
-                      className="text-xs bg-gray-100 border-border-default text-text-tertiary"
+                      className="text-xs bg-muted border-border text-muted-foreground"
                     >
                       {tag}
                     </Badge>

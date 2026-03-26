@@ -30,7 +30,7 @@ export function NotificationRow({
 
   return (
     <div
-      className={`flex cursor-pointer items-start gap-4 border-b border-border-default px-4 py-3 transition-colors hover:bg-background-primary/50 last:border-b-0 ${
+      className={`flex cursor-pointer items-start gap-4 border-b border-border px-4 py-3 transition-colors hover:bg-background/50 last:border-b-0 ${
         isUnread ? 'bg-blue-500/5' : ''
       }`}
       onClick={() => onClick(notification)}
@@ -52,7 +52,7 @@ export function NotificationRow({
       </div>
 
       <div className="flex-shrink-0 pt-0.5">
-        <IconComponent className="h-5 w-5 text-text-tertiary" />
+        <IconComponent className="h-5 w-5 text-muted-foreground" />
       </div>
 
       <div className="min-w-0 flex-1">
@@ -60,8 +60,8 @@ export function NotificationRow({
           <span
             className={`text-sm ${
               isUnread
-                ? 'font-semibold text-text-primary'
-                : 'font-medium text-text-secondary'
+                ? 'font-semibold text-foreground'
+                : 'font-medium text-foreground-secondary'
             }`}
           >
             {notification.title}
@@ -70,12 +70,12 @@ export function NotificationRow({
             <span className="h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
           )}
         </div>
-        <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
+        <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
           {notification.message}
         </p>
       </div>
 
-      <span className="flex-shrink-0 whitespace-nowrap text-xs text-text-tertiary">
+      <span className="flex-shrink-0 whitespace-nowrap text-xs text-muted-foreground">
         {formatRelativeTime(notification.createdAt)}
       </span>
     </div>

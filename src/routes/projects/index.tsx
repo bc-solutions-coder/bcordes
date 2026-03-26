@@ -56,17 +56,17 @@ function WorkPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-background">
       {/* Page Header */}
-      <section className="border-b border-border-default bg-background-secondary">
+      <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
           <FadeInView>
-            <h1 className="mb-4 text-4xl font-bold tracking-tight text-text-primary md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
               Projects
             </h1>
           </FadeInView>
           <FadeInView delay={100}>
-            <p className="max-w-2xl text-lg text-text-secondary md:text-xl">
+            <p className="max-w-2xl text-lg text-foreground-secondary md:text-xl">
               A selection of projects I have worked on, showcasing my experience
               across different industries and technologies.
             </p>
@@ -91,7 +91,7 @@ function WorkPage() {
 
         {/* Results Count */}
         <FadeInView delay={300}>
-          <p className="mb-8 text-sm text-text-tertiary">
+          <p className="mb-8 text-sm text-muted-foreground">
             Showing {filteredShowcases.length} of {showcases.length} projects
             {(selectedTag || selectedYear) && (
               <button
@@ -100,7 +100,7 @@ function WorkPage() {
                   setSelectedTag(null)
                   setSelectedYear(null)
                 }}
-                className="ml-2 text-accent-primary hover:text-accent-secondary hover:underline transition-colors"
+                className="ml-2 text-primary hover:text-primary hover:underline transition-colors"
               >
                 Clear filters
               </button>
@@ -120,7 +120,7 @@ function WorkPage() {
         ) : (
           <FadeInView delay={400}>
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="mb-4 text-6xl text-text-tertiary">
+              <div className="mb-4 text-6xl text-muted-foreground">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="64"
@@ -136,10 +136,10 @@ function WorkPage() {
                   <path d="m21 21-4.3-4.3" />
                 </svg>
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-text-primary">
+              <h3 className="mb-2 text-xl font-semibold text-foreground">
                 No projects found
               </h3>
-              <p className="mb-6 text-text-secondary">
+              <p className="mb-6 text-foreground-secondary">
                 Try adjusting your filters to see more results.
               </p>
               <button
@@ -148,7 +148,7 @@ function WorkPage() {
                   setSelectedTag(null)
                   setSelectedYear(null)
                 }}
-                className="rounded-lg bg-accent-primary px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-secondary"
+                className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-primary"
               >
                 Clear all filters
               </button>

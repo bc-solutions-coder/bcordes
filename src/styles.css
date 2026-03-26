@@ -35,37 +35,8 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Green-on-white light theme */
+/* Unified theme — shadcn/ui naming convention */
 :root {
-  /* Background Colors */
-  --background-primary: #ffffff;
-  --background-secondary: #f0f9ec;
-  --background-tertiary: #fafafa;
-
-  /* Text Colors */
-  --text-primary: #1a1a1a;
-  --text-secondary: #4a4a4a;
-  --text-tertiary: #737373;
-
-  /* Green Accent Colors (Accessible) */
-  --accent-primary: #2a6b22;
-  --accent-secondary: #3d8b37;
-  --accent-tertiary: #1e5218;
-  --accent-decorative: #6bbf59;
-  --accent-light: #f0f9ec;
-  --accent-mid: #dcefd4;
-
-  /* Border Colors */
-  --border-default: #e5e5e5;
-  --border-accent: rgb(61 139 55 / 0.3);
-
-  /* Additional */
-  --focus-ring: #2a6b22;
-  --gray-50: #fafafa;
-  --gray-100: #f5f5f5;
-  --gray-200: #e5e5e5;
-
-  /* shadcn/ui compatible variables - light theme values */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -99,30 +70,17 @@ code {
   --sidebar-accent-foreground: oklch(0.145 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.39 0.11 142);
+
+  /* Extended semantic tokens (beyond shadcn vocabulary) */
+  --primary-hover: #1e5218;
+  --foreground-secondary: #4a4a4a;
+  --decorative: #6bbf59;
+  --decorative-muted: #dcefd4;
+  --border-primary: rgb(61 139 55 / 0.3);
 }
 
 @theme inline {
-  /* Custom design tokens */
-  --color-background-primary: var(--background-primary);
-  --color-background-secondary: var(--background-secondary);
-  --color-background-tertiary: var(--background-tertiary);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-tertiary: var(--text-tertiary);
-  --color-accent-primary: var(--accent-primary);
-  --color-accent-secondary: var(--accent-secondary);
-  --color-accent-tertiary: var(--accent-tertiary);
-  --color-accent-decorative: var(--accent-decorative);
-  --color-accent-light: var(--accent-light);
-  --color-accent-mid: var(--accent-mid);
-  --color-border-default: var(--border-default);
-  --color-border-accent: var(--border-accent);
-  --color-focus-ring: var(--focus-ring);
-  --color-gray-50: var(--gray-50);
-  --color-gray-100: var(--gray-100);
-  --color-gray-200: var(--gray-200);
-
-  /* shadcn/ui compatible color mappings */
+  /* shadcn/ui color mappings */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -159,6 +117,13 @@ code {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Extended semantic tokens */
+  --color-primary-hover: var(--primary-hover);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-decorative: var(--decorative);
+  --color-decorative-muted: var(--decorative-muted);
+  --color-border-primary: var(--border-primary);
 }
 
 @layer base {
@@ -166,8 +131,7 @@ code {
     @apply border-border outline-ring/50;
   }
   body {
-    background-color: var(--background-primary);
-    color: var(--text-primary);
+    @apply bg-background text-foreground;
   }
 }
 
@@ -243,117 +207,7 @@ code {
 }
 
 /* Showcase Content Styles */
-.showcase-content {
-  max-width: none;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-
-.showcase-content h2 {
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  letter-spacing: -0.025em;
-}
-
-.showcase-content h3 {
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.showcase-content h4 {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.showcase-content p {
-  color: var(--text-secondary);
-  margin-bottom: 1.25rem;
-}
-
-.showcase-content strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.showcase-content a {
-  color: var(--accent-primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.showcase-content a:hover {
-  color: var(--accent-tertiary);
-}
-
-.showcase-content ul,
-.showcase-content ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.showcase-content ul {
-  list-style-type: disc;
-}
-
-.showcase-content ol {
-  list-style-type: decimal;
-}
-
-.showcase-content li {
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.showcase-content li strong {
-  color: var(--text-primary);
-}
-
-.showcase-content blockquote {
-  border-left: 3px solid var(--accent-primary);
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  color: var(--text-tertiary);
-  font-style: italic;
-}
-
-.showcase-content pre {
-  background: var(--background-tertiary);
-  border: 1px solid var(--border-default);
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
-.showcase-content code {
-  font-size: 0.875rem;
-}
-
-.showcase-content p code {
-  background: var(--background-tertiary);
-  border: 1px solid var(--border-default);
-  border-radius: 0.375rem;
-  padding: 0.125rem 0.375rem;
-  font-size: 0.875em;
-}
-
-.showcase-content hr {
-  border-color: var(--border-default);
-  margin: 2rem 0;
-}
-
-.showcase-content h2:first-child {
-  margin-top: 0;
-}
+@import './styles/showcase.css';
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {

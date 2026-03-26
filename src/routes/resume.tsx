@@ -92,24 +92,24 @@ const education = [
 
 function ResumePage() {
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <section className="border-b border-border-default bg-background-secondary">
+      <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-4xl px-6 py-16">
           <FadeInView>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="mb-2 text-4xl font-bold text-text-primary md:text-5xl">
+                <h1 className="mb-2 text-4xl font-bold text-foreground md:text-5xl">
                   Resume
                 </h1>
-                <p className="text-lg text-text-secondary">
+                <p className="text-lg text-foreground-secondary">
                   6+ years of professional software engineering experience
                 </p>
               </div>
               <a
                 href="/Cordes-Resume.pdf"
                 download
-                className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-accent-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-tertiary"
+                className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
               >
                 <Download className="h-4 w-4" />
                 Download PDF
@@ -124,32 +124,31 @@ function ResumePage() {
         {/* Experience */}
         <FadeInView delay={100}>
           <section className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">
+            <h2 className="mb-6 text-2xl font-bold text-foreground">
               Experience
             </h2>
             <div className="space-y-8">
               {experience.map((job, index) => (
-                <div
-                  key={index}
-                  className="border-l-2 border-accent-primary/30 pl-6"
-                >
+                <div key={index} className="border-l-2 border-primary/30 pl-6">
                   <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="text-lg font-semibold text-text-primary">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {job.title}
                     </h3>
-                    <span className="text-sm text-text-tertiary">
+                    <span className="text-sm text-muted-foreground">
                       {job.period}
                     </span>
                   </div>
-                  <p className="mb-2 text-accent-secondary">{job.company}</p>
-                  <p className="mb-3 text-text-secondary">{job.description}</p>
+                  <p className="mb-2 text-primary">{job.company}</p>
+                  <p className="mb-3 text-foreground-secondary">
+                    {job.description}
+                  </p>
                   <ul className="space-y-1">
                     {job.highlights.map((highlight, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2 text-sm text-text-secondary"
+                        className="flex items-start gap-2 text-sm text-foreground-secondary"
                       >
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent-primary" />
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                         {highlight}
                       </li>
                     ))}
@@ -163,13 +162,11 @@ function ResumePage() {
         {/* Skills */}
         <FadeInView delay={200}>
           <section className="mb-12">
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">
-              Skills
-            </h2>
+            <h2 className="mb-6 text-2xl font-bold text-foreground">Skills</h2>
             <div className="grid gap-6 sm:grid-cols-2">
               {Object.entries(skills).map(([category, items]) => (
                 <div key={category}>
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-accent-secondary">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
                     {category}
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -177,7 +174,7 @@ function ResumePage() {
                       <Badge
                         key={skill}
                         variant="secondary"
-                        className="bg-background-secondary border border-border-default text-text-secondary"
+                        className="bg-secondary border border-border text-foreground-secondary"
                       >
                         {skill}
                       </Badge>
@@ -192,20 +189,17 @@ function ResumePage() {
         {/* Education */}
         <FadeInView delay={300}>
           <section>
-            <h2 className="mb-6 text-2xl font-bold text-text-primary">
+            <h2 className="mb-6 text-2xl font-bold text-foreground">
               Education
             </h2>
             <div className="space-y-4">
               {education.map((edu, index) => (
-                <div
-                  key={index}
-                  className="border-l-2 border-accent-primary/30 pl-6"
-                >
-                  <h3 className="font-semibold text-text-primary">
+                <div key={index} className="border-l-2 border-primary/30 pl-6">
+                  <h3 className="font-semibold text-foreground">
                     {edu.degree}
                   </h3>
-                  <p className="text-text-secondary">{edu.school}</p>
-                  <p className="text-sm text-text-tertiary">{edu.year}</p>
+                  <p className="text-foreground-secondary">{edu.school}</p>
+                  <p className="text-sm text-muted-foreground">{edu.year}</p>
                 </div>
               ))}
             </div>

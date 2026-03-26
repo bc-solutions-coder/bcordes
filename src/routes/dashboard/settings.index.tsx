@@ -176,18 +176,18 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-primary">
-      <header className="border-b border-border-default bg-background-secondary">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border bg-secondary">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-6 py-4">
-          <Settings className="h-6 w-6 text-accent-secondary" />
-          <h1 className="text-xl font-semibold text-text-primary">Settings</h1>
+          <Settings className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-semibold text-foreground">Settings</h1>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        <Card className="border-border-default bg-background-secondary">
+        <Card className="border-border bg-secondary">
           <CardHeader>
-            <CardTitle className="text-text-primary">Notifications</CardTitle>
+            <CardTitle className="text-foreground">Notifications</CardTitle>
             <CardDescription>
               Choose how you want to receive notifications
             </CardDescription>
@@ -199,15 +199,15 @@ function SettingsPage() {
               return (
                 <div
                   key={channel.type}
-                  className="flex items-center justify-between rounded-lg border border-border-default px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-border px-4 py-3"
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="h-5 w-5 text-text-tertiary" />
+                    <Icon className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="text-sm font-medium text-text-primary">
+                      <p className="text-sm font-medium text-foreground">
                         {channel.label}
                       </p>
-                      <p className="text-xs text-text-secondary">
+                      <p className="text-xs text-foreground-secondary">
                         {channel.description}
                       </p>
                     </div>

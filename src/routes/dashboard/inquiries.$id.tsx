@@ -53,18 +53,18 @@ function InquiryDetailPage() {
     : comments.filter((c) => !c.isInternal)
 
   return (
-    <div className="min-h-screen bg-background-primary">
-      <section className="border-b border-border-default bg-background-secondary">
+    <div className="min-h-screen bg-background">
+      <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <Link
             to="/dashboard/inquiries"
-            className="mb-4 inline-flex items-center gap-1 text-sm text-text-secondary transition-colors hover:text-text-primary"
+            className="mb-4 inline-flex items-center gap-1 text-sm text-foreground-secondary transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to inquiries
           </Link>
           <div className="flex items-start justify-between gap-4">
-            <h1 className="text-3xl font-bold tracking-tight text-text-primary">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Inquiry Details
             </h1>
             <Badge
@@ -78,67 +78,67 @@ function InquiryDetailPage() {
 
       <main className="mx-auto max-w-7xl px-6 py-8">
         {/* Inquiry details */}
-        <div className="rounded-lg border border-border-default bg-background-secondary p-6">
+        <div className="rounded-lg border border-border bg-secondary p-6">
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <dt className="text-sm font-medium text-text-tertiary">Name</dt>
-              <dd className="mt-1 text-text-primary">{inquiry.name}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">
+                Name
+              </dt>
+              <dd className="mt-1 text-foreground">{inquiry.name}</dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-text-tertiary">Email</dt>
-              <dd className="mt-1 text-text-primary">{inquiry.email}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">
+                Email
+              </dt>
+              <dd className="mt-1 text-foreground">{inquiry.email}</dd>
             </div>
             {inquiry.company && (
               <div>
-                <dt className="text-sm font-medium text-text-tertiary">
+                <dt className="text-sm font-medium text-muted-foreground">
                   Company
                 </dt>
-                <dd className="mt-1 text-text-primary">{inquiry.company}</dd>
+                <dd className="mt-1 text-foreground">{inquiry.company}</dd>
               </div>
             )}
             {inquiry.projectType && (
               <div>
-                <dt className="text-sm font-medium text-text-tertiary">
+                <dt className="text-sm font-medium text-muted-foreground">
                   Project Type
                 </dt>
-                <dd className="mt-1 text-text-primary">
-                  {inquiry.projectType}
-                </dd>
+                <dd className="mt-1 text-foreground">{inquiry.projectType}</dd>
               </div>
             )}
             {inquiry.budgetRange && (
               <div>
-                <dt className="text-sm font-medium text-text-tertiary">
+                <dt className="text-sm font-medium text-muted-foreground">
                   Budget
                 </dt>
-                <dd className="mt-1 text-text-primary">
-                  {inquiry.budgetRange}
-                </dd>
+                <dd className="mt-1 text-foreground">{inquiry.budgetRange}</dd>
               </div>
             )}
             {inquiry.timeline && (
               <div>
-                <dt className="text-sm font-medium text-text-tertiary">
+                <dt className="text-sm font-medium text-muted-foreground">
                   Timeline
                 </dt>
-                <dd className="mt-1 text-text-primary">{inquiry.timeline}</dd>
+                <dd className="mt-1 text-foreground">{inquiry.timeline}</dd>
               </div>
             )}
             <div>
-              <dt className="text-sm font-medium text-text-tertiary">
+              <dt className="text-sm font-medium text-muted-foreground">
                 Submitted
               </dt>
-              <dd className="mt-1 text-text-primary">
+              <dd className="mt-1 text-foreground">
                 {formatDateTime(inquiry.createdAt)}
               </dd>
             </div>
           </dl>
 
-          <div className="mt-6 border-t border-border-default pt-6">
-            <h2 className="mb-2 text-sm font-medium text-text-tertiary">
+          <div className="mt-6 border-t border-border pt-6">
+            <h2 className="mb-2 text-sm font-medium text-muted-foreground">
               Message
             </h2>
-            <p className="whitespace-pre-wrap text-text-primary">
+            <p className="whitespace-pre-wrap text-foreground">
               {inquiry.message}
             </p>
           </div>
@@ -146,12 +146,12 @@ function InquiryDetailPage() {
 
         {/* Comments */}
         <div className="mt-8">
-          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-text-primary">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
             <MessageSquare className="h-5 w-5" />
             Comments
           </h2>
           {visibleComments.length === 0 ? (
-            <p className="text-text-secondary">No comments yet.</p>
+            <p className="text-foreground-secondary">No comments yet.</p>
           ) : (
             <div className="space-y-4">
               {visibleComments.map((comment) => (
@@ -160,11 +160,11 @@ function InquiryDetailPage() {
                   className={`rounded-lg border p-4 ${
                     comment.isInternal
                       ? 'border-yellow-500/20 bg-yellow-500/5'
-                      : 'border-border-default bg-background-secondary'
+                      : 'border-border bg-secondary'
                   }`}
                 >
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-medium text-text-primary">
+                    <span className="font-medium text-foreground">
                       {comment.authorName}
                     </span>
                     <div className="flex items-center gap-2">
@@ -173,12 +173,12 @@ function InquiryDetailPage() {
                           Internal
                         </Badge>
                       )}
-                      <span className="text-text-tertiary">
+                      <span className="text-muted-foreground">
                         {formatDateTime(comment.createdAt)}
                       </span>
                     </div>
                   </div>
-                  <p className="whitespace-pre-wrap text-text-secondary">
+                  <p className="whitespace-pre-wrap text-foreground-secondary">
                     {comment.content}
                   </p>
                 </div>
@@ -215,7 +215,7 @@ function InquiryDetailPage() {
               placeholder="Write a comment..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              className="min-h-[100px] border-border-default bg-background-secondary text-text-primary placeholder:text-text-tertiary"
+              className="min-h-[100px] border-border bg-secondary text-foreground placeholder:text-muted-foreground"
             />
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -230,7 +230,7 @@ function InquiryDetailPage() {
                     />
                     <label
                       htmlFor="internal"
-                      className="text-sm text-text-secondary cursor-pointer select-none"
+                      className="text-sm text-foreground-secondary cursor-pointer select-none"
                     >
                       Internal note (not visible to submitter)
                     </label>
@@ -240,7 +240,7 @@ function InquiryDetailPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting || !commentText.trim()}
-                className="bg-accent-primary hover:bg-accent-tertiary text-white"
+                className="bg-primary hover:bg-primary-hover text-white"
               >
                 <Send className="mr-2 h-4 w-4" />
                 {isSubmitting ? 'Sending...' : 'Send'}

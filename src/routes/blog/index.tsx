@@ -31,13 +31,13 @@ function BlogPostCard({ post, index }: BlogPostCardProps) {
         params={{ slug: post.slug }}
         className="group block"
       >
-        <article className="rounded-xl border border-border-default bg-background-secondary p-6 transition-all duration-300 hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/5">
+        <article className="rounded-xl border border-border bg-secondary p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5">
           {/* Tags */}
           <div className="mb-3 flex flex-wrap gap-2">
             {post.frontmatter.tags.slice(0, 3).map((tag: string) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-1 rounded-full bg-accent-primary/10 px-2.5 py-0.5 text-xs font-medium text-accent-secondary"
+                className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"
               >
                 <Tag className="h-3 w-3" />
                 {tag}
@@ -46,17 +46,17 @@ function BlogPostCard({ post, index }: BlogPostCardProps) {
           </div>
 
           {/* Title */}
-          <h2 className="mb-2 text-xl font-semibold text-text-primary transition-colors group-hover:text-accent-secondary">
+          <h2 className="mb-2 text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
             {post.frontmatter.title}
           </h2>
 
           {/* Excerpt */}
-          <p className="mb-4 line-clamp-2 text-text-secondary">
+          <p className="mb-4 line-clamp-2 text-foreground-secondary">
             {post.frontmatter.excerpt}
           </p>
 
           {/* Meta */}
-          <div className="flex items-center gap-4 text-sm text-text-tertiary">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
               {formatDate(post.frontmatter.date)}
@@ -76,15 +76,15 @@ function BlogIndex() {
   const { posts } = Route.useLoaderData()
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <section className="border-b border-border-default bg-background-secondary/50">
+      <section className="border-b border-border bg-secondary/50">
         <div className="mx-auto max-w-4xl px-6 py-16">
           <FadeInView>
-            <h1 className="mb-4 text-4xl font-bold tracking-tight text-text-primary md:text-5xl">
+            <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground md:text-5xl">
               Blog
             </h1>
-            <p className="max-w-2xl text-lg text-text-secondary">
+            <p className="max-w-2xl text-lg text-foreground-secondary">
               Thoughts on software engineering, architecture patterns, and
               lessons learned from building products.
             </p>
@@ -96,8 +96,8 @@ function BlogIndex() {
       <section className="mx-auto max-w-4xl px-6 py-12">
         {posts.length === 0 ? (
           <FadeInView>
-            <div className="rounded-xl border border-border-default bg-background-secondary p-12 text-center">
-              <p className="text-text-secondary">
+            <div className="rounded-xl border border-border bg-secondary p-12 text-center">
+              <p className="text-foreground-secondary">
                 No blog posts yet. Check back soon!
               </p>
             </div>

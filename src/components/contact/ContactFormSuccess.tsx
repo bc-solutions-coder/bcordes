@@ -6,10 +6,10 @@ interface ContactFormSuccessProps {
 
 export function ContactFormSuccess({ onSendAnother }: ContactFormSuccessProps) {
   return (
-    <div className="rounded-lg border border-border-default bg-background-secondary p-8 text-center">
-      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent-primary/20">
+    <div className="rounded-lg border border-border bg-secondary p-8 text-center">
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20">
         <svg
-          className="h-6 w-6 text-accent-primary"
+          className="h-6 w-6 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -22,16 +22,16 @@ export function ContactFormSuccess({ onSendAnother }: ContactFormSuccessProps) {
           />
         </svg>
       </div>
-      <h3 className="mb-2 text-lg font-semibold text-text-primary">
+      <h3 className="mb-2 text-lg font-semibold text-foreground">
         Message Sent!
       </h3>
-      <p className="mb-6 text-text-secondary">
+      <p className="mb-6 text-foreground-secondary">
         Thanks for reaching out. I&apos;ll get back to you within 24-48 hours.
       </p>
       <Button
         variant="outline"
         onClick={onSendAnother}
-        className="border-border-default hover:border-accent-primary hover:text-accent-secondary"
+        className="border-border hover:border-primary hover:text-primary"
       >
         Send Another Message
       </Button>

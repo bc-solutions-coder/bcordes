@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b border-border-default bg-white/80 backdrop-blur transition-shadow ${
+      className={`sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur transition-shadow ${
         scrolled ? 'shadow-md' : ''
       }`}
     >
@@ -50,8 +50,8 @@ export function Header() {
             alt="BC Solutions"
             className="h-12"
           />
-          <span className="ml-2 text-2xl font-bold tracking-tight text-text-primary">
-            BC <span className="text-accent-secondary">Solutions</span>
+          <span className="ml-2 text-2xl font-bold tracking-tight text-foreground">
+            BC <span className="text-primary">Solutions</span>
           </span>
         </Link>
 
@@ -65,10 +65,10 @@ export function Header() {
                     to={link.href}
                     className={navigationMenuTriggerStyle()}
                     activeProps={{
-                      className: `${navigationMenuTriggerStyle()} text-accent-primary`,
+                      className: `${navigationMenuTriggerStyle()} text-primary`,
                     }}
                   >
-                    <span className="text-text-primary hover:text-accent-primary transition-colors">
+                    <span className="text-foreground hover:text-primary transition-colors">
                       {link.label}
                     </span>
                   </Link>
@@ -82,7 +82,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Button
             asChild
-            className="hidden md:inline-flex bg-accent-primary hover:bg-accent-tertiary text-white font-medium"
+            className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
           >
             <Link to="/contact">Get in Touch</Link>
           </Button>

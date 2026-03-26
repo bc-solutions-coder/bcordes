@@ -16,15 +16,15 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
       to="/projects/$slug"
       params={{ slug }}
       className={cn(
-        'group block overflow-hidden rounded-xl border border-border-default bg-background-secondary',
+        'group block overflow-hidden rounded-xl border border-border bg-secondary',
         'transition-all duration-300 ease-out',
-        'hover:scale-[1.02] hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary',
+        'hover:scale-[1.02] hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         className,
       )}
     >
       {/* Image Container */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-background-tertiary">
+      <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         {image ? (
           <img
             src={image}
@@ -33,29 +33,29 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <div className="text-4xl font-bold text-text-tertiary opacity-50">
+            <div className="text-4xl font-bold text-muted-foreground opacity-50">
               {title.charAt(0)}
             </div>
           </div>
         )}
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background-primary/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
       {/* Content */}
       <div className="p-5">
         {/* Year */}
-        <div className="mb-2 flex items-center justify-between text-sm text-text-tertiary">
+        <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
           <span>{year}</span>
         </div>
 
         {/* Title */}
-        <h3 className="mb-2 text-lg font-semibold text-text-primary transition-colors duration-300 group-hover:text-accent-primary">
+        <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
           {title}
         </h3>
 
         {/* Description */}
-        <p className="mb-4 line-clamp-2 text-sm text-text-secondary">
+        <p className="mb-4 line-clamp-2 text-sm text-foreground-secondary">
           {description}
         </p>
 
@@ -65,7 +65,7 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
             <Badge
               key={tag}
               variant="secondary"
-              className="border border-border-default bg-background-tertiary text-xs text-text-secondary transition-colors duration-200 group-hover:border-accent-primary/30 group-hover:text-text-primary"
+              className="border border-border bg-muted text-xs text-foreground-secondary transition-colors duration-200 group-hover:border-primary/30 group-hover:text-foreground"
             >
               {tag}
             </Badge>
@@ -73,7 +73,7 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
           {tags.length > 3 && (
             <Badge
               variant="secondary"
-              className="border border-border-default bg-background-tertiary text-xs text-text-tertiary"
+              className="border border-border bg-muted text-xs text-muted-foreground"
             >
               +{tags.length - 3}
             </Badge>
