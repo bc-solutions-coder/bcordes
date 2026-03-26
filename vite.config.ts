@@ -4,6 +4,7 @@ import { nitro } from 'nitro/vite'
 import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const config = defineConfig({
   plugins: [
@@ -12,9 +13,22 @@ const config = defineConfig({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      router: {
+        routeFileIgnorePattern: '\\.test\\.(tsx?|jsx?)$',
+      },
+    }),
     nitro(),
     viteReact(),
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            filename: 'stats.html',
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   build: {
     chunkSizeWarningLimit: 600,

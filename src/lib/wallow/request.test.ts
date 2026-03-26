@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
   buildFallbackProblem,
   isAuthRedirect,
@@ -7,6 +8,18 @@ import {
   toNetworkError,
 } from './request'
 import { WallowError } from './errors'
+
+vi.mock('@/lib/logger', () => {
+  const child = () => mockLogger
+  const mockLogger = {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    child,
+  }
+  return { default: mockLogger }
+})
 
 function mockResponse(
   opts: Partial<{

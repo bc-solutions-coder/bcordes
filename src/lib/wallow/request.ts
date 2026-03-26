@@ -1,5 +1,8 @@
 import { WallowError } from './errors'
 import type { ProblemDetails } from './types'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'wallow' })
 
 /** Check if a response is an auth redirect (Wallow returns 3xx to /Account/Login instead of 401). */
 export function isAuthRedirect(response: Response): boolean {
@@ -30,14 +33,13 @@ export async function parseProblemDetails(
 ): Promise<ProblemDetails> {
   try {
     const problem = (await response.json()) as ProblemDetails
-    console.error(
-      `[wallow] ${method} ${path} → ${problem.status} ${problem.code} ${problem.title}`,
+    log.error(
+      { method, path, status: problem.status, code: problem.code },
+      problem.title,
     )
     return problem
   } catch {
-    console.error(
-      `[wallow] ${method} ${path} → ${response.status} (no JSON body)`,
-    )
+    log.error({ method, path, status: response.status }, 'No JSON body')
     return buildFallbackProblem(response)
   }
 }
@@ -61,7 +63,7 @@ export function toNetworkError(
       err.cause instanceof Error &&
       err.cause.message.includes('Timeout'))
   const code = isTimeout ? 'NETWORK_TIMEOUT' : 'NETWORK_ERROR'
-  console.error(`[wallow] ${method} ${path} → ${code}: ${message}`)
+  log.error({ method, path, code }, message)
   return new WallowError({
     type: 'https://httpstatuses.com/503',
     title: isTimeout ? 'Request Timeout' : 'Network Error',
