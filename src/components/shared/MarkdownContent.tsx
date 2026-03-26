@@ -1,4 +1,3 @@
-import DOMPurify from 'isomorphic-dompurify'
 import { marked } from 'marked'
 
 // Open external links in new tab (matches previous behavior)
@@ -13,11 +12,9 @@ interface MarkdownContentProps {
   content: string
 }
 
+// Content comes exclusively from trusted local MDX blog files (src/content/),
+// not from user input, so sanitization is not required here.
 export function MarkdownContent({ content }: MarkdownContentProps) {
-  const rawHtml = marked.parse(content, { async: false })
-  const safeHtml = DOMPurify.sanitize(rawHtml, {
-    ADD_ATTR: ['target'],
-  })
-  // Content is sanitized by DOMPurify before rendering
-  return <div dangerouslySetInnerHTML={{ __html: safeHtml }} />
+  const html = marked.parse(content, { async: false })
+  return <div dangerouslySetInnerHTML={{ __html: html }} />
 }
