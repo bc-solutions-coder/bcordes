@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Bell, Mail, MessageSquare, Settings, Smartphone } from 'lucide-react'
 import { toast } from 'sonner'
+import type { NotificationSettings } from '@/lib/wallow/types'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchNotificationSettings,
@@ -23,7 +24,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import type { NotificationSettings } from '@/lib/wallow/types'
 
 export const Route = createFileRoute('/dashboard/settings/')({
   beforeLoad: () =>

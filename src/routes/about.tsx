@@ -1,27 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AboutHero } from '~/components/about/AboutHero'
 import { Timeline } from '~/components/about/Timeline'
+import { ValueIcon } from '~/components/about/ValueIcon'
 import { FadeInView } from '~/components/shared/FadeInView'
 
 export const Route = createFileRoute('/about')({ component: AboutPage })
-
-function ValueIcon({ d }: { d: string }) {
-  return (
-    <svg
-      className="w-8 h-8"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d={d}
-      />
-    </svg>
-  )
-}
 
 interface ValueCard {
   icon: React.ReactNode
@@ -31,9 +14,7 @@ interface ValueCard {
 
 const values: Array<ValueCard> = [
   {
-    icon: (
-      <ValueIcon d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    ),
+    icon: <ValueIcon d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />,
     title: 'Quality-Driven Development',
     description:
       'Every line of code is crafted with care. I prioritize clean architecture, comprehensive testing, and maintainable solutions over quick fixes.',

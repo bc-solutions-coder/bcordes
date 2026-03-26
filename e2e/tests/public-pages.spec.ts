@@ -20,7 +20,9 @@ test.describe('Public Pages', () => {
       const viewProjects = page.getByRole('link', { name: 'View My Projects' })
       await expect(viewProjects).toBeVisible()
 
-      const getInTouch = page.getByRole('link', { name: 'Get in Touch' }).first()
+      const getInTouch = page
+        .getByRole('link', { name: 'Get in Touch' })
+        .first()
       await expect(getInTouch).toBeVisible()
     })
 
@@ -33,9 +35,7 @@ test.describe('Public Pages', () => {
       await expect(page.getByText('Projects Delivered')).toBeVisible()
     })
 
-    test('has navigation links pointing to correct hrefs', async ({
-      page,
-    }) => {
+    test('has navigation links pointing to correct hrefs', async ({ page }) => {
       await page.goto('/')
 
       const nav = page.locator('header')
@@ -43,9 +43,10 @@ test.describe('Public Pages', () => {
         'href',
         '/',
       )
-      await expect(
-        nav.getByRole('link', { name: 'Projects' }),
-      ).toHaveAttribute('href', '/projects')
+      await expect(nav.getByRole('link', { name: 'Projects' })).toHaveAttribute(
+        'href',
+        '/projects',
+      )
       await expect(nav.getByRole('link', { name: 'About' })).toHaveAttribute(
         'href',
         '/about',
@@ -69,9 +70,7 @@ test.describe('Public Pages', () => {
     test('displays the role subtitle', async ({ page }) => {
       await page.goto('/about')
 
-      await expect(
-        page.getByText('Full-Stack Software Engineer'),
-      ).toBeVisible()
+      await expect(page.getByText('Full-Stack Software Engineer')).toBeVisible()
     })
 
     test('displays the "My Approach" values section', async ({ page }) => {
@@ -82,9 +81,7 @@ test.describe('Public Pages', () => {
       })
       await expect(approachHeading).toBeVisible()
 
-      await expect(
-        page.getByText('Quality-Driven Development'),
-      ).toBeVisible()
+      await expect(page.getByText('Quality-Driven Development')).toBeVisible()
       await expect(page.getByText('Clear Communication')).toBeVisible()
       await expect(page.getByText('Modern Tech Stack')).toBeVisible()
       await expect(page.getByText('Client-Focused Solutions')).toBeVisible()

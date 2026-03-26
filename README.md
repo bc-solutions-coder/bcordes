@@ -19,7 +19,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/SignalR-WebSocket-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="SignalR" />
+  <img src="https://img.shields.io/badge/SSE-WebSocket-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="SSE" />
   <img src="https://img.shields.io/badge/OIDC-Auth-F78C40?style=flat-square&logo=openid&logoColor=white" alt="OIDC Auth" />
   <img src="https://img.shields.io/badge/Docker-GHCR-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
 </p>
@@ -42,7 +42,7 @@
 
 - **Server-Side Rendering** — TanStack Start with Nitro for fast, SEO-friendly pages
 - **Authentication** — OIDC-based auth flow with sealed sessions and automatic token refresh
-- **Real-time Updates** — Microsoft SignalR WebSocket integration for live data
+- **Real-time Updates** — Microsoft SSE WebSocket integration for live data
 - **Modern UI** — Custom green-on-white theme built with Tailwind CSS v4 and shadcn/ui
 - **Database** — PostgreSQL 16
 - **Backend Integration** — Connected to the .NET Wallow API with retry logic
@@ -57,7 +57,7 @@
 | **Data**      | TanStack Query, PostgreSQL 16            |
 | **Styling**   | Tailwind CSS v4, shadcn/ui, Lucide icons |
 | **Auth**      | OpenID Connect, iron-webcrypto sessions  |
-| **Real-time** | Microsoft SignalR                        |
+| **Real-time** | Microsoft SSE                            |
 | **Forms**     | React Hook Form + Zod                    |
 | **Testing**   | Vitest, Testing Library                  |
 | **Tooling**   | ESLint, Prettier, Storybook 9            |

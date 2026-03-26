@@ -1,12 +1,12 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { createWallowClient } from '~/lib/wallow/client'
 import type {
   Notification,
   NotificationSettings,
   PaginatedResponse,
   PushDevice,
 } from '~/lib/wallow/types'
+import { createWallowClient } from '~/lib/wallow/client'
 
 export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -14,8 +14,7 @@ export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
     const response = await client.get(
       '/api/v1/notifications?pageNumber=1&pageSize=20',
     )
-    const paginated =
-      (await response.json()) as PaginatedResponse<Notification>
+    const paginated = (await response.json()) as PaginatedResponse<Notification>
     return paginated.items
   },
 )
@@ -96,7 +95,7 @@ export const fetchVapidPublicKey = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
     const response = await client.get('/api/v1/push/vapid-public-key')
-    return (await response.text()) as string
+    return await response.text()
   },
 )
 

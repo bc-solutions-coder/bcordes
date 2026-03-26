@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 
+// Must import after mocks are set up
+import { Route } from '@/routes/auth/logout'
+
 // ---------------------------------------------------------------------------
 // Hoisted mocks — session + oidc
 // ---------------------------------------------------------------------------
@@ -20,9 +23,6 @@ vi.mock('@/lib/auth/session', () => ({
 vi.mock('@/lib/auth/oidc', () => ({
   getLogoutUrl: mockGetLogoutUrl,
 }))
-
-// Must import after mocks are set up
-import { Route } from '@/routes/auth/logout'
 
 // ---------------------------------------------------------------------------
 // Helpers

@@ -6,6 +6,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
 import { toast } from 'sonner'
 
+import type { Notification } from '@/lib/wallow/types'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -13,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useUser } from '@/hooks/useUser'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useEventStream } from '@/hooks/useEventStream'
 import {
   fetchNotifications,
   fetchUnreadCount,
@@ -23,15 +24,14 @@ import {
 import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
 import { formatRelativeTime } from '@/lib/format'
-import type { Notification } from '@/lib/wallow/types'
 
 export function NotificationBell() {
   const { user } = useUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { subscribe } = useSignalR()
+  const { subscribe } = useEventStream()
 
-  const { data: notifications = [] } = useQuery<Notification[]>({
+  const { data: notifications = [] } = useQuery<Array<Notification>>({
     queryKey: ['notifications'],
     queryFn: () => fetchNotifications(),
     enabled: !!user,
@@ -49,31 +49,29 @@ export function NotificationBell() {
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
       invalidateNotifications(queryClient)
+      toast.success('All notifications marked as read')
+    },
+    onError: (error) => {
+      toast.error(`Failed to mark notifications as read: ${error.message}`)
     },
   })
 
   useEffect(() => {
     if (!user) return
-    const unsubscribe = subscribe(
-      'NotificationCreated',
-      (envelope) => {
-        // Optimistically bump the unread count immediately
-        queryClient.setQueryData<number>(
-          ['notifications', 'unread-count'],
-          (old) => (old ?? 0) + 1,
-        )
-        // Then refetch both queries for accurate data
-        invalidateNotifications(queryClient)
-        if (document.visibilityState === 'visible') {
-          const payload = envelope.payload as
-            | Record<string, unknown>
-            | undefined
-          const title =
-            (payload?.title ?? payload?.Title) as string | undefined
-          toast(title ?? 'New notification')
-        }
-      },
-    )
+    const unsubscribe = subscribe('NotificationCreated', (envelope) => {
+      // Optimistically bump the unread count immediately
+      queryClient.setQueryData<number>(
+        ['notifications', 'unread-count'],
+        (old) => (old ?? 0) + 1,
+      )
+      // Then refetch both queries for accurate data
+      invalidateNotifications(queryClient)
+      if (document.visibilityState === 'visible') {
+        const payload = envelope.payload as Record<string, unknown> | undefined
+        const title = (payload?.title ?? payload?.Title) as string | undefined
+        toast(title ?? 'New notification')
+      }
+    })
     return unsubscribe
   }, [user, subscribe, queryClient])
 
@@ -119,7 +117,10 @@ export function NotificationBell() {
               variant="ghost"
               size="sm"
               className="h-auto px-2 py-1 text-xs text-accent-primary hover:text-accent-primary/80"
-              onClick={() => markAllRead.mutate()}
+              onClick={(e) => {
+                e.stopPropagation()
+                markAllRead.mutate()
+              }}
               disabled={markAllRead.isPending}
             >
               Mark all as read

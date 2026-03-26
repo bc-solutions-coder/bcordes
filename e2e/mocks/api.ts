@@ -27,7 +27,7 @@ export async function mockRoute(
  * ```ts
  * await mockWallowApi(page, [
  *   {
- *     pattern: '**/api/projects*',
+ *     pattern: '**\/api\/projects*',
  *     handler: (route) =>
  *       route.fulfill({ json: { items: [] }, status: 200 }),
  *   },

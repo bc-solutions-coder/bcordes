@@ -1,13 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { getNotificationRoute } from '@/lib/notifications/routing'
 import type { Notification } from '@/lib/wallow/types'
+import { getNotificationRoute } from '@/lib/notifications/routing'
 
 const FALLBACK = '/dashboard/notifications'
 const VALID_UUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
 
-function makeNotification(
-  overrides: Partial<Notification> = {},
-): Notification {
+function makeNotification(overrides: Partial<Notification> = {}): Notification {
   return {
     id: '00000000-0000-0000-0000-000000000001',
     userId: '00000000-0000-0000-0000-000000000002',

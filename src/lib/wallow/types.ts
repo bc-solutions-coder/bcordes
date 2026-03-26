@@ -9,7 +9,7 @@ export interface ProblemDetails {
   errors?: Record<string, Array<string>>
 }
 
-/** Envelope for real-time SignalR messages from the Wallow backend */
+/** Envelope for real-time SSE messages from the Wallow backend */
 export interface RealtimeEnvelope {
   type: string
   module: string
@@ -69,7 +69,7 @@ export interface InquiryCommentAddedPayload {
 
 /** Generic paginated response from the Wallow backend */
 export interface PaginatedResponse<T> {
-  items: T[]
+  items: Array<T>
   pageNumber: number
   pageSize: number
   totalCount: number
@@ -86,7 +86,7 @@ export interface Notification {
   readAt: string | null
   createdAt: string
   updatedAt: string
-  /** Server-provided deep link (available on SignalR payloads, pending on REST DTO) */
+  /** Server-provided deep link (available on SSE payloads, pending on REST DTO) */
   actionUrl?: string
   entityId?: string
 }

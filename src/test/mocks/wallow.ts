@@ -33,7 +33,9 @@ export function createMockWallowClient(): MockWallowClient {
   const defaultResponse = () => Promise.resolve(jsonResponse({}))
 
   return {
-    get: vi.fn<(path: string) => Promise<Response>>().mockImplementation(defaultResponse),
+    get: vi
+      .fn<(path: string) => Promise<Response>>()
+      .mockImplementation(defaultResponse),
     post: vi
       .fn<(path: string, body?: unknown) => Promise<Response>>()
       .mockImplementation(defaultResponse),

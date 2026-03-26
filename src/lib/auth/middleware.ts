@@ -52,7 +52,7 @@ export async function requireAuth(returnTo?: string): Promise<User> {
 /** Require the current user to have the 'admin' role. Throws 403 if not. */
 export async function requireAdmin(): Promise<User> {
   const session = await getSession()
-  if (!session || !session.user) {
+  if (!session) {
     const error = new Error('Authentication required')
     ;(error as unknown as Record<string, unknown>).status = 403
     throw error

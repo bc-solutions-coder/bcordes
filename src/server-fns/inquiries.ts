@@ -16,12 +16,17 @@ function normalizeInquiryStatus(inquiry: Inquiry): Inquiry {
 
 const submitInquirySchema = z.object({
   name: z.string().min(1).max(200),
-  email: z.string().email().max(254),
+  email: z.email().max(254),
   phone: z.string().max(100).default(''),
   company: z.string().optional(),
   projectType: z.enum(['Frontend', 'Full-Stack', 'Consulting', 'Other']),
   budgetRange: z.enum(['Under $5k', '$5k-$15k', '$15k-$50k', '$50k+']),
-  timeline: z.enum(['Less than 1 month', '1-3 months', '3-6 months', '6+ months']),
+  timeline: z.enum([
+    'Less than 1 month',
+    '1-3 months',
+    '3-6 months',
+    '6+ months',
+  ]),
   message: z.string().min(1).max(5000),
 })
 
@@ -45,7 +50,9 @@ export const fetchInquiries = createServerFn({ method: 'GET' }).handler(
     await requireAdmin()
     const client = await createWallowClient()
     const response = await client.get('/api/v1/inquiries')
-    return ((await response.json()) as Array<Inquiry>).map(normalizeInquiryStatus)
+    return ((await response.json()) as Array<Inquiry>).map(
+      normalizeInquiryStatus,
+    )
   },
 )
 
@@ -56,12 +63,14 @@ export const fetchMyInquiries = createServerFn({ method: 'GET' }).handler(
     const client = await createWallowClient()
     const path = isAdmin ? '/api/v1/inquiries' : '/api/v1/inquiries/submitted'
     const response = await client.get(path)
-    return ((await response.json()) as Array<Inquiry>).map(normalizeInquiryStatus)
+    return ((await response.json()) as Array<Inquiry>).map(
+      normalizeInquiryStatus,
+    )
   },
 )
 
 export const fetchInquiry = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ id: z.string().uuid() }))
+  .inputValidator(z.object({ id: z.uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
     const response = await client.get(`/api/v1/inquiries/${data.id}`)
@@ -69,7 +78,7 @@ export const fetchInquiry = createServerFn({ method: 'GET' })
   })
 
 export const updateInquiryStatus = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ id: z.string().uuid(), status: z.string() }))
+  .inputValidator(z.object({ id: z.uuid(), status: z.string() }))
   .handler(async ({ data }) => {
     await requireAdmin()
     const client = await createWallowClient()
@@ -89,7 +98,7 @@ export const fetchInquiryComments = createServerFn({ method: 'GET' })
   })
 
 const submitInquiryCommentSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   content: z.string().min(1),
   isInternal: z.boolean().optional().default(false),
 })

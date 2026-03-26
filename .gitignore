@@ -9,6 +9,9 @@ count.txt
 .tanstack
 .wrangler
 .output
+coverage
+test-results
+playwright-report
 .vinxi
 todos.json
 
@@ -24,5 +27,7 @@ todos.json
 .claude
 .serena
 .superpowers
+docs/plans
+docs/superpowers
 CLAUDE.md
 AGENTS.md

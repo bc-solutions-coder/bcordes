@@ -1,5 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SessionData, User } from '@/lib/auth/types'
+
+import { getSession } from '@/lib/auth/session'
+import { requireAdmin } from '@/lib/auth/middleware'
 
 // Mock getSession — the sole dependency for auth checks
 vi.mock('@/lib/auth/session', () => ({
@@ -25,16 +28,13 @@ vi.mock('@/lib/wallow/client', () => ({
   }),
 }))
 
-import { getSession } from '@/lib/auth/session'
-import { requireAdmin } from '@/lib/auth/middleware'
-
 const mockedGetSession = vi.mocked(getSession)
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeUser(roles: string[] = ['user']): User {
+function makeUser(roles: Array<string> = ['user']): User {
   return {
     id: 'user-1',
     name: 'Test User',
@@ -74,7 +74,9 @@ describe('requireAdmin()', () => {
   })
 
   it('should reject non-admin users with a 403 status', async () => {
-    mockedGetSession.mockResolvedValue(makeSession({ user: makeUser(['user']) }))
+    mockedGetSession.mockResolvedValue(
+      makeSession({ user: makeUser(['user']) }),
+    )
 
     try {
       await requireAdmin()
@@ -83,7 +85,9 @@ describe('requireAdmin()', () => {
       // Accept either a redirect, a Response with 403, or an error with status 403
       const err = error as Record<string, unknown>
       const status =
-        err.status ?? err.statusCode ?? (err as { response?: { status?: number } }).response?.status
+        err.status ??
+        err.statusCode ??
+        (err as { response?: { status?: number } }).response?.status
       expect(status).toBe(403)
     }
   })
@@ -107,7 +111,9 @@ describe('requireAdmin()', () => {
     } catch (error: unknown) {
       const err = error as Record<string, unknown>
       const status =
-        err.status ?? err.statusCode ?? (err as { response?: { status?: number } }).response?.status
+        err.status ??
+        err.statusCode ??
+        (err as { response?: { status?: number } }).response?.status
       expect(status).toBe(403)
     }
   })
@@ -123,7 +129,9 @@ describe('fetchInquiries admin guard', () => {
   })
 
   it('should require admin role to fetch all inquiries', async () => {
-    mockedGetSession.mockResolvedValue(makeSession({ user: makeUser(['user']) }))
+    mockedGetSession.mockResolvedValue(
+      makeSession({ user: makeUser(['user']) }),
+    )
 
     // Once requireAdmin is wired into fetchInquiries, this should reject
     // For now we call requireAdmin directly to prove the guard works
@@ -133,7 +141,9 @@ describe('fetchInquiries admin guard', () => {
     } catch (error: unknown) {
       const err = error as Record<string, unknown>
       const status =
-        err.status ?? err.statusCode ?? (err as { response?: { status?: number } }).response?.status
+        err.status ??
+        err.statusCode ??
+        (err as { response?: { status?: number } }).response?.status
       expect(status).toBe(403)
     }
   })
@@ -149,7 +159,9 @@ describe('updateInquiryStatus admin guard', () => {
   })
 
   it('should require admin role to update inquiry status', async () => {
-    mockedGetSession.mockResolvedValue(makeSession({ user: makeUser(['user']) }))
+    mockedGetSession.mockResolvedValue(
+      makeSession({ user: makeUser(['user']) }),
+    )
 
     try {
       await requireAdmin()
@@ -157,7 +169,9 @@ describe('updateInquiryStatus admin guard', () => {
     } catch (error: unknown) {
       const err = error as Record<string, unknown>
       const status =
-        err.status ?? err.statusCode ?? (err as { response?: { status?: number } }).response?.status
+        err.status ??
+        err.statusCode ??
+        (err as { response?: { status?: number } }).response?.status
       expect(status).toBe(403)
     }
   })

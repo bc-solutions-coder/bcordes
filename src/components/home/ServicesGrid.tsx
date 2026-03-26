@@ -1,4 +1,5 @@
 import { Code, Layers, MessageSquare } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -8,7 +9,14 @@ import {
 } from '~/components/ui/card'
 import { FadeInView } from '~/components/shared/FadeInView'
 
-const services = [
+interface Service {
+  icon: LucideIcon
+  title: string
+  description: string
+  skills: Array<string>
+}
+
+const services: Array<Service> = [
   {
     icon: Code,
     title: 'Frontend Development',

@@ -2,7 +2,12 @@ import { setResponseStatus } from '@tanstack/react-start/server'
 import { getSession, setSession, withRefreshLock } from '../auth/session'
 import { parseUserFromToken, refreshToken } from '../auth/oidc'
 import { WallowError } from './errors'
-import { isAuthRedirect, parseProblemDetails, parseRetryDelay } from './request'
+import {
+  isAuthRedirect,
+  parseProblemDetails,
+  parseRetryDelay,
+  toNetworkError,
+} from './request'
 import { WALLOW_BASE_URL } from './config'
 import type { SessionData } from '../auth/types'
 
@@ -14,6 +19,8 @@ interface WallowClient {
   delete: (path: string) => Promise<Response>
 }
 
+const REQUEST_TIMEOUT_MS = 30_000
+
 function buildFetchOptions(
   method: string,
   accessToken: string,
@@ -23,6 +30,7 @@ function buildFetchOptions(
   return {
     method,
     redirect: 'manual',
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: 'application/json',
@@ -76,18 +84,32 @@ export async function createWallowClient(): Promise<WallowClient> {
     body?: unknown,
   ): Promise<Response> {
     let currentSession = (await getSession())!
-    let response = await doFetch(path, method, currentSession.accessToken, body)
+    let response: Response
+
+    try {
+      response = await doFetch(path, method, currentSession.accessToken, body)
+    } catch (err) {
+      throw toNetworkError(err, method, path)
+    }
 
     if (response.status === 401 || isAuthRedirect(response)) {
       currentSession = await refreshSession(currentSession)
-      response = await doFetch(path, method, currentSession.accessToken, body)
+      try {
+        response = await doFetch(path, method, currentSession.accessToken, body)
+      } catch (err) {
+        throw toNetworkError(err, method, path)
+      }
     }
 
     if (response.status === 429) {
       await new Promise((resolve) =>
         setTimeout(resolve, parseRetryDelay(response)),
       )
-      response = await doFetch(path, method, currentSession.accessToken, body)
+      try {
+        response = await doFetch(path, method, currentSession.accessToken, body)
+      } catch (err) {
+        throw toNetworkError(err, method, path)
+      }
     }
 
     if (!response.ok) {

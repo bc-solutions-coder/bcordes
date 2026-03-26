@@ -5,7 +5,16 @@ import { tanstackConfig } from '@tanstack/eslint-config'
 export default [
   ...tanstackConfig,
   {
-    ignores: ['.storybook/**', 'eslint.config.js', 'prettier.config.js'],
+    ignores: [
+      '.storybook/**',
+      '.nitro/**',
+      '.output/**',
+      'coverage/**',
+      'e2e/**',
+      'public/**',
+      'eslint.config.js',
+      'prettier.config.js',
+    ],
   },
   {
     files: ['src/components/ui/**'],

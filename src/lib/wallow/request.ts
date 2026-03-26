@@ -1,3 +1,4 @@
+import { WallowError } from './errors'
 import type { ProblemDetails } from './types'
 
 /** Check if a response is an auth redirect (Wallow returns 3xx to /Account/Login instead of 401). */
@@ -45,4 +46,28 @@ export async function parseProblemDetails(
 export function parseRetryDelay(response: Response): number {
   const retryAfter = response.headers.get('Retry-After')
   return retryAfter ? Number(retryAfter) * 1000 : 1000
+}
+
+/** Convert a network-level fetch error (timeout, connection reset, etc.) into a WallowError. */
+export function toNetworkError(
+  err: unknown,
+  method: string,
+  path: string,
+): WallowError {
+  const message = err instanceof Error ? err.message : 'Network request failed'
+  const isTimeout =
+    (err instanceof Error && err.name === 'TimeoutError') ||
+    (err instanceof TypeError &&
+      err.cause instanceof Error &&
+      err.cause.message.includes('Timeout'))
+  const code = isTimeout ? 'NETWORK_TIMEOUT' : 'NETWORK_ERROR'
+  console.error(`[wallow] ${method} ${path} → ${code}: ${message}`)
+  return new WallowError({
+    type: 'https://httpstatuses.com/503',
+    title: isTimeout ? 'Request Timeout' : 'Network Error',
+    status: 503,
+    detail: `${method} ${path}: ${message}`,
+    traceId: '',
+    code,
+  })
 }
