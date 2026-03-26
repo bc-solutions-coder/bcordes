@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import { useUser } from '@/hooks/useUser'
 
 export type ConnectionStatus =
   | 'connecting'
@@ -26,6 +27,7 @@ const CLAIM_WAIT_MS = 200
 const BC_CHANNEL_NAME = 'sse-leader'
 
 export function EventStreamProvider({ children }: { children: ReactNode }) {
+  const { user } = useUser()
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const eventSourceRef = useRef<EventSource | null>(null)
   const subscribersRef = useRef<Map<string, Set<Handler>>>(new Map())
@@ -43,7 +45,8 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
   const claimTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const dispatchEnvelope = useCallback((envelope: RealtimeEnvelope) => {
-    console.log('[sse] event:', envelope.type)
+    if (!envelope.type && !envelope.payload) return
+    console.log('[sse] event:', envelope.type, envelope.payload)
     const handlers = subscribersRef.current.get(envelope.type)
     if (handlers) {
       handlers.forEach((handler) => handler(envelope))
@@ -64,7 +67,7 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
 
     setStatus(reconnectAttemptRef.current > 0 ? 'reconnecting' : 'connecting')
 
-    const es = new EventSource('/api/notifications/stream?subscribe=Inquiries')
+    const es = new EventSource('/api/notifications/stream')
     eventSourceRef.current = es
 
     // Connection timeout — if onopen doesn't fire within 10s, treat as error
@@ -206,6 +209,12 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
   )
 
   useEffect(() => {
+    if (!user) {
+      // Not authenticated — don't connect, reset state
+      setStatus('disconnected')
+      return
+    }
+
     mountedRef.current = true
 
     // Helper to start a claim round
@@ -323,7 +332,7 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [connect, dispatchEnvelope, startHeartbeat])
+  }, [user, connect, dispatchEnvelope, startHeartbeat])
 
   return (
     <EventStreamContext.Provider value={{ status, subscribe }}>

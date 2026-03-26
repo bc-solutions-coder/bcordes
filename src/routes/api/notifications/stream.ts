@@ -156,15 +156,27 @@ export const Route = createFileRoute('/api/notifications/stream')({
             }, MAX_STREAM_DURATION_MS)
 
             async function connectUpstream(accessToken: string) {
-              const url = `${WALLOW_BASE_URL}/events?subscribe=Notifications`
-              reqLog.debug({ url }, 'Upstream connecting')
+              const url = `${WALLOW_BASE_URL}/events?subscribe=Notifications,Inquiries`
+              reqLog.info({ url }, 'Upstream connecting')
 
               const response = await fetch(url, {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
                   Accept: 'text/event-stream',
                 },
+                redirect: 'manual',
               })
+
+              if (response.status >= 300 && response.status < 400) {
+                const location = response.headers.get('location')
+                reqLog.error(
+                  { status: response.status, location },
+                  'Upstream redirected (likely auth failure)',
+                )
+                throw new Error(
+                  `Upstream SSE redirected: ${response.status} -> ${location}`,
+                )
+              }
 
               if (!response.ok || !response.body) {
                 reqLog.error(
@@ -205,12 +217,27 @@ export const Route = createFileRoute('/api/notifications/stream')({
                     if (!dataLine) continue
 
                     try {
-                      const envelope: RealtimeEnvelope = JSON.parse(
-                        dataLine.slice(5).trim(),
+                      const parsed = JSON.parse(dataLine.slice(5).trim())
+                      // Wallow sends PascalCase — normalize to camelCase
+                      const envelope: RealtimeEnvelope = {
+                        type: parsed.type ?? parsed.Type,
+                        module: parsed.module ?? parsed.Module,
+                        payload: parsed.payload ?? parsed.Payload,
+                        timestamp: parsed.timestamp ?? parsed.Timestamp,
+                        correlationId:
+                          parsed.correlationId ?? parsed.CorrelationId,
+                      }
+                      reqLog.info(
+                        { type: envelope.type, module: envelope.module },
+                        'Upstream event received',
                       )
                       send(envelope)
                     } catch {
                       // Forward raw if not parseable as envelope
+                      reqLog.warn(
+                        { msg },
+                        'Upstream raw message (not JSON envelope)',
+                      )
                       enqueueOrBuffer(controller, encoder.encode(`${msg}\n\n`))
                     }
                   }
@@ -224,7 +251,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
             void (async () => {
               try {
                 upstreamReader = await connectUpstream(session.accessToken)
-                reqLog.debug('Upstream connected')
+                reqLog.info('Upstream connected, piping events')
                 enqueueOrBuffer(controller, encoder.encode(': connected\n\n'))
 
                 await pipeUpstream(upstreamReader)
@@ -234,7 +261,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
                   try {
                     const tokens = await refreshToken(session.refreshToken)
                     upstreamReader = await connectUpstream(tokens.accessToken)
-                    reqLog.debug('Upstream reconnected')
+                    reqLog.info('Upstream reconnected after token refresh')
                     await pipeUpstream(upstreamReader)
                   } catch {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- closed is mutated in cancel()
@@ -246,7 +273,13 @@ export const Route = createFileRoute('/api/notifications/stream')({
               } catch (err) {
                 reqLog.error({ err }, 'Upstream connection failed')
                 clearInterval(keepaliveTimer)
-                controller.close()
+                if (!closed) {
+                  try {
+                    controller.close()
+                  } catch {
+                    // Controller already closed (client disconnected)
+                  }
+                }
               }
             })()
           },
