@@ -4,6 +4,7 @@ import {
   Link,
   Scripts,
   createRootRouteWithContext,
+  useRouter,
 } from '@tanstack/react-router'
 
 import { Header } from '../components/layout/Header'
@@ -68,12 +69,43 @@ function NotFound() {
   )
 }
 
+function RouteError() {
+  const router = useRouter()
+
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+      <h1 className="mb-2 text-8xl font-bold text-primary">500</h1>
+      <h2 className="mb-4 text-2xl font-semibold text-foreground">
+        Something Went Wrong
+      </h2>
+      <p className="mb-8 max-w-md text-foreground-secondary">
+        An unexpected error occurred. Please try again.
+      </p>
+      <div className="flex gap-4">
+        <button
+          onClick={() => router.invalidate()}
+          className="rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
+        >
+          Try Again
+        </button>
+        <Link
+          to="/"
+          className="rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted"
+        >
+          Go Home
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 const siteTitle = 'BC Solutions | Professional Software Engineering'
 const siteDescription =
   'Bryan Cordes - Professional software engineering solutions. Full-stack development, technical consulting, and architecture expertise for startups and enterprises.'
 const siteUrl = 'https://bcordes.dev'
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  errorComponent: RouteError,
   notFoundComponent: NotFound,
   head: () => ({
     meta: [
