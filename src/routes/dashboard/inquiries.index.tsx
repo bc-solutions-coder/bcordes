@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
 import { Mail, RefreshCw } from 'lucide-react'
-import { serverRequireAuth } from '@/server-fns/auth'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
-import { getAuthUser } from '@/lib/auth/middleware'
-import { useSignalR } from '@/hooks/useSignalR'
+import { useSignalREvents } from '@/hooks/useSignalREvents'
+import { formatDateTime } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,13 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
-const fetchCurrentUserRoles = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    const user = await getAuthUser()
-    return { roles: user?.roles ?? [] }
-  },
-)
+import { STATUS_COLORS, STATUS_LABELS } from '@/config/inquiries'
 
 export const Route = createFileRoute('/dashboard/inquiries/')({
   beforeLoad: () =>
@@ -45,51 +38,22 @@ export const Route = createFileRoute('/dashboard/inquiries/')({
   component: DashboardInquiriesPage,
 })
 
-const statusColors: Record<string, string> = {
-  new: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-  open: 'bg-green-500/10 text-green-500 border-green-500/20',
-  in_progress: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-  resolved: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
-  closed: 'bg-red-500/10 text-red-500 border-red-500/20',
-}
-
-const statusLabels: Record<string, string> = {
-  new: 'New',
-  open: 'Open',
-  in_progress: 'In Progress',
-  resolved: 'Resolved',
-  closed: 'Closed',
-}
-
 const projectTypeLabels: Record<string, string> = {
   frontend: 'Frontend Development',
   fullstack: 'Full-Stack Development',
   consulting: 'Consulting',
 }
 
-function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 function DashboardInquiriesPage() {
   const { inquiries, isAdmin } = Route.useLoaderData()
   const router = useRouter()
-  const { subscribe } = useSignalR()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  useEffect(() => {
-    const unsubs = [
-      subscribe('InquirySubmitted', () => router.invalidate()),
-      subscribe('InquiryStatusUpdated', () => router.invalidate()),
-    ]
-    return () => unsubs.forEach((unsub) => unsub())
-  }, [subscribe, router])
+  useSignalREvents({
+    InquirySubmitted: () => router.invalidate(),
+    InquiryStatusUpdated: () => router.invalidate(),
+  })
 
   async function handleRefresh() {
     setIsRefreshing(true)
@@ -203,7 +167,7 @@ function DashboardInquiriesPage() {
                       {inquiry.budgetRange || '-'}
                     </TableCell>
                     <TableCell className="text-text-secondary whitespace-nowrap">
-                      {formatDate(inquiry.createdAt)}
+                      {formatDateTime(inquiry.createdAt)}
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       {isAdmin ? (
@@ -215,7 +179,7 @@ function DashboardInquiriesPage() {
                         >
                           <SelectTrigger
                             size="sm"
-                            className={`w-32 border ${statusColors[inquiry.status] ?? 'bg-gray-500/10 text-gray-500 border-gray-500/20'} bg-transparent`}
+                            className={`w-32 border ${STATUS_COLORS[inquiry.status] ?? 'bg-gray-500/10 text-gray-500 border-gray-500/20'} bg-transparent`}
                           >
                             <SelectValue />
                           </SelectTrigger>
@@ -227,22 +191,16 @@ function DashboardInquiriesPage() {
                               New
                             </SelectItem>
                             <SelectItem
-                              value="open"
+                              value="reviewed"
                               className="text-text-primary"
                             >
-                              Open
+                              Reviewed
                             </SelectItem>
                             <SelectItem
-                              value="in_progress"
+                              value="contacted"
                               className="text-text-primary"
                             >
-                              In Progress
-                            </SelectItem>
-                            <SelectItem
-                              value="resolved"
-                              className="text-text-primary"
-                            >
-                              Resolved
+                              Contacted
                             </SelectItem>
                             <SelectItem
                               value="closed"
@@ -254,9 +212,9 @@ function DashboardInquiriesPage() {
                         </Select>
                       ) : (
                         <Badge
-                          className={`border ${statusColors[inquiry.status] ?? 'bg-gray-500/10 text-gray-500 border-gray-500/20'}`}
+                          className={`border ${STATUS_COLORS[inquiry.status] ?? 'bg-gray-500/10 text-gray-500 border-gray-500/20'}`}
                         >
-                          {statusLabels[inquiry.status] ??
+                          {STATUS_LABELS[inquiry.status] ??
                             inquiry.status.replace('_', ' ')}
                         </Badge>
                       )}

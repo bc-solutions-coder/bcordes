@@ -78,13 +78,17 @@ export interface PaginatedResponse<T> {
 /** Notification delivered to a user via the Wallow backend */
 export interface Notification {
   id: string
+  userId: string
   type: string
   title: string
-  body: string
-  entityId?: string
-  metadata?: Record<string, string>
+  message: string
+  isRead: boolean
   readAt: string | null
   createdAt: string
+  updatedAt: string
+  /** Server-provided deep link (available on SignalR payloads, pending on REST DTO) */
+  actionUrl?: string
+  entityId?: string
 }
 
 /** Per-channel notification preference */

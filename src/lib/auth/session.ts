@@ -69,6 +69,7 @@ export async function sealSessionCookie(data: SessionData): Promise<string> {
     'HttpOnly',
     'Path=/',
     'SameSite=Lax',
+    'Max-Age=86400',
     ...(process.env.NODE_ENV === 'production' ? ['Secure'] : []),
   ]
   return parts.join('; ')

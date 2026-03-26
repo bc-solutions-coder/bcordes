@@ -24,12 +24,13 @@ export const fetchUnreadCount = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
     const response = await client.get('/api/v1/notifications/unread-count')
-    return (await response.json()) as number
+    const data = (await response.json()) as { count: number } | number
+    return typeof data === 'number' ? data : data.count
   },
 )
 
 export const markNotificationRead = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ id: z.string() }))
+  .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
     await client.post(`/api/v1/notifications/${data.id}/read`)
@@ -63,9 +64,9 @@ export const updateChannelSetting = createServerFn({ method: 'POST' })
   })
 
 const registerPushDeviceSchema = z.object({
-  endpoint: z.string(),
-  p256dh: z.string(),
-  auth: z.string(),
+  endpoint: z.string().url().max(2048),
+  p256dh: z.string().max(256),
+  auth: z.string().max(128),
 })
 
 export const registerPushDevice = createServerFn({ method: 'POST' })
@@ -77,7 +78,7 @@ export const registerPushDevice = createServerFn({ method: 'POST' })
   })
 
 export const deregisterPushDevice = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ id: z.string() }))
+  .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
     await client.delete(`/api/v1/push/devices/${data.id}`)

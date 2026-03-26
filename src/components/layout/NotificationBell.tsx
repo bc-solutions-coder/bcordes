@@ -20,21 +20,10 @@ import {
   markAllNotificationsRead,
   markNotificationRead,
 } from '@/server-fns/notifications'
+import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
+import { formatRelativeTime } from '@/lib/format'
 import type { Notification } from '@/lib/wallow/types'
-
-function timeAgo(dateStr: string): string {
-  const seconds = Math.floor(
-    (Date.now() - new Date(dateStr).getTime()) / 1000,
-  )
-  if (seconds < 60) return 'just now'
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-  const days = Math.floor(hours / 24)
-  return `${days}d ago`
-}
 
 export function NotificationBell() {
   const { user } = useUser()
@@ -59,10 +48,7 @@ export function NotificationBell() {
   const markAllRead = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      queryClient.invalidateQueries({
-        queryKey: ['notifications', 'unread-count'],
-      })
+      invalidateNotifications(queryClient)
     },
   })
 
@@ -70,13 +56,21 @@ export function NotificationBell() {
     if (!user) return
     const unsubscribe = subscribe(
       'NotificationCreated',
-      (envelope: { payload?: { title: string } }) => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        queryClient.invalidateQueries({
-          queryKey: ['notifications', 'unread-count'],
-        })
+      (envelope) => {
+        // Optimistically bump the unread count immediately
+        queryClient.setQueryData<number>(
+          ['notifications', 'unread-count'],
+          (old) => (old ?? 0) + 1,
+        )
+        // Then refetch both queries for accurate data
+        invalidateNotifications(queryClient)
         if (document.visibilityState === 'visible') {
-          toast(envelope.payload?.title ?? 'New notification')
+          const payload = envelope.payload as
+            | Record<string, unknown>
+            | undefined
+          const title =
+            (payload?.title ?? payload?.Title) as string | undefined
+          toast(title ?? 'New notification')
         }
       },
     )
@@ -87,12 +81,9 @@ export function NotificationBell() {
 
   const handleClick = useCallback(
     async (notification: Notification) => {
-      if (!notification.readAt) {
+      if (!notification.isRead) {
         await markNotificationRead({ data: { id: notification.id } })
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        queryClient.invalidateQueries({
-          queryKey: ['notifications', 'unread-count'],
-        })
+        invalidateNotifications(queryClient)
       }
       navigate({ to: getNotificationRoute(notification) })
     },
@@ -146,17 +137,17 @@ export function NotificationBell() {
                 key={n.id}
                 onClick={() => handleClick(n)}
                 className={`w-full px-4 py-3 text-left transition-colors hover:bg-background-secondary ${
-                  n.readAt ? 'opacity-60' : ''
+                  n.isRead ? 'opacity-60' : ''
                 }`}
               >
                 <p className="text-sm font-medium text-text-primary">
                   {n.title}
                 </p>
                 <p className="mt-0.5 text-xs text-text-secondary line-clamp-2">
-                  {n.body}
+                  {n.message}
                 </p>
                 <p className="mt-1 text-xs text-text-secondary">
-                  {timeAgo(n.createdAt)}
+                  {formatRelativeTime(n.createdAt)}
                 </p>
               </button>
             ))

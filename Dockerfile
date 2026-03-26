@@ -37,8 +37,12 @@ FROM node:24-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN addgroup -S app && adduser -S app -G app
+
 # Copy only what's needed to run (Nitro bundles its own deps)
-COPY --from=builder /app/.output ./.output
+COPY --chown=app:app --from=builder /app/.output ./.output
+
+USER app
 
 # Defaults for non-secret env vars — secrets should be passed at runtime
 ENV HOST=0.0.0.0

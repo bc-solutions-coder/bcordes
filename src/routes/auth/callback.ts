@@ -1,3 +1,4 @@
+import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
 import type { SessionData } from '~/lib/auth/types'
 import { exchangeCode, fetchUserProfile } from '~/lib/auth/oidc'
@@ -20,6 +21,11 @@ function clearTempCookies(): Array<string> {
     `__oauth_code_verifier=; ${expired}`,
     `__oauth_return_to=; ${expired}`,
   ]
+}
+
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b))
 }
 
 function isSameOrigin(returnTo: string, requestUrl: string): boolean {
@@ -58,7 +64,7 @@ export const Route = createFileRoute('/auth/callback')({
         if (!code || !state || !storedState || !codeVerifier) {
           return errorRedirect('missing_params')
         }
-        if (state !== storedState) {
+        if (!safeEqual(state, storedState)) {
           return errorRedirect('state_mismatch')
         }
 
@@ -85,6 +91,7 @@ export const Route = createFileRoute('/auth/callback')({
             expiresAt,
             user,
             version: 1,
+            csrfToken: randomBytes(32).toString('hex'),
           }
 
           const sessionCookie = await sealSessionCookie(sessionData)
@@ -99,7 +106,10 @@ export const Route = createFileRoute('/auth/callback')({
           for (const c of clearHeaders) headers.append('Set-Cookie', c)
           return new Response(null, { status: 302, headers })
         } catch (err) {
-          console.error('[auth/callback] Token exchange failed:', err)
+          console.error(
+            '[auth/callback] Token exchange failed:',
+            err instanceof Error ? err.message : String(err),
+          )
           return errorRedirect('auth_failed')
         }
       },

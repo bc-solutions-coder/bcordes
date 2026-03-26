@@ -22,7 +22,6 @@ async function handleLogout(request: Request) {
 export const Route = createFileRoute('/auth/logout')({
   server: {
     handlers: {
-      GET: async ({ request }: { request: Request }) => handleLogout(request),
       POST: async ({ request }: { request: Request }) => handleLogout(request),
     },
   },

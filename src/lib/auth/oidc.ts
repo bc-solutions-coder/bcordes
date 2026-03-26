@@ -9,6 +9,7 @@ import {
   randomState,
   refreshTokenGrant,
 } from 'openid-client'
+import { userFromClaims } from './claims'
 import type { Configuration } from 'openid-client'
 import type { User } from './types'
 
@@ -34,9 +35,14 @@ function getConfig(): Promise<Configuration> {
   if (!configPromise) {
     const issuer = process.env.OIDC_ISSUER
     if (!issuer) throw new Error('OIDC_ISSUER environment variable is not set')
+    const clientId = process.env.OIDC_CLIENT_ID
+    if (!clientId) throw new Error('OIDC_CLIENT_ID environment variable is not set')
+    const redirectUri = process.env.OIDC_REDIRECT_URI
+    if (!redirectUri)
+      throw new Error('OIDC_REDIRECT_URI environment variable is not set')
     configPromise = discovery(
       new URL(issuer),
-      process.env.OIDC_CLIENT_ID!,
+      clientId,
       process.env.OIDC_CLIENT_SECRET,
       undefined,
       isDev ? { execute: [allowInsecureRequests] } : undefined,
@@ -62,7 +68,7 @@ export async function getAuthorizationUrl(
   const url = buildAuthorizationUrl(config, {
     redirect_uri: process.env.OIDC_REDIRECT_URI!,
     scope:
-      'openid profile email roles offline_access inquiries.read inquiries.write',
+      'openid profile email roles offline_access inquiries.read inquiries.write notifications.read notifications.write',
     state,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
@@ -133,32 +139,7 @@ export async function fetchUserProfile(
   const config = await getConfig()
   const claims = await fetchUserInfo(config, accessToken, expectedSubject)
 
-  const rawRole = claims.role as unknown
-  const roles: Array<string> = Array.isArray(rawRole)
-    ? (rawRole as Array<string>)
-    : typeof rawRole === 'string'
-      ? [rawRole]
-      : []
-
-  const org = (claims.organization ?? claims.org) as
-    | Record<string, { name: string }>
-    | undefined
-  const tenantId = org ? Object.keys(org)[0] : ''
-  const tenantName = org && tenantId ? org[tenantId].name : ''
-
-  return {
-    id: claims.sub,
-    name: ((claims.name ??
-      claims.preferred_username ??
-      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
-      (claims.email as string) ||
-      'User'),
-    email: String(claims.email ?? ''),
-    roles,
-    permissions: [],
-    tenantId,
-    tenantName,
-  }
+  return userFromClaims(claims as Record<string, unknown>)
 }
 
 /**
@@ -178,32 +159,5 @@ export function parseUserFromToken(token: string): User {
     'base64',
   ).toString('utf-8')
   const claims = JSON.parse(json) as Record<string, unknown>
-
-  const rawRole = claims.role
-  const roles: Array<string> = Array.isArray(rawRole)
-    ? (rawRole as Array<string>)
-    : typeof rawRole === 'string'
-      ? [rawRole]
-      : []
-
-  const org = (claims.organization ?? claims.org) as
-    | Record<string, { name: string }>
-    | undefined
-  const tenantId = org ? Object.keys(org)[0] : ''
-  const tenantName = org && tenantId ? org[tenantId].name : ''
-
-  return {
-    id: claims.sub as string,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- claims are Record<string, unknown>
-    name: ((claims.name ??
-      claims.preferred_username ??
-      [claims.given_name, claims.family_name].filter(Boolean).join(' ')) ||
-      (claims.email as string) ||
-      'User') as string,
-    email: String(claims.email ?? ''),
-    roles,
-    permissions: [],
-    tenantId,
-    tenantName,
-  }
+  return userFromClaims(claims)
 }

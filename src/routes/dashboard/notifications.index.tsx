@@ -1,79 +1,132 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
-  useQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import {
+  AlertTriangle,
   Bell,
-  CheckSquare,
+  CheckCheck,
   ClipboardList,
   CreditCard,
+  Loader2,
   Mail,
   Megaphone,
+  MessageCircleReply,
   MessageSquare,
-  AlertTriangle,
-  CheckCheck,
-  Loader2,
 } from 'lucide-react'
+import type { Notification } from '@/lib/wallow/types'
+import type { NotificationType } from '@/hooks/useNotificationFilters'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchNotifications,
-  markNotificationRead,
   markAllNotificationsRead,
+  markNotificationRead,
 } from '@/server-fns/notifications'
+import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
-import { useSignalR } from '@/hooks/useSignalR'
-import { Button } from '@/components/ui/button'
+import { formatRelativeTime } from '@/lib/format'
+import { useSignalREvents } from '@/hooks/useSignalREvents'
+import {
+  notificationTypes,
+  useNotificationFilters,
+} from '@/hooks/useNotificationFilters'
+import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { Notification } from '@/lib/wallow/types'
 
-const notificationTypes = [
-  'TaskAssigned',
-  'InquirySubmitted',
-  'SystemAlert',
-  'Announcement',
-  'BillingInvoice',
-  'Mention',
-] as const
-
-type NotificationType = (typeof notificationTypes)[number]
-
-const typeIcon: Record<NotificationType, typeof Bell> = {
-  TaskAssigned: ClipboardList,
-  InquirySubmitted: Mail,
-  SystemAlert: AlertTriangle,
-  Announcement: Megaphone,
-  BillingInvoice: CreditCard,
-  Mention: MessageSquare,
+interface NotificationRowProps {
+  notification: Notification
+  selectedIds: ReadonlySet<string>
+  onSelect: (id: string, checked: boolean) => void
+  onClick: (notification: Notification) => void
 }
 
-const typeLabels: Record<NotificationType, string> = {
-  TaskAssigned: 'Tasks',
-  InquirySubmitted: 'Inquiries',
-  SystemAlert: 'Alerts',
-  Announcement: 'Announcements',
-  BillingInvoice: 'Billing',
-  Mention: 'Mentions',
+function NotificationRow({
+  notification,
+  selectedIds,
+  onSelect,
+  onClick,
+}: NotificationRowProps) {
+  const typeConfig = (
+    NOTIFICATION_TYPE_CONFIG as Partial<
+      Record<string, (typeof NOTIFICATION_TYPE_CONFIG)[NotificationType]>
+    >
+  )[notification.type]
+  const IconComponent = typeConfig?.icon ?? Bell
+  const isUnread = !notification.isRead
+
+  return (
+    <div
+      className={`flex cursor-pointer items-start gap-4 border-b border-border-default px-4 py-3 transition-colors hover:bg-background-primary/50 last:border-b-0 ${
+        isUnread ? 'bg-blue-500/5' : ''
+      }`}
+      onClick={() => onClick(notification)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick(notification)
+        }
+      }}
+    >
+      <div className="pt-1" onClick={(e) => e.stopPropagation()}>
+        <Checkbox
+          checked={selectedIds.has(notification.id)}
+          onCheckedChange={(checked) =>
+            onSelect(notification.id, !!checked)
+          }
+          aria-label={`Select notification: ${notification.title}`}
+        />
+      </div>
+
+      <div className="flex-shrink-0 pt-0.5">
+        <IconComponent className="h-5 w-5 text-text-tertiary" />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-sm ${
+              isUnread
+                ? 'font-semibold text-text-primary'
+                : 'font-medium text-text-secondary'
+            }`}
+          >
+            {notification.title}
+          </span>
+          {isUnread && (
+            <span className="h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
+          )}
+        </div>
+        <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
+          {notification.message}
+        </p>
+      </div>
+
+      <span className="flex-shrink-0 whitespace-nowrap text-xs text-text-tertiary">
+        {formatRelativeTime(notification.createdAt)}
+      </span>
+    </div>
+  )
 }
 
-function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr)
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffSec = Math.floor(diffMs / 1000)
-  const diffMin = Math.floor(diffSec / 60)
-  const diffHr = Math.floor(diffMin / 60)
-  const diffDay = Math.floor(diffHr / 24)
-
-  if (diffSec < 60) return 'just now'
-  if (diffMin < 60) return `${diffMin}m ago`
-  if (diffHr < 24) return `${diffHr}h ago`
-  if (diffDay < 7) return `${diffDay}d ago`
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+const NOTIFICATION_TYPE_CONFIG: Record<
+  NotificationType,
+  { icon: typeof Bell; label: string }
+> = {
+  TaskAssigned: { icon: ClipboardList, label: 'Tasks' },
+  InquirySubmitted: { icon: Mail, label: 'Inquiries' },
+  InquiryComment: { icon: MessageCircleReply, label: 'Inquiry Replies' },
+  SystemAlert: { icon: AlertTriangle, label: 'Alerts' },
+  Announcement: { icon: Megaphone, label: 'Announcements' },
+  BillingInvoice: { icon: CreditCard, label: 'Billing' },
+  Mention: { icon: MessageSquare, label: 'Mentions' },
 }
 
 export const Route = createFileRoute('/dashboard/notifications/')({
@@ -90,113 +143,57 @@ function NotificationsIndexPage() {
   const { notifications: initialNotifications } = Route.useLoaderData()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { subscribe } = useSignalR()
-
-  const [unreadOnly, setUnreadOnly] = useState(false)
-  const [activeType, setActiveType] = useState<NotificationType | null>(null)
-  const [page, setPage] = useState(1)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-
-  const queryKey = useMemo(
-    () => ['notifications', { page, type: activeType, unreadOnly }] as const,
-    [page, activeType, unreadOnly],
-  )
-
   const { data: notifications = initialNotifications } = useQuery({
-    queryKey,
+    queryKey: ['notifications'],
     queryFn: () => fetchNotifications(),
-    initialData: page === 1 && !activeType && !unreadOnly
-      ? initialNotifications
-      : undefined,
+    initialData: initialNotifications,
   })
 
-  // Subscribe to real-time notification events
-  useEffect(() => {
-    const unsubs = [
-      subscribe('NotificationCreated', () => {
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
-      }),
-    ]
-    return () => unsubs.forEach((unsub) => unsub())
-  }, [subscribe, queryClient])
+  const {
+    unreadOnly,
+    activeType,
+    page,
+    setPage,
+    filtered: filteredNotifications,
+    unreadCount,
+    handleTabChange,
+    handleTypeFilter,
+  } = useNotificationFilters(notifications)
 
-  // Filter notifications client-side
-  const filteredNotifications = useMemo(() => {
-    let result = notifications
-    if (unreadOnly) {
-      result = result.filter((n) => !n.readAt)
-    }
-    if (activeType) {
-      result = result.filter((n) => n.type === activeType)
-    }
-    return result
-  }, [notifications, unreadOnly, activeType])
+  const {
+    selectedIds,
+    allSelected,
+    selectAll,
+    selectOne,
+  } = useNotificationSelection(filteredNotifications)
 
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.readAt).length,
-    [notifications],
-  )
+  useSignalREvents({
+    NotificationCreated: () => invalidateNotifications(queryClient),
+  })
 
   const markReadMutation = useMutation({
     mutationFn: (id: string) => markNotificationRead({ data: { id } }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      invalidateNotifications(queryClient)
     },
   })
 
   const markAllReadMutation = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      invalidateNotifications(queryClient)
     },
   })
 
   const handleRowClick = useCallback(
-    async (notification: Notification) => {
-      if (!notification.readAt) {
+    (notification: Notification) => {
+      if (!notification.isRead) {
         markReadMutation.mutate(notification.id)
       }
-      const route = getNotificationRoute(notification)
-      navigate({ to: route })
+      navigate({ to: getNotificationRoute(notification) })
     },
     [markReadMutation, navigate],
   )
-
-  const allSelected =
-    filteredNotifications.length > 0 &&
-    filteredNotifications.every((n) => selectedIds.has(n.id))
-
-  function handleSelectAll(checked: boolean) {
-    if (checked) {
-      setSelectedIds(new Set(filteredNotifications.map((n) => n.id)))
-    } else {
-      setSelectedIds(new Set())
-    }
-  }
-
-  function handleSelectOne(id: string, checked: boolean) {
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (checked) {
-        next.add(id)
-      } else {
-        next.delete(id)
-      }
-      return next
-    })
-  }
-
-  function handleTabChange(value: string) {
-    setUnreadOnly(value === 'unread')
-    setPage(1)
-    setSelectedIds(new Set())
-  }
-
-  function handleTypeFilter(type: NotificationType) {
-    setActiveType((prev) => (prev === type ? null : type))
-    setPage(1)
-    setSelectedIds(new Set())
-  }
 
   return (
     <div className="min-h-screen bg-background-primary">
@@ -244,7 +241,7 @@ function NotificationsIndexPage() {
                   : 'border-border-default text-text-secondary hover:text-text-primary hover:bg-background-primary'
               }
             >
-              {typeLabels[type]}
+              {NOTIFICATION_TYPE_CONFIG[type].label}
             </Button>
           ))}
         </div>
@@ -254,7 +251,7 @@ function NotificationsIndexPage() {
           <div className="mb-4 flex items-center gap-4 rounded-lg border border-border-default bg-background-secondary px-4 py-2">
             <Checkbox
               checked={allSelected}
-              onCheckedChange={(checked) => handleSelectAll(!!checked)}
+              onCheckedChange={(checked) => selectAll(!!checked)}
               aria-label="Select all notifications"
             />
             <span className="text-sm text-text-secondary">
@@ -294,70 +291,15 @@ function NotificationsIndexPage() {
           </div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-border-default bg-background-secondary">
-            {filteredNotifications.map((notification) => {
-              const IconComponent =
-                typeIcon[notification.type as NotificationType] ?? Bell
-              const isUnread = !notification.readAt
-
-              return (
-                <div
-                  key={notification.id}
-                  className={`flex cursor-pointer items-start gap-4 border-b border-border-default px-4 py-3 transition-colors hover:bg-background-primary/50 last:border-b-0 ${
-                    isUnread ? 'bg-blue-500/5' : ''
-                  }`}
-                  onClick={() => handleRowClick(notification)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleRowClick(notification)
-                    }
-                  }}
-                >
-                  <div
-                    className="pt-1"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Checkbox
-                      checked={selectedIds.has(notification.id)}
-                      onCheckedChange={(checked) =>
-                        handleSelectOne(notification.id, !!checked)
-                      }
-                      aria-label={`Select notification: ${notification.title}`}
-                    />
-                  </div>
-
-                  <div className="flex-shrink-0 pt-0.5">
-                    <IconComponent className="h-5 w-5 text-text-tertiary" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-sm ${
-                          isUnread
-                            ? 'font-semibold text-text-primary'
-                            : 'font-medium text-text-secondary'
-                        }`}
-                      >
-                        {notification.title}
-                      </span>
-                      {isUnread && (
-                        <span className="h-2 w-2 flex-shrink-0 rounded-full bg-blue-500" />
-                      )}
-                    </div>
-                    <p className="mt-0.5 line-clamp-2 text-sm text-text-tertiary">
-                      {notification.body}
-                    </p>
-                  </div>
-
-                  <span className="flex-shrink-0 whitespace-nowrap text-xs text-text-tertiary">
-                    {formatRelativeTime(notification.createdAt)}
-                  </span>
-                </div>
-              )
-            })}
+            {filteredNotifications.map((notification) => (
+              <NotificationRow
+                key={notification.id}
+                notification={notification}
+                selectedIds={selectedIds}
+                onSelect={selectOne}
+                onClick={handleRowClick}
+              />
+            ))}
           </div>
         )}
 

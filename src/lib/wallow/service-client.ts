@@ -1,15 +1,13 @@
 import {
-  
   allowInsecureRequests,
   clientCredentialsGrant,
-  discovery
+  discovery,
 } from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
 import { WallowError } from './errors'
-import type {Configuration} from 'openid-client';
-import type { ProblemDetails } from './types'
-
-const BASE_URL = process.env.WALLOW_API_URL!
+import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
+import { WALLOW_BASE_URL } from './config'
+import type { Configuration } from 'openid-client'
 
 interface TokenCache {
   accessToken: string
@@ -68,6 +66,8 @@ async function fetchServiceToken(): Promise<string> {
   return tokenCache.accessToken
 }
 
+const REQUEST_TIMEOUT_MS = 30_000
+
 async function request(
   method: string,
   path: string,
@@ -76,8 +76,9 @@ async function request(
   const token = await getServiceToken()
 
   const doFetch = (accessToken: string) =>
-    fetch(`${BASE_URL}${path}`, {
+    fetch(`${WALLOW_BASE_URL}${path}`, {
       method,
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...(body !== undefined && { 'Content-Type': 'application/json' }),
@@ -85,29 +86,38 @@ async function request(
       ...(body !== undefined && { body: JSON.stringify(body) }),
     })
 
-  let response = await doFetch(token)
+  let response: Response
+
+  try {
+    response = await doFetch(token)
+  } catch (err) {
+    throw toNetworkError(err, method, path)
+  }
+
+  // 401 — invalidate cached token, fetch a new one, retry once
+  if (response.status === 401) {
+    tokenCache = null
+    const freshToken = await getServiceToken()
+    try {
+      response = await doFetch(freshToken)
+    } catch (err) {
+      throw toNetworkError(err, method, path)
+    }
+  }
 
   if (response.status === 429) {
-    const retryAfter = response.headers.get('Retry-After')
-    const ms = retryAfter ? Number(retryAfter) * 1000 : 1000
-    await new Promise((resolve) => setTimeout(resolve, ms))
-    response = await doFetch(token)
+    await new Promise((resolve) =>
+      setTimeout(resolve, parseRetryDelay(response)),
+    )
+    try {
+      response = await doFetch(await getServiceToken())
+    } catch (err) {
+      throw toNetworkError(err, method, path)
+    }
   }
 
   if (!response.ok) {
-    let problem: ProblemDetails
-    try {
-      problem = await response.json()
-    } catch {
-      problem = {
-        type: `https://httpstatuses.com/${response.status}`,
-        title: response.statusText || 'Request Failed',
-        status: response.status,
-        detail: `Wallow API returned ${response.status}`,
-        traceId: '',
-        code: `HTTP_${response.status}`,
-      }
-    }
+    const problem = await parseProblemDetails(response, method, path)
     setResponseStatus(problem.status)
     throw new WallowError(problem)
   }

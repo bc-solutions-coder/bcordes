@@ -90,7 +90,8 @@
   "pnpm": {
     "overrides": {
       "@tanstack/react-router": "1.168.3",
-      "@tanstack/router-core": "1.168.3"
+      "@tanstack/router-core": "1.168.3",
+      "seroval": ">=1.4.1"
     }
   },
   "devDependencies": {

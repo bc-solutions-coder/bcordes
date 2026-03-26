@@ -1,7 +1,7 @@
 import { redirect } from '@tanstack/react-router'
-import { getSession, setSession } from './session'
+import { clearSession, getSession, setSession } from './session'
 import { fetchUserProfile, refreshToken } from './oidc'
-import type { User } from './types'
+import type { SessionData, User } from './types'
 
 /** Resolve the current authenticated user, silently refreshing tokens if needed. */
 export async function getAuthUser(): Promise<User | null> {
@@ -31,8 +31,9 @@ export async function getAuthUser(): Promise<User | null> {
     })
     return user
   } catch {
-    // Refresh failed — still return the cached user rather than logging them out
-    return session.user
+    // Refresh failed — clear the session to avoid returning stale credentials
+    clearSession()
+    return null
   }
 }
 
@@ -46,4 +47,20 @@ export async function requireAuth(returnTo?: string): Promise<User> {
     })
   }
   return user
+}
+
+/** Require the current user to have the 'admin' role. Throws 403 if not. */
+export async function requireAdmin(): Promise<User> {
+  const session = await getSession()
+  if (!session || !session.user) {
+    const error = new Error('Authentication required')
+    ;(error as unknown as Record<string, unknown>).status = 403
+    throw error
+  }
+  if (!session.user.roles.includes('admin')) {
+    const error = new Error('Forbidden: admin role required')
+    ;(error as unknown as Record<string, unknown>).status = 403
+    throw error
+  }
+  return session.user
 }
