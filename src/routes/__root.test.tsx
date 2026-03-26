@@ -38,6 +38,10 @@ vi.mock('@/components/ui/shadcn/sonner', () => ({
 
 vi.mock('@/styles.css?url', () => ({ default: 'styles.css' }))
 
+vi.mock('@/hooks/useUser', () => ({
+  useUser: () => ({ user: null, isLoading: false }),
+}))
+
 describe('__root route', () => {
   afterEach(() => {
     cleanup()
@@ -183,6 +187,9 @@ describe('__root route', () => {
         Toaster: () => <div data-testid="toaster">Toaster</div>,
       }))
       vi.doMock('@/styles.css?url', () => ({ default: 'styles.css' }))
+      vi.doMock('@/hooks/useUser', () => ({
+        useUser: () => ({ user: null, isLoading: false }),
+      }))
 
       const { DevTools: DevToolsComponent } =
         (await import('./__root')) as unknown as {

@@ -73,6 +73,11 @@ function fireNamedEvent(es: MockEventSource, eventType: string, data: unknown) {
 /*  Setup / teardown                                                    */
 /* ------------------------------------------------------------------ */
 
+const mockUser = { id: 'test-user', name: 'Test' }
+vi.mock('@/hooks/useUser', () => ({
+  useUser: () => ({ user: mockUser, isLoading: false }),
+}))
+
 beforeEach(() => {
   mockEventSources = []
   vi.stubGlobal(

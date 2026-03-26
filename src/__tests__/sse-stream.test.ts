@@ -190,12 +190,13 @@ describe('SSE stream proxy', () => {
       await reader.read()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.test.local/events?subscribe=Notifications',
+        'https://api.test.local/events?subscribe=Notifications,Inquiries',
         {
           headers: {
             Authorization: 'Bearer test-access-token',
             Accept: 'text/event-stream',
           },
+          redirect: 'manual',
         },
       )
 
