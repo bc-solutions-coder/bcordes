@@ -1,7 +1,11 @@
 import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
 import type { SessionData } from '@/lib/auth/types'
-import { exchangeCode, fetchUserProfile } from '@/lib/auth/oidc'
+import {
+  exchangeCode,
+  fetchUserProfile,
+  parseUserFromToken,
+} from '@/lib/auth/oidc'
 import { sealSessionCookie } from '@/lib/auth/session'
 
 function parseCookies(cookieHeader: string): Record<string, string> {
@@ -75,10 +79,20 @@ export const Route = createFileRoute('/auth/callback')({
             request.url,
             state,
           )
-          const user = await fetchUserProfile(
+          const tokenUser = parseUserFromToken(tokens.accessToken)
+          const profileUser = await fetchUserProfile(
             tokens.accessToken,
             tokens.subject,
           )
+          // Merge: userinfo for profile fields, access token for org claims
+          const user = {
+            ...profileUser,
+            tenantId: profileUser.tenantId || tokenUser.tenantId,
+            tenantName: profileUser.tenantName || tokenUser.tenantName,
+            roles: profileUser.roles.length
+              ? profileUser.roles
+              : tokenUser.roles,
+          }
           // Default to 1 hour if the provider doesn't return expires_in
           const expiresAt =
             Math.floor(Date.now() / 1000) + (tokens.expiresIn || 3600)
@@ -93,6 +107,8 @@ export const Route = createFileRoute('/auth/callback')({
             version: 1,
             csrfToken: randomBytes(32).toString('hex'),
           }
+
+          console.log('[auth/callback] session.user:', user)
 
           const sessionCookie = await sealSessionCookie(sessionData)
 

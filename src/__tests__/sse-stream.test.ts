@@ -92,6 +92,7 @@ describe('SSE stream proxy', () => {
             : {
                 accessToken: 'test-access-token',
                 refreshToken: 'test-refresh-token',
+                user: { name: 'Test User', email: 'test@test.com' },
               },
         ),
       ),

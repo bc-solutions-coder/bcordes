@@ -9,6 +9,23 @@ import { FadeInView } from '@/components/shared/FadeInView'
 export const Route = createFileRoute('/projects/')({
   component: WorkPage,
   loader: () => ({ showcases: getShowcases() }),
+  head: () => ({
+    meta: [
+      { title: 'Projects | BC Solutions' },
+      {
+        name: 'description',
+        content:
+          'Showcasing projects and work across different industries and technologies.',
+      },
+      { property: 'og:title', content: 'Projects | BC Solutions' },
+      {
+        property: 'og:description',
+        content:
+          'Showcasing projects and work across different industries and technologies.',
+      },
+      { property: 'og:url', content: 'https://bcordes.dev/projects' },
+    ],
+  }),
 })
 
 function WorkPage() {

@@ -13,6 +13,25 @@ export const Route = createFileRoute('/projects/$slug')({
     if (!showcase) throw notFound()
     return { showcase }
   },
+  head: ({ loaderData }) => {
+    const { showcase } = loaderData
+    const title = `${showcase.title} | BC Solutions`
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: showcase.description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: showcase.description },
+        {
+          property: 'og:url',
+          content: `https://bcordes.dev/projects/${showcase.slug}`,
+        },
+        ...(showcase.image
+          ? [{ property: 'og:image', content: showcase.image }]
+          : []),
+      ],
+    }
+  },
   notFoundComponent: () => (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-6 py-16 text-center">

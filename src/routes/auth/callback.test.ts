@@ -16,6 +16,15 @@ import { sealSessionCookie } from '@/lib/auth/session'
 vi.mock('@/lib/auth/oidc', () => ({
   exchangeCode: vi.fn(),
   fetchUserProfile: vi.fn(),
+  parseUserFromToken: vi.fn(() => ({
+    id: 'token-sub',
+    name: 'Token User',
+    email: 'token@example.com',
+    roles: [],
+    permissions: [],
+    tenantId: '',
+    tenantName: '',
+  })),
 }))
 
 vi.mock('@/lib/auth/session', () => ({

@@ -4,16 +4,14 @@ import {
   Link,
   Scripts,
   createRootRouteWithContext,
-  useRouter,
 } from '@tanstack/react-router'
 
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { Toaster } from '../components/ui/shadcn/sonner'
-
 import appCss from '../styles.css?url'
-
 import type { QueryClient } from '@tanstack/react-query'
+import { EventStreamProvider } from '@/hooks/EventStreamProvider'
 import { reportWebVitals } from '@/lib/web-vitals'
 
 function DevTools() {
@@ -238,14 +236,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body style={{ margin: 0 }}>
-        <LoadingOverlay />
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <Toaster position="bottom-right" />
-        {import.meta.env.DEV && <DevTools />}
+        <EventStreamProvider>
+          <LoadingOverlay />
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <Toaster position="bottom-right" />
+          {import.meta.env.DEV && <DevTools />}
+        </EventStreamProvider>
         <Scripts />
       </body>
     </html>

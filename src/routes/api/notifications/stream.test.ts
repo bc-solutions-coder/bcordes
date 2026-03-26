@@ -85,6 +85,17 @@ describe('SSE Route GET handler', () => {
     vi.resetModules()
 
     // Re-apply mocks after resetModules
+    vi.doMock('@/lib/logger', () => {
+      const child = () => mockLogger
+      const mockLogger = {
+        info: vi.fn(),
+        error: vi.fn(),
+        warn: vi.fn(),
+        debug: vi.fn(),
+        child,
+      }
+      return { default: mockLogger }
+    })
     vi.doMock('@/lib/auth/session', () => ({
       getSession: vi.fn(),
     }))
@@ -121,7 +132,10 @@ describe('SSE Route GET handler', () => {
   })
 
   it('returns 503 when SSE manager is draining', async () => {
-    mockGetSession.mockResolvedValue({ accessToken: 'tok' })
+    mockGetSession.mockResolvedValue({
+      accessToken: 'tok',
+      user: { name: 'Test', email: 'test@test.com' },
+    })
     const { handler, mod } = await getHandler()
     mod.sseManager.drain()
 
@@ -147,6 +161,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: undefined,
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     const { handler } = await getHandler()
@@ -196,6 +211,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: undefined,
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     const { handler } = await getHandler()
@@ -220,6 +236,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: undefined,
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     const { handler } = await getHandler()
@@ -276,6 +293,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: 'refresh-tok',
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     mockRefreshToken.mockResolvedValue({
@@ -338,6 +356,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: undefined,
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     const { handler, mod } = await getHandler()
@@ -402,6 +421,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: undefined,
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     const { handler, mod } = await getHandler()
@@ -462,6 +482,7 @@ describe('SSE Route GET handler', () => {
     mockGetSession.mockResolvedValue({
       accessToken: 'test-token',
       refreshToken: 'refresh-tok',
+      user: { name: 'Test', email: 'test@test.com' },
     })
 
     mockRefreshToken.mockResolvedValue({
