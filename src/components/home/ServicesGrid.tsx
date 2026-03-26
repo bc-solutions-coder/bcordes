@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '~/components/ui/card'
-import { FadeInView } from '~/components/shared/FadeInView'
+} from '@/components/ui/card'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 interface Service {
   icon: LucideIcon

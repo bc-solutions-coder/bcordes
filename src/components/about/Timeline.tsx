@@ -1,4 +1,4 @@
-import { FadeInView } from '~/components/shared/FadeInView'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 interface TimelineEntry {
   period: string

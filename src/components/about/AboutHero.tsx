@@ -1,5 +1,5 @@
-import { Badge } from '~/components/ui/badge'
-import { FadeInView } from '~/components/shared/FadeInView'
+import { Badge } from '@/components/ui/badge'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 export function AboutHero() {
   return (

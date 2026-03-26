@@ -5,15 +5,15 @@ vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (config: Record<string, unknown>) => config,
 }))
 
-vi.mock('~/components/about/AboutHero', () => ({
+vi.mock('@/components/about/AboutHero', () => ({
   AboutHero: () => <div data-testid="about-hero">AboutHero</div>,
 }))
 
-vi.mock('~/components/about/Timeline', () => ({
+vi.mock('@/components/about/Timeline', () => ({
   Timeline: () => <div data-testid="timeline">Timeline</div>,
 }))
 
-vi.mock('~/components/shared/FadeInView', () => ({
+vi.mock('@/components/shared/FadeInView', () => ({
   FadeInView: ({
     children,
     ...rest

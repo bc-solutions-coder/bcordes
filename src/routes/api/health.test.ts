@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockPing = vi.fn()
 
-vi.mock('~/lib/valkey', () => ({
+vi.mock('@/lib/valkey', () => ({
   getValkey: vi.fn(() => ({ ping: mockPing })),
 }))
 

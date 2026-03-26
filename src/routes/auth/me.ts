@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { getAuthUser } from '~/lib/auth/middleware'
+import { getAuthUser } from '@/lib/auth/middleware'
 
 export const Route = createFileRoute('/auth/me')({
   server: {

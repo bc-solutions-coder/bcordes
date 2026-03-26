@@ -6,11 +6,11 @@ import { renderWithProviders } from '@/test/helpers/render'
 
 const mockSubmitInquiry = vi.fn()
 
-vi.mock('~/server-fns/inquiries', () => ({
+vi.mock('@/server-fns/inquiries', () => ({
   submitInquiry: (...args: Array<unknown>) => mockSubmitInquiry(...args),
 }))
 
-vi.mock('~/hooks/useUser', () => ({
+vi.mock('@/hooks/useUser', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 

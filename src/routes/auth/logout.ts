@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { clearSession, getSession } from '~/lib/auth/session'
-import { getLogoutUrl } from '~/lib/auth/oidc'
+import { clearSession, getSession } from '@/lib/auth/session'
+import { getLogoutUrl } from '@/lib/auth/oidc'
 
 async function handleLogout(request: Request) {
   const session = await getSession()

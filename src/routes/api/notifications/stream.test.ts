@@ -3,15 +3,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // All imports must be dynamic because stream.ts transitively imports
 // ~/lib/auth/session which throws without SESSION_SECRET at module level.
 
-vi.mock('~/lib/auth/session', () => ({
+vi.mock('@/lib/auth/session', () => ({
   getSession: vi.fn(),
 }))
 
-vi.mock('~/lib/auth/oidc', () => ({
+vi.mock('@/lib/auth/oidc', () => ({
   refreshToken: vi.fn(),
 }))
 
-vi.mock('~/lib/wallow/config', () => ({
+vi.mock('@/lib/wallow/config', () => ({
   WALLOW_BASE_URL: 'http://localhost:9999',
 }))
 
@@ -85,23 +85,23 @@ describe('SSE Route GET handler', () => {
     vi.resetModules()
 
     // Re-apply mocks after resetModules
-    vi.doMock('~/lib/auth/session', () => ({
+    vi.doMock('@/lib/auth/session', () => ({
       getSession: vi.fn(),
     }))
-    vi.doMock('~/lib/auth/oidc', () => ({
+    vi.doMock('@/lib/auth/oidc', () => ({
       refreshToken: vi.fn(),
     }))
-    vi.doMock('~/lib/wallow/config', () => ({
+    vi.doMock('@/lib/wallow/config', () => ({
       WALLOW_BASE_URL: 'http://localhost:9999',
     }))
     vi.doMock('@tanstack/react-router', () => ({
       createFileRoute: () => (config: unknown) => config,
     }))
 
-    const sessionMod = await import('~/lib/auth/session')
+    const sessionMod = await import('@/lib/auth/session')
     mockGetSession = sessionMod.getSession as ReturnType<typeof vi.fn>
 
-    const oidcMod = await import('~/lib/auth/oidc')
+    const oidcMod = await import('@/lib/auth/oidc')
     mockRefreshToken = oidcMod.refreshToken as ReturnType<typeof vi.fn>
   })
 

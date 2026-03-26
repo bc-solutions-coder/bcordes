@@ -1,8 +1,8 @@
 import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
-import type { SessionData } from '~/lib/auth/types'
-import { exchangeCode, fetchUserProfile } from '~/lib/auth/oidc'
-import { sealSessionCookie } from '~/lib/auth/session'
+import type { SessionData } from '@/lib/auth/types'
+import { exchangeCode, fetchUserProfile } from '@/lib/auth/oidc'
+import { sealSessionCookie } from '@/lib/auth/session'
 
 function parseCookies(cookieHeader: string): Record<string, string> {
   return Object.fromEntries(

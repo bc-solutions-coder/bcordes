@@ -8,7 +8,7 @@ import { WallowError } from './errors'
 import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
 import { WALLOW_BASE_URL } from './config'
 import type { Configuration } from 'openid-client'
-import { getValkey, keys } from '~/lib/valkey'
+import { getValkey, keys } from '@/lib/valkey'
 
 const isDev = process.env.NODE_ENV !== 'production'
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Download } from 'lucide-react'
-import { FadeInView } from '~/components/shared/FadeInView'
-import { Badge } from '~/components/ui/badge'
+import { FadeInView } from '@/components/shared/FadeInView'
+import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/resume')({
   component: ResumePage,

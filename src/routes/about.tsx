@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { AboutHero } from '~/components/about/AboutHero'
-import { Timeline } from '~/components/about/Timeline'
-import { ValueIcon } from '~/components/about/ValueIcon'
-import { FadeInView } from '~/components/shared/FadeInView'
+import { AboutHero } from '@/components/about/AboutHero'
+import { Timeline } from '@/components/about/Timeline'
+import { ValueIcon } from '@/components/about/ValueIcon'
+import { FadeInView } from '@/components/shared/FadeInView'
 
 export const Route = createFileRoute('/about')({ component: AboutPage })
 

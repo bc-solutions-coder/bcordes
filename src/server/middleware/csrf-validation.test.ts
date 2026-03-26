@@ -25,7 +25,7 @@ const { mockGetSession, mockGetRequestHeader, mockCreateError } = vi.hoisted(
   }),
 )
 
-vi.mock('~/lib/auth/session', () => ({
+vi.mock('@/lib/auth/session', () => ({
   getSession: mockGetSession,
 }))
 

@@ -1,8 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { Hero } from '~/components/home/Hero'
-import { ServicesGrid } from '~/components/home/ServicesGrid'
-import { SkillsShowcase } from '~/components/home/SkillsShowcase'
-import { FeaturedWork } from '~/components/home/FeaturedWork'
+import { Hero } from '@/components/home/Hero'
+import { ServicesGrid } from '@/components/home/ServicesGrid'
+import { SkillsShowcase } from '@/components/home/SkillsShowcase'
+import { FeaturedWork } from '@/components/home/FeaturedWork'
 import { getFeaturedShowcases } from '@/content/projects'
 
 export const Route = createFileRoute('/')({
