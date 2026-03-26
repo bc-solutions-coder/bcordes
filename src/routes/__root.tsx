@@ -69,8 +69,10 @@ function NotFound() {
   )
 }
 
-function RouteError() {
-  const router = useRouter()
+function RouteError({ error, reset }: { error: unknown; reset: () => void }) {
+  useEffect(() => {
+    console.error('[RouteError]', error)
+  }, [error])
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
@@ -81,9 +83,14 @@ function RouteError() {
       <p className="mb-8 max-w-md text-foreground-secondary">
         An unexpected error occurred. Please try again.
       </p>
+      {import.meta.env.DEV && error instanceof Error && (
+        <pre className="mb-8 max-w-2xl overflow-auto rounded bg-muted p-4 text-left text-sm text-foreground-secondary">
+          {error.message}
+        </pre>
+      )}
       <div className="flex gap-4">
         <button
-          onClick={() => router.invalidate()}
+          onClick={reset}
           className="rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Try Again

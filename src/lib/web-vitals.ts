@@ -11,11 +11,13 @@ function sendMetric(metric: Metric) {
 }
 
 export function reportWebVitals() {
-  import('web-vitals').then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
-    onCLS(sendMetric)
-    onFCP(sendMetric)
-    onINP(sendMetric)
-    onLCP(sendMetric)
-    onTTFB(sendMetric)
-  })
+  import('web-vitals')
+    .then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
+      onCLS(sendMetric)
+      onFCP(sendMetric)
+      onINP(sendMetric)
+      onLCP(sendMetric)
+      onTTFB(sendMetric)
+    })
+    .catch(() => {})
 }

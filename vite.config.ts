@@ -20,11 +20,15 @@ const config = defineConfig({
     }),
     nitro(),
     viteReact(),
-    visualizer({
-      filename: 'stats.html',
-      gzipSize: true,
-      brotliSize: true,
-    }),
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            filename: 'stats.html',
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   build: {
     chunkSizeWarningLimit: 600,

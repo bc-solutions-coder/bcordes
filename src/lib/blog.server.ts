@@ -5,6 +5,7 @@ import type { BlogFrontmatter, BlogPost } from './blog'
 
 const BLOG_DIR = join(process.cwd(), 'src/content/blog')
 
+/** Validate and cast raw frontmatter to typed BlogFrontmatter. */
 function validateFrontmatter(
   frontmatter: Record<string, unknown>,
   slug: string,
@@ -28,12 +29,14 @@ function validateFrontmatter(
   }
 }
 
+/** Estimate read time based on word count (200 words/min). */
 function calculateReadTime(content: string): number {
   const wordsPerMinute = 200
   const wordCount = content.trim().split(/\s+/).length
   return Math.max(1, Math.ceil(wordCount / wordsPerMinute))
 }
 
+/** Get all published blog posts, sorted by date descending. */
 export async function getBlogPosts(): Promise<Array<BlogPost>> {
   try {
     const files = await readdir(BLOG_DIR)
@@ -75,6 +78,7 @@ export async function getBlogPosts(): Promise<Array<BlogPost>> {
   }
 }
 
+/** Get a single published blog post by slug, or null if not found. */
 export async function getBlogPostBySlug(
   slug: string,
 ): Promise<BlogPost | null> {
