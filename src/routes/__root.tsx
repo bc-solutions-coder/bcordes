@@ -13,6 +13,7 @@ import { Toaster } from '../components/ui/shadcn/sonner'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { reportWebVitals } from '@/lib/web-vitals'
 
 function DevTools() {
   const [Panel, setPanel] = useState<React.ReactNode>(null)
@@ -188,6 +189,10 @@ function LoadingOverlay() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    reportWebVitals()
+  }, [])
+
   return (
     <html lang="en" style={{ colorScheme: 'light' }}>
       <head>
