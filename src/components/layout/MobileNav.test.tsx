@@ -75,4 +75,33 @@ describe('MobileNav', () => {
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('Sign Out')).toBeInTheDocument()
   })
+
+  it('creates and submits a logout form when Sign Out is clicked', () => {
+    mockUseUser.mockReturnValue({
+      user: { name: 'Test User', email: 'test@example.com' },
+      isLoading: false,
+    })
+
+    const submitSpy = vi.fn()
+    const appendChildSpy = vi.spyOn(document.body, 'appendChild')
+    vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(submitSpy)
+
+    renderWithProviders(<MobileNav />)
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Open navigation menu' }),
+    )
+    fireEvent.click(screen.getByText('Sign Out'))
+
+    const appendedForm = appendChildSpy.mock.calls.find(
+      (call) => call[0] instanceof HTMLFormElement,
+    )
+    expect(appendedForm).toBeDefined()
+
+    const form = appendedForm![0] as HTMLFormElement
+    expect(form.method).toBe('post')
+    expect(form.action).toContain('/auth/logout')
+    expect(submitSpy).toHaveBeenCalled()
+
+    appendChildSpy.mockRestore()
+  })
 })

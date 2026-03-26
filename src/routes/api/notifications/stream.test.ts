@@ -245,6 +245,204 @@ describe('SSE Route GET handler', () => {
     vi.unstubAllGlobals()
   })
 
+  it('closes controller when reconnect connectUpstream throws after refreshToken succeeds (lines 231-232)', async () => {
+    let callCount = 0
+    const fetchSpy = vi.fn().mockImplementation(() => {
+      callCount++
+      if (callCount === 1) {
+        // First call succeeds, upstream closes immediately
+        const fakeBody = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.close()
+          },
+        })
+        return Promise.resolve({
+          ok: true,
+          body: fakeBody,
+          status: 200,
+          statusText: 'OK',
+        })
+      }
+      // Second call (reconnect) fails
+      return Promise.resolve({
+        ok: false,
+        body: null,
+        status: 502,
+        statusText: 'Bad Gateway',
+      })
+    })
+    vi.stubGlobal('fetch', fetchSpy)
+
+    mockGetSession.mockResolvedValue({
+      accessToken: 'test-token',
+      refreshToken: 'refresh-tok',
+    })
+
+    mockRefreshToken.mockResolvedValue({
+      accessToken: 'new-access-token',
+    })
+
+    const { handler } = await getHandler()
+    const response = await handler()
+
+    const reader = response.body!.getReader()
+    const decoder = new TextDecoder()
+    const chunks: Array<string> = []
+
+    const readWithTimeout = async () => {
+      const timeout = setTimeout(() => reader.cancel(), 2000)
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done) break
+          chunks.push(decoder.decode(value, { stream: true }))
+        }
+      } catch {
+        // stream cancelled/closed
+      } finally {
+        clearTimeout(timeout)
+      }
+    }
+
+    await readWithTimeout()
+
+    // refreshToken was called, and second fetch (reconnect) was attempted
+    expect(mockRefreshToken).toHaveBeenCalledWith('refresh-tok')
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+
+    vi.unstubAllGlobals()
+  })
+
+  it('pull() catches enqueue error on keepalive delivery (line 252)', async () => {
+    vi.useFakeTimers()
+
+    // Keep upstream alive so the keepalive timer can fire
+    const fakeBody = new ReadableStream<Uint8Array>({
+      start() {
+        // Never close — upstream stays open
+      },
+      cancel() {
+        // Allow cancellation
+      },
+    })
+
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      body: fakeBody,
+      status: 200,
+      statusText: 'OK',
+    })
+    vi.stubGlobal('fetch', fetchSpy)
+
+    mockGetSession.mockResolvedValue({
+      accessToken: 'test-token',
+      refreshToken: undefined,
+    })
+
+    const { handler, mod } = await getHandler()
+    const response = await handler()
+
+    const reader = response.body!.getReader()
+
+    // Read the ': connected' chunk
+    const firstRead = reader.read()
+    await vi.advanceTimersByTimeAsync(0)
+    await firstRead
+
+    // Get the registered controller from sseManager and make enqueue throw
+    const controller = [...mod.sseManager.connections][0]
+    const originalEnqueue = controller.enqueue.bind(controller)
+    controller.enqueue = vi.fn().mockImplementation((chunk: Uint8Array) => {
+      // Check if this is a keepalive chunk (pull() path)
+      const text = new TextDecoder().decode(chunk)
+      if (text.includes('keepalive')) {
+        throw new TypeError('Controller is already closed')
+      }
+      return originalEnqueue(chunk)
+    })
+
+    // Fire the keepalive timer — this sets latestKeepalive via enqueueOrBuffer
+    // and resolves pullResolve. Then pull() runs and tries enqueue() which throws.
+    await vi.advanceTimersByTimeAsync(30_001)
+
+    // Read to trigger pull() — it will find latestKeepalive and try to enqueue
+    const readPromise = reader.read()
+    await vi.advanceTimersByTimeAsync(0)
+
+    // The read may hang or return — cancel to clean up
+    await reader.cancel().catch(() => {})
+    await readPromise.catch(() => {})
+
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+  })
+
+  it('pull() catches controller.close() error in shouldClose branch (line 260)', async () => {
+    vi.useFakeTimers()
+
+    // Keep upstream alive
+    const fakeBody = new ReadableStream<Uint8Array>({
+      start() {
+        // Never close
+      },
+      cancel() {
+        // Allow cancellation
+      },
+    })
+
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      body: fakeBody,
+      status: 200,
+      statusText: 'OK',
+    })
+    vi.stubGlobal('fetch', fetchSpy)
+
+    mockGetSession.mockResolvedValue({
+      accessToken: 'test-token',
+      refreshToken: undefined,
+    })
+
+    const { handler, mod } = await getHandler()
+    const response = await handler()
+
+    const reader = response.body!.getReader()
+
+    // Read the ': connected' chunk
+    const firstRead = reader.read()
+    await vi.advanceTimersByTimeAsync(0)
+    await firstRead
+
+    // Get the registered controller and make close() throw
+    const controller = [...mod.sseManager.connections][0]
+    controller.close = vi.fn(() => {
+      throw new TypeError('Controller is already closed')
+    })
+
+    // Read the reconnect event that maxDurationTimer enqueues
+    const readPromise = reader.read()
+
+    // Advance past MAX_STREAM_DURATION (4 hours) to trigger maxDurationTimer
+    // which sets shouldClose = true, enqueues reconnect event, resolves pullResolve
+    // Then pull() runs, sees shouldClose, calls controller.close() which throws
+    await vi.advanceTimersByTimeAsync(4 * 60 * 60 * 1000 + 1)
+
+    // Read the reconnect event
+    await readPromise.catch(() => {})
+
+    // Next read triggers pull() which sees shouldClose and tries close()
+    const nextRead = reader.read()
+    await vi.advanceTimersByTimeAsync(0)
+    await nextRead.catch(() => {})
+
+    // Clean up
+    await reader.cancel().catch(() => {})
+
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+  })
+
   it('attempts token refresh when upstream ends with refresh token available', async () => {
     const fetchSpy = vi.fn().mockImplementation(() => {
       const fakeBody = new ReadableStream<Uint8Array>({

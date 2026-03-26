@@ -5,13 +5,14 @@ import { ContactForm } from './ContactForm'
 import { renderWithProviders } from '@/test/helpers/render'
 
 const mockSubmitInquiry = vi.fn()
+const mockUseUser = vi.fn(() => ({ user: null, isLoading: false }))
 
 vi.mock('@/server-fns/inquiries', () => ({
   submitInquiry: (...args: Array<unknown>) => mockSubmitInquiry(...args),
 }))
 
 vi.mock('@/hooks/useUser', () => ({
-  useUser: () => ({ user: null, isLoading: false }),
+  useUser: (...args: Array<unknown>) => mockUseUser(...args),
 }))
 
 vi.mock('sonner', () => ({
@@ -283,5 +284,47 @@ describe('ContactForm', () => {
     await waitFor(() => {
       expect(screen.getByText('Message Sent!')).toBeInTheDocument()
     })
+  })
+
+  it('pre-fills email and name when user has both', async () => {
+    mockUseUser.mockReturnValue({
+      user: { email: 'jane@example.com', name: 'Jane Smith' },
+      isLoading: false,
+    })
+
+    renderWithProviders(<ContactForm />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Email/)).toHaveValue('jane@example.com')
+    })
+    expect(screen.getByLabelText(/^Name/)).toHaveValue('Jane Smith')
+  })
+
+  it('pre-fills only email when user has email but no name', async () => {
+    mockUseUser.mockReturnValue({
+      user: { email: 'jane@example.com', name: undefined },
+      isLoading: false,
+    })
+
+    renderWithProviders(<ContactForm />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Email/)).toHaveValue('jane@example.com')
+    })
+    expect(screen.getByLabelText(/^Name/)).toHaveValue('')
+  })
+
+  it('pre-fills only name when user has name but no email', async () => {
+    mockUseUser.mockReturnValue({
+      user: { email: undefined, name: 'Jane Smith' },
+      isLoading: false,
+    })
+
+    renderWithProviders(<ContactForm />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Name/)).toHaveValue('Jane Smith')
+    })
+    expect(screen.getByLabelText(/^Email/)).toHaveValue('')
   })
 })

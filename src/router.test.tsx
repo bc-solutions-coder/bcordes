@@ -1,3 +1,4 @@
+import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ---------------------------------------------------------------------------
@@ -95,6 +96,26 @@ describe('getRouter', () => {
 
     expect(mockGetContext).toHaveBeenCalledTimes(2)
     expect(mockCreateRouter).toHaveBeenCalledTimes(2)
+  })
+
+  it('Wrap component renders TanstackQuery.Provider with children', async () => {
+    const { getRouter } = await import('./router')
+    getRouter()
+
+    const config = mockCreateRouter.mock.calls[0][0]
+    const Wrap = config.Wrap as React.FC<{ children: React.ReactNode }>
+
+    render(
+      <Wrap>
+        <span data-testid="child">hello</span>
+      </Wrap>,
+    )
+
+    expect(screen.getByTestId('child')).toHaveTextContent('hello')
+    expect(mockProvider).toHaveBeenCalled()
+    expect(mockProvider.mock.calls[0][0]).toMatchObject({
+      queryClient: mockQueryClient,
+    })
   })
 
   it('spreads the rqContext into the router context', async () => {

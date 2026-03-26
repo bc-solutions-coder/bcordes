@@ -228,6 +228,79 @@ describe('GET /auth/callback', () => {
     expect(res.headers.get('location')).toBe('/auth/login?error=auth_failed')
   })
 
+  it('falls back to 3600 when tokens.expiresIn is 0', async () => {
+    const tokensNoExpiry: TokenResult = { ...fakeTokens, expiresIn: 0 }
+    vi.mocked(exchangeCode).mockResolvedValue(tokensNoExpiry)
+    vi.mocked(fetchUserProfile).mockResolvedValue(fakeUser)
+    vi.mocked(sealSessionCookie).mockResolvedValue(
+      '__session=sealed; HttpOnly; Path=/',
+    )
+
+    const state = 'ok-state'
+    const req = makeRequest(
+      { code: 'auth-code', state },
+      { __oauth_state: state, __oauth_code_verifier: 'verifier' },
+    )
+
+    const res = await handler({ request: req })
+
+    expect(res.status).toBe(302)
+    // Verify sealSessionCookie was called with an expiresAt ~3600s from now
+    const sessionArg = vi.mocked(sealSessionCookie).mock.calls[0][0]
+    const nowSec = Math.floor(Date.now() / 1000)
+    expect(sessionArg.expiresAt).toBeGreaterThanOrEqual(nowSec + 3599)
+    expect(sessionArg.expiresAt).toBeLessThanOrEqual(nowSec + 3601)
+  })
+
+  it('falls back to 3600 when tokens.expiresIn is undefined', async () => {
+    const tokensUndefinedExpiry: TokenResult = {
+      ...fakeTokens,
+      expiresIn: undefined as unknown as number,
+    }
+    vi.mocked(exchangeCode).mockResolvedValue(tokensUndefinedExpiry)
+    vi.mocked(fetchUserProfile).mockResolvedValue(fakeUser)
+    vi.mocked(sealSessionCookie).mockResolvedValue(
+      '__session=sealed; HttpOnly; Path=/',
+    )
+
+    const state = 'ok-state'
+    const req = makeRequest(
+      { code: 'auth-code', state },
+      { __oauth_state: state, __oauth_code_verifier: 'verifier' },
+    )
+
+    const res = await handler({ request: req })
+
+    expect(res.status).toBe(302)
+    const sessionArg = vi.mocked(sealSessionCookie).mock.calls[0][0]
+    const nowSec = Math.floor(Date.now() / 1000)
+    expect(sessionArg.expiresAt).toBeGreaterThanOrEqual(nowSec + 3599)
+    expect(sessionArg.expiresAt).toBeLessThanOrEqual(nowSec + 3601)
+  })
+
+  it('falls back to / when returnTo is an unparseable URL (isSameOrigin catch branch)', async () => {
+    vi.mocked(exchangeCode).mockResolvedValue(fakeTokens)
+    vi.mocked(fetchUserProfile).mockResolvedValue(fakeUser)
+    vi.mocked(sealSessionCookie).mockResolvedValue(
+      '__session=sealed; HttpOnly; Path=/',
+    )
+
+    const state = 'ok-state'
+    const req = makeRequest(
+      { code: 'auth-code', state },
+      {
+        __oauth_state: state,
+        __oauth_code_verifier: 'verifier',
+        __oauth_return_to: 'http://[invalid',
+      },
+    )
+
+    const res = await handler({ request: req })
+
+    expect(res.status).toBe(302)
+    expect(res.headers.get('location')).toBe('/')
+  })
+
   it('clears temp cookies on every response (error path)', async () => {
     const req = makeRequest() // missing everything
     const res = await handler({ request: req })

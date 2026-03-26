@@ -241,6 +241,183 @@ describe('NotificationBell', () => {
     expect(mockNavigate).toHaveBeenCalled()
   })
 
+  it('shows toast.error when markAllRead mutation fails', async () => {
+    const { toast } = await import('sonner')
+    const { markAllNotificationsRead } =
+      await import('@/server-fns/notifications')
+    vi.mocked(markAllNotificationsRead).mockRejectedValueOnce(
+      new Error('Network failure'),
+    )
+
+    const notifications: Array<Notification> = [
+      {
+        id: 'n1',
+        userId: '1',
+        type: 'inquiry',
+        title: 'Unread',
+        message: 'msg',
+        isRead: false,
+        readAt: null,
+        createdAt: '2026-03-25T10:00:00Z',
+        updatedAt: '2026-03-25T10:00:00Z',
+      },
+    ]
+    mockUseUser.mockReturnValue({
+      user: { id: '1', name: 'Test' },
+      isLoading: false,
+    })
+    mockFetchNotifications.mockResolvedValue(notifications)
+    mockFetchUnreadCount.mockResolvedValue(1)
+
+    renderWithProviders(<NotificationBell />)
+
+    fireEvent.click(screen.getByRole('button', { name: /notifications/i }))
+    const markAllBtn = await screen.findByText('Mark all as read')
+    fireEvent.click(markAllBtn)
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Failed to mark notifications as read: Network failure',
+      )
+    })
+  })
+
+  it('subscribes to NotificationCreated and optimistically bumps unread count', async () => {
+    const { invalidateNotifications } =
+      await import('@/lib/notifications/query-utils')
+    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    mockSubscribe.mockImplementation(
+      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+        capturedCallback = cb
+        return vi.fn()
+      },
+    )
+
+    mockUseUser.mockReturnValue({
+      user: { id: '1', name: 'Test' },
+      isLoading: false,
+    })
+    mockFetchUnreadCount.mockResolvedValue(3)
+
+    renderWithProviders(<NotificationBell />)
+
+    // Wait for initial render with unread count
+    await screen.findByText('3')
+
+    // Simulate a NotificationCreated event
+    capturedCallback({ payload: { title: 'Hello' } })
+
+    await waitFor(() => {
+      expect(invalidateNotifications).toHaveBeenCalled()
+    })
+  })
+
+  it('shows toast when NotificationCreated fires and tab is visible', async () => {
+    const { toast } = await import('sonner')
+    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    mockSubscribe.mockImplementation(
+      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+        capturedCallback = cb
+        return vi.fn()
+      },
+    )
+
+    // Stub visibilityState to 'visible'
+    const visibilitySpy = vi
+      .spyOn(document, 'visibilityState', 'get')
+      .mockReturnValue('visible')
+
+    mockUseUser.mockReturnValue({
+      user: { id: '1', name: 'Test' },
+      isLoading: false,
+    })
+    mockFetchUnreadCount.mockResolvedValue(0)
+
+    renderWithProviders(<NotificationBell />)
+
+    // Wait for component to mount and subscribe
+    await waitFor(() => {
+      expect(mockSubscribe).toHaveBeenCalledWith(
+        'NotificationCreated',
+        expect.any(Function),
+      )
+    })
+
+    // Invoke callback with a notification that has a title
+    capturedCallback({ payload: { title: 'New message arrived' } })
+
+    expect(toast).toHaveBeenCalledWith('New message arrived')
+
+    visibilitySpy.mockRestore()
+  })
+
+  it('shows default toast text when notification has no title', async () => {
+    const { toast } = await import('sonner')
+    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    mockSubscribe.mockImplementation(
+      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+        capturedCallback = cb
+        return vi.fn()
+      },
+    )
+
+    const visibilitySpy = vi
+      .spyOn(document, 'visibilityState', 'get')
+      .mockReturnValue('visible')
+
+    mockUseUser.mockReturnValue({
+      user: { id: '1', name: 'Test' },
+      isLoading: false,
+    })
+    mockFetchUnreadCount.mockResolvedValue(0)
+
+    renderWithProviders(<NotificationBell />)
+
+    await waitFor(() => {
+      expect(mockSubscribe).toHaveBeenCalled()
+    })
+
+    // Invoke callback without a title in payload
+    capturedCallback({ payload: {} })
+
+    expect(toast).toHaveBeenCalledWith('New notification')
+
+    visibilitySpy.mockRestore()
+  })
+
+  it('does not show toast when tab is hidden', async () => {
+    const { toast } = await import('sonner')
+    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    mockSubscribe.mockImplementation(
+      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+        capturedCallback = cb
+        return vi.fn()
+      },
+    )
+
+    const visibilitySpy = vi
+      .spyOn(document, 'visibilityState', 'get')
+      .mockReturnValue('hidden')
+
+    mockUseUser.mockReturnValue({
+      user: { id: '1', name: 'Test' },
+      isLoading: false,
+    })
+    mockFetchUnreadCount.mockResolvedValue(0)
+
+    renderWithProviders(<NotificationBell />)
+
+    await waitFor(() => {
+      expect(mockSubscribe).toHaveBeenCalled()
+    })
+
+    capturedCallback({ payload: { title: 'Should not toast' } })
+
+    expect(toast).not.toHaveBeenCalled()
+
+    visibilitySpy.mockRestore()
+  })
+
   it('shows "View all notifications" link in popover', async () => {
     mockUseUser.mockReturnValue({
       user: { id: '1', name: 'Test' },

@@ -261,4 +261,84 @@ describe('usePushNotifications', () => {
       expect(mockSendTestPush).toHaveBeenCalledOnce()
     })
   })
+
+  describe('onError callbacks', () => {
+    it('logs to console.error when enable fails', async () => {
+      stubBrowserAPIs()
+      const enableError = new Error('vapid fetch failed')
+      mockFetchVapidPublicKey.mockRejectedValue(enableError)
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const { usePushNotifications } = await import('./usePushNotifications')
+      const { result } = renderHook(() => usePushNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(result.current.isSupported).toBe(true)
+      })
+
+      await act(async () => {
+        await result.current.enable().catch(() => {})
+      })
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        'Failed to enable push notifications:',
+        enableError,
+      )
+    })
+
+    it('logs to console.error when disable fails', async () => {
+      stubBrowserAPIs()
+      const disableError = new Error('deregister failed')
+      mockListPushDevices.mockResolvedValue([
+        { id: 'device-1', platform: 'web', createdAt: '2026-01-01T00:00:00Z' },
+      ])
+      mockDeregisterPushDevice.mockRejectedValue(disableError)
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const { usePushNotifications } = await import('./usePushNotifications')
+      const { result } = renderHook(() => usePushNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(result.current.isRegistered).toBe(true)
+      })
+
+      await act(async () => {
+        await result.current.disable().catch(() => {})
+      })
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        'Failed to disable push notifications:',
+        disableError,
+      )
+    })
+
+    it('logs to console.error when sendTest fails', async () => {
+      stubBrowserAPIs()
+      const testError = new Error('test push failed')
+      mockSendTestPush.mockRejectedValue(testError)
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const { usePushNotifications } = await import('./usePushNotifications')
+      const { result } = renderHook(() => usePushNotifications(), {
+        wrapper: createWrapper(),
+      })
+
+      await waitFor(() => {
+        expect(result.current.isSupported).toBe(true)
+      })
+
+      await act(async () => {
+        await result.current.sendTest().catch(() => {})
+      })
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        'Failed to send test push:',
+        testError,
+      )
+    })
+  })
 })

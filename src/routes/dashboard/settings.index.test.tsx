@@ -17,8 +17,15 @@ vi.mock('@/server-fns/notifications', () => ({
     mockUpdateChannelSetting(...args),
 }))
 
+const mockServerRequireAuth = vi.fn()
 vi.mock('@/server-fns/auth', () => ({
-  serverRequireAuth: vi.fn(),
+  serverRequireAuth: (...args: Array<unknown>) =>
+    mockServerRequireAuth(...args),
+}))
+
+const mockToast = { success: vi.fn(), error: vi.fn() }
+vi.mock('sonner', () => ({
+  toast: mockToast,
 }))
 
 const mockPushState = {
@@ -49,6 +56,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 const routeModule = await import('./settings.index')
 const routeConfig = routeModule.Route as unknown as {
+  beforeLoad: () => Promise<void>
   loader: () => Promise<Array<NotificationSettings>>
   component: React.ComponentType
 }
@@ -314,6 +322,81 @@ describe('settings.index', () => {
 
       await vi.waitFor(() => {
         expect(mockPushState.sendTest).toHaveBeenCalledOnce()
+      })
+    })
+
+    it('handleToggle appends new entry when channelType is not in localSettings', async () => {
+      // Start with empty settings so no channelType matches
+      mockUseLoaderData.mockReturnValue([])
+
+      renderWithProviders(<SettingsPage />)
+
+      const emailDesc = screen.getByText('Receive notifications via email')
+      const emailRow = emailDesc.closest(
+        'div.flex.items-center.justify-between',
+      )!
+      const emailSwitch = emailRow.querySelector('button[role="switch"]')!
+
+      fireEvent.click(emailSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockUpdateChannelSetting).toHaveBeenCalledWith({
+          data: { channelType: 'email', isEnabled: true },
+        })
+      })
+    })
+
+    it('handleToggle reverts localSettings and shows toast.error on failure', async () => {
+      mockUpdateChannelSetting.mockRejectedValue(new Error('Network error'))
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      // SMS is currently disabled (isEnabled: false). Toggle it on.
+      const smsDesc = screen.getByText('Receive notifications via text message')
+      const smsRow = smsDesc.closest('div.flex.items-center.justify-between')!
+      const smsSwitch = smsRow.querySelector(
+        'button[role="switch"]',
+      ) as HTMLButtonElement
+
+      fireEvent.click(smsSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith('Network error')
+      })
+
+      // After revert, the SMS switch should be back to unchecked
+      expect(smsSwitch.getAttribute('data-state')).toBe('unchecked')
+    })
+
+    it('handleToggle shows generic message for non-Error exceptions', async () => {
+      mockUpdateChannelSetting.mockRejectedValue('string error')
+      mockUseLoaderData.mockReturnValue(defaultSettings)
+
+      renderWithProviders(<SettingsPage />)
+
+      const smsDesc = screen.getByText('Receive notifications via text message')
+      const smsRow = smsDesc.closest('div.flex.items-center.justify-between')!
+      const smsSwitch = smsRow.querySelector('button[role="switch"]')!
+
+      fireEvent.click(smsSwitch)
+
+      await vi.waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith('Failed to update setting')
+      })
+    })
+  })
+
+  // ---- beforeLoad tests ----
+
+  describe('beforeLoad', () => {
+    it('calls serverRequireAuth with returnTo path', async () => {
+      mockServerRequireAuth.mockResolvedValue(undefined)
+
+      await routeConfig.beforeLoad()
+
+      expect(mockServerRequireAuth).toHaveBeenCalledWith({
+        data: { returnTo: '/dashboard/settings' },
       })
     })
   })

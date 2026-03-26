@@ -251,6 +251,24 @@ describe('service-client', () => {
     })
   })
 
+  describe('401 retry network failure', () => {
+    it('throws WallowError when the retry fetch after 401 throws a network error', async () => {
+      mockClientCredentialsGrant
+        .mockResolvedValueOnce(tokenResponse('tok-stale'))
+        .mockResolvedValueOnce(tokenResponse('tok-refreshed'))
+
+      fetchMock
+        .mockResolvedValueOnce(jsonResponse({ title: 'Unauthorized' }, 401))
+        .mockRejectedValueOnce(new TypeError('fetch failed'))
+
+      const client = await loadModule()
+      await expect(client.get('/protected')).rejects.toThrow('fetch failed')
+
+      expect(mockRedisDel).toHaveBeenCalledWith('bcordes:service-token')
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+    })
+  })
+
   describe('429 retry', () => {
     it('waits and retries on 429', async () => {
       mockClientCredentialsGrant.mockResolvedValue(tokenResponse('tok-ok'))
@@ -266,6 +284,26 @@ describe('service-client', () => {
 
       const client = await loadModule()
       await client.get('/rate-limited')
+
+      expect(fetchMock).toHaveBeenCalledTimes(2)
+    })
+
+    it('throws WallowError when the retry fetch after 429 throws a network error', async () => {
+      mockClientCredentialsGrant.mockResolvedValue(tokenResponse('tok-ok'))
+
+      fetchMock
+        .mockResolvedValueOnce(
+          new Response(null, {
+            status: 429,
+            headers: { 'Retry-After': '0' },
+          }),
+        )
+        .mockRejectedValueOnce(new TypeError('network timeout'))
+
+      const client = await loadModule()
+      await expect(client.get('/rate-limited')).rejects.toThrow(
+        'network timeout',
+      )
 
       expect(fetchMock).toHaveBeenCalledTimes(2)
     })
