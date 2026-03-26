@@ -3,6 +3,9 @@ import type { RealtimeEnvelope } from '@/lib/wallow/types'
 import { getSession } from '@/lib/auth/session'
 import { refreshToken } from '@/lib/auth/oidc'
 import { WALLOW_BASE_URL } from '@/lib/wallow/config'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'sse' })
 
 const KEEPALIVE_INTERVAL_MS = 30_000
 const MAX_STREAM_DURATION_MS = 4 * 60 * 60 * 1_000 // 4 hours
@@ -61,6 +64,10 @@ export const Route = createFileRoute('/api/notifications/stream')({
         if (!session?.accessToken) {
           return new Response('Unauthorized', { status: 401 })
         }
+
+        const reqLog = log.child({
+          user: session.user.name || session.user.email,
+        })
 
         if (sseManager.draining) {
           return new Response('Service Unavailable', { status: 503 })
@@ -149,18 +156,21 @@ export const Route = createFileRoute('/api/notifications/stream')({
             }, MAX_STREAM_DURATION_MS)
 
             async function connectUpstream(accessToken: string) {
-              const response = await fetch(
-                `${WALLOW_BASE_URL}/api/v1/notifications/stream`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    Accept: 'text/event-stream',
-                  },
-                  signal: AbortSignal.timeout(0), // no fetch-level timeout; SSE is long-lived
+              const url = `${WALLOW_BASE_URL}/events?subscribe=Notifications`
+              reqLog.debug({ url }, 'Upstream connecting')
+
+              const response = await fetch(url, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  Accept: 'text/event-stream',
                 },
-              )
+              })
 
               if (!response.ok || !response.body) {
+                reqLog.error(
+                  { status: response.status },
+                  `Upstream failed: ${response.statusText}`,
+                )
                 throw new Error(
                   `Upstream SSE failed: ${response.status} ${response.statusText}`,
                 )
@@ -214,7 +224,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
             void (async () => {
               try {
                 upstreamReader = await connectUpstream(session.accessToken)
-                console.log('[sse] upstream connected')
+                reqLog.debug('Upstream connected')
                 enqueueOrBuffer(controller, encoder.encode(': connected\n\n'))
 
                 await pipeUpstream(upstreamReader)
@@ -224,7 +234,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
                   try {
                     const tokens = await refreshToken(session.refreshToken)
                     upstreamReader = await connectUpstream(tokens.accessToken)
-                    console.log('[sse] upstream reconnected')
+                    reqLog.debug('Upstream reconnected')
                     await pipeUpstream(upstreamReader)
                   } catch {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- closed is mutated in cancel()
@@ -234,7 +244,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
                   controller.close()
                 }
               } catch (err) {
-                console.error('[sse] upstream connection failed', err)
+                reqLog.error({ err }, 'Upstream connection failed')
                 clearInterval(keepaliveTimer)
                 controller.close()
               }
@@ -266,7 +276,7 @@ export const Route = createFileRoute('/api/notifications/stream')({
             })
           },
           cancel() {
-            console.log('[sse] client disconnected')
+            reqLog.debug('Client disconnected')
             closed = true
             clearInterval(keepaliveTimer)
             clearTimeout(maxDurationTimer)

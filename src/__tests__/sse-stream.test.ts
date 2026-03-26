@@ -50,6 +50,18 @@ describe('SSE stream proxy', () => {
   beforeEach(() => {
     vi.spyOn(console, 'log').mockImplementation(() => {})
     vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    vi.doMock('@/lib/logger', () => {
+      const child = () => mockLogger
+      const mockLogger = {
+        info: vi.fn(),
+        error: vi.fn(),
+        warn: vi.fn(),
+        debug: vi.fn(),
+        child,
+      }
+      return { default: mockLogger }
+    })
     process.env.WALLOW_API_URL = 'https://api.test.local'
     process.env.NODE_ENV = 'production'
 
@@ -177,13 +189,13 @@ describe('SSE stream proxy', () => {
       await reader.read()
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.test.local/api/v1/notifications/stream',
-        expect.objectContaining({
+        'https://api.test.local/events?subscribe=Notifications',
+        {
           headers: {
             Authorization: 'Bearer test-access-token',
             Accept: 'text/event-stream',
           },
-        }),
+        },
       )
 
       reader.cancel()
@@ -313,7 +325,9 @@ describe('SSE stream proxy', () => {
 
       reader.cancel()
 
-      expect(console.log).toHaveBeenCalledWith('[sse] client disconnected')
+      const { default: mockLogger } = await import('@/lib/logger')
+      const sseLog = mockLogger.child()
+      expect(sseLog.debug).toHaveBeenCalledWith('Client disconnected')
     })
   })
 
