@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.3...bcordes-v0.1.4) (2026-03-30)
+
+
+### Features
+
+* hide contact CTAs from admin users and simplify prod stack ([cbbaf1e](https://github.com/bc-solutions-coder/bcordes/commit/cbbaf1eb76cfa6f047257838e649d94ea12f9413))
+
 ## [0.1.3](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.2...bcordes-v0.1.3) (2026-03-26)
 
 
