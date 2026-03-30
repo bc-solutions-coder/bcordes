@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/shadcn/button'
 import { FadeInView } from '@/components/shared/FadeInView'
+import { useUser } from '@/hooks/useUser'
 
 interface Stat {
   value: string
@@ -14,6 +15,9 @@ const stats: Array<Stat> = [
 ]
 
 export function Hero() {
+  const { user } = useUser()
+  const isAdmin = user?.roles.includes('admin') ?? false
+
   return (
     <section
       className="relative overflow-hidden bg-background"
@@ -60,14 +64,16 @@ export function Hero() {
               >
                 <Link to="/projects">View My Projects</Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-border hover:border-primary hover:text-primary text-foreground font-semibold px-6 py-3 h-auto rounded-[10px]"
-              >
-                <Link to="/contact">Get in Touch</Link>
-              </Button>
+              {!isAdmin && (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="border-border hover:border-primary hover:text-primary text-foreground font-semibold px-6 py-3 h-auto rounded-[10px]"
+                >
+                  <Link to="/contact">Get in Touch</Link>
+                </Button>
+              )}
             </div>
           </FadeInView>
 

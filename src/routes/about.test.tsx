@@ -13,6 +13,10 @@ vi.mock('@/components/about/Timeline', () => ({
   Timeline: () => <div data-testid="timeline">Timeline</div>,
 }))
 
+vi.mock('@/hooks/useUser', () => ({
+  useUser: () => ({ user: null, isLoading: false }),
+}))
+
 vi.mock('@/components/shared/FadeInView', () => ({
   FadeInView: ({
     children,

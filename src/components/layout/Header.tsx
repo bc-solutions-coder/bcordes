@@ -7,6 +7,7 @@ import { MobileNav } from './MobileNav'
 import { NotificationBell } from './NotificationBell'
 import { UserMenu } from './UserMenu'
 import { NAV_LINKS } from '@/config/navigation'
+import { useUser } from '@/hooks/useUser'
 import { Button } from '@/components/ui/shadcn/button'
 import {
   NavigationMenu,
@@ -18,6 +19,8 @@ import {
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
+  const { user } = useUser()
+  const isAdmin = user?.roles.includes('admin') ?? false
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,12 +83,14 @@ export function Header() {
 
         {/* CTA Button, User Menu, and Mobile Nav */}
         <div className="flex items-center gap-2">
-          <Button
-            asChild
-            className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
-          >
-            <Link to="/contact">Get in Touch</Link>
-          </Button>
+          {!isAdmin && (
+            <Button
+              asChild
+              className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
+            >
+              <Link to="/contact">Get in Touch</Link>
+            </Button>
+          )}
           <NotificationBell />
           <UserMenu />
           <MobileNav />

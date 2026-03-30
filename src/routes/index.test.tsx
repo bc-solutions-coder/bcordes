@@ -57,6 +57,10 @@ vi.mock('@/content/projects', () => ({
   getFeaturedShowcases: () => mockShowcases,
 }))
 
+vi.mock('@/hooks/useUser', () => ({
+  useUser: () => ({ user: null, isLoading: false }),
+}))
+
 describe('index route', () => {
   afterEach(() => {
     cleanup()

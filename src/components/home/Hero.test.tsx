@@ -14,6 +14,10 @@ vi.mock('@/hooks/useReducedMotion', () => ({
   useReducedMotion: vi.fn(() => true),
 }))
 
+vi.mock('@/hooks/useUser', () => ({
+  useUser: () => ({ user: null, isLoading: false }),
+}))
+
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,

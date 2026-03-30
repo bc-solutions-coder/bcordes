@@ -3,6 +3,7 @@ import { AboutHero } from '@/components/about/AboutHero'
 import { Timeline } from '@/components/about/Timeline'
 import { ValueIcon } from '@/components/about/ValueIcon'
 import { FadeInView } from '@/components/shared/FadeInView'
+import { useUser } from '@/hooks/useUser'
 
 export const Route = createFileRoute('/about')({ component: AboutPage })
 
@@ -44,6 +45,9 @@ const values: Array<ValueCard> = [
 ]
 
 function AboutPage() {
+  const { user } = useUser()
+  const isAdmin = user?.roles.includes('admin') ?? false
+
   return (
     <>
       {/* Hero Section */}
@@ -91,38 +95,40 @@ function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <FadeInView delay={0}>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Let's Build Something Great
-            </h2>
-            <p className="text-foreground-secondary mb-8 max-w-xl mx-auto">
-              Interested in working together? I'd love to hear about your
-              project and explore how I can help bring your vision to life.
-            </p>
-            <a
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300"
-            >
-              Get in Touch
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+      {!isAdmin && (
+        <section className="py-20 px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <FadeInView delay={0}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Let's Build Something Great
+              </h2>
+              <p className="text-foreground-secondary mb-8 max-w-xl mx-auto">
+                Interested in working together? I'd love to hear about your
+                project and explore how I can help bring your vision to life.
+              </p>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </a>
-          </FadeInView>
-        </div>
-      </section>
+                Get in Touch
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </FadeInView>
+          </div>
+        </section>
+      )}
     </>
   )
 }

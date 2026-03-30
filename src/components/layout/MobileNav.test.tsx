@@ -65,7 +65,7 @@ describe('MobileNav', () => {
 
   it('shows Dashboard and Sign Out when user is authenticated', () => {
     mockUseUser.mockReturnValue({
-      user: { name: 'Test User', email: 'test@example.com' },
+      user: { name: 'Test User', email: 'test@example.com', roles: ['user'] },
       isLoading: false,
     })
     renderWithProviders(<MobileNav />)
@@ -78,7 +78,7 @@ describe('MobileNav', () => {
 
   it('creates and submits a logout form when Sign Out is clicked', () => {
     mockUseUser.mockReturnValue({
-      user: { name: 'Test User', email: 'test@example.com' },
+      user: { name: 'Test User', email: 'test@example.com', roles: ['user'] },
       isLoading: false,
     })
 

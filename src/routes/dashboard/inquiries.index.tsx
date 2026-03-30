@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Mail, RefreshCw } from 'lucide-react'
+import { toast } from 'sonner'
 import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
 import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
@@ -69,6 +70,9 @@ function DashboardInquiriesPage() {
       router.invalidate()
     } catch (error) {
       console.error('Failed to update status:', error)
+      toast.error('Failed to update status', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      })
     }
   }
 

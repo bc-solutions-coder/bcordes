@@ -18,6 +18,7 @@ import { useUser } from '@/hooks/useUser'
 export function MobileNav() {
   const [open, setOpen] = useState(false)
   const { user } = useUser()
+  const isAdmin = user?.roles.includes('admin') ?? false
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -56,14 +57,16 @@ export function MobileNav() {
             </Link>
           ))}
           <div className="mt-6 px-4 flex flex-col gap-3">
-            <Button
-              asChild
-              className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
-            >
-              <Link to="/contact" onClick={() => setOpen(false)}>
-                Get in Touch
-              </Link>
-            </Button>
+            {!isAdmin && (
+              <Button
+                asChild
+                className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
+              >
+                <Link to="/contact" onClick={() => setOpen(false)}>
+                  Get in Touch
+                </Link>
+              </Button>
+            )}
             {user ? (
               <>
                 <Link
