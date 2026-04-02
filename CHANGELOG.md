@@ -2,28 +2,25 @@
 
 ## [0.1.4](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.3...bcordes-v0.1.4) (2026-03-30)
 
-
 ### Features
 
-* hide contact CTAs from admin users and simplify prod stack ([cbbaf1e](https://github.com/bc-solutions-coder/bcordes/commit/cbbaf1eb76cfa6f047257838e649d94ea12f9413))
+- hide contact CTAs from admin users and simplify prod stack ([cbbaf1e](https://github.com/bc-solutions-coder/bcordes/commit/cbbaf1eb76cfa6f047257838e649d94ea12f9413))
 
 ## [0.1.3](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.2...bcordes-v0.1.3) (2026-03-26)
 
-
 ### Features
 
-* **dx:** DX improvements — pino logging, web-vitals, error boundary, date-fns, gray-matter ([4279717](https://github.com/bc-solutions-coder/bcordes/commit/427971711bc448635f8f819ae5d014f964f40e8f))
-* initial release with versioning setup ([535f223](https://github.com/bc-solutions-coder/bcordes/commit/535f223f90a5a69bea5d6e948b8594f587801f3a))
-* **notifications:** full notifications integration with real-time ([f6de0d7](https://github.com/bc-solutions-coder/bcordes/commit/f6de0d77dd33a7b2c56d089a007c7add1e5ca8a2))
-* **security:** security hardening — headers, auth guards, CSRF, CVE fixes ([514957b](https://github.com/bc-solutions-coder/bcordes/commit/514957bcad32ea3424a7175091e4f59c5a45a9a8))
-
+- **dx:** DX improvements — pino logging, web-vitals, error boundary, date-fns, gray-matter ([4279717](https://github.com/bc-solutions-coder/bcordes/commit/427971711bc448635f8f819ae5d014f964f40e8f))
+- initial release with versioning setup ([535f223](https://github.com/bc-solutions-coder/bcordes/commit/535f223f90a5a69bea5d6e948b8594f587801f3a))
+- **notifications:** full notifications integration with real-time ([f6de0d7](https://github.com/bc-solutions-coder/bcordes/commit/f6de0d77dd33a7b2c56d089a007c7add1e5ca8a2))
+- **security:** security hardening — headers, auth guards, CSRF, CVE fixes ([514957b](https://github.com/bc-solutions-coder/bcordes/commit/514957bcad32ea3424a7175091e4f59c5a45a9a8))
 
 ### Bug Fixes
 
-* **ci:** add eslint as explicit devDependency for CI compatibility ([4d1e447](https://github.com/bc-solutions-coder/bcordes/commit/4d1e44770a6c3d1d5b21d6d17cdb826baaad97f4))
-* production readiness — Docker, version pins, Nitro plugin ([aa2bd31](https://github.com/bc-solutions-coder/bcordes/commit/aa2bd31cb071ccd5e51e2b28e025f3dba44c9ef0))
-* SSE event stream — singleton leader election and upstream fixes ([b7764c1](https://github.com/bc-solutions-coder/bcordes/commit/b7764c1bb0a6740c5677badf00364abfb41fd5f7))
-* **test:** mock useUser in tests that render EventStreamProvider ([8989400](https://github.com/bc-solutions-coder/bcordes/commit/89894002ebb01d02c0a1eb029e79bb6ee08d362c))
+- **ci:** add eslint as explicit devDependency for CI compatibility ([4d1e447](https://github.com/bc-solutions-coder/bcordes/commit/4d1e44770a6c3d1d5b21d6d17cdb826baaad97f4))
+- production readiness — Docker, version pins, Nitro plugin ([aa2bd31](https://github.com/bc-solutions-coder/bcordes/commit/aa2bd31cb071ccd5e51e2b28e025f3dba44c9ef0))
+- SSE event stream — singleton leader election and upstream fixes ([b7764c1](https://github.com/bc-solutions-coder/bcordes/commit/b7764c1bb0a6740c5677badf00364abfb41fd5f7))
+- **test:** mock useUser in tests that render EventStreamProvider ([8989400](https://github.com/bc-solutions-coder/bcordes/commit/89894002ebb01d02c0a1eb029e79bb6ee08d362c))
 
 ## [0.1.2](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.1...bcordes-v0.1.2) (2026-03-23)
 

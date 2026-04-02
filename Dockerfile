@@ -37,7 +37,8 @@ FROM node:24-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN addgroup -S app && adduser -S app -G app
+RUN apk add --no-cache wget && \
+    addgroup -S app && adduser -S app -G app
 
 # Copy only what's needed to run (Nitro bundles its own deps)
 COPY --chown=app:app --from=builder /app/.output ./.output

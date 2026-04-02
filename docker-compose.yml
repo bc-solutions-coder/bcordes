@@ -1,22 +1,5 @@
 # Local dev infrastructure — run alongside `pnpm dev` and local Wallow
 services:
-  postgres:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-wallow}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wallow}
-      POSTGRES_DB: ${POSTGRES_DB:-wallow}
-    ports:
-      - '127.0.0.1:5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-wallow}']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   valkey:
     image: valkey/valkey:8-alpine
     restart: unless-stopped
@@ -27,5 +10,4 @@ services:
       - valkey_data:/data
 
 volumes:
-  postgres_data:
   valkey_data:
