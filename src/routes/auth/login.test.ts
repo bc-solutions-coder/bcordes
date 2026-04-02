@@ -22,6 +22,18 @@ vi.mock('@/lib/auth/oidc', () => ({
   ),
 }))
 
+vi.mock('@/lib/logger', () => {
+  const child = () => mockLogger
+  const mockLogger = {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    child,
+  }
+  return { default: mockLogger }
+})
+
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (routeConfig: unknown) => routeConfig,
 }))

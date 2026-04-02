@@ -9,6 +9,18 @@ import { fetchUserProfile, refreshToken } from '@/lib/auth/oidc'
 // Mocks
 // ---------------------------------------------------------------------------
 
+vi.mock('@/lib/logger', () => {
+  const child = () => mockLogger
+  const mockLogger = {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    child,
+  }
+  return { default: mockLogger }
+})
+
 vi.mock('@/lib/auth/session', () => ({
   getSession: vi.fn(),
   setSession: vi.fn(),

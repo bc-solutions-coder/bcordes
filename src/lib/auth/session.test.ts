@@ -9,6 +9,18 @@ import type { SessionData } from './types'
 
 vi.stubEnv('SESSION_SECRET', 'a]3kf9$mLp2xQz!vR7nW^tY0uBc8dEhJ')
 
+vi.mock('@/lib/logger', () => {
+  const child = () => mockLogger
+  const mockLogger = {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    child,
+  }
+  return { default: mockLogger }
+})
+
 const mockSeal = vi.fn()
 const mockUnseal = vi.fn()
 

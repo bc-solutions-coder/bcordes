@@ -1,13 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { clearSession, getSession } from '@/lib/auth/session'
 import { getLogoutUrl } from '@/lib/auth/oidc'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'auth.logout' })
 
 async function handleLogout(request: Request) {
   const session = await getSession()
   const idTokenHint = session?.idToken
 
+  log.info(
+    { hasSession: !!session, hasIdToken: !!idTokenHint },
+    'logout initiated',
+  )
+
   // Clear local session cookie and server-side store
   clearSession()
+
+  log.info('session cleared, redirecting to OIDC logout')
 
   // Build the post-logout redirect back to the site root
   const origin = new URL(request.url).origin

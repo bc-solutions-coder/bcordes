@@ -10,8 +10,12 @@ import {
   refreshTokenGrant,
 } from 'openid-client'
 import { userFromClaims } from './claims'
+import { redact } from './redact'
 import type { Configuration } from 'openid-client'
 import type { User } from './types'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'auth.oidc' })
 
 export { randomState, randomPKCECodeVerifier }
 
@@ -74,6 +78,7 @@ export async function getAuthorizationUrl(
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
   })
+  log.debug({ state: redact(state) }, 'built authorization URL')
   return url.href
 }
 
@@ -84,6 +89,7 @@ export async function exchangeCode(
   callbackUrl: string,
   expectedState: string,
 ): Promise<TokenResult> {
+  log.info({ state: redact(expectedState) }, 'exchanging authorization code')
   const config = await getConfig()
   const tokens = await authorizationCodeGrant(config, new URL(callbackUrl), {
     pkceCodeVerifier: codeVerifier,
@@ -91,26 +97,31 @@ export async function exchangeCode(
   })
   const claims = tokens.claims()
   const subject = claims?.sub ?? ''
+  const expiresIn = tokens.expires_in ?? 0
+  log.info({ subject, expiresIn }, 'authorization code exchanged')
   return {
     accessToken: tokens.access_token,
     refreshToken: tokens.refresh_token ?? '',
     idToken: tokens.id_token ?? '',
-    expiresIn: tokens.expires_in ?? 0,
+    expiresIn,
     subject,
   }
 }
 
 /** Refreshes an access token using a refresh token. */
 export async function refreshToken(rt: string): Promise<TokenResult> {
+  log.info({ refreshToken: redact(rt) }, 'refreshing access token')
   const config = await getConfig()
   const tokens = await refreshTokenGrant(config, rt)
   const claims = tokens.claims()
   const subject = claims?.sub ?? ''
+  const expiresIn = tokens.expires_in ?? 0
+  log.info({ subject, expiresIn }, 'access token refreshed')
   return {
     accessToken: tokens.access_token,
     refreshToken: tokens.refresh_token ?? rt,
     idToken: tokens.id_token ?? '',
-    expiresIn: tokens.expires_in ?? 0,
+    expiresIn,
     subject,
   }
 }
@@ -137,10 +148,13 @@ export async function fetchUserProfile(
   accessToken: string,
   expectedSubject: string,
 ): Promise<User> {
+  log.debug({ subject: expectedSubject }, 'fetching user profile')
   const config = await getConfig()
   const claims = await fetchUserInfo(config, accessToken, expectedSubject)
 
-  return userFromClaims(claims as Record<string, unknown>)
+  const user = userFromClaims(claims as Record<string, unknown>)
+  log.debug({ subject: expectedSubject }, 'user profile fetched')
+  return user
 }
 
 /**

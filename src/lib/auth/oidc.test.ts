@@ -7,6 +7,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { parseUserFromToken } from './oidc'
 
+vi.mock('@/lib/logger', () => {
+  const child = () => mockLogger
+  const mockLogger = {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+    child,
+  }
+  return { default: mockLogger }
+})
+
 /** Build a minimal JWT (header.payload.signature) from a claims object. */
 function fakeJwt(claims: Record<string, unknown>): string {
   const header = Buffer.from(JSON.stringify({ alg: 'none' })).toString(

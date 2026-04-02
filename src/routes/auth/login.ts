@@ -4,6 +4,10 @@ import {
   randomPKCECodeVerifier,
   randomState,
 } from '@/lib/auth/oidc'
+import { redact } from '@/lib/auth/redact'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'auth.login' })
 
 export const Route = createFileRoute('/auth/login')({
   server: {
@@ -15,6 +19,11 @@ export const Route = createFileRoute('/auth/login')({
         const state = randomState()
         const codeVerifier = randomPKCECodeVerifier()
         const authorizationURL = await getAuthorizationUrl(state, codeVerifier)
+
+        log.info(
+          { returnTo, state: redact(state) },
+          'login initiated, redirecting to OIDC provider',
+        )
 
         const cookieOptions = [
           'HttpOnly',

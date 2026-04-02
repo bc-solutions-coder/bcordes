@@ -6,7 +6,11 @@ import {
   fetchUserProfile,
   parseUserFromToken,
 } from '@/lib/auth/oidc'
+import { redact, redactUser } from '@/lib/auth/redact'
 import { sealSessionCookie } from '@/lib/auth/session'
+import logger from '@/lib/logger'
+
+const log = logger.child({ module: 'auth.callback' })
 
 function parseCookies(cookieHeader: string): Record<string, string> {
   return Object.fromEntries(
@@ -46,6 +50,8 @@ export const Route = createFileRoute('/auth/callback')({
   server: {
     handlers: {
       GET: async ({ request }: { request: Request }) => {
+        log.info('callback received from OIDC provider')
+
         const url = new URL(request.url)
         const code = url.searchParams.get('code')
         const state = url.searchParams.get('state')
@@ -58,6 +64,7 @@ export const Route = createFileRoute('/auth/callback')({
         const clearHeaders = clearTempCookies()
 
         const errorRedirect = (reason: string) => {
+          log.warn({ reason }, 'callback error, redirecting to login')
           const headers = new Headers({
             Location: `/auth/login?error=${encodeURIComponent(reason)}`,
           })
@@ -108,7 +115,13 @@ export const Route = createFileRoute('/auth/callback')({
             csrfToken: randomBytes(32).toString('hex'),
           }
 
-          console.log('[auth/callback] session.user:', user)
+          log.info(
+            {
+              user: redactUser(user),
+              sessionId: redact(sessionData.sessionId),
+            },
+            'session created, redirecting to app',
+          )
 
           const sessionCookie = await sealSessionCookie(sessionData)
 
@@ -117,14 +130,16 @@ export const Route = createFileRoute('/auth/callback')({
             destination = rawReturnTo
           }
 
+          log.info({ destination }, 'callback complete, redirecting')
+
           const headers = new Headers({ Location: destination })
           headers.append('Set-Cookie', sessionCookie)
           for (const c of clearHeaders) headers.append('Set-Cookie', c)
           return new Response(null, { status: 302, headers })
         } catch (err) {
-          console.error(
-            '[auth/callback] Token exchange failed:',
-            err instanceof Error ? err.message : String(err),
+          log.error(
+            { err: err instanceof Error ? err.message : String(err) },
+            'token exchange failed',
           )
           return errorRedirect('auth_failed')
         }
