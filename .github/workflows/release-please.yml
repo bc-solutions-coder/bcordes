@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  packages: write
 
 jobs:
   release-please:
@@ -22,53 +23,44 @@ jobs:
           manifest-file: .release-please-manifest.json
           config-file: release-please-config.json
 
-  docker:
+  publish:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       packages: write
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Install crane
+        uses: imjasonh/setup-crane@v0.4
 
       - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | crane auth login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
 
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=semver,pattern={{version}},value=${{ needs.release-please.outputs.tag_name }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.tag_name }}
-            type=semver,pattern={{major}},value=${{ needs.release-please.outputs.tag_name }}
-            type=sha,prefix=sha-
-            type=raw,value=latest
+      - name: Parse semver from tag
+        id: semver
+        run: |
+          TAG="${{ needs.release-please.outputs.tag_name }}"
+          # Strip leading 'v' and component prefix (e.g., bcordes-v0.1.5 → 0.1.5)
+          VERSION="${TAG##*-v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="${TAG#v}"
+          fi
+          MAJOR="${VERSION%%.*}"
+          MINOR="${VERSION#*.}"
+          MINOR="${MINOR%%.*}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "minor=$MAJOR.$MINOR" >> "$GITHUB_OUTPUT"
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+      - name: Retag nightly as latest + semver
+        run: |
+          SRC="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly"
+          DST="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          crane copy "$SRC" "$DST:latest"
+          crane copy "$SRC" "$DST:${{ steps.semver.outputs.version }}"
+          crane copy "$SRC" "$DST:${{ steps.semver.outputs.minor }}"
+          crane copy "$SRC" "$DST:${{ steps.semver.outputs.major }}"
+          echo "Retagged nightly → latest, ${{ steps.semver.outputs.version }}, ${{ steps.semver.outputs.minor }}, ${{ steps.semver.outputs.major }}"
