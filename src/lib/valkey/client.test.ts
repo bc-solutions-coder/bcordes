@@ -1,7 +1,10 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const MockRedis = vi.fn()
+const MockRedis = vi.fn(() => ({
+  on: vi.fn().mockReturnThis(),
+  connect: vi.fn().mockResolvedValue(undefined),
+}))
 
 vi.mock('ioredis', () => ({
   default: MockRedis,
@@ -33,7 +36,13 @@ describe('valkey client', () => {
       vi.stubEnv('VALKEY_URL', 'redis://my-valkey:6380')
       const { getValkey } = await import('./client')
       getValkey()
-      expect(MockRedis).toHaveBeenCalledWith('redis://my-valkey:6380')
+      expect(MockRedis).toHaveBeenCalledWith(
+        'redis://my-valkey:6380',
+        expect.objectContaining({
+          maxRetriesPerRequest: 3,
+          lazyConnect: true,
+        }),
+      )
     })
   })
 
