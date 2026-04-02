@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.5](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.4...bcordes-v0.1.5) (2026-04-02)
+
+
+### Features
+
+* **auth:** add structured pino logging across auth flow ([2e2138d](https://github.com/bc-solutions-coder/bcordes/commit/2e2138deb5c6e230d765632013288ac251a939d2))
+* harden Valkey client, simplify local dev stack, and add auth docs ([2ab649c](https://github.com/bc-solutions-coder/bcordes/commit/2ab649c983a8001593c41a0e8dddcbbbec275e24))
+
+
+### Bug Fixes
+
+* break auth redirect loop when Valkey is unavailable ([a4ecdad](https://github.com/bc-solutions-coder/bcordes/commit/a4ecdad029dcb2246086905117e593a88a427894))
+* **test:** update Valkey client mock to match retry/error handling changes ([ec9b578](https://github.com/bc-solutions-coder/bcordes/commit/ec9b578860fd708ca08772e10f185eeef8dec873))
+
 ## [0.1.4](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.3...bcordes-v0.1.4) (2026-03-30)
 
 ### Features
