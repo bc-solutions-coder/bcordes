@@ -1,0 +1,26 @@
+name: Deploy Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  auto-approve:
+    if: ${{ !startsWith(github.head_ref, 'release-please--') }}
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Auto-approve deploy gate for non-release PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: 'success',
+              context: 'deploy-ready',
+              description: 'Non-release PR — deploy gate not required',
+            });
