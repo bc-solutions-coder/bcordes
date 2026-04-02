@@ -111,7 +111,7 @@ describe('GET /auth/callback', () => {
     vi.clearAllMocks()
   })
 
-  it('redirects to /auth/login?error=missing_params when code is missing', async () => {
+  it('redirects to /auth/error?reason=missing_params when code is missing', async () => {
     const req = makeRequest(
       { state: 'abc' },
       { __oauth_state: 'abc', __oauth_code_verifier: 'verifier' },
@@ -119,10 +119,12 @@ describe('GET /auth/callback', () => {
     const res = await handler({ request: req })
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('/auth/login?error=missing_params')
+    expect(res.headers.get('location')).toBe(
+      '/auth/error?reason=missing_params',
+    )
   })
 
-  it('redirects to /auth/login?error=missing_params when state is missing', async () => {
+  it('redirects to /auth/error?reason=missing_params when state is missing', async () => {
     const req = makeRequest(
       { code: 'the-code' },
       { __oauth_state: 'abc', __oauth_code_verifier: 'verifier' },
@@ -130,18 +132,22 @@ describe('GET /auth/callback', () => {
     const res = await handler({ request: req })
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('/auth/login?error=missing_params')
+    expect(res.headers.get('location')).toBe(
+      '/auth/error?reason=missing_params',
+    )
   })
 
-  it('redirects to /auth/login?error=missing_params when cookies are absent', async () => {
+  it('redirects to /auth/error?reason=missing_params when cookies are absent', async () => {
     const req = makeRequest({ code: 'the-code', state: 'abc' })
     const res = await handler({ request: req })
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('/auth/login?error=missing_params')
+    expect(res.headers.get('location')).toBe(
+      '/auth/error?reason=missing_params',
+    )
   })
 
-  it('redirects to ?error=state_mismatch when state does not match', async () => {
+  it('redirects to /auth/error?reason=state_mismatch when state does not match', async () => {
     const req = makeRequest(
       { code: 'the-code', state: 'query-state' },
       { __oauth_state: 'cookie-state', __oauth_code_verifier: 'verifier' },
@@ -149,7 +155,9 @@ describe('GET /auth/callback', () => {
     const res = await handler({ request: req })
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('/auth/login?error=state_mismatch')
+    expect(res.headers.get('location')).toBe(
+      '/auth/error?reason=state_mismatch',
+    )
   })
 
   it('sets session cookie and redirects to / on successful exchange', async () => {
@@ -246,7 +254,7 @@ describe('GET /auth/callback', () => {
     const res = await handler({ request: req })
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('/auth/login?error=auth_failed')
+    expect(res.headers.get('location')).toBe('/auth/error?reason=auth_failed')
   })
 
   it('falls back to 3600 when tokens.expiresIn is 0', async () => {

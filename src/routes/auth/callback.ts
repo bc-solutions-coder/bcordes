@@ -28,6 +28,7 @@ function clearTempCookies(): Array<string> {
     `__oauth_state=; ${expired}`,
     `__oauth_code_verifier=; ${expired}`,
     `__oauth_return_to=; ${expired}`,
+    `__oauth_attempts=; ${expired}`,
   ]
 }
 
@@ -64,9 +65,9 @@ export const Route = createFileRoute('/auth/callback')({
         const clearHeaders = clearTempCookies()
 
         const errorRedirect = (reason: string) => {
-          log.warn({ reason }, 'callback error, redirecting to login')
+          log.warn({ reason }, 'callback error, redirecting to error page')
           const headers = new Headers({
-            Location: `/auth/login?error=${encodeURIComponent(reason)}`,
+            Location: `/auth/error?reason=${encodeURIComponent(reason)}`,
           })
           for (const c of clearHeaders) headers.append('Set-Cookie', c)
           return new Response(null, { status: 302, headers })
