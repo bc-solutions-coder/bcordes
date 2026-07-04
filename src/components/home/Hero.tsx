@@ -132,6 +132,8 @@ export function Hero() {
                 <img
                   src="/BC-Solutions-no-background.svg"
                   alt=""
+                  width={64}
+                  height={64}
                   className="w-16 h-16"
                 />
               </div>

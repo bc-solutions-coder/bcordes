@@ -51,7 +51,9 @@ export function Header() {
           <img
             src="/BC-Solutions-no-background.svg"
             alt="BC Solutions"
-            className="h-12"
+            width={48}
+            height={48}
+            className="h-12 w-12"
           />
           <span className="ml-2 text-2xl font-bold tracking-tight text-foreground">
             BC <span className="text-primary">Solutions</span>

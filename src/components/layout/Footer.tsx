@@ -16,7 +16,9 @@ export function Footer() {
               <img
                 src="/BC-Solutions-no-background.svg"
                 alt="BC Solutions"
-                className="h-14"
+                width={56}
+                height={56}
+                className="h-14 w-14"
               />
               <span className="text-2xl font-bold tracking-tight text-white">
                 BC <span className="text-[#a8e6a0]">Solutions</span>
