@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.5...bcordes-v0.1.6) (2026-07-04)
+
+
+### Bug Fixes
+
+* prevent header leaf logo flash on SSR load ([53bda34](https://github.com/bc-solutions-coder/bcordes/commit/53bda34f659d62ff2c52dd96d4d20b34ae7041a6))
+
 ## [0.1.5](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.4...bcordes-v0.1.5) (2026-04-02)
 
 
