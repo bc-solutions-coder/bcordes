@@ -42,12 +42,10 @@ services:
         reservations:
           cpus: '0.25'
           memory: 128M
-    labels:
-      - pangolin.proxy-resources.personal.name=personal
-      - pangolin.proxy-resources.personal.full-domain=bcordes.dev
-      - pangolin.proxy-resources.personal.protocol=http
-      - pangolin.proxy-resources.personal.targets[0].method=http
-      - pangolin.proxy-resources.personal.targets[0].port=3000
+    # Pangolin resource is managed manually in the Pangolin dashboard.
+    # Do NOT add pangolin.proxy-resources.* labels here — Newt's Docker
+    # integration treats them as source of truth and reverts dashboard
+    # edits back to them on every redeploy.
 
   # ============================================
   # CACHE (session store)
