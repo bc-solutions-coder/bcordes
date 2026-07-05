@@ -843,7 +843,9 @@ export const WALLOW_BASE_URL = process.env.WALLOW_API_URL!
 
 Every request is: `fetch(${WALLOW_BASE_URL}${path}, options)`
 
-For example: `client.get('/api/v1/inquiries')` → `fetch('https://api.wallow.dev/api/v1/inquiries', ...)`
+For example: `client.get('/v1/inquiries')` → `fetch('https://api.wallow.dev/v1/inquiries', ...)`
+
+`WALLOW_API_URL` must be a bare origin — paths already carry the `/v1` route prefix. On the `api.*` subdomain the backend is rooted there (`/v1/...`); for a single-domain gateway deploy, put the `/api` prefix in `WALLOW_API_URL` (e.g. `https://wallow.dev/api`).
 
 ### Error Handling: WallowError & ProblemDetails
 
@@ -897,12 +899,12 @@ export const submitInquiry = createServerFn({ method: 'POST' })
     if (session) {
       // Authenticated user → use user client (Bearer token)
       const client = await createWallowClient()
-      const response = await client.post('/api/v1/inquiries', data)
+      const response = await client.post('/v1/inquiries', data)
       return normalizeInquiryStatus((await response.json()) as Inquiry)
     }
 
     // Anonymous user → use service client (M2M)
-    const response = await serviceClient.post('/api/v1/inquiries', data)
+    const response = await serviceClient.post('/v1/inquiries', data)
     return normalizeInquiryStatus((await response.json()) as Inquiry)
   })
 ```

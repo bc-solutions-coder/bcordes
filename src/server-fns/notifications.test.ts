@@ -79,7 +79,7 @@ describe('notifications server functions', () => {
       const result = await fetchNotifications()
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        '/api/v1/notifications?pageNumber=1&pageSize=20',
+        '/v1/notifications?pageNumber=1&pageSize=20',
       )
       expect(result).toEqual(items)
     })
@@ -95,7 +95,7 @@ describe('notifications server functions', () => {
       const result = await fetchUnreadCount()
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        '/api/v1/notifications/unread-count',
+        '/v1/notifications/unread-count',
       )
       expect(result).toBe(5)
     })
@@ -120,7 +120,7 @@ describe('notifications server functions', () => {
       await markNotificationRead({ data: { id } })
 
       expect(mockClient.post).toHaveBeenCalledWith(
-        `/api/v1/notifications/${id}/read`,
+        `/v1/notifications/${id}/read`,
       )
     })
   })
@@ -134,9 +134,7 @@ describe('notifications server functions', () => {
 
       await markAllNotificationsRead()
 
-      expect(mockClient.post).toHaveBeenCalledWith(
-        '/api/v1/notifications/read-all',
-      )
+      expect(mockClient.post).toHaveBeenCalledWith('/v1/notifications/read-all')
     })
   })
 
@@ -153,9 +151,7 @@ describe('notifications server functions', () => {
 
       const result = await fetchNotificationSettings()
 
-      expect(mockClient.get).toHaveBeenCalledWith(
-        '/api/v1/notification-settings',
-      )
+      expect(mockClient.get).toHaveBeenCalledWith('/v1/notification-settings')
       expect(result).toEqual(settings)
     })
   })
@@ -172,7 +168,7 @@ describe('notifications server functions', () => {
       })
 
       expect(mockClient.put).toHaveBeenCalledWith(
-        '/api/v1/notification-settings/channel',
+        '/v1/notification-settings/channel',
         { channelType: 'email', isEnabled: false },
       )
     })
@@ -197,10 +193,7 @@ describe('notifications server functions', () => {
 
       const result = await registerPushDevice({ data: input })
 
-      expect(mockClient.post).toHaveBeenCalledWith(
-        '/api/v1/push/devices',
-        input,
-      )
+      expect(mockClient.post).toHaveBeenCalledWith('/v1/push/devices', input)
       expect(result).toEqual(device)
     })
   })
@@ -215,9 +208,7 @@ describe('notifications server functions', () => {
 
       await deregisterPushDevice({ data: { id } })
 
-      expect(mockClient.delete).toHaveBeenCalledWith(
-        `/api/v1/push/devices/${id}`,
-      )
+      expect(mockClient.delete).toHaveBeenCalledWith(`/v1/push/devices/${id}`)
     })
   })
 
@@ -238,7 +229,7 @@ describe('notifications server functions', () => {
 
       const result = await listPushDevices()
 
-      expect(mockClient.get).toHaveBeenCalledWith('/api/v1/push/devices')
+      expect(mockClient.get).toHaveBeenCalledWith('/v1/push/devices')
       expect(result).toEqual(devices)
     })
   })
@@ -252,9 +243,7 @@ describe('notifications server functions', () => {
 
       const result = await fetchVapidPublicKey()
 
-      expect(mockClient.get).toHaveBeenCalledWith(
-        '/api/v1/push/vapid-public-key',
-      )
+      expect(mockClient.get).toHaveBeenCalledWith('/v1/push/vapid-public-key')
       expect(result).toBe('BPub...key')
     })
   })
@@ -268,7 +257,7 @@ describe('notifications server functions', () => {
 
       await sendTestPush()
 
-      expect(mockClient.post).toHaveBeenCalledWith('/api/v1/push/send')
+      expect(mockClient.post).toHaveBeenCalledWith('/v1/push/send')
     })
   })
 })

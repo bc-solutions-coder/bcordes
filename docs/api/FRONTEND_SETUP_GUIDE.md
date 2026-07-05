@@ -798,7 +798,10 @@ export async function authenticatedFetch<T>(
 // Example server function using authenticated fetch:
 export const getMyInvoices = createServerFn({ method: 'GET' }).handler(
   async () => {
-    return authenticatedFetch('/api/v1/billing/invoices')
+    // Paths use the /v1 route prefix only. On the api.* subdomain the backend
+    // is rooted there, so the full URL is https://api.wallow.dev/v1/billing/invoices.
+    // For a single-domain deploy, put the /api gateway prefix in WALLOW_API_URL.
+    return authenticatedFetch('/v1/billing/invoices')
   },
 )
 ```

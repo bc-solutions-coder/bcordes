@@ -12,7 +12,7 @@ export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
     const response = await client.get(
-      '/api/v1/notifications?pageNumber=1&pageSize=20',
+      '/v1/notifications?pageNumber=1&pageSize=20',
     )
     const paginated = (await response.json()) as PaginatedResponse<Notification>
     return paginated.items
@@ -22,7 +22,7 @@ export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
 export const fetchUnreadCount = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
-    const response = await client.get('/api/v1/notifications/unread-count')
+    const response = await client.get('/v1/notifications/unread-count')
     const data = (await response.json()) as { count: number } | number
     return typeof data === 'number' ? data : data.count
   },
@@ -32,21 +32,21 @@ export const markNotificationRead = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    await client.post(`/api/v1/notifications/${data.id}/read`)
+    await client.post(`/v1/notifications/${data.id}/read`)
   })
 
 export const markAllNotificationsRead = createServerFn({
   method: 'POST',
 }).handler(async () => {
   const client = await createWallowClient()
-  await client.post('/api/v1/notifications/read-all')
+  await client.post('/v1/notifications/read-all')
 })
 
 export const fetchNotificationSettings = createServerFn({
   method: 'GET',
 }).handler(async () => {
   const client = await createWallowClient()
-  const response = await client.get('/api/v1/notification-settings')
+  const response = await client.get('/v1/notification-settings')
   return (await response.json()) as Array<NotificationSettings>
 })
 
@@ -59,7 +59,7 @@ export const updateChannelSetting = createServerFn({ method: 'POST' })
   .inputValidator(updateChannelSettingSchema)
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    await client.put('/api/v1/notification-settings/channel', data)
+    await client.put('/v1/notification-settings/channel', data)
   })
 
 const registerPushDeviceSchema = z.object({
@@ -72,7 +72,7 @@ export const registerPushDevice = createServerFn({ method: 'POST' })
   .inputValidator(registerPushDeviceSchema)
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    const response = await client.post('/api/v1/push/devices', data)
+    const response = await client.post('/v1/push/devices', data)
     return (await response.json()) as PushDevice
   })
 
@@ -80,13 +80,13 @@ export const deregisterPushDevice = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    await client.delete(`/api/v1/push/devices/${data.id}`)
+    await client.delete(`/v1/push/devices/${data.id}`)
   })
 
 export const listPushDevices = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
-    const response = await client.get('/api/v1/push/devices')
+    const response = await client.get('/v1/push/devices')
     return (await response.json()) as Array<PushDevice>
   },
 )
@@ -94,7 +94,7 @@ export const listPushDevices = createServerFn({ method: 'GET' }).handler(
 export const fetchVapidPublicKey = createServerFn({ method: 'GET' }).handler(
   async () => {
     const client = await createWallowClient()
-    const response = await client.get('/api/v1/push/vapid-public-key')
+    const response = await client.get('/v1/push/vapid-public-key')
     return await response.text()
   },
 )
@@ -102,6 +102,6 @@ export const fetchVapidPublicKey = createServerFn({ method: 'GET' }).handler(
 export const sendTestPush = createServerFn({ method: 'POST' }).handler(
   async () => {
     const client = await createWallowClient()
-    await client.post('/api/v1/push/send')
+    await client.post('/v1/push/send')
   },
 )

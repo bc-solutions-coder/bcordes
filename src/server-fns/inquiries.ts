@@ -37,11 +37,11 @@ export const submitInquiry = createServerFn({ method: 'POST' })
 
     if (session) {
       const client = await createWallowClient()
-      const response = await client.post('/api/v1/inquiries', data)
+      const response = await client.post('/v1/inquiries', data)
       return normalizeInquiryStatus((await response.json()) as Inquiry)
     }
 
-    const response = await serviceClient.post('/api/v1/inquiries', data)
+    const response = await serviceClient.post('/v1/inquiries', data)
     return normalizeInquiryStatus((await response.json()) as Inquiry)
   })
 
@@ -49,7 +49,7 @@ export const fetchInquiries = createServerFn({ method: 'GET' }).handler(
   async () => {
     await requireAdmin()
     const client = await createWallowClient()
-    const response = await client.get('/api/v1/inquiries')
+    const response = await client.get('/v1/inquiries')
     return ((await response.json()) as Array<Inquiry>).map(
       normalizeInquiryStatus,
     )
@@ -61,7 +61,7 @@ export const fetchMyInquiries = createServerFn({ method: 'GET' }).handler(
     const session = await getSession()
     const isAdmin = session?.user.roles.includes('admin') ?? false
     const client = await createWallowClient()
-    const path = isAdmin ? '/api/v1/inquiries' : '/api/v1/inquiries/submitted'
+    const path = isAdmin ? '/v1/inquiries' : '/v1/inquiries/submitted'
     const response = await client.get(path)
     return ((await response.json()) as Array<Inquiry>).map(
       normalizeInquiryStatus,
@@ -73,7 +73,7 @@ export const fetchInquiry = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ id: z.uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    const response = await client.get(`/api/v1/inquiries/${data.id}`)
+    const response = await client.get(`/v1/inquiries/${data.id}`)
     return normalizeInquiryStatus((await response.json()) as Inquiry)
   })
 
@@ -83,7 +83,7 @@ export const updateInquiryStatus = createServerFn({ method: 'POST' })
     await requireAdmin()
     const client = await createWallowClient()
     const apiStatus = STATUS_TO_API[data.status] ?? data.status
-    const response = await client.patch(`/api/v1/inquiries/${data.id}/status`, {
+    const response = await client.patch(`/v1/inquiries/${data.id}/status`, {
       newStatus: apiStatus,
     })
     return normalizeInquiryStatus((await response.json()) as Inquiry)
@@ -93,7 +93,7 @@ export const fetchInquiryComments = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    const response = await client.get(`/api/v1/inquiries/${data.id}/comments`)
+    const response = await client.get(`/v1/inquiries/${data.id}/comments`)
     return (await response.json()) as Array<InquiryComment>
   })
 
@@ -107,9 +107,9 @@ export const submitInquiryComment = createServerFn({ method: 'POST' })
   .inputValidator(submitInquiryCommentSchema)
   .handler(async ({ data }) => {
     const client = await createWallowClient()
-    const response = await client.post(
-      `/api/v1/inquiries/${data.id}/comments`,
-      { content: data.content, isInternal: data.isInternal },
-    )
+    const response = await client.post(`/v1/inquiries/${data.id}/comments`, {
+      content: data.content,
+      isInternal: data.isInternal,
+    })
     return (await response.json()) as InquiryComment
   })

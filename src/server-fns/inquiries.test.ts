@@ -158,7 +158,7 @@ describe('submitInquiry', () => {
 
     expect(mockedGetSession).toHaveBeenCalled()
     expect(mockedServiceClient.post).toHaveBeenCalledWith(
-      '/api/v1/inquiries',
+      '/v1/inquiries',
       validSubmitData,
     )
     expect(mockedCreateWallowClient).not.toHaveBeenCalled()
@@ -176,7 +176,7 @@ describe('submitInquiry', () => {
 
     expect(mockedCreateWallowClient).toHaveBeenCalled()
     expect(mockClient.post).toHaveBeenCalledWith(
-      '/api/v1/inquiries',
+      '/v1/inquiries',
       validSubmitData,
     )
     expect(result.status).toBe('new')
@@ -225,7 +225,7 @@ describe('fetchInquiries', () => {
     )()
 
     expect(mockedRequireAdmin).toHaveBeenCalled()
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/inquiries')
+    expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries')
     expect(result).toHaveLength(2)
     expect(result[0].status).toBe('new')
     expect(result[1].status).toBe('contacted')
@@ -237,7 +237,7 @@ describe('fetchInquiries', () => {
 // ---------------------------------------------------------------------------
 
 describe('fetchMyInquiries', () => {
-  it('admin fetches from /api/v1/inquiries', async () => {
+  it('admin fetches from /v1/inquiries', async () => {
     const inquiries = [makeInquiry({ status: 'New' })]
     mockedGetSession.mockResolvedValue(createMockAdminSession())
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
@@ -246,11 +246,11 @@ describe('fetchMyInquiries', () => {
       fetchMyInquiries as (arg?: unknown) => Promise<unknown>
     )()
 
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/inquiries')
+    expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries')
     expect(result[0].status).toBe('new')
   })
 
-  it('non-admin fetches from /api/v1/inquiries/submitted', async () => {
+  it('non-admin fetches from /v1/inquiries/submitted', async () => {
     const inquiries = [makeInquiry({ status: 'Reviewed' })]
     mockedGetSession.mockResolvedValue(createMockSession())
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
@@ -259,11 +259,11 @@ describe('fetchMyInquiries', () => {
       fetchMyInquiries as (arg?: unknown) => Promise<unknown>
     )()
 
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/inquiries/submitted')
+    expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries/submitted')
     expect(result[0].status).toBe('reviewed')
   })
 
-  it('null session (unauthenticated) fetches from /api/v1/inquiries/submitted', async () => {
+  it('null session (unauthenticated) fetches from /v1/inquiries/submitted', async () => {
     const inquiries: Array<Inquiry> = []
     mockedGetSession.mockResolvedValue(null)
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
@@ -272,7 +272,7 @@ describe('fetchMyInquiries', () => {
       fetchMyInquiries as (arg?: unknown) => Promise<unknown>
     )()
 
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/inquiries/submitted')
+    expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries/submitted')
     expect(result).toHaveLength(0)
   })
 })
@@ -290,9 +290,7 @@ describe('fetchInquiry', () => {
       data: { id: TEST_UUID },
     })
 
-    expect(mockClient.get).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}`,
-    )
+    expect(mockClient.get).toHaveBeenCalledWith(`/v1/inquiries/${TEST_UUID}`)
     expect(result.status).toBe('closed')
   })
 })
@@ -315,7 +313,7 @@ describe('updateInquiryStatus', () => {
 
     expect(mockedRequireAdmin).toHaveBeenCalled()
     expect(mockClient.patch).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}/status`,
+      `/v1/inquiries/${TEST_UUID}/status`,
       { newStatus: 'Reviewed' },
     )
     expect(result.status).toBe('reviewed')
@@ -331,7 +329,7 @@ describe('updateInquiryStatus', () => {
     })
 
     expect(mockClient.patch).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}/status`,
+      `/v1/inquiries/${TEST_UUID}/status`,
       { newStatus: 'unknown-status' },
     )
   })
@@ -353,7 +351,7 @@ describe('fetchInquiryComments', () => {
     })
 
     expect(mockClient.get).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}/comments`,
+      `/v1/inquiries/${TEST_UUID}/comments`,
     )
     expect(result).toHaveLength(2)
     expect(result[0].id).toBe('comment-1')
@@ -376,7 +374,7 @@ describe('submitInquiryComment', () => {
     })
 
     expect(mockClient.post).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}/comments`,
+      `/v1/inquiries/${TEST_UUID}/comments`,
       { content: 'Hello', isInternal: true },
     )
     expect(result.content).toBe('Hello')
@@ -392,7 +390,7 @@ describe('submitInquiryComment', () => {
     })
 
     expect(mockClient.post).toHaveBeenCalledWith(
-      `/api/v1/inquiries/${TEST_UUID}/comments`,
+      `/v1/inquiries/${TEST_UUID}/comments`,
       { content: 'A comment', isInternal: false },
     )
   })
