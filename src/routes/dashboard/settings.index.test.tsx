@@ -153,11 +153,9 @@ describe('settings.index', () => {
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
       )!
-      const pushSwitch = pushRow.querySelector(
-        'button[role="switch"]',
-      ) as HTMLButtonElement
+      const pushSwitch = pushRow.querySelector('[role="switch"]') as HTMLElement
       expect(pushSwitch).toBeTruthy()
-      expect(pushSwitch.disabled).toBe(true)
+      expect(pushSwitch.hasAttribute('data-disabled')).toBe(true)
     })
 
     it('push channel switch is disabled when permission is denied', () => {
@@ -170,11 +168,9 @@ describe('settings.index', () => {
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
       )!
-      const pushSwitch = pushRow.querySelector(
-        'button[role="switch"]',
-      ) as HTMLButtonElement
+      const pushSwitch = pushRow.querySelector('[role="switch"]') as HTMLElement
       expect(pushSwitch).toBeTruthy()
-      expect(pushSwitch.disabled).toBe(true)
+      expect(pushSwitch.hasAttribute('data-disabled')).toBe(true)
     })
 
     it('"Send test notification" visible when push.isRegistered', () => {
@@ -212,7 +208,7 @@ describe('settings.index', () => {
       const smsRow = smsDescription.closest(
         'div.flex.items-center.justify-between',
       )!
-      const smsSwitch = smsRow.querySelector('button[role="switch"]')!
+      const smsSwitch = smsRow.querySelector('[role="switch"]')!
 
       fireEvent.click(smsSwitch)
 
@@ -254,7 +250,7 @@ describe('settings.index', () => {
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
       )!
-      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+      const pushSwitch = pushRow.querySelector('[role="switch"]')!
 
       fireEvent.click(pushSwitch)
 
@@ -275,7 +271,7 @@ describe('settings.index', () => {
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
       )!
-      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+      const pushSwitch = pushRow.querySelector('[role="switch"]')!
 
       fireEvent.click(pushSwitch)
 
@@ -297,7 +293,7 @@ describe('settings.index', () => {
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
       )!
-      const pushSwitch = pushRow.querySelector('button[role="switch"]')!
+      const pushSwitch = pushRow.querySelector('[role="switch"]')!
 
       fireEvent.click(pushSwitch)
 
@@ -335,7 +331,7 @@ describe('settings.index', () => {
       const emailRow = emailDesc.closest(
         'div.flex.items-center.justify-between',
       )!
-      const emailSwitch = emailRow.querySelector('button[role="switch"]')!
+      const emailSwitch = emailRow.querySelector('[role="switch"]')!
 
       fireEvent.click(emailSwitch)
 
@@ -355,9 +351,7 @@ describe('settings.index', () => {
       // SMS is currently disabled (isEnabled: false). Toggle it on.
       const smsDesc = screen.getByText('Receive notifications via text message')
       const smsRow = smsDesc.closest('div.flex.items-center.justify-between')!
-      const smsSwitch = smsRow.querySelector(
-        'button[role="switch"]',
-      ) as HTMLButtonElement
+      const smsSwitch = smsRow.querySelector('[role="switch"]') as HTMLElement
 
       fireEvent.click(smsSwitch)
 
@@ -366,7 +360,7 @@ describe('settings.index', () => {
       })
 
       // After revert, the SMS switch should be back to unchecked
-      expect(smsSwitch.getAttribute('data-state')).toBe('unchecked')
+      expect(smsSwitch.hasAttribute('data-unchecked')).toBe(true)
     })
 
     it('handleToggle shows generic message for non-Error exceptions', async () => {
@@ -377,7 +371,7 @@ describe('settings.index', () => {
 
       const smsDesc = screen.getByText('Receive notifications via text message')
       const smsRow = smsDesc.closest('div.flex.items-center.justify-between')!
-      const smsSwitch = smsRow.querySelector('button[role="switch"]')!
+      const smsSwitch = smsRow.querySelector('[role="switch"]')!
 
       fireEvent.click(smsSwitch)
 

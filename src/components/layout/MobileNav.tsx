@@ -22,15 +22,17 @@ export function MobileNav() {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden text-foreground hover:text-primary hover:bg-transparent"
-          aria-label="Open navigation menu"
-        >
-          <Menu className="h-6 w-6" />
-        </Button>
+      <SheetTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-foreground hover:text-primary hover:bg-transparent"
+            aria-label="Open navigation menu"
+          />
+        }
+      >
+        <Menu className="h-6 w-6" />
       </SheetTrigger>
       <SheetContent
         side="right"
@@ -59,12 +61,11 @@ export function MobileNav() {
           <div className="mt-6 px-4 flex flex-col gap-3">
             {!isAdmin && (
               <Button
-                asChild
+                render={<Link to="/contact" onClick={() => setOpen(false)} />}
+                nativeButton={false}
                 className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
               >
-                <Link to="/contact" onClick={() => setOpen(false)}>
-                  Get in Touch
-                </Link>
+                Get in Touch
               </Button>
             )}
             {user ? (
@@ -94,13 +95,12 @@ export function MobileNav() {
               </>
             ) : (
               <Button
-                asChild
+                render={<a href="/auth/login" onClick={() => setOpen(false)} />}
+                nativeButton={false}
                 variant="outline"
                 className="w-full border-border text-foreground-secondary hover:text-primary"
               >
-                <a href="/auth/login" onClick={() => setOpen(false)}>
-                  Sign In
-                </a>
+                Sign In
               </Button>
             )}
           </div>

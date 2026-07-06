@@ -65,18 +65,20 @@ export function Header() {
           <NavigationMenuList className="gap-1">
             {NAV_LINKS.map((link) => (
               <NavigationMenuItem key={link.href}>
-                <NavigationMenuLink asChild>
-                  <Link
-                    to={link.href}
-                    className={navigationMenuTriggerStyle()}
-                    activeProps={{
-                      className: `${navigationMenuTriggerStyle()} text-primary`,
-                    }}
-                  >
-                    <span className="text-foreground hover:text-primary transition-colors">
-                      {link.label}
-                    </span>
-                  </Link>
+                <NavigationMenuLink
+                  render={
+                    <Link
+                      to={link.href}
+                      className={navigationMenuTriggerStyle()}
+                      activeProps={{
+                        className: `${navigationMenuTriggerStyle()} text-primary`,
+                      }}
+                    />
+                  }
+                >
+                  <span className="text-foreground hover:text-primary transition-colors">
+                    {link.label}
+                  </span>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
@@ -87,10 +89,11 @@ export function Header() {
         <div className="flex items-center gap-2">
           {!isAdmin && (
             <Button
-              asChild
+              render={<Link to="/contact" />}
+              nativeButton={false}
               className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
             >
-              <Link to="/contact">Get in Touch</Link>
+              Get in Touch
             </Button>
           )}
           <NotificationBell />

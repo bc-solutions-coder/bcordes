@@ -180,9 +180,11 @@ function DashboardInquiriesPage() {
                       {isAdmin ? (
                         <Select
                           value={inquiry.status}
-                          onValueChange={(value) =>
-                            handleStatusChange(inquiry.id, value)
-                          }
+                          onValueChange={(value) => {
+                            if (value != null) {
+                              handleStatusChange(inquiry.id, value)
+                            }
+                          }}
                         >
                           <SelectTrigger
                             size="sm"

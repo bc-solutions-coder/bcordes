@@ -29,14 +29,15 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
               </p>
             </div>
             <Button
-              asChild
+              render={
+                <Link to="/projects" className="flex items-center gap-2" />
+              }
+              nativeButton={false}
               variant="ghost"
               className="text-primary hover:text-primary-hover hover:bg-primary/10"
             >
-              <Link to="/projects" className="flex items-center gap-2">
-                View all work
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              View all work
+              <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
         </FadeInView>

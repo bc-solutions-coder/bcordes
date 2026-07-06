@@ -135,10 +135,8 @@ function SettingsPage() {
     if (!push.isSupported) {
       return (
         <Tooltip>
-          <TooltipTrigger asChild>
-            <span>
-              <Switch checked={false} disabled />
-            </span>
+          <TooltipTrigger render={<span />}>
+            <Switch checked={false} disabled />
           </TooltipTrigger>
           <TooltipContent>Not supported in this browser</TooltipContent>
         </Tooltip>
@@ -148,10 +146,8 @@ function SettingsPage() {
     if (push.permission === 'denied') {
       return (
         <Tooltip>
-          <TooltipTrigger asChild>
-            <span>
-              <Switch checked={false} disabled />
-            </span>
+          <TooltipTrigger render={<span />}>
+            <Switch checked={false} disabled />
           </TooltipTrigger>
           <TooltipContent>
             Permission blocked — reset in browser settings

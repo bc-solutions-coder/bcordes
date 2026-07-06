@@ -101,9 +101,9 @@ describe('UserMenu', () => {
     })
     renderWithProviders(<UserMenu />)
 
-    // Open the Radix dropdown — requires pointerDown for Radix trigger
+    // Open the Base UI menu — Menu.Trigger opens on click
     const trigger = screen.getByText('Bryan Cordes').closest('button')!
-    fireEvent.pointerDown(trigger, { button: 0, pointerType: 'mouse' })
+    fireEvent.click(trigger)
 
     // Wait for dropdown content to appear
     const signOut = await screen.findByText('Sign Out')

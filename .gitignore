@@ -22,6 +22,9 @@ todos.json
 # Git worktrees
 .worktrees/
 
+# Scratch / reference-only (Base UI migration diff refs, not part of build)
+.scratch/
+
 # AI tooling config (local-only)
 .beads
 .claude

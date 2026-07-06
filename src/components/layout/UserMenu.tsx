@@ -32,58 +32,63 @@ export function UserMenu() {
   if (!user) {
     return (
       <Button
-        asChild
+        render={<a href="/auth/login" />}
+        nativeButton={false}
         variant="ghost"
         className="hidden md:inline-flex text-foreground-secondary hover:text-primary"
       >
-        <a href="/auth/login">Sign In</a>
+        Sign In
       </Button>
     )
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="hidden md:inline-flex items-center gap-2 text-foreground-secondary hover:text-primary"
-        >
-          <Avatar className="h-7 w-7">
-            <AvatarFallback className="bg-primary text-white text-xs">
-              {getInitials(user.name)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="max-w-[120px] truncate">
-            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive against runtime OIDC data */}
-            {user.name ?? user.email ?? 'User'}
-          </span>
-        </Button>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="ghost"
+            className="hidden md:inline-flex items-center gap-2 text-foreground-secondary hover:text-primary"
+          />
+        }
+      >
+        <Avatar className="h-7 w-7">
+          <AvatarFallback className="bg-primary text-white text-xs">
+            {getInitials(user.name)}
+          </AvatarFallback>
+        </Avatar>
+        <span className="max-w-[120px] truncate">
+          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive against runtime OIDC data */}
+          {user.name ?? user.email ?? 'User'}
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem asChild>
-          <Link to="/dashboard/inquiries" className="cursor-pointer">
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            Dashboard
-          </Link>
+        <DropdownMenuItem
+          render={<Link to="/dashboard/inquiries" className="cursor-pointer" />}
+        >
+          <LayoutDashboard className="mr-2 h-4 w-4" />
+          Dashboard
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <a
-            href="/auth/logout"
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault()
-              // POST to logout endpoint
-              const form = document.createElement('form')
-              form.method = 'POST'
-              form.action = '/auth/logout'
-              document.body.appendChild(form)
-              form.submit()
-            }}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </a>
+        <DropdownMenuItem
+          render={
+            <a
+              href="/auth/logout"
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault()
+                // POST to logout endpoint
+                const form = document.createElement('form')
+                form.method = 'POST'
+                form.action = '/auth/logout'
+                document.body.appendChild(form)
+                form.submit()
+              }}
+            />
+          }
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

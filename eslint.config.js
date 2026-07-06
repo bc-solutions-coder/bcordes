@@ -6,6 +6,8 @@ export default [
   ...tanstackConfig,
   {
     ignores: [
+      '.scratch',
+      '.scratch/**',
       '.storybook/**',
       '.nitro/**',
       '.output/**',

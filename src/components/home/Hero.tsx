@@ -58,20 +58,22 @@ export function Hero() {
           <FadeInView delay={300}>
             <div className="flex flex-wrap gap-4 mb-0">
               <Button
-                asChild
+                render={<Link to="/projects" />}
+                nativeButton={false}
                 size="lg"
                 className="bg-primary hover:bg-primary-hover text-white font-semibold px-6 py-3 h-auto rounded-[10px]"
               >
-                <Link to="/projects">View My Projects</Link>
+                View My Projects
               </Button>
               {!isAdmin && (
                 <Button
-                  asChild
+                  render={<Link to="/contact" />}
+                  nativeButton={false}
                   variant="outline"
                   size="lg"
                   className="border-border hover:border-primary hover:text-primary text-foreground font-semibold px-6 py-3 h-auto rounded-[10px]"
                 >
-                  <Link to="/contact">Get in Touch</Link>
+                  Get in Touch
                 </Button>
               )}
             </div>

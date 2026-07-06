@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { Slot } from '@radix-ui/react-slot'
+import { useRender } from '@base-ui/react/use-render'
 import { cva } from 'class-variance-authority'
 import type { VariantProps } from 'class-variance-authority'
 
@@ -37,27 +36,35 @@ const buttonVariants = cva(
   },
 )
 
+type ButtonProps = useRender.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    /**
+     * When `render` composes onto a non-<button> element (e.g. an <a> or a
+     * TanStack <Link>), set this to `false`. Kept for API parity with Base UI's
+     * button; polymorphism here is handled by `useRender`, which preserves the
+     * rendered element's native semantics (an anchor stays a link).
+     */
+    nativeButton?: boolean
+  }
+
 function Button({
   className,
   variant = 'default',
   size = 'default',
-  asChild = false,
+  render,
+  nativeButton: _nativeButton,
   ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : 'button'
-
-  return (
-    <Comp
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+}: ButtonProps) {
+  return useRender({
+    render: render ?? <button />,
+    props: {
+      'data-slot': 'button',
+      'data-variant': variant,
+      'data-size': size,
+      className: cn(buttonVariants({ variant, size, className })),
+      ...props,
+    },
+  })
 }
 
 export { Button, buttonVariants }
