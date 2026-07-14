@@ -117,7 +117,19 @@ function testFilesOnDisk(): Array<string> {
     .sort()
 }
 
-function collectFromRootConfig(): Array<{ name: string; file: string }> {
+interface CollectedTest {
+  name: string
+  file: string
+  projectName: string
+}
+
+let collected: Array<CollectedTest> | undefined
+
+function collectFromRootConfig(): Array<CollectedTest> {
+  // Collection is a ~30s child run; every test in this file wants the same
+  // answer, so pay for it once.
+  if (collected) return collected
+
   const stdout = execFileSync(
     'pnpm',
     ['exec', 'vitest', 'list', '--json'],
@@ -126,7 +138,8 @@ function collectFromRootConfig(): Array<{ name: string; file: string }> {
     { cwd: repoRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
   )
 
-  return JSON.parse(stdout)
+  collected = JSON.parse(stdout)
+  return collected!
 }
 
 describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
@@ -263,10 +276,34 @@ describe('the root run collects the whole workspace', () => {
     'discovers every app test file from the repo root with no extra flags',
     { timeout: 180_000 },
     () => {
-      const collected = collectFromRootConfig()
-      const files = [...new Set(collected.map((entry) => entry.file))].sort()
+      // Scoped to the app project: workspace packages under packages/* are
+      // projects of their own and bring their own test files to the same run.
+      const files = [
+        ...new Set(
+          collectFromRootConfig()
+            .filter((entry) => entry.projectName === 'bcordes')
+            .map((entry) => entry.file),
+        ),
+      ].sort()
 
       expect(files).toEqual(testFilesOnDisk())
+    },
+  )
+
+  it(
+    'collects each workspace package as a project of its own',
+    { timeout: 180_000 },
+    () => {
+      // packages/* is not a decorative glob: an extracted package's tests must
+      // run in the same root `pnpm vitest run` as the app's.
+      const packageTests = collectFromRootConfig().filter((entry) =>
+        entry.file.startsWith(join(repoRoot, 'packages')),
+      )
+
+      expect(packageTests.length).toBeGreaterThan(0)
+      expect(
+        packageTests.every((entry) => entry.projectName !== 'bcordes'),
+      ).toBe(true)
     },
   )
 
@@ -274,9 +311,9 @@ describe('the root run collects the whole workspace', () => {
     'collects at least the pre-migration test baseline',
     { timeout: 180_000 },
     () => {
-      const collected = collectFromRootConfig()
-
-      expect(collected.length).toBeGreaterThanOrEqual(BASELINE_TEST_COUNT)
+      expect(collectFromRootConfig().length).toBeGreaterThanOrEqual(
+        BASELINE_TEST_COUNT,
+      )
     },
   )
 })
@@ -300,6 +337,8 @@ describe('merged coverage output', () => {
       // Pinned to one small, unrelated test file: enough to prove the coverage
       // plumbing resolves workspace sources, without re-running (and re-entering)
       // the whole suite. reportsDirectory is redirected so ./coverage is untouched.
+      // It must be a file that stays in apps/web for the whole migration — the
+      // lib/ tests it used to point at are being extracted into packages/*.
       execFileSync(
         'pnpm',
         [
@@ -309,7 +348,7 @@ describe('merged coverage output', () => {
           '--coverage',
           '--coverage.reporter=lcov',
           `--coverage.reportsDirectory=${reportsDirectory}`,
-          'lib/utils.test.ts',
+          'routes/dashboard/settings.test.tsx',
         ],
         { cwd: repoRoot, encoding: 'utf8', stdio: 'pipe' },
       )

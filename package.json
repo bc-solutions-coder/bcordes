@@ -32,7 +32,7 @@
     ]
   },
   "devDependencies": {
-    "@tanstack/eslint-config": "^0.4.0",
+    "@bcordes/config": "workspace:*",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^10.1.0",
     "husky": "^9.1.7",

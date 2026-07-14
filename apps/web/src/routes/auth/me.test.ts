@@ -15,7 +15,7 @@ vi.mock('@/lib/auth/middleware', () => ({
   getAuthUser: vi.fn(),
 }))
 
-vi.mock('@/lib/logger', () => {
+vi.mock('@bcordes/logger', () => {
   const child = () => mockLogger
   const mockLogger = {
     info: vi.fn(),

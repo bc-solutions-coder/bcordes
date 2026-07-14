@@ -85,7 +85,7 @@ describe('SSE Route GET handler', () => {
     vi.resetModules()
 
     // Re-apply mocks after resetModules
-    vi.doMock('@/lib/logger', () => {
+    vi.doMock('@bcordes/logger', () => {
       const child = () => mockLogger
       const mockLogger = {
         info: vi.fn(),

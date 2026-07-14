@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { NotificationBell } from './NotificationBell'
+import type * as BcordesUtils from '@bcordes/utils'
 import type { Notification } from '@/lib/wallow/types'
 import { renderWithProviders } from '@/test/helpers/render'
 
@@ -33,7 +34,10 @@ vi.mock('@/lib/notifications/routing', () => ({
   getNotificationRoute: vi.fn(() => '/dashboard/notifications'),
 }))
 
-vi.mock('@/lib/format', () => ({
+// Only the clock is faked. Spreading the original module keeps cn() real —
+// every shadcn primitive this bell renders imports it from the same package.
+vi.mock('@bcordes/utils', async (importOriginal) => ({
+  ...(await importOriginal<typeof BcordesUtils>()),
   formatRelativeTime: vi.fn(() => 'just now'),
 }))
 

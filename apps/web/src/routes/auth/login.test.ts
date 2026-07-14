@@ -22,7 +22,7 @@ vi.mock('@/lib/auth/oidc', () => ({
   ),
 }))
 
-vi.mock('@/lib/logger', () => {
+vi.mock('@bcordes/logger', () => {
   const child = () => mockLogger
   const mockLogger = {
     info: vi.fn(),

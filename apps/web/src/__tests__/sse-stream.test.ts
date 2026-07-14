@@ -51,7 +51,7 @@ describe('SSE stream proxy', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {})
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    vi.doMock('@/lib/logger', () => {
+    vi.doMock('@bcordes/logger', () => {
       const child = () => mockLogger
       const mockLogger = {
         info: vi.fn(),
@@ -327,7 +327,7 @@ describe('SSE stream proxy', () => {
 
       reader.cancel()
 
-      const { default: mockLogger } = await import('@/lib/logger')
+      const { default: mockLogger } = await import('@bcordes/logger')
       const sseLog = mockLogger.child()
       expect(sseLog.debug).toHaveBeenCalledWith('Client disconnected')
     })

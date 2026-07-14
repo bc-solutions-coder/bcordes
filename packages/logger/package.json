@@ -1,0 +1,16 @@
+{
+  "name": "@bcordes/logger",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "pino": "^10.3.1"
+  },
+  "devDependencies": {
+    "@bcordes/config": "workspace:*",
+    "pino-pretty": "^13.1.3"
+  }
+}

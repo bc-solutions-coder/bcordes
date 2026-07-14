@@ -1,5 +1,5 @@
+import { cn } from '@bcordes/utils'
 import { Badge } from '@/components/ui/shadcn/badge'
-import { cn } from '@/lib/utils'
 
 interface ProjectFilterProps {
   tags: Array<string>

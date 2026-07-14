@@ -27,7 +27,7 @@ const mockRedis = {
   del: mockRedisDel,
 }
 
-vi.mock('@/lib/valkey', () => ({
+vi.mock('@bcordes/valkey', () => ({
   getValkey: vi.fn(() => mockRedis),
   keys: {
     serviceToken: () => 'bcordes:service-token',

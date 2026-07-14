@@ -1,5 +1,5 @@
 import { createMiddleware, createStart } from '@tanstack/react-start'
-import logger from '@/lib/logger'
+import logger from '@bcordes/logger'
 
 const log = logger.child({ module: 'http' })
 

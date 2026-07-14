@@ -6,6 +6,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Bell } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { formatRelativeTime } from '@bcordes/utils'
 import type { Notification } from '@/lib/wallow/types'
 import { Button } from '@/components/ui/shadcn/button'
 import {
@@ -23,7 +24,6 @@ import {
 } from '@/server-fns/notifications'
 import { invalidateNotifications } from '@/lib/notifications/query-utils'
 import { getNotificationRoute } from '@/lib/notifications/routing'
-import { formatRelativeTime } from '@/lib/format'
 
 export function NotificationBell() {
   const { user } = useUser()

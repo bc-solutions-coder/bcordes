@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
+import logger from '@bcordes/logger'
 import {
   getAuthorizationUrl,
   randomPKCECodeVerifier,
   randomState,
 } from '@/lib/auth/oidc'
 import { redact } from '@/lib/auth/redact'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'auth.login' })
 

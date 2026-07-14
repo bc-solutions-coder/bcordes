@@ -1,9 +1,9 @@
 import { redirect } from '@tanstack/react-router'
+import logger from '@bcordes/logger'
 import { redactUser } from './redact'
 import { clearSession, getSession, setSession } from './session'
 import { fetchUserProfile, refreshToken } from './oidc'
 import type { SessionData, User } from './types'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'auth' })
 

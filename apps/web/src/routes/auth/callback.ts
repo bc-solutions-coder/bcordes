@@ -1,5 +1,6 @@
 import { randomBytes, timingSafeEqual } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
+import logger from '@bcordes/logger'
 import type { SessionData } from '@/lib/auth/types'
 import {
   exchangeCode,
@@ -8,7 +9,6 @@ import {
 } from '@/lib/auth/oidc'
 import { redact, redactUser } from '@/lib/auth/redact'
 import { sealSessionCookie } from '@/lib/auth/session'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'auth.callback' })
 

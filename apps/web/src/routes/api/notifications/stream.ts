@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
+import logger from '@bcordes/logger'
 import type { RealtimeEnvelope } from '@/lib/wallow/types'
 import { getSession } from '@/lib/auth/session'
 import { refreshToken } from '@/lib/auth/oidc'
 import { WALLOW_BASE_URL } from '@/lib/wallow/config'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'sse' })
 

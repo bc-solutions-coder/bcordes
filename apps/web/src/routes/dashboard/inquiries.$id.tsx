@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, createFileRoute, useRouter } from '@tanstack/react-router'
 import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
-import { formatDateTime } from '@/lib/format'
+import { formatDateTime } from '@bcordes/utils'
 import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchInquiry,

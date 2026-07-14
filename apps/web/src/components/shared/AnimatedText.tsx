@@ -1,5 +1,5 @@
+import { cn } from '@bcordes/utils'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { cn } from '@/lib/utils'
 
 interface AnimatedTextProps {
   text: string

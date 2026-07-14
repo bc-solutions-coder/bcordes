@@ -1,6 +1,6 @@
+import logger from '@bcordes/logger'
 import { WallowError } from './errors'
 import type { ProblemDetails } from './types'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'wallow' })
 

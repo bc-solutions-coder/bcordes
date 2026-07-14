@@ -4,11 +4,11 @@ import {
   discovery,
 } from 'openid-client'
 import { setResponseStatus } from '@tanstack/react-start/server'
+import { getValkey, keys } from '@bcordes/valkey'
 import { WallowError } from './errors'
 import { parseProblemDetails, parseRetryDelay, toNetworkError } from './request'
 import { WALLOW_BASE_URL } from './config'
 import type { Configuration } from 'openid-client'
-import { getValkey, keys } from '@/lib/valkey'
 
 const isDev = process.env.NODE_ENV !== 'production'
 

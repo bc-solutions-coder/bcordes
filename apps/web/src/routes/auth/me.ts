@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import logger from '@bcordes/logger'
 import { getAuthUser } from '@/lib/auth/middleware'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'auth.me' })
 

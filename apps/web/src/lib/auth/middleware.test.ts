@@ -9,7 +9,7 @@ import { fetchUserProfile, refreshToken } from '@/lib/auth/oidc'
 // Mocks
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/logger', () => {
+vi.mock('@bcordes/logger', () => {
   const child = () => mockLogger
   const mockLogger = {
     info: vi.fn(),

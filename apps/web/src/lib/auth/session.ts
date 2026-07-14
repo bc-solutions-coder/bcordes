@@ -4,10 +4,10 @@ import {
   getCookie,
   setCookie,
 } from '@tanstack/react-start/server'
+import logger from '@bcordes/logger'
+import { getValkey, keys } from '@bcordes/valkey'
 import { redact } from './redact'
 import type { SessionData } from './types'
-import logger from '@/lib/logger'
-import { getValkey, keys } from '@/lib/valkey'
 
 const log = logger.child({ module: 'auth.session' })
 

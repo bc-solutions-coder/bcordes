@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { parseUserFromToken } from './oidc'
 
-vi.mock('@/lib/logger', () => {
+vi.mock('@bcordes/logger', () => {
   const child = () => mockLogger
   const mockLogger = {
     info: vi.fn(),

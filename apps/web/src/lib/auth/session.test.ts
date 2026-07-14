@@ -9,7 +9,7 @@ import type { SessionData } from './types'
 
 vi.stubEnv('SESSION_SECRET', 'a]3kf9$mLp2xQz!vR7nW^tY0uBc8dEhJ')
 
-vi.mock('@/lib/logger', () => {
+vi.mock('@bcordes/logger', () => {
   const child = () => mockLogger
   const mockLogger = {
     info: vi.fn(),
@@ -54,7 +54,7 @@ const mockRedisClient = {
   del: mockRedisDel,
 }
 
-vi.mock('@/lib/valkey', () => ({
+vi.mock('@bcordes/valkey', () => ({
   getValkey: vi.fn(() => mockRedisClient),
   keys: {
     session: (id: string) => 'bcordes:session:' + id,

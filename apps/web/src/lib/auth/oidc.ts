@@ -9,11 +9,11 @@ import {
   randomState,
   refreshTokenGrant,
 } from 'openid-client'
+import logger from '@bcordes/logger'
 import { userFromClaims } from './claims'
 import { redact } from './redact'
 import type { Configuration } from 'openid-client'
 import type { User } from './types'
-import logger from '@/lib/logger'
 
 const log = logger.child({ module: 'auth.oidc' })
 

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { getValkey } from '@/lib/valkey'
+import { getValkey } from '@bcordes/valkey'
 
 export const Route = createFileRoute('/api/health')({
   server: {
