@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { cn } from '@bcordes/utils'
+import { Badge } from '@bcordes/ui/components/badge'
 import type { ShowcaseMeta } from '@/content/projects'
-import { Badge } from '@/components/ui/shadcn/badge'
 
 interface ProjectCardProps {
   showcase: ShowcaseMeta

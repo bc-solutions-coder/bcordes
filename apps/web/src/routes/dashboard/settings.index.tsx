@@ -3,6 +3,20 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Bell, Mail, MessageSquare, Settings, Smartphone } from 'lucide-react'
 import { toast } from 'sonner'
+import { Button } from '@bcordes/ui/components/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@bcordes/ui/components/card'
+import { Switch } from '@bcordes/ui/components/switch'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@bcordes/ui/components/tooltip'
 import type { NotificationSettings } from '@/lib/wallow/types'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
@@ -10,20 +24,6 @@ import {
   updateChannelSetting,
 } from '@/server-fns/notifications'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
-import { Button } from '@/components/ui/shadcn/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/shadcn/card'
-import { Switch } from '@/components/ui/shadcn/switch'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/shadcn/tooltip'
 
 export const Route = createFileRoute('/dashboard/settings/')({
   beforeLoad: () =>

@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { Badge } from '@bcordes/ui/components/badge'
+import { Button } from '@bcordes/ui/components/button'
 import type { ShowcaseMeta } from '@/content/projects'
 import { FadeInView } from '@/components/shared/FadeInView'
-import { Badge } from '@/components/ui/shadcn/badge'
-import { Button } from '@/components/ui/shadcn/button'
 
 interface FeaturedWorkProps {
   showcases: Array<ShowcaseMeta>

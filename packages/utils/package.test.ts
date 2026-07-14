@@ -173,7 +173,10 @@ describe('every importer was rewritten', () => {
     expect(importers.length).toBeGreaterThanOrEqual(FORMER_IMPORTER_COUNT)
     expect(importers).toEqual(
       expect.arrayContaining([
-        'apps/web/src/components/ui/shadcn/button.tsx',
+        // button.tsx is a named witness on the far side of a later extraction:
+        // F4 moved the primitives to packages/ui, and cn had to follow them
+        // across the package boundary rather than being re-created there.
+        'packages/ui/src/components/button.tsx',
         'apps/web/src/components/projects/ProjectCard.tsx',
         'apps/web/src/routes/dashboard/inquiries.$id.tsx',
       ]),

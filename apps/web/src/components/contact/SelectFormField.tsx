@@ -1,19 +1,18 @@
-import type { Control, FieldPath, FieldValues } from 'react-hook-form'
-
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/shadcn/form'
+} from '@bcordes/ui/components/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/shadcn/select'
+} from '@bcordes/ui/components/select'
+import type { Control, FieldPath, FieldValues } from 'react-hook-form'
 
 interface SelectOption {
   readonly value: string

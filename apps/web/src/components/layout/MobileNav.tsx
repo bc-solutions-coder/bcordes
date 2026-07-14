@@ -4,15 +4,15 @@ import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
 
-import { NAV_LINKS } from '@/config/navigation'
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@bcordes/ui/components/button'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/shadcn/sheet'
+} from '@bcordes/ui/components/sheet'
+import { NAV_LINKS } from '@/config/navigation'
 import { useUser } from '@/hooks/useUser'
 
 export function MobileNav() {

@@ -3,19 +3,19 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
-import { MobileNav } from './MobileNav'
-import { NotificationBell } from './NotificationBell'
-import { UserMenu } from './UserMenu'
-import { NAV_LINKS } from '@/config/navigation'
-import { useUser } from '@/hooks/useUser'
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@bcordes/ui/components/button'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from '@/components/ui/shadcn/navigation-menu'
+} from '@bcordes/ui/components/navigation-menu'
+import { MobileNav } from './MobileNav'
+import { NotificationBell } from './NotificationBell'
+import { UserMenu } from './UserMenu'
+import { NAV_LINKS } from '@/config/navigation'
+import { useUser } from '@/hooks/useUser'
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)

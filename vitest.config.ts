@@ -14,7 +14,7 @@ export default defineConfig({
         '**/*.stories.{ts,tsx}',
         '**/routeTree.gen.ts',
         '**/types.ts',
-        '**/components/ui/shadcn/**',
+        'packages/ui/src/components/**',
       ],
     },
   },

@@ -48,7 +48,7 @@ export const config = [
     ],
   },
   {
-    files: ['apps/web/src/components/ui/**'],
+    files: ['packages/ui/src/components/**'],
     rules: {
       '@typescript-eslint/no-unnecessary-condition': 'off',
     },

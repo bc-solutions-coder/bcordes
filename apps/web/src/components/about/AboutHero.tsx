@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/shadcn/badge'
+import { Badge } from '@bcordes/ui/components/badge'
 import { FadeInView } from '@/components/shared/FadeInView'
 
 export function AboutHero() {

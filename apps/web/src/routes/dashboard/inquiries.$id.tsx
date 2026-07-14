@@ -2,17 +2,17 @@ import { useState } from 'react'
 import { Link, createFileRoute, useRouter } from '@tanstack/react-router'
 import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
 import { formatDateTime } from '@bcordes/utils'
-import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
+import { Badge } from '@bcordes/ui/components/badge'
+import { Button } from '@bcordes/ui/components/button'
+import { Textarea } from '@bcordes/ui/components/textarea'
+import { Checkbox } from '@bcordes/ui/components/checkbox'
+import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
 import {
   fetchInquiry,
   fetchInquiryComments,
   submitInquiryComment,
 } from '@/server-fns/inquiries'
-import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
-import { Badge } from '@/components/ui/shadcn/badge'
-import { Button } from '@/components/ui/shadcn/button'
-import { Textarea } from '@/components/ui/shadcn/textarea'
-import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 
 export const Route = createFileRoute('/dashboard/inquiries/$id')({
   beforeLoad: () =>

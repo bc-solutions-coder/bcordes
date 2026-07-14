@@ -3,11 +3,8 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Mail, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDateTime } from '@bcordes/utils'
-import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
-import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
-import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
-import { Badge } from '@/components/ui/shadcn/badge'
-import { Button } from '@/components/ui/shadcn/button'
+import { Badge } from '@bcordes/ui/components/badge'
+import { Button } from '@bcordes/ui/components/button'
 import {
   Table,
   TableBody,
@@ -15,14 +12,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/shadcn/table'
+} from '@bcordes/ui/components/table'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/shadcn/select'
+} from '@bcordes/ui/components/select'
+import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
+import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
 import { STATUS_COLORS, STATUS_LABELS } from '@/config/inquiries'
 
 export const Route = createFileRoute('/dashboard/inquiries/')({

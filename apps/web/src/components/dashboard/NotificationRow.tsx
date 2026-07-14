@@ -1,8 +1,8 @@
 import { Bell } from 'lucide-react'
 import { formatRelativeTime } from '@bcordes/utils'
+import { Checkbox } from '@bcordes/ui/components/checkbox'
 import type { Notification } from '@/lib/wallow/types'
 import type { NotificationType } from '@/hooks/useNotificationFilters'
-import { Checkbox } from '@/components/ui/shadcn/checkbox'
 
 export interface NotificationTypeConfig {
   icon: typeof Bell

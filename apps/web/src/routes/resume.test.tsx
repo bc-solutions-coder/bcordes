@@ -25,7 +25,7 @@ vi.mock('@/components/shared/FadeInView', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/shadcn/badge', () => ({
+vi.mock('@bcordes/ui/components/badge', () => ({
   Badge: ({
     children,
     ...rest

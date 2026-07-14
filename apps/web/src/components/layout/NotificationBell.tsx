@@ -7,13 +7,13 @@ import { Bell } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { formatRelativeTime } from '@bcordes/utils'
-import type { Notification } from '@/lib/wallow/types'
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@bcordes/ui/components/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/shadcn/popover'
+} from '@bcordes/ui/components/popover'
+import type { Notification } from '@/lib/wallow/types'
 import { useUser } from '@/hooks/useUser'
 import { useEventStream } from '@/hooks/useEventStream'
 import {

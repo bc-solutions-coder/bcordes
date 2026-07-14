@@ -1,3 +1,14 @@
+import { Button } from '@bcordes/ui/components/button'
+import { Input } from '@bcordes/ui/components/input'
+import { Textarea } from '@bcordes/ui/components/textarea'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@bcordes/ui/components/form'
 import { SelectFormField } from './SelectFormField'
 import {
   budgetOptions,
@@ -6,17 +17,6 @@ import {
 } from './contact-form.schema'
 import type { UseFormReturn } from 'react-hook-form'
 import type { ContactFormValues } from './contact-form.schema'
-import { Button } from '@/components/ui/shadcn/button'
-import { Input } from '@/components/ui/shadcn/input'
-import { Textarea } from '@/components/ui/shadcn/textarea'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/shadcn/form'
 
 interface ContactFormFieldsProps {
   form: UseFormReturn<ContactFormValues>

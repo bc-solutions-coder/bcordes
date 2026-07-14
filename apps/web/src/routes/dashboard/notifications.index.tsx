@@ -14,6 +14,10 @@ import {
   MessageSquare,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { Badge } from '@bcordes/ui/components/badge'
+import { Button } from '@bcordes/ui/components/button'
+import { Checkbox } from '@bcordes/ui/components/checkbox'
+import { Tabs, TabsList, TabsTrigger } from '@bcordes/ui/components/tabs'
 import type { NotificationType } from '@/hooks/useNotificationFilters'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
@@ -30,10 +34,6 @@ import {
 } from '@/hooks/useNotificationFilters'
 import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 import { NotificationRow } from '@/components/dashboard/NotificationRow'
-import { Badge } from '@/components/ui/shadcn/badge'
-import { Button } from '@/components/ui/shadcn/button'
-import { Checkbox } from '@/components/ui/shadcn/checkbox'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/shadcn/tabs'
 
 const NOTIFICATION_TYPE_CONFIG: Record<
   NotificationType,

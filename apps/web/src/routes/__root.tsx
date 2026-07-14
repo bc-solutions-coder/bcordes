@@ -6,9 +6,9 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 
+import { Toaster } from '@bcordes/ui/components/sonner'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
-import { Toaster } from '../components/ui/shadcn/sonner'
 import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 import { EventStreamProvider } from '@/hooks/EventStreamProvider'

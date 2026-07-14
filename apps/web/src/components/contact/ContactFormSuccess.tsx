@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@bcordes/ui/components/button'
 
 interface ContactFormSuccessProps {
   onSendAnother: () => void

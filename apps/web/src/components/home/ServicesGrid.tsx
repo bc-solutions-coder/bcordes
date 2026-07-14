@@ -1,12 +1,12 @@
 import { Code, Layers, MessageSquare } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/shadcn/card'
+} from '@bcordes/ui/components/card'
+import type { LucideIcon } from 'lucide-react'
 import { FadeInView } from '@/components/shared/FadeInView'
 
 interface Service {
