@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Import after mocks are registered
 import { validateCsrfToken } from './csrf-validation'
+import type { H3Event } from 'h3'
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks
@@ -39,8 +40,9 @@ vi.mock('h3', () => ({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeEvent(method: string) {
-  return { method }
+// h3 is mocked above, so the handler only ever reads `method` off the event.
+function makeEvent(method: string): H3Event {
+  return { method } as unknown as H3Event
 }
 
 // ---------------------------------------------------------------------------

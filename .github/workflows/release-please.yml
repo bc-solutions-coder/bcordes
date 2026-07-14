@@ -43,11 +43,8 @@ jobs:
         id: semver
         run: |
           TAG="${{ needs.release-please.outputs.tag_name }}"
-          # Strip leading 'v' and component prefix (e.g., bcordes-v0.1.5 → 0.1.5)
-          VERSION="${TAG##*-v}"
-          if [ -z "$VERSION" ]; then
-            VERSION="${TAG#v}"
-          fi
+          # include-component-in-tag is false, so tags are plain v<version> (e.g., v0.1.7 -> 0.1.7)
+          VERSION="${TAG#v}"
           MAJOR="${VERSION%%.*}"
           MINOR="${VERSION#*.}"
           MINOR="${MINOR%%.*}"

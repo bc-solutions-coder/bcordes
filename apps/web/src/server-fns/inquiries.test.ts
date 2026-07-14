@@ -152,7 +152,7 @@ describe('submitInquiry', () => {
     mockedGetSession.mockResolvedValue(null)
     mockServiceClient.post.mockResolvedValue(jsonResponse(inquiry))
 
-    const result = await (submitInquiry as (arg?: unknown) => Promise<unknown>)(
+    const result = await (submitInquiry as (arg?: unknown) => Promise<Inquiry>)(
       { data: validSubmitData },
     )
 
@@ -170,7 +170,7 @@ describe('submitInquiry', () => {
     mockedGetSession.mockResolvedValue(createMockSession())
     mockClient.post.mockResolvedValue(jsonResponse(inquiry))
 
-    const result = await (submitInquiry as (arg?: unknown) => Promise<unknown>)(
+    const result = await (submitInquiry as (arg?: unknown) => Promise<Inquiry>)(
       { data: validSubmitData },
     )
 
@@ -187,7 +187,7 @@ describe('submitInquiry', () => {
     mockedGetSession.mockResolvedValue(null)
     mockServiceClient.post.mockResolvedValue(jsonResponse(inquiry))
 
-    const result = await (submitInquiry as (arg?: unknown) => Promise<unknown>)(
+    const result = await (submitInquiry as (arg?: unknown) => Promise<Inquiry>)(
       { data: validSubmitData },
     )
 
@@ -199,7 +199,7 @@ describe('submitInquiry', () => {
     mockedGetSession.mockResolvedValue(null)
     mockServiceClient.post.mockResolvedValue(jsonResponse(inquiry))
 
-    const result = await (submitInquiry as (arg?: unknown) => Promise<unknown>)(
+    const result = await (submitInquiry as (arg?: unknown) => Promise<Inquiry>)(
       { data: validSubmitData },
     )
 
@@ -221,7 +221,7 @@ describe('fetchInquiries', () => {
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
 
     const result = await (
-      fetchInquiries as (arg?: unknown) => Promise<unknown>
+      fetchInquiries as (arg?: unknown) => Promise<Array<Inquiry>>
     )()
 
     expect(mockedRequireAdmin).toHaveBeenCalled()
@@ -243,7 +243,7 @@ describe('fetchMyInquiries', () => {
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
 
     const result = await (
-      fetchMyInquiries as (arg?: unknown) => Promise<unknown>
+      fetchMyInquiries as (arg?: unknown) => Promise<Array<Inquiry>>
     )()
 
     expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries')
@@ -256,7 +256,7 @@ describe('fetchMyInquiries', () => {
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
 
     const result = await (
-      fetchMyInquiries as (arg?: unknown) => Promise<unknown>
+      fetchMyInquiries as (arg?: unknown) => Promise<Array<Inquiry>>
     )()
 
     expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries/submitted')
@@ -269,7 +269,7 @@ describe('fetchMyInquiries', () => {
     mockClient.get.mockResolvedValue(jsonResponse(inquiries))
 
     const result = await (
-      fetchMyInquiries as (arg?: unknown) => Promise<unknown>
+      fetchMyInquiries as (arg?: unknown) => Promise<Array<Inquiry>>
     )()
 
     expect(mockClient.get).toHaveBeenCalledWith('/v1/inquiries/submitted')
@@ -286,7 +286,7 @@ describe('fetchInquiry', () => {
     const inquiry = makeInquiry({ status: 'Closed' })
     mockClient.get.mockResolvedValue(jsonResponse(inquiry))
 
-    const result = await (fetchInquiry as (arg?: unknown) => Promise<unknown>)({
+    const result = await (fetchInquiry as (arg?: unknown) => Promise<Inquiry>)({
       data: { id: TEST_UUID },
     })
 
@@ -306,7 +306,7 @@ describe('updateInquiryStatus', () => {
     mockClient.patch.mockResolvedValue(jsonResponse(updated))
 
     const result = await (
-      updateInquiryStatus as (arg?: unknown) => Promise<unknown>
+      updateInquiryStatus as (arg?: unknown) => Promise<Inquiry>
     )({
       data: { id: TEST_UUID, status: 'reviewed' },
     })
@@ -324,7 +324,7 @@ describe('updateInquiryStatus', () => {
     mockedRequireAdmin.mockResolvedValue(createMockAdminSession().user)
     mockClient.patch.mockResolvedValue(jsonResponse(updated))
 
-    await (updateInquiryStatus as (arg?: unknown) => Promise<unknown>)({
+    await (updateInquiryStatus as (arg?: unknown) => Promise<Inquiry>)({
       data: { id: TEST_UUID, status: 'unknown-status' },
     })
 
@@ -345,7 +345,7 @@ describe('fetchInquiryComments', () => {
     mockClient.get.mockResolvedValue(jsonResponse(comments))
 
     const result = await (
-      fetchInquiryComments as (arg?: unknown) => Promise<unknown>
+      fetchInquiryComments as (arg?: unknown) => Promise<Array<InquiryComment>>
     )({
       data: { id: TEST_UUID },
     })
@@ -368,7 +368,7 @@ describe('submitInquiryComment', () => {
     mockClient.post.mockResolvedValue(jsonResponse(comment))
 
     const result = await (
-      submitInquiryComment as (arg?: unknown) => Promise<unknown>
+      submitInquiryComment as (arg?: unknown) => Promise<InquiryComment>
     )({
       data: { id: TEST_UUID, content: 'Hello', isInternal: true },
     })
@@ -385,7 +385,7 @@ describe('submitInquiryComment', () => {
     const comment = makeComment()
     mockClient.post.mockResolvedValue(jsonResponse(comment))
 
-    await (submitInquiryComment as (arg?: unknown) => Promise<unknown>)({
+    await (submitInquiryComment as (arg?: unknown) => Promise<InquiryComment>)({
       data: { id: TEST_UUID, content: 'A comment', isInternal: false },
     })
 

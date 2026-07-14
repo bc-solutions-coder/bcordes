@@ -16,7 +16,7 @@ function safeEqual(a: string, b: string): boolean {
  */
 export function validateCsrfToken() {
   return defineEventHandler(async (event) => {
-    const method = event.method?.toUpperCase() ?? 'GET'
+    const method = event.method.toUpperCase()
     if (SAFE_METHODS.has(method)) return
 
     const session = await getSession()

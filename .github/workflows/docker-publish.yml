@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
 
     steps:
       - name: Checkout repository
@@ -34,3 +35,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+          secrets: |
+            node_auth_token=${{ secrets.GITHUB_TOKEN }}
