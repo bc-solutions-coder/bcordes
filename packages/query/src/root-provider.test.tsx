@@ -1,7 +1,45 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
+import {
+  QueryClient,
+  hydrate,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { Provider, getContext } from './root-provider'
+
+const SSR_KEY = ['root-provider-ssr-probe']
+
+/**
+ * The shape @tanstack/query-core's `dehydrate` emits on the server and
+ * `hydrate` consumes on the client — the payload TanStack Start ships in the
+ * SSR stream.
+ */
+function dehydratedServerState(data: string) {
+  return {
+    mutations: [],
+    queries: [
+      {
+        queryKey: SSR_KEY,
+        queryHash: JSON.stringify(SSR_KEY),
+        state: {
+          data,
+          dataUpdateCount: 1,
+          dataUpdatedAt: Date.now(),
+          error: null,
+          errorUpdateCount: 0,
+          errorUpdatedAt: 0,
+          fetchFailureCount: 0,
+          fetchFailureReason: null,
+          fetchMeta: null,
+          isInvalidated: false,
+          status: 'success' as const,
+          fetchStatus: 'idle' as const,
+        },
+      },
+    ],
+  }
+}
 
 describe('root-provider', () => {
   afterEach(() => {
@@ -95,6 +133,39 @@ describe('root-provider', () => {
 
       expect(capturedClient).toBe(queryClient)
       expect(capturedClient?.getDefaultOptions().queries?.staleTime).toBe(99999)
+    })
+
+    it('serves server-hydrated query data to children without refetching', async () => {
+      // What the app relies on for SSR: state dehydrated on the server is
+      // hydrated into the client the Provider hands down, and a consumer reads
+      // it straight out of the cache instead of going back to the network.
+      const queryClient = new QueryClient()
+      hydrate(queryClient, dehydratedServerState('from-server'))
+
+      const queryFn = vi.fn(
+        (): Promise<string> =>
+          Promise.reject(new Error('must not refetch hydrated data')),
+      )
+
+      function Consumer() {
+        const { data } = useQuery({
+          queryKey: SSR_KEY,
+          queryFn,
+          staleTime: Infinity,
+        })
+        return <span data-testid="value">{data ?? 'no-data'}</span>
+      }
+
+      render(
+        <Provider queryClient={queryClient}>
+          <Consumer />
+        </Provider>,
+      )
+
+      expect(await screen.findByTestId('value')).toHaveTextContent(
+        'from-server',
+      )
+      expect(queryFn).not.toHaveBeenCalled()
     })
   })
 })

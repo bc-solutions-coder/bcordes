@@ -17,6 +17,7 @@
   "dependencies": {
     "@bc-solutions-coder/sdk": "0.1.0",
     "@bcordes/logger": "workspace:*",
+    "@bcordes/query": "workspace:*",
     "@bcordes/ui": "workspace:*",
     "@bcordes/utils": "workspace:*",
     "@bcordes/valkey": "workspace:*",

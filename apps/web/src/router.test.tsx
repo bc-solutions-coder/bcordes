@@ -22,7 +22,7 @@ const mockProvider = vi.fn(({ children }: { children: React.ReactNode }) => (
   <>{children}</>
 ))
 
-vi.mock('./integrations/tanstack-query/root-provider', () => ({
+vi.mock('@bcordes/query', () => ({
   getContext: mockGetContext,
   Provider: mockProvider,
 }))

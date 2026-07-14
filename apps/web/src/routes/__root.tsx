@@ -21,7 +21,7 @@ function DevTools() {
     Promise.all([
       import('@tanstack/react-devtools'),
       import('@tanstack/react-router-devtools'),
-      import('../integrations/tanstack-query/devtools'),
+      import('@bcordes/query/devtools'),
     ]).then(
       ([{ TanStackDevtools }, { TanStackRouterDevtoolsPanel }, query]) => {
         setPanel(
