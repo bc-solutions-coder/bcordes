@@ -8,13 +8,13 @@ import {
   getAuthorizationUrl,
   randomPKCECodeVerifier,
   randomState,
-} from '@/lib/auth/oidc'
+} from '@bcordes/auth/oidc'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   randomState: vi.fn(() => 'mock-state-value'),
   randomPKCECodeVerifier: vi.fn(() => 'mock-code-verifier'),
   getAuthorizationUrl: vi.fn(() =>

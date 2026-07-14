@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import logger from '@bcordes/logger'
-import { clearSession, getSession } from '@/lib/auth/session'
-import { getLogoutUrl } from '@/lib/auth/oidc'
+import { clearSession, getSession } from '@bcordes/auth/session'
+import { getLogoutUrl } from '@bcordes/auth/oidc'
 
 const log = logger.child({ module: 'auth.logout' })
 

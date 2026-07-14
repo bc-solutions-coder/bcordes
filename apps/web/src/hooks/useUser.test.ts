@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createElement } from 'react'
+import { createMockUser } from '@bcordes/auth/testing'
 import type { ReactNode } from 'react'
-import { createMockUser } from '@/test/mocks/auth'
 import { renderWithProviders } from '@/test/helpers/render'
 
 // Mock global fetch

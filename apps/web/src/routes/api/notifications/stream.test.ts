@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // All imports must be dynamic because stream.ts transitively imports
 // ~/lib/auth/session which throws without SESSION_SECRET at module level.
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
 }))
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   refreshToken: vi.fn(),
 }))
 
@@ -96,10 +96,10 @@ describe('SSE Route GET handler', () => {
       }
       return { default: mockLogger }
     })
-    vi.doMock('@/lib/auth/session', () => ({
+    vi.doMock('@bcordes/auth/session', () => ({
       getSession: vi.fn(),
     }))
-    vi.doMock('@/lib/auth/oidc', () => ({
+    vi.doMock('@bcordes/auth/oidc', () => ({
       refreshToken: vi.fn(),
     }))
     vi.doMock('@/lib/wallow/config', () => ({
@@ -109,10 +109,10 @@ describe('SSE Route GET handler', () => {
       createFileRoute: () => (config: unknown) => config,
     }))
 
-    const sessionMod = await import('@/lib/auth/session')
+    const sessionMod = await import('@bcordes/auth/session')
     mockGetSession = sessionMod.getSession as ReturnType<typeof vi.fn>
 
-    const oidcMod = await import('@/lib/auth/oidc')
+    const oidcMod = await import('@bcordes/auth/oidc')
     mockRefreshToken = oidcMod.refreshToken as ReturnType<typeof vi.fn>
   })
 

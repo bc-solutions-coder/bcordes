@@ -84,7 +84,7 @@ describe('SSE stream proxy', () => {
     oidcRefreshToken?: () => Promise<unknown>
     fetchOverride?: () => Promise<typeof mockFetchResponse>
   }) {
-    vi.doMock('@/lib/auth/session', () => ({
+    vi.doMock('@bcordes/auth/session', () => ({
       getSession: vi.fn(() =>
         Promise.resolve(
           options && 'session' in options
@@ -98,7 +98,7 @@ describe('SSE stream proxy', () => {
       ),
     }))
 
-    vi.doMock('@/lib/auth/oidc', () => ({
+    vi.doMock('@bcordes/auth/oidc', () => ({
       refreshToken: vi.fn(
         options?.oidcRefreshToken ??
           (() =>

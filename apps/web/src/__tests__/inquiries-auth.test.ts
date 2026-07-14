@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { SessionData, User } from '@/lib/auth/types'
 
-import { getSession } from '@/lib/auth/session'
-import { requireAdmin } from '@/lib/auth/middleware'
+import { getSession } from '@bcordes/auth/session'
+import { requireAdmin } from '@bcordes/auth/middleware'
+import type { SessionData, User } from '@bcordes/auth/types'
 
 // Mock getSession — the sole dependency for auth checks
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
 }))
 

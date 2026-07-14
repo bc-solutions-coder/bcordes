@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { User } from '@/lib/auth/types'
-
-import { getAuthUser, requireAuth } from '@/lib/auth/middleware'
+import { getAuthUser, requireAuth } from '@bcordes/auth/middleware'
+import type { User } from '@bcordes/auth/types'
 
 // Mock @tanstack/react-start so createServerFn chains resolve to the handler
 vi.mock('@tanstack/react-start', () => {
@@ -23,7 +22,7 @@ vi.mock('@tanstack/react-start', () => {
 })
 
 // Mock auth middleware
-vi.mock('@/lib/auth/middleware', () => ({
+vi.mock('@bcordes/auth/middleware', () => ({
   getAuthUser: vi.fn(),
   requireAuth: vi.fn(),
 }))

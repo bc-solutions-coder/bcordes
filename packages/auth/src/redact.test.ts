@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { redact, redactUser } from './redact'
-import type { User } from '@/lib/auth/types'
+import type { User } from './types'
 
 describe('redact', () => {
   it('returns "[empty]" for undefined', () => {

@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { SessionData } from '@/lib/auth/types'
-
-import { getSession } from '@/lib/auth/session'
+import { getSession } from '@bcordes/auth/session'
+import type { SessionData } from '@bcordes/auth/types'
 
 // Mock @tanstack/react-start so createServerFn chains resolve to the handler
 vi.mock('@tanstack/react-start', () => {
@@ -23,7 +22,7 @@ vi.mock('@tanstack/react-start', () => {
 })
 
 // Mock session
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
 }))
 

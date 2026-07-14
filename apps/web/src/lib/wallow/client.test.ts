@@ -1,27 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setResponseStatus } from '@tanstack/react-start/server'
+import { getSession, setSession, withRefreshLock } from '@bcordes/auth/session'
+import { parseUserFromToken, refreshToken } from '@bcordes/auth/oidc'
+import { createMockSession } from '@bcordes/auth/testing'
 import { WallowError } from './errors'
 import { createWallowClient } from './client'
-import { createMockSession } from '@/test/mocks/auth'
 
 // ---------------------------------------------------------------------------
 // Imports of mocked modules (typed via vi.mocked)
 // ---------------------------------------------------------------------------
 
-import { getSession, setSession, withRefreshLock } from '@/lib/auth/session'
-import { parseUserFromToken, refreshToken } from '@/lib/auth/oidc'
-
 // ---------------------------------------------------------------------------
 // vi.mock() — hoisted
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
   setSession: vi.fn(),
   withRefreshLock: vi.fn(),
 }))
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   refreshToken: vi.fn(),
   parseUserFromToken: vi.fn(),
 }))

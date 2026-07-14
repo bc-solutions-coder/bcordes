@@ -1,8 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { SessionData, User } from '@/lib/auth/types'
-
-import { getAuthUser } from '@/lib/auth/middleware'
+import { getAuthUser } from '@bcordes/auth/middleware'
+import type { SessionData, User } from '@bcordes/auth/types'
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks for getAuthUser tests (session + oidc)
@@ -22,13 +21,13 @@ const {
   mockFetchUserProfile: vi.fn(),
 }))
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: mockGetSession,
   setSession: mockSetSession,
   clearSession: mockClearSession,
 }))
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   refreshToken: mockRefreshToken,
   fetchUserProfile: mockFetchUserProfile,
 }))
@@ -132,7 +131,7 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
   it('throws a descriptive error when OIDC_CLIENT_ID is not set', async () => {
     vi.resetModules()
     // Remove the vi.mock for oidc so we get the real module
-    vi.doUnmock('@/lib/auth/oidc')
+    vi.doUnmock('@bcordes/auth/oidc')
 
     const saved = { ...process.env }
     process.env.OIDC_ISSUER = 'https://auth.example.com'
@@ -141,7 +140,7 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
     process.env.SESSION_SECRET = 'a]zV-*M8WG#aNrqd,1>dC&.7[Px4bxgf'
 
     try {
-      const oidc = await import('@/lib/auth/oidc')
+      const oidc = await import('@bcordes/auth/oidc')
       const state = oidc.randomState()
       const verifier = oidc.randomPKCECodeVerifier()
       // getConfig() is called internally — should throw because OIDC_CLIENT_ID is empty
@@ -155,7 +154,7 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
 
   it('throws a descriptive error when OIDC_REDIRECT_URI is not set', async () => {
     vi.resetModules()
-    vi.doUnmock('@/lib/auth/oidc')
+    vi.doUnmock('@bcordes/auth/oidc')
 
     const saved = { ...process.env }
     process.env.OIDC_ISSUER = 'https://auth.example.com'
@@ -164,7 +163,7 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
     process.env.SESSION_SECRET = 'a]zV-*M8WG#aNrqd,1>dC&.7[Px4bxgf'
 
     try {
-      const oidc = await import('@/lib/auth/oidc')
+      const oidc = await import('@bcordes/auth/oidc')
       const state = oidc.randomState()
       const verifier = oidc.randomPKCECodeVerifier()
       await expect(oidc.getAuthorizationUrl(state, verifier)).rejects.toThrow(
@@ -183,13 +182,13 @@ describe('Auth Hardening — OIDC getConfig validation', () => {
 describe('Auth Hardening — session cookie Max-Age', () => {
   it('includes Max-Age=86400 in the Set-Cookie header value', async () => {
     vi.resetModules()
-    vi.doUnmock('@/lib/auth/session')
+    vi.doUnmock('@bcordes/auth/session')
 
     const saved = { ...process.env }
     process.env.SESSION_SECRET = 'a]zV-*M8WG#aNrqd,1>dC&.7[Px4bxgf'
 
     try {
-      const { sealSessionCookie } = await import('@/lib/auth/session')
+      const { sealSessionCookie } = await import('@bcordes/auth/session')
 
       const data: SessionData = {
         sessionId: 'sess-cookie-test',

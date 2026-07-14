@@ -1,4 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { getSession } from '@bcordes/auth/session'
+import { requireAdmin } from '@bcordes/auth/middleware'
+import {
+  createMockAdminSession,
+  createMockSession,
+} from '@bcordes/auth/testing'
 import {
   fetchInquiries,
   fetchInquiry,
@@ -11,7 +17,6 @@ import {
 import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
 import type { MockWallowClient } from '@/test/mocks/wallow'
 import { createMockWallowClient, jsonResponse } from '@/test/mocks/wallow'
-import { createMockAdminSession, createMockSession } from '@/test/mocks/auth'
 
 // ---------------------------------------------------------------------------
 // Imports (after mocks are hoisted)
@@ -19,8 +24,6 @@ import { createMockAdminSession, createMockSession } from '@/test/mocks/auth'
 
 import { createWallowClient } from '@/lib/wallow/client'
 import { serviceClient } from '@/lib/wallow/service-client'
-import { getSession } from '@/lib/auth/session'
-import { requireAdmin } from '@/lib/auth/middleware'
 
 // ---------------------------------------------------------------------------
 // Mock @tanstack/react-start so createServerFn chains resolve to the handler
@@ -64,11 +67,11 @@ vi.mock('@/lib/wallow/service-client', () => ({
   },
 }))
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
 }))
 
-vi.mock('@/lib/auth/middleware', () => ({
+vi.mock('@bcordes/auth/middleware', () => ({
   requireAdmin: vi.fn(),
 }))
 

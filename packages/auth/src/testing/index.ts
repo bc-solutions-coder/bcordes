@@ -1,4 +1,4 @@
-import type { SessionData, User } from '@/lib/auth/types'
+import type { SessionData, User } from '../types'
 
 // ---------------------------------------------------------------------------
 // User factories

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@bc-solutions-coder/sdk": "0.1.0",
+    "@bcordes/auth": "workspace:*",
     "@bcordes/logger": "workspace:*",
     "@bcordes/query": "workspace:*",
     "@bcordes/ui": "workspace:*",

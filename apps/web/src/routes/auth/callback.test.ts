@@ -4,16 +4,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // Imports (after mocks)
 // ---------------------------------------------------------------------------
 
-import type { TokenResult } from '@/lib/auth/oidc'
-import type { User } from '@/lib/auth/types'
-import { exchangeCode, fetchUserProfile } from '@/lib/auth/oidc'
-import { sealSessionCookie } from '@/lib/auth/session'
+import { exchangeCode, fetchUserProfile } from '@bcordes/auth/oidc'
+import { sealSessionCookie } from '@bcordes/auth/session'
+import type { TokenResult } from '@bcordes/auth/oidc'
+import type { User } from '@bcordes/auth/types'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
 // ---------------------------------------------------------------------------
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   exchangeCode: vi.fn(),
   fetchUserProfile: vi.fn(),
   parseUserFromToken: vi.fn(() => ({
@@ -27,7 +27,7 @@ vi.mock('@/lib/auth/oidc', () => ({
   })),
 }))
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   sealSessionCookie: vi.fn(),
 }))
 

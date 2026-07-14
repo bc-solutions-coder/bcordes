@@ -213,9 +213,9 @@ describe('every importer was rewritten', () => {
     expect(importers.length).toBeGreaterThanOrEqual(FORMER_IMPORTER_COUNT)
     expect(importers).toEqual(
       expect.arrayContaining([
-        'apps/web/src/lib/auth/session.ts',
         'apps/web/src/lib/wallow/service-client.ts',
         'apps/web/src/routes/api/health.ts',
+        'packages/auth/src/session.ts',
       ]),
     )
   })

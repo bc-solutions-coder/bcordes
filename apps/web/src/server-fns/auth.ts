@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { getAuthUser, requireAuth } from '@/lib/auth/middleware'
+import { getAuthUser, requireAuth } from '@bcordes/auth/middleware'
 
 export const serverRequireAuth = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ returnTo: z.string().optional() }))

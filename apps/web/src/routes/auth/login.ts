@@ -4,8 +4,8 @@ import {
   getAuthorizationUrl,
   randomPKCECodeVerifier,
   randomState,
-} from '@/lib/auth/oidc'
-import { redact } from '@/lib/auth/redact'
+} from '@bcordes/auth/oidc'
+import { redact } from '@bcordes/auth'
 
 const log = logger.child({ module: 'auth.login' })
 

@@ -1,0 +1,27 @@
+{
+  "name": "@bcordes/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./session": "./src/session.ts",
+    "./oidc": "./src/oidc.ts",
+    "./middleware": "./src/middleware.ts",
+    "./types": "./src/types.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "dependencies": {
+    "openid-client": "^6.4.3",
+    "iron-webcrypto": "^2.0.0",
+    "@bcordes/logger": "workspace:*",
+    "@bcordes/valkey": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-start": "~1.167.5",
+    "@tanstack/react-router": "1.168.3"
+  },
+  "devDependencies": {
+    "@bcordes/config": "workspace:*"
+  }
+}

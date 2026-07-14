@@ -15,12 +15,12 @@ const { mockGetSession, mockClearSession, mockGetLogoutUrl } = vi.hoisted(
   }),
 )
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('@bcordes/auth/session', () => ({
   getSession: mockGetSession,
   clearSession: mockClearSession,
 }))
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('@bcordes/auth/oidc', () => ({
   getLogoutUrl: mockGetLogoutUrl,
 }))
 

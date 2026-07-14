@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getAuthUser, requireAdmin, requireAuth } from './middleware'
-import { createMockSession, createMockUser } from '@/test/mocks/auth'
 
-import { clearSession, getSession, setSession } from '@/lib/auth/session'
-import { fetchUserProfile, refreshToken } from '@/lib/auth/oidc'
+import { clearSession, getSession, setSession } from './session'
+import { fetchUserProfile, refreshToken } from './oidc'
+// Session/user fixtures come from the package's own /testing entry, shipped by
+// T6.2. Sibling-relative here (leaf vitest has no '@/' alias); apps/web
+// consumers reach the same factories via the '@bcordes/auth/testing' subpath.
+import { createMockSession, createMockUser } from './testing'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -21,13 +24,13 @@ vi.mock('@bcordes/logger', () => {
   return { default: mockLogger }
 })
 
-vi.mock('@/lib/auth/session', () => ({
+vi.mock('./session', () => ({
   getSession: vi.fn(),
   setSession: vi.fn(),
   clearSession: vi.fn(),
 }))
 
-vi.mock('@/lib/auth/oidc', () => ({
+vi.mock('./oidc', () => ({
   refreshToken: vi.fn(),
   fetchUserProfile: vi.fn(),
 }))

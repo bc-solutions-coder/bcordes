@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { User } from '@/lib/auth/types'
+import type { User } from '@bcordes/auth/types'
 
 async function fetchUser(): Promise<User | null> {
   const res = await fetch('/auth/me')

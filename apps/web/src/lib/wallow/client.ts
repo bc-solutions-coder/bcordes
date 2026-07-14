@@ -1,6 +1,6 @@
 import { setResponseStatus } from '@tanstack/react-start/server'
-import { getSession, setSession, withRefreshLock } from '../auth/session'
-import { parseUserFromToken, refreshToken } from '../auth/oidc'
+import { getSession, setSession, withRefreshLock } from '@bcordes/auth/session'
+import { parseUserFromToken, refreshToken } from '@bcordes/auth/oidc'
 import { WallowError } from './errors'
 import {
   isAuthRedirect,
@@ -9,7 +9,7 @@ import {
   toNetworkError,
 } from './request'
 import { WALLOW_BASE_URL } from './config'
-import type { SessionData } from '../auth/types'
+import type { SessionData } from '@bcordes/auth/types'
 
 interface WallowClient {
   get: (path: string) => Promise<Response>

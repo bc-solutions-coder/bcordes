@@ -168,8 +168,8 @@ describe('every importer was rewritten', () => {
     expect(importers).toEqual(
       expect.arrayContaining([
         'apps/web/src/start.ts',
-        'apps/web/src/lib/auth/session.ts',
         'apps/web/src/lib/wallow/request.ts',
+        'packages/auth/src/session.ts',
         'apps/web/src/routes/api/notifications/stream.ts',
       ]),
     )
