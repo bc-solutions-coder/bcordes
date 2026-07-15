@@ -23,7 +23,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 const mockUseUser = vi.fn()
-vi.mock('@/hooks/useUser', () => ({
+vi.mock('@/shared/auth', () => ({
   useUser: () => mockUseUser(),
 }))
 

@@ -5,15 +5,13 @@ vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (config: Record<string, unknown>) => config,
 }))
 
-vi.mock('@/components/about/AboutHero', () => ({
+vi.mock('@/features/about', async () => ({
+  ...(await vi.importActual('@/features/about')),
   AboutHero: () => <div data-testid="about-hero">AboutHero</div>,
-}))
-
-vi.mock('@/components/about/Timeline', () => ({
   Timeline: () => <div data-testid="timeline">Timeline</div>,
 }))
 
-vi.mock('@/hooks/useUser', () => ({
+vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 

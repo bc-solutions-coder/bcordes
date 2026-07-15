@@ -265,7 +265,7 @@ describe('every form-primitive importer was rewritten', () => {
     // the T10.2 block below); it is no longer an external importer here.
     expect(filesMatching('@bcordes/forms')).toEqual(
       expect.arrayContaining([
-        'apps/web/src/components/contact/ContactFormFields.tsx',
+        'apps/web/src/features/contact/components/ContactFormFields.tsx',
       ]),
     )
   })
@@ -327,7 +327,9 @@ describe('SelectFormField really moved into @bcordes/forms', () => {
     // A leftover copy in apps/web would let the app fork the component instead
     // of consuming the package's, hiding a half-finished move.
     expect(
-      existsSync(join(webDir, 'src/components/contact/SelectFormField.tsx')),
+      existsSync(
+        join(webDir, 'src/features/contact/components/SelectFormField.tsx'),
+      ),
     ).toBe(false)
   })
 
@@ -370,7 +372,7 @@ describe('SelectFormField really moved into @bcordes/forms', () => {
     // The call sites (ContactFormFields) import SelectFormField by package name,
     // and no sibling './SelectFormField' import survives now that the file left.
     const consumer = readText(
-      join(webDir, 'src/components/contact/ContactFormFields.tsx'),
+      join(webDir, 'src/features/contact/components/ContactFormFields.tsx'),
     )
 
     expect(consumer).toMatch(

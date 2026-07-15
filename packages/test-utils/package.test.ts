@@ -227,9 +227,9 @@ describe('every render-helper importer was repointed', () => {
     // A few stable call sites no later feature relocates.
     expect(importers).toEqual(
       expect.arrayContaining([
-        'apps/web/src/components/contact/ContactForm.test.tsx',
-        'apps/web/src/components/layout/NotificationBell.test.tsx',
-        'apps/web/src/components/projects/ProjectCard.test.tsx',
+        'apps/web/src/features/contact/components/ContactForm.test.tsx',
+        'apps/web/src/features/notifications/components/NotificationBell.test.tsx',
+        'apps/web/src/features/projects/components/ProjectCard.test.tsx',
         'apps/web/src/routes/dashboard/settings.index.test.tsx',
       ]),
     )

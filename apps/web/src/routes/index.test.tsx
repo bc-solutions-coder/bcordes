@@ -33,19 +33,10 @@ vi.mock('@tanstack/react-router', () => ({
   }),
 }))
 
-vi.mock('@/components/home/Hero', () => ({
+vi.mock('@/features/home', () => ({
   Hero: () => <div data-testid="hero">Hero</div>,
-}))
-
-vi.mock('@/components/home/ServicesGrid', () => ({
   ServicesGrid: () => <div data-testid="services-grid">ServicesGrid</div>,
-}))
-
-vi.mock('@/components/home/SkillsShowcase', () => ({
   SkillsShowcase: () => <div data-testid="skills-showcase">SkillsShowcase</div>,
-}))
-
-vi.mock('@/components/home/FeaturedWork', () => ({
   FeaturedWork: ({ showcases }: { showcases: Array<unknown> }) => (
     <div data-testid="featured-work">
       FeaturedWork: {showcases.length} items
@@ -53,11 +44,11 @@ vi.mock('@/components/home/FeaturedWork', () => ({
   ),
 }))
 
-vi.mock('@/content/projects', () => ({
+vi.mock('@/features/projects', () => ({
   getFeaturedShowcases: () => mockShowcases,
 }))
 
-vi.mock('@/hooks/useUser', () => ({
+vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 

@@ -269,10 +269,10 @@ describe('every importer was rewritten', () => {
     // A few stable app-side call sites that no later feature relocates.
     expect(importers).toEqual(
       expect.arrayContaining([
-        'apps/web/src/server-fns/inquiries.ts',
-        'apps/web/src/server-fns/notifications.ts',
-        'apps/web/src/lib/notifications/routing.ts',
-        'apps/web/src/components/layout/NotificationBell.tsx',
+        'apps/web/src/features/inquiries/server-fns/inquiries.ts',
+        'apps/web/src/features/notifications/server-fns/notifications.ts',
+        'apps/web/src/features/notifications/lib/routing.ts',
+        'apps/web/src/features/notifications/components/NotificationBell.tsx',
       ]),
     )
   })

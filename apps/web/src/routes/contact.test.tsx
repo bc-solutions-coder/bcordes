@@ -34,7 +34,7 @@ vi.mock('@/components/shared/FadeInView', () => ({
   ),
 }))
 
-vi.mock('@/components/contact/ContactForm', () => ({
+vi.mock('@/features/contact', () => ({
   ContactForm: () => <div data-testid="contact-form">ContactForm</div>,
 }))
 

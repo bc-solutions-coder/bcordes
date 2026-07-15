@@ -11,7 +11,7 @@ import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
-import { EventStreamProvider } from '@/hooks/EventStreamProvider'
+import { EventStreamProvider } from '@/features/notifications'
 import { reportWebVitals } from '@/lib/web-vitals'
 
 function DevTools() {

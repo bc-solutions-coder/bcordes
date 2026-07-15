@@ -29,7 +29,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
-vi.mock('./NotificationBell', () => ({
+vi.mock('@/features/notifications', () => ({
   NotificationBell: () => <div data-testid="notification-bell" />,
 }))
 
@@ -41,7 +41,7 @@ vi.mock('./MobileNav', () => ({
   MobileNav: () => <div data-testid="mobile-nav" />,
 }))
 
-vi.mock('@/hooks/useUser', () => ({
+vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 

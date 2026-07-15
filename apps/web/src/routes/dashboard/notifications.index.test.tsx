@@ -17,25 +17,21 @@ const mockFetchNotifications = vi.fn()
 const mockMarkNotificationRead = vi.fn()
 const mockMarkAllNotificationsRead = vi.fn()
 
-vi.mock('@/server-fns/notifications', () => ({
+const mockUseNotificationFilters = vi.fn()
+const mockUseNotificationSelection = vi.fn()
+
+// The notification sources now live behind the @/features/notifications barrel.
+// Spread the real module so NotificationRow renders for real, then override the
+// server fns, hooks, and lib helpers this page drives.
+vi.mock('@/features/notifications', async () => ({
+  ...(await vi.importActual('@/features/notifications')),
   fetchNotifications: (...args: Array<unknown>) =>
     mockFetchNotifications(...args),
   markNotificationRead: (...args: Array<unknown>) =>
     mockMarkNotificationRead(...args),
   markAllNotificationsRead: (...args: Array<unknown>) =>
     mockMarkAllNotificationsRead(...args),
-}))
-
-vi.mock('@/server-fns/auth', () => ({
-  serverRequireAuth: vi.fn(),
-}))
-
-vi.mock('@/hooks/useEventStreamEvents', () => ({
   useEventStreamEvents: vi.fn(),
-}))
-
-const mockUseNotificationFilters = vi.fn()
-vi.mock('@/hooks/useNotificationFilters', () => ({
   notificationTypes: [
     'TaskAssigned',
     'InquirySubmitted',
@@ -47,20 +43,14 @@ vi.mock('@/hooks/useNotificationFilters', () => ({
   ],
   useNotificationFilters: (...args: Array<unknown>) =>
     mockUseNotificationFilters(...args),
-}))
-
-const mockUseNotificationSelection = vi.fn()
-vi.mock('@/hooks/useNotificationSelection', () => ({
   useNotificationSelection: (...args: Array<unknown>) =>
     mockUseNotificationSelection(...args),
-}))
-
-vi.mock('@/lib/notifications/query-utils', () => ({
   invalidateNotifications: vi.fn(),
+  getNotificationRoute: vi.fn(() => '/dashboard'),
 }))
 
-vi.mock('@/lib/notifications/routing', () => ({
-  getNotificationRoute: vi.fn(() => '/dashboard'),
+vi.mock('@/shared/auth', () => ({
+  serverRequireAuth: vi.fn(),
 }))
 
 // Only the clock is faked. Spreading the original module keeps cn() real —

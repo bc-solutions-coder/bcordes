@@ -18,22 +18,20 @@ import { Badge } from '@bcordes/ui/components/badge'
 import { Button } from '@bcordes/ui/components/button'
 import { Checkbox } from '@bcordes/ui/components/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@bcordes/ui/components/tabs'
-import type { NotificationType } from '@/hooks/useNotificationFilters'
-import { serverRequireAuth } from '@/server-fns/auth'
+import type { NotificationType } from '@/features/notifications'
+import { serverRequireAuth } from '@/shared/auth'
 import {
+  NotificationRow,
   fetchNotifications,
+  getNotificationRoute,
+  invalidateNotifications,
   markAllNotificationsRead,
   markNotificationRead,
-} from '@/server-fns/notifications'
-import { invalidateNotifications } from '@/lib/notifications/query-utils'
-import { getNotificationRoute } from '@/lib/notifications/routing'
-import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
-import {
   notificationTypes,
+  useEventStreamEvents,
   useNotificationFilters,
-} from '@/hooks/useNotificationFilters'
-import { useNotificationSelection } from '@/hooks/useNotificationSelection'
-import { NotificationRow } from '@/components/dashboard/NotificationRow'
+  useNotificationSelection,
+} from '@/features/notifications'
 
 const NOTIFICATION_TYPE_CONFIG: Record<
   NotificationType,

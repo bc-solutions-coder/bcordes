@@ -38,7 +38,7 @@ vi.mock('@bcordes/ui/components/sonner', () => ({
 
 vi.mock('@/styles.css?url', () => ({ default: 'styles.css' }))
 
-vi.mock('@/hooks/useUser', () => ({
+vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 
@@ -203,7 +203,7 @@ describe('__root route', () => {
         Toaster: () => <div data-testid="toaster">Toaster</div>,
       }))
       vi.doMock('@/styles.css?url', () => ({ default: 'styles.css' }))
-      vi.doMock('@/hooks/useUser', () => ({
+      vi.doMock('@/shared/auth', () => ({
         useUser: () => ({ user: null, isLoading: false }),
       }))
 

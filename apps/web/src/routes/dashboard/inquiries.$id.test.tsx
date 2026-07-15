@@ -23,7 +23,7 @@ const mockFetchCurrentUserRoles = vi.fn()
 const mockServerRequireAuth = vi.fn()
 const mockSubmitInquiryComment = vi.fn()
 
-vi.mock('@/server-fns/inquiries', () => ({
+vi.mock('@/features/inquiries', () => ({
   fetchInquiry: (...args: Array<unknown>) => mockFetchInquiry(...args),
   fetchInquiryComments: (...args: Array<unknown>) =>
     mockFetchInquiryComments(...args),
@@ -31,14 +31,14 @@ vi.mock('@/server-fns/inquiries', () => ({
     mockSubmitInquiryComment(...args),
 }))
 
-vi.mock('@/server-fns/auth', () => ({
+vi.mock('@/shared/auth', () => ({
   fetchCurrentUserRoles: (...args: Array<unknown>) =>
     mockFetchCurrentUserRoles(...args),
   serverRequireAuth: (...args: Array<unknown>) =>
     mockServerRequireAuth(...args),
 }))
 
-vi.mock('@/hooks/useEventStreamEvents', () => ({
+vi.mock('@/features/notifications', () => ({
   useEventStreamEvents: vi.fn(),
 }))
 

@@ -81,24 +81,24 @@ const TESTED_COMPONENTS = [
 
 /** Every file outside the moved tree that imported a primitive. */
 const FORMER_IMPORTERS = [
-  'apps/web/src/components/about/AboutHero.tsx',
-  'apps/web/src/components/contact/ContactFormFields.tsx',
-  'apps/web/src/components/contact/ContactFormSuccess.tsx',
+  'apps/web/src/features/about/components/AboutHero.tsx',
+  'apps/web/src/features/contact/components/ContactFormFields.tsx',
+  'apps/web/src/features/contact/components/ContactFormSuccess.tsx',
   // SelectFormField left apps/web for @bcordes/forms in T10.2, but it still
   // composes @bcordes/ui/components/select — so it remains a ui-primitive
   // importer, now at its packages/forms home.
   'packages/forms/src/SelectFormField.tsx',
-  'apps/web/src/components/dashboard/NotificationRow.tsx',
-  'apps/web/src/components/home/FeaturedWork.tsx',
-  'apps/web/src/components/home/Hero.tsx',
-  'apps/web/src/components/home/ServicesGrid.tsx',
+  'apps/web/src/features/notifications/components/NotificationRow.tsx',
+  'apps/web/src/features/home/components/FeaturedWork.tsx',
+  'apps/web/src/features/home/components/Hero.tsx',
+  'apps/web/src/features/home/components/ServicesGrid.tsx',
   'apps/web/src/components/layout/Footer.tsx',
   'apps/web/src/components/layout/Header.tsx',
   'apps/web/src/components/layout/MobileNav.tsx',
-  'apps/web/src/components/layout/NotificationBell.tsx',
+  'apps/web/src/features/notifications/components/NotificationBell.tsx',
   'apps/web/src/components/layout/UserMenu.tsx',
-  'apps/web/src/components/projects/ProjectCard.tsx',
-  'apps/web/src/components/projects/ProjectFilter.tsx',
+  'apps/web/src/features/projects/components/ProjectCard.tsx',
+  'apps/web/src/features/projects/components/ProjectFilter.tsx',
   'apps/web/src/routes/__root.test.tsx',
   'apps/web/src/routes/dashboard/inquiries.$id.tsx',
   'apps/web/src/routes/dashboard/inquiries.index.tsx',

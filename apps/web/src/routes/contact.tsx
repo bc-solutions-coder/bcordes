@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Github, Linkedin, Mail, MapPin } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { FadeInView } from '@/components/shared/FadeInView'
-import { ContactForm } from '@/components/contact/ContactForm'
+import { ContactForm } from '@/features/contact'
 
 export const Route = createFileRoute('/contact')({
   component: ContactPage,

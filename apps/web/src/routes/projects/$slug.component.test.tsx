@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 
-import type { ShowcaseMeta } from '@/content/projects'
+import type { ShowcaseMeta } from '@/features/projects'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
@@ -37,7 +37,7 @@ vi.mock('@/components/shared/FadeInView', () => ({
   ),
 }))
 
-vi.mock('@/content/projects', () => ({
+vi.mock('@/features/projects', () => ({
   getShowcases: vi.fn(),
   getShowcaseContent: (...args: Array<unknown>) =>
     mockGetShowcaseContent(...args),

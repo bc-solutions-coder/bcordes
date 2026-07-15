@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Notification } from '@bcordes/wallow/types'
-import { getNotificationRoute } from '@/lib/notifications/routing'
+import { getNotificationRoute } from '@/features/notifications'
 
 function makeNotification(overrides: Partial<Notification> = {}): Notification {
   return {

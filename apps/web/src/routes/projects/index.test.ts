@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { ShowcaseMeta } from '@/content/projects'
+import type { ShowcaseMeta } from '@/features/projects'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
@@ -7,7 +7,7 @@ import type { ShowcaseMeta } from '@/content/projects'
 
 const mockGetShowcases = vi.fn()
 
-vi.mock('@/content/projects', () => ({
+vi.mock('@/features/projects', () => ({
   getShowcases: mockGetShowcases,
 }))
 

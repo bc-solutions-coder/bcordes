@@ -18,12 +18,12 @@ import {
   TooltipTrigger,
 } from '@bcordes/ui/components/tooltip'
 import type { NotificationSettings } from '@bcordes/wallow/types'
-import { serverRequireAuth } from '@/server-fns/auth'
+import { serverRequireAuth } from '@/shared/auth'
 import {
   fetchNotificationSettings,
   updateChannelSetting,
-} from '@/server-fns/notifications'
-import { usePushNotifications } from '@/hooks/usePushNotifications'
+  usePushNotifications,
+} from '@/features/notifications'
 
 export const Route = createFileRoute('/dashboard/settings/')({
   beforeLoad: () =>

@@ -10,15 +10,17 @@ import type { NotificationSettings } from '@bcordes/wallow/types'
 const mockFetchNotificationSettings = vi.fn()
 const mockUpdateChannelSetting = vi.fn()
 
-vi.mock('@/server-fns/notifications', () => ({
+vi.mock('@/features/notifications', async () => ({
+  ...(await vi.importActual('@/features/notifications')),
   fetchNotificationSettings: (...args: Array<unknown>) =>
     mockFetchNotificationSettings(...args),
   updateChannelSetting: (...args: Array<unknown>) =>
     mockUpdateChannelSetting(...args),
+  usePushNotifications: () => mockPushState,
 }))
 
 const mockServerRequireAuth = vi.fn()
-vi.mock('@/server-fns/auth', () => ({
+vi.mock('@/shared/auth', () => ({
   serverRequireAuth: (...args: Array<unknown>) =>
     mockServerRequireAuth(...args),
 }))
@@ -36,10 +38,6 @@ const mockPushState = {
   disable: vi.fn(),
   sendTest: vi.fn(),
 }
-
-vi.mock('@/hooks/usePushNotifications', () => ({
-  usePushNotifications: () => mockPushState,
-}))
 
 const mockUseLoaderData = vi.fn()
 

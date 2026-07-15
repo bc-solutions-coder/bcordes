@@ -1,10 +1,12 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { Hero } from '@/components/home/Hero'
-import { ServicesGrid } from '@/components/home/ServicesGrid'
-import { SkillsShowcase } from '@/components/home/SkillsShowcase'
-import { FeaturedWork } from '@/components/home/FeaturedWork'
-import { getFeaturedShowcases } from '@/content/projects'
-import { useUser } from '@/hooks/useUser'
+import {
+  FeaturedWork,
+  Hero,
+  ServicesGrid,
+  SkillsShowcase,
+} from '@/features/home'
+import { getFeaturedShowcases } from '@/features/projects'
+import { useUser } from '@/shared/auth'
 
 export const Route = createFileRoute('/')({
   component: HomePage,

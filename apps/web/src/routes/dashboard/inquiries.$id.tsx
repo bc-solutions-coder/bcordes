@@ -6,13 +6,13 @@ import { Badge } from '@bcordes/ui/components/badge'
 import { Button } from '@bcordes/ui/components/button'
 import { Textarea } from '@bcordes/ui/components/textarea'
 import { Checkbox } from '@bcordes/ui/components/checkbox'
-import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
+import { useEventStreamEvents } from '@/features/notifications'
 import {
   fetchInquiry,
   fetchInquiryComments,
   submitInquiryComment,
-} from '@/server-fns/inquiries'
-import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
+} from '@/features/inquiries'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/shared/auth'
 
 export const Route = createFileRoute('/dashboard/inquiries/$id')({
   beforeLoad: () =>

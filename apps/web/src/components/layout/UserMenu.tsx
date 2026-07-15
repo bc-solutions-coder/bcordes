@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@bcordes/ui/components/dropdown-menu'
-import { useUser } from '@/hooks/useUser'
+import { useUser } from '@/shared/auth'
 
 function getInitials(name: string | undefined) {
   if (!name) return '?'

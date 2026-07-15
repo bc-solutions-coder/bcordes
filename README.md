@@ -92,10 +92,10 @@ This repo is a **pnpm workspace monorepo**: the releasable app lives in `apps/we
 │   └── web/                 # TanStack Start application (package: bcordes)
 │       ├── src/
 │       │   ├── routes/          # File-based route definitions (incl. api/notifications/stream.ts SSE)
-│       │   ├── components/      # App feature components
-│       │   ├── server-fns/      # TanStack Start server functions
-│       │   ├── hooks/           # App-local hooks (SSE event stream, auth, animations)
-│       │   └── content/         # Static content (blog, projects)
+│       │   ├── features/        # Feature modules (home, about, projects, contact, inquiries, notifications) — each a public src index.ts, internals private
+│       │   ├── shared/          # Cross-cutting app modules (e.g. auth) with the same public-API discipline
+│       │   ├── components/      # Shared app components (layout, shared); feature components live under features/<name>/components/
+│       │   └── hooks/           # App-local hooks (SSE event stream, auth, animations)
 │       └── e2e/                 # Playwright e2e suite
 └── packages/                # Internal @bcordes/* libraries (private, workspace:*)
     ├── config/              # Shared ESLint / Prettier / tsconfig base

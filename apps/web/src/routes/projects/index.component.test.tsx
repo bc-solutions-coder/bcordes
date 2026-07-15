@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 
-import type { ShowcaseMeta } from '@/content/projects'
+import type { ShowcaseMeta } from '@/features/projects'
+import type * as ProjectsModule from '@/features/projects'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)
@@ -42,7 +43,8 @@ vi.mock('@/components/shared/FadeInView', () => ({
   ),
 }))
 
-vi.mock('@/content/projects', () => ({
+vi.mock('@/features/projects', async (importOriginal) => ({
+  ...(await importOriginal<typeof ProjectsModule>()),
   getShowcases: vi.fn(),
 }))
 

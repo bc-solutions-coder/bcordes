@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import type { ShowcaseMeta } from '@/content/projects'
-import { getShowcases } from '@/content/projects'
-import { ProjectCard } from '@/components/projects/ProjectCard'
-import { ProjectFilter } from '@/components/projects/ProjectFilter'
+import type { ShowcaseMeta } from '@/features/projects'
+import { ProjectCard, ProjectFilter, getShowcases } from '@/features/projects'
 import { FadeInView } from '@/components/shared/FadeInView'
 
 export const Route = createFileRoute('/projects/')({

@@ -20,10 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@bcordes/ui/components/select'
-import { useEventStreamEvents } from '@/hooks/useEventStreamEvents'
-import { fetchMyInquiries, updateInquiryStatus } from '@/server-fns/inquiries'
-import { fetchCurrentUserRoles, serverRequireAuth } from '@/server-fns/auth'
-import { STATUS_COLORS, STATUS_LABELS } from '@/config/inquiries'
+import { useEventStreamEvents } from '@/features/notifications'
+import {
+  STATUS_COLORS,
+  STATUS_LABELS,
+  fetchMyInquiries,
+  updateInquiryStatus,
+} from '@/features/inquiries'
+import { fetchCurrentUserRoles, serverRequireAuth } from '@/shared/auth'
 
 export const Route = createFileRoute('/dashboard/inquiries/')({
   beforeLoad: () =>

@@ -21,6 +21,20 @@ const noDeepPackageImports = {
     "Import a package's declared export subpaths, not its internals (e.g. '@bcordes/config/eslint', never '@bcordes/config/src/...').",
 }
 
+// Feature/shared modules under apps/web/src expose a public API via their own
+// index.ts; cross-module imports must target the bare module
+// (@/features/notifications, @/shared/auth), never reach into its internals.
+// Intra-module imports use relative paths, which this pattern does not match.
+// Carried by every app-scoped no-restricted-imports block for the same
+// replace-not-merge reason as noTildeAlias/noDeepPackageImports: flat ESLint
+// config replaces (does not merge) rule options, so the last matching block for
+// a given files glob wins outright and must repeat every group it wants.
+const noDeepModuleImports = {
+  group: ['@/features/*/*', '@/shared/*/*'],
+  message:
+    'Import a feature/shared module through its index (e.g. @/features/notifications), not its internals.',
+}
+
 /** @type {import('eslint').Linter.Config[]} */
 export const config = [
   ...tanstackConfig,
@@ -97,7 +111,7 @@ export const config = [
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: [noDeepPackageImports, noTildeAlias] },
+        { patterns: [noDeepPackageImports, noTildeAlias, noDeepModuleImports] },
       ],
     },
   },
@@ -112,6 +126,7 @@ export const config = [
           patterns: [
             noDeepPackageImports,
             noTildeAlias,
+            noDeepModuleImports,
             {
               group: ['@/routes/*'],
               message:
@@ -133,6 +148,7 @@ export const config = [
           patterns: [
             noDeepPackageImports,
             noTildeAlias,
+            noDeepModuleImports,
             {
               group: ['@/routes/*'],
               message: 'Hooks must not import from routes.',
@@ -158,10 +174,37 @@ export const config = [
           patterns: [
             noDeepPackageImports,
             noTildeAlias,
+            noDeepModuleImports,
             {
               group: ['@/routes/*', '@/components/*', '@/hooks/*'],
               message:
                 'lib/ is a low-level layer. It must not import from routes, components, or hooks.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // features/shared are consumed BY routes and the app shell; they must never
+  // depend on routes (same layering direction as the existing components rule).
+  {
+    files: [
+      'apps/web/src/features/**/*.{ts,tsx}',
+      'apps/web/src/shared/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            noDeepPackageImports,
+            noTildeAlias,
+            noDeepModuleImports,
+            {
+              group: ['@/routes/*'],
+              message:
+                'Features/shared must not import from routes. Routes import features, not the reverse.',
             },
           ],
         },

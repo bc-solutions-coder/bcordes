@@ -243,7 +243,7 @@ describe('every importer was rewritten', () => {
     // A few stable app-side call sites that no later feature relocates.
     expect(importers).toEqual(
       expect.arrayContaining([
-        'apps/web/src/hooks/useUser.ts',
+        'apps/web/src/shared/auth/hooks/useUser.ts',
         'apps/web/src/routes/auth/me.ts',
         'apps/web/src/routes/auth/logout.ts',
         'packages/server/src/csrf.ts',

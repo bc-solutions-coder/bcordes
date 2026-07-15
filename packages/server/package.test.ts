@@ -160,14 +160,24 @@ describe('the middleware really moved out of apps/web', () => {
   })
 
   it('moves csrf.ts out of apps/web/src/server-fns (product server-fns stay)', () => {
-    // Only csrf.ts leaves server-fns; auth.ts, inquiries.ts and notifications.ts
-    // are product domain and stay in apps/web permanently.
+    // Only csrf.ts leaves server-fns; auth.ts is product domain and stays in
+    // apps/web permanently. inquiries.ts and notifications.ts each relocated
+    // into their own feature module (apps/web/src/features/*/server-fns/).
     expect(existsSync(join(webDir, 'src/server-fns/csrf.ts'))).toBe(false)
     expect(existsSync(join(webDir, 'src/server-fns/csrf.test.ts'))).toBe(false)
-    expect(existsSync(join(webDir, 'src/server-fns/inquiries.ts'))).toBe(true)
+    expect(
+      existsSync(
+        join(webDir, 'src/features/inquiries/server-fns/inquiries.ts'),
+      ),
+    ).toBe(true)
     expect(existsSync(join(webDir, 'src/server-fns/notifications.ts'))).toBe(
-      true,
+      false,
     )
+    expect(
+      existsSync(
+        join(webDir, 'src/features/notifications/server-fns/notifications.ts'),
+      ),
+    ).toBe(true)
   })
 
   it('carries every source module into packages/server/src', () => {

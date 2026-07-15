@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { MobileNav as MobileNavShell } from '@bcordes/navigation'
 import { Button } from '@bcordes/ui/components/button'
 import { NAV_LINKS } from '@/config/navigation'
-import { useUser } from '@/hooks/useUser'
+import { useUser } from '@/shared/auth'
 
 const NAV_ITEMS = NAV_LINKS.map((link) => ({
   label: link.label,

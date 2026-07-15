@@ -1,9 +1,9 @@
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { Badge } from '@bcordes/ui/components/badge'
-import type { ShowcaseMeta } from '@/content/projects'
+import type { ShowcaseMeta } from '@/features/projects'
 import { FadeInView } from '@/components/shared/FadeInView'
-import { getShowcaseContent, getShowcases } from '@/content/projects'
+import { getShowcaseContent, getShowcases } from '@/features/projects'
 
 export const Route = createFileRoute('/projects/$slug')({
   component: ShowcaseDetailPage,
