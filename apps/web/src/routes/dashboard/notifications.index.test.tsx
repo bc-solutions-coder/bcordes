@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import type * as BcordesUtils from '@bcordes/utils'
-import type { Notification } from '@/lib/wallow/types'
-import { renderWithProviders } from '@/test/helpers/render'
+import type { Notification } from '@bcordes/wallow/types'
 
 // ---------------------------------------------------------------------------
 // Mocks

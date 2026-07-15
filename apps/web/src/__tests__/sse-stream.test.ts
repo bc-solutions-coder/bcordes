@@ -109,7 +109,7 @@ describe('SSE stream proxy', () => {
       ),
     }))
 
-    vi.doMock('@/lib/wallow/config', () => ({
+    vi.doMock('@bcordes/wallow/config', () => ({
       WALLOW_BASE_URL: 'https://api.test.local',
     }))
 

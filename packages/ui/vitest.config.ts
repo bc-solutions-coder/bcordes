@@ -6,7 +6,7 @@ export default defineConfig({
     // valkey). Every primitive here renders, so this project needs a DOM and
     // the three jsdom polyfills Base UI's overlays and Select depend on.
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['@bcordes/test-utils/setup'],
     include: ['*.test.ts', 'src/**/*.test.{ts,tsx}'],
   },
 })

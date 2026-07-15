@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import type { RealtimeEnvelope } from '@bcordes/wallow/types'
 import { useUser } from '@/hooks/useUser'
 
 export type ConnectionStatus =

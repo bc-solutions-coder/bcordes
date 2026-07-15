@@ -3,8 +3,8 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createElement } from 'react'
 import { createMockUser } from '@bcordes/auth/testing'
+import { renderWithProviders } from '@bcordes/test-utils'
 import type { ReactNode } from 'react'
-import { renderWithProviders } from '@/test/helpers/render'
 
 // Mock global fetch
 const mockFetch = vi.fn()

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import type { RealtimeEnvelope } from '@bcordes/wallow/types'
 
 const mockUnsubscribe1 = vi.fn()
 const mockUnsubscribe2 = vi.fn()

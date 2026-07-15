@@ -25,17 +25,13 @@ const readJson = (path: string) => JSON.parse(readFileSync(path, 'utf8'))
 const readText = (path: string) => readFileSync(path, 'utf8')
 
 /**
- * The 24 primitives that move, flattened out of the redundant `ui/shadcn/`
- * nesting into packages/ui/src/components/.
+ * The primitives that live in packages/ui/src/components/, flattened out of the
+ * redundant `ui/shadcn/` nesting.
  *
- * form.tsx is in this list ON PURPOSE. The bead's step 4 ("form.tsx STAYS
- * HERE") reads at a glance like it stays in apps/web, but the bead's own Files
- * section moves all 41 files, its acceptance criterion forbids any surviving
- * `@/components/ui` import in apps/ (form.tsx has two importers), and F10
- * (bcordes-0i2.10.1) states outright that it will move
- * `packages/ui/src/components/form.tsx` -> packages/forms and rewrite importers
- * off `@bcordes/ui/components/form`. So form.tsx moves here with the rest, and
- * "stays" means "do not extract @bcordes/forms in this bead too".
+ * form.tsx is NOT in this list: T4.1 moved it here alongside the rest, but F10
+ * (bcordes-0i2.10.1) then extracted it into @bcordes/forms and rewrote its
+ * importers off the old ui form subpath, so the form primitive no longer lives
+ * in this package.
  */
 const COMPONENTS = [
   'avatar',
@@ -45,7 +41,6 @@ const COMPONENTS = [
   'checkbox',
   'dialog',
   'dropdown-menu',
-  'form',
   'input',
   'label',
   'navigation-menu',
@@ -72,7 +67,6 @@ const TESTED_COMPONENTS = [
   'checkbox',
   'dialog',
   'dropdown-menu',
-  'form',
   'label',
   'navigation-menu',
   'popover',
@@ -90,7 +84,10 @@ const FORMER_IMPORTERS = [
   'apps/web/src/components/about/AboutHero.tsx',
   'apps/web/src/components/contact/ContactFormFields.tsx',
   'apps/web/src/components/contact/ContactFormSuccess.tsx',
-  'apps/web/src/components/contact/SelectFormField.tsx',
+  // SelectFormField left apps/web for @bcordes/forms in T10.2, but it still
+  // composes @bcordes/ui/components/select — so it remains a ui-primitive
+  // importer, now at its packages/forms home.
+  'packages/forms/src/SelectFormField.tsx',
   'apps/web/src/components/dashboard/NotificationRow.tsx',
   'apps/web/src/components/home/FeaturedWork.tsx',
   'apps/web/src/components/home/Hero.tsx',
@@ -172,14 +169,13 @@ describe('@bcordes/ui package manifest', () => {
     const manifest = readJson(join(packageDir, 'package.json'))
 
     // A package declares what it imports rather than leaning on root hoisting.
-    // react-hook-form is in this list because form.tsx moved here; @hookform/
-    // resolvers and zod stay dev-only (only form.test.tsx reaches for them).
+    // react-hook-form left with form.tsx (now @bcordes/forms), so it is no
+    // longer a dependency here.
     expect(manifest.dependencies).toMatchObject({
       '@base-ui/react': expect.any(String),
       'class-variance-authority': expect.any(String),
       'lucide-react': expect.any(String),
       sonner: expect.any(String),
-      'react-hook-form': expect.any(String),
       '@bcordes/utils': 'workspace:*',
     })
   })
@@ -219,16 +215,6 @@ describe('the primitives really moved out of apps/web', () => {
     expect(
       existsSync(join(packageDir, `src/components/${name}.test.tsx`)),
     ).toBe(true)
-  })
-
-  it('rewrites the one cross-primitive import to a sibling-relative path', () => {
-    // form.tsx reached for Label through the `@/…` alias, which does not exist
-    // inside the package. It is a sibling now.
-    const form = readText(join(packageDir, 'src/components/form.tsx'))
-
-    expect(form).toMatch(/from '\.\/label'/)
-    expect(form).not.toMatch(/@\/components/)
-    expect(form).not.toMatch(/@bcordes\/ui/)
   })
 
   it('keeps cn coming from @bcordes/utils, not a re-created local copy', () => {

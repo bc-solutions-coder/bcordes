@@ -1,111 +1,80 @@
 'use client'
 
 import { Link } from '@tanstack/react-router'
-import { LayoutDashboard, LogOut, Menu } from 'lucide-react'
+import { LayoutDashboard, LogOut } from 'lucide-react'
 import { useState } from 'react'
 
+import { MobileNav as MobileNavShell } from '@bcordes/navigation'
 import { Button } from '@bcordes/ui/components/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@bcordes/ui/components/sheet'
 import { NAV_LINKS } from '@/config/navigation'
 import { useUser } from '@/hooks/useUser'
+
+const NAV_ITEMS = NAV_LINKS.map((link) => ({
+  label: link.label,
+  to: link.href,
+}))
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
   const { user } = useUser()
   const isAdmin = user?.roles.includes('admin') ?? false
 
+  const close = () => setOpen(false)
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-foreground hover:text-primary hover:bg-transparent"
-            aria-label="Open navigation menu"
-          />
-        }
-      >
-        <Menu className="h-6 w-6" />
-      </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="w-[300px] bg-background border-border"
-      >
-        <SheetHeader className="border-b border-border pb-4">
-          <SheetTitle className="text-foreground text-left">
-            Navigation
-          </SheetTitle>
-        </SheetHeader>
-        <nav className="flex flex-col gap-2 pt-6">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors"
-              activeProps={{
-                className:
-                  'flex items-center px-4 py-3 text-lg font-medium text-primary bg-secondary rounded-md transition-colors',
-              }}
+    <MobileNavShell
+      items={NAV_ITEMS}
+      open={open}
+      onOpenChange={setOpen}
+      onNavigate={close}
+      actions={
+        <>
+          {!isAdmin && (
+            <Button
+              render={<Link to="/contact" onClick={close} />}
+              nativeButton={false}
+              className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
             >
-              {link.label}
-            </Link>
-          ))}
-          <div className="mt-6 px-4 flex flex-col gap-3">
-            {!isAdmin && (
-              <Button
-                render={<Link to="/contact" onClick={() => setOpen(false)} />}
-                nativeButton={false}
-                className="w-full bg-primary hover:bg-primary-hover text-white font-medium"
+              Get in Touch
+            </Button>
+          )}
+          {user ? (
+            <>
+              <Link
+                to="/dashboard/inquiries"
+                onClick={close}
+                className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors"
               >
-                Get in Touch
-              </Button>
-            )}
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard/inquiries"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors"
-                >
-                  <LayoutDashboard className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <button
-                  onClick={() => {
-                    setOpen(false)
-                    const form = document.createElement('form')
-                    form.method = 'POST'
-                    form.action = '/auth/logout'
-                    document.body.appendChild(form)
-                    form.submit()
-                  }}
-                  className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors text-left"
-                >
-                  <LogOut className="h-5 w-5" />
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <Button
-                render={<a href="/auth/login" onClick={() => setOpen(false)} />}
-                nativeButton={false}
-                variant="outline"
-                className="w-full border-border text-foreground-secondary hover:text-primary"
+                <LayoutDashboard className="h-5 w-5" />
+                Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  close()
+                  const form = document.createElement('form')
+                  form.method = 'POST'
+                  form.action = '/auth/logout'
+                  document.body.appendChild(form)
+                  form.submit()
+                }}
+                className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors text-left"
               >
-                Sign In
-              </Button>
-            )}
-          </div>
-        </nav>
-      </SheetContent>
-    </Sheet>
+                <LogOut className="h-5 w-5" />
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Button
+              render={<a href="/auth/login" onClick={close} />}
+              nativeButton={false}
+              variant="outline"
+              className="w-full border-border text-foreground-secondary hover:text-primary"
+            >
+              Sign In
+            </Button>
+          )}
+        </>
+      }
+    />
   )
 }

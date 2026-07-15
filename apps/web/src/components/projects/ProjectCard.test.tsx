@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { ProjectCard } from './ProjectCard'
 import type { ShowcaseMeta } from '@/content/projects'
-import { renderWithProviders } from '@/test/helpers/render'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

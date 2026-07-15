@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { ProjectFilter } from './ProjectFilter'
-import { renderWithProviders } from '@/test/helpers/render'
 
 beforeEach(() => {
   vi.clearAllMocks()

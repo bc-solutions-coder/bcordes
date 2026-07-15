@@ -8,8 +8,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@bcordes/ui/components/form'
-import { SelectFormField } from './SelectFormField'
+  SelectFormField,
+} from '@bcordes/forms'
 import {
   budgetOptions,
   projectTypeOptions,

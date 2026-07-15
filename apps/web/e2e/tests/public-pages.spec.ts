@@ -81,10 +81,18 @@ test.describe('Public Pages', () => {
       })
       await expect(approachHeading).toBeVisible()
 
-      await expect(page.getByText('Quality-Driven Development')).toBeVisible()
-      await expect(page.getByText('Clear Communication')).toBeVisible()
-      await expect(page.getByText('Modern Tech Stack')).toBeVisible()
-      await expect(page.getByText('Client-Focused Solutions')).toBeVisible()
+      // Assert the value titles via their h3 heading role: some titles (e.g.
+      // "Clear Communication") also appear as substrings in the body copy, so
+      // getByText is ambiguous under strict mode.
+      const values = [
+        'Quality-Driven Development',
+        'Clear Communication',
+        'Modern Tech Stack',
+        'Client-Focused Solutions',
+      ]
+      for (const value of values) {
+        await expect(page.getByRole('heading', { name: value })).toBeVisible()
+      }
     })
 
     test('has navigation links visible', async ({ page }) => {
@@ -147,9 +155,10 @@ test.describe('Public Pages', () => {
     test('renders the contact form with required fields', async ({ page }) => {
       await page.goto('/contact')
 
-      // Form labels
+      // Form labels (scope Email to the textbox: the footer also has an
+      // aria-label="Email" mailto link, making getByLabel(/Email/) ambiguous).
       await expect(page.getByLabel(/Name/)).toBeVisible()
-      await expect(page.getByLabel(/Email/)).toBeVisible()
+      await expect(page.getByRole('textbox', { name: /Email/ })).toBeVisible()
       await expect(page.getByLabel(/Message/)).toBeVisible()
 
       // Submit button

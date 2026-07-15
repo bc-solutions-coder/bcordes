@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { UserMenu } from './UserMenu'
-import { renderWithProviders } from '@/test/helpers/render'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

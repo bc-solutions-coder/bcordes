@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@bcordes/ui/components/popover'
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 import { useUser } from '@/hooks/useUser'
 import { useEventStream } from '@/hooks/useEventStream'
 import {

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import React from 'react'
-import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import type { RealtimeEnvelope } from '@bcordes/wallow/types'
 
 /* ------------------------------------------------------------------ */
 /*  EventSource mock                                                    */

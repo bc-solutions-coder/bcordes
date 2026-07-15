@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { ProblemDetails } from '@/lib/wallow/types'
-import { WallowError } from '@/lib/wallow/errors'
+import { WallowError } from '@bcordes/wallow/errors'
+import type { ProblemDetails } from '@bcordes/wallow/types'
 
 describe('WallowError.toJSON()', () => {
   const validationProblem: ProblemDetails = {

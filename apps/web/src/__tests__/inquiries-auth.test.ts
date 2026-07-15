@@ -10,7 +10,7 @@ vi.mock('@bcordes/auth/session', () => ({
 }))
 
 // Mock wallow client so handlers don't make real HTTP calls
-vi.mock('@/lib/wallow/client', () => ({
+vi.mock('@bcordes/wallow/client', () => ({
   createWallowClient: vi.fn().mockResolvedValue({
     get: vi.fn().mockResolvedValue({
       json: vi.fn().mockResolvedValue([]),

@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { MockWallowClient } from '@/test/mocks/wallow'
 import {
   createMockWallowClient,
   jsonResponse,
   textResponse,
-} from '@/test/mocks/wallow'
+} from '@bcordes/wallow/testing'
+import type { MockWallowClient } from '@bcordes/wallow/testing'
 
 // Mock @tanstack/react-start so createServerFn chains resolve to the handler
 vi.mock('@tanstack/react-start', () => {
@@ -24,7 +24,7 @@ vi.mock('@tanstack/react-start', () => {
 
 // Mock wallow client
 let mockClient: MockWallowClient
-vi.mock('@/lib/wallow/client', () => ({
+vi.mock('@bcordes/wallow/client', () => ({
   createWallowClient: vi.fn(() => Promise.resolve(mockClient)),
 }))
 

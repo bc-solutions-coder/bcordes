@@ -3,19 +3,18 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
+import { MainNav } from '@bcordes/navigation'
 import { Button } from '@bcordes/ui/components/button'
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@bcordes/ui/components/navigation-menu'
 import { MobileNav } from './MobileNav'
 import { NotificationBell } from './NotificationBell'
 import { UserMenu } from './UserMenu'
 import { NAV_LINKS } from '@/config/navigation'
 import { useUser } from '@/hooks/useUser'
+
+const NAV_ITEMS = NAV_LINKS.map((link) => ({
+  label: link.label,
+  to: link.href,
+}))
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -42,65 +41,42 @@ export function Header() {
         scrolled ? 'shadow-md' : ''
       }`}
     >
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center transition-opacity hover:opacity-80"
-        >
-          <img
-            src="/BC-Solutions-no-background.svg"
-            alt="BC Solutions"
-            width={48}
-            height={48}
-            className="h-12 w-12"
-          />
-          <span className="ml-2 text-2xl font-bold tracking-tight text-foreground">
-            BC <span className="text-primary">Solutions</span>
-          </span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <NavigationMenu className="hidden md:flex" viewport={false}>
-          <NavigationMenuList className="gap-1">
-            {NAV_LINKS.map((link) => (
-              <NavigationMenuItem key={link.href}>
-                <NavigationMenuLink
-                  render={
-                    <Link
-                      to={link.href}
-                      className={navigationMenuTriggerStyle()}
-                      activeProps={{
-                        className: `${navigationMenuTriggerStyle()} text-primary`,
-                      }}
-                    />
-                  }
-                >
-                  <span className="text-foreground hover:text-primary transition-colors">
-                    {link.label}
-                  </span>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        {/* CTA Button, User Menu, and Mobile Nav */}
-        <div className="flex items-center gap-2">
-          {!isAdmin && (
-            <Button
-              render={<Link to="/contact" />}
-              nativeButton={false}
-              className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
-            >
-              Get in Touch
-            </Button>
-          )}
-          <NotificationBell />
-          <UserMenu />
-          <MobileNav />
-        </div>
-      </div>
+      <MainNav
+        items={NAV_ITEMS}
+        logo={
+          <Link
+            to="/"
+            className="flex items-center transition-opacity hover:opacity-80"
+          >
+            <img
+              src="/BC-Solutions-no-background.svg"
+              alt="BC Solutions"
+              width={48}
+              height={48}
+              className="h-12 w-12"
+            />
+            <span className="ml-2 text-2xl font-bold tracking-tight text-foreground">
+              BC <span className="text-primary">Solutions</span>
+            </span>
+          </Link>
+        }
+        actions={
+          <>
+            {!isAdmin && (
+              <Button
+                render={<Link to="/contact" />}
+                nativeButton={false}
+                className="hidden md:inline-flex bg-primary hover:bg-primary-hover text-white font-medium"
+              >
+                Get in Touch
+              </Button>
+            )}
+            <NotificationBell />
+            <UserMenu />
+            <MobileNav />
+          </>
+        }
+      />
     </header>
   )
 }

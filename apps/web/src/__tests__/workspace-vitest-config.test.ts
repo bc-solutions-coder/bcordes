@@ -6,6 +6,7 @@ import {
   readdirSync,
   rmSync,
 } from 'node:fs'
+import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -226,18 +227,24 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     expect(test?.environment).toBe('jsdom')
   })
 
-  it('points setupFiles at a file that exists inside apps/web', () => {
+  it('points setupFiles at a resolvable setup module', () => {
     const { test } = loadConfig(appConfigPath)
     const setupFiles = [test?.setupFiles ?? []].flat()
 
     expect(setupFiles.length).toBeGreaterThan(0)
 
+    // The shared Vitest harness now lives in @bcordes/test-utils (its ./setup
+    // subpath), so setupFiles is a bare package specifier rather than an
+    // app-local relative path. A relative entry still resolves against appDir;
+    // a package specifier resolves through the app's node_modules.
+    const requireFromApp = createRequire(join(appDir, 'package.json'))
     for (const setupFile of setupFiles) {
       const resolved = isAbsolute(setupFile)
         ? setupFile
-        : resolve(appDir, setupFile)
+        : setupFile.startsWith('.')
+          ? resolve(appDir, setupFile)
+          : requireFromApp.resolve(setupFile)
 
-      expect(resolved.startsWith(appDir)).toBe(true)
       expect(existsSync(resolved)).toBe(true)
     }
   })

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { Footer } from './Footer'
-import { renderWithProviders } from '@/test/helpers/render'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

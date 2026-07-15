@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
-import type { Inquiry } from '@/lib/wallow/types'
-import { renderWithProviders } from '@/test/helpers/render'
+import { renderWithProviders } from '@bcordes/test-utils'
+import type { Inquiry } from '@bcordes/wallow/types'
 
 // ---------------------------------------------------------------------------
 // Mocks (hoisted)

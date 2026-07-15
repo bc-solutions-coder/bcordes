@@ -11,7 +11,7 @@ vi.mock('@bcordes/auth/oidc', () => ({
   refreshToken: vi.fn(),
 }))
 
-vi.mock('@/lib/wallow/config', () => ({
+vi.mock('@bcordes/wallow/config', () => ({
   WALLOW_BASE_URL: 'http://localhost:9999',
 }))
 
@@ -102,7 +102,7 @@ describe('SSE Route GET handler', () => {
     vi.doMock('@bcordes/auth/oidc', () => ({
       refreshToken: vi.fn(),
     }))
-    vi.doMock('@/lib/wallow/config', () => ({
+    vi.doMock('@bcordes/wallow/config', () => ({
       WALLOW_BASE_URL: 'http://localhost:9999',
     }))
     vi.doMock('@tanstack/react-router', () => ({

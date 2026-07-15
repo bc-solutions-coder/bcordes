@@ -246,7 +246,7 @@ describe('every importer was rewritten', () => {
         'apps/web/src/hooks/useUser.ts',
         'apps/web/src/routes/auth/me.ts',
         'apps/web/src/routes/auth/logout.ts',
-        'apps/web/src/server-fns/csrf.ts',
+        'packages/server/src/csrf.ts',
       ]),
     )
   })
@@ -298,7 +298,7 @@ describe('the package runs in the root vitest', () => {
 //
 // The session/user mock factories that used to live at apps/web's
 // @/test/mocks/auth move into the package as a dedicated '/testing' subpath.
-// This is the same multi-entrypoint mechanism @bcordes/wallow/testing (F7)
+// This is the same multi-entrypoint mechanism the wallow /testing entry (F7)
 // will reuse, so it is pinned here: the subpath is additive (it does not touch
 // the library exports), it resolves from a consumer, it hands back typed
 // User/SessionData fixtures — and, load-bearing, the fixtures never leak into

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 
 export function useNotificationSelection(
   filteredNotifications: Array<Notification>,

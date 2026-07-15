@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 import { getNotificationRoute } from '@/lib/notifications/routing'
 
 const FALLBACK = '/dashboard/notifications'

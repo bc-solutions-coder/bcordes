@@ -9,7 +9,7 @@ export default defineConfig({
   ],
   test: {
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['@bcordes/test-utils/setup'],
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
   },
 })

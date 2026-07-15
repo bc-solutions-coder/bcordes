@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, screen } from '@testing-library/react'
-import { renderWithProviders } from '@/test/helpers/render'
+import { renderWithProviders } from '@bcordes/test-utils'
 
 // ---------------------------------------------------------------------------
 // Mocks

@@ -5,6 +5,9 @@ import {
   createMockAdminSession,
   createMockSession,
 } from '@bcordes/auth/testing'
+import { createWallowClient } from '@bcordes/wallow/client'
+import { serviceClient } from '@bcordes/wallow/service-client'
+import { createMockWallowClient, jsonResponse } from '@bcordes/wallow/testing'
 import {
   fetchInquiries,
   fetchInquiry,
@@ -14,16 +17,12 @@ import {
   submitInquiryComment,
   updateInquiryStatus,
 } from './inquiries'
-import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
-import type { MockWallowClient } from '@/test/mocks/wallow'
-import { createMockWallowClient, jsonResponse } from '@/test/mocks/wallow'
+import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
+import type { MockWallowClient } from '@bcordes/wallow/testing'
 
 // ---------------------------------------------------------------------------
 // Imports (after mocks are hoisted)
 // ---------------------------------------------------------------------------
-
-import { createWallowClient } from '@/lib/wallow/client'
-import { serviceClient } from '@/lib/wallow/service-client'
 
 // ---------------------------------------------------------------------------
 // Mock @tanstack/react-start so createServerFn chains resolve to the handler
@@ -52,11 +51,11 @@ vi.mock('@tanstack/react-start', () => {
 let mockClient: MockWallowClient
 let mockServiceClient: MockWallowClient
 
-vi.mock('@/lib/wallow/client', () => ({
+vi.mock('@bcordes/wallow/client', () => ({
   createWallowClient: vi.fn(),
 }))
 
-vi.mock('@/lib/wallow/service-client', () => ({
+vi.mock('@bcordes/wallow/service-client', () => ({
   serviceClient: {
     get: vi.fn(),
     post: vi.fn(),

@@ -76,7 +76,7 @@ describe('service client — 401 retry', () => {
         new Response(JSON.stringify({ ok: true }), { status: 200 }),
       )
 
-    const { serviceClient } = await import('@/lib/wallow/service-client')
+    const { serviceClient } = await import('@bcordes/wallow/service-client')
     const response = await serviceClient.get('/api/v1/test')
 
     expect(response.status).toBe(200)
@@ -98,7 +98,7 @@ describe('service client — 401 retry', () => {
       Promise.resolve(new Response('Unauthorized', { status: 401 })),
     )
 
-    const { serviceClient } = await import('@/lib/wallow/service-client')
+    const { serviceClient } = await import('@bcordes/wallow/service-client')
 
     const promise = serviceClient.get('/api/v1/test').catch((e: unknown) => e)
     await vi.runAllTimersAsync()

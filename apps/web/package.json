@@ -17,11 +17,15 @@
   "dependencies": {
     "@bc-solutions-coder/sdk": "0.1.0",
     "@bcordes/auth": "workspace:*",
+    "@bcordes/forms": "workspace:*",
     "@bcordes/logger": "workspace:*",
+    "@bcordes/navigation": "workspace:*",
     "@bcordes/query": "workspace:*",
+    "@bcordes/server": "workspace:*",
     "@bcordes/ui": "workspace:*",
     "@bcordes/utils": "workspace:*",
     "@bcordes/valkey": "workspace:*",
+    "@bcordes/wallow": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/match-sorter-utils": "^8.19.4",
@@ -60,6 +64,7 @@
   },
   "devDependencies": {
     "@bcordes/config": "workspace:*",
+    "@bcordes/test-utils": "workspace:*",
     "@faker-js/faker": "^10.2.0",
     "@playwright/test": "^1.58.2",
     "@storybook/react-vite": "^9.1.17",

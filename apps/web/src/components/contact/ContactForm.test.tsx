@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { toast } from 'sonner'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { ContactForm } from './ContactForm'
-import { renderWithProviders } from '@/test/helpers/render'
 
 const mockSubmitInquiry = vi.fn()
 const mockUseUser = vi.fn(() => ({ user: null, isLoading: false }))

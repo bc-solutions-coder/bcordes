@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { Header } from './Header'
-import { renderWithProviders } from '@/test/helpers/render'
 
 // ---------------------------------------------------------------------------
 // Component under test

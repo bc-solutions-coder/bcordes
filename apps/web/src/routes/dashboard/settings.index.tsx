@@ -17,7 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@bcordes/ui/components/tooltip'
-import type { NotificationSettings } from '@/lib/wallow/types'
+import type { NotificationSettings } from '@bcordes/wallow/types'
 import { serverRequireAuth } from '@/server-fns/auth'
 import {
   fetchNotificationSettings,

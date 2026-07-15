@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { NotificationBell } from './NotificationBell'
 import type * as BcordesUtils from '@bcordes/utils'
-import type { Notification } from '@/lib/wallow/types'
-import { renderWithProviders } from '@/test/helpers/render'
+import type { Notification } from '@bcordes/wallow/types'
 
 const mockUseUser = vi.fn(() => ({ user: null, isLoading: false }))
 const mockSubscribe = vi.fn(() => vi.fn())

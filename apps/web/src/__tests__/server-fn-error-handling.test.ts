@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { WallowError } from '@/lib/wallow/errors'
+import { WallowError } from '@bcordes/wallow/errors'
 
 describe('WallowError user-facing messages', () => {
   it('should produce a user-friendly message for 403 errors', () => {

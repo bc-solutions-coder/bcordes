@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
-import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
-import { renderWithProviders } from '@/test/helpers/render'
+import { renderWithProviders } from '@bcordes/test-utils'
+import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
 
 if (!('ResizeObserver' in globalThis)) {
   // @ts-expect-error polyfill for test environment

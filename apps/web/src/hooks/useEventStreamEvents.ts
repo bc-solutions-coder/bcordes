@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { RealtimeEnvelope } from '@/lib/wallow/types'
+import type { RealtimeEnvelope } from '@bcordes/wallow/types'
 import { useEventStream } from '@/hooks/useEventStream'
 
 type Handler = (envelope: RealtimeEnvelope) => void

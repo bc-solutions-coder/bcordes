@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 import { useNotificationSelection } from '@/hooks/useNotificationSelection'
 
 function makeNotification(

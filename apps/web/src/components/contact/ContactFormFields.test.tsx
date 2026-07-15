@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { ContactFormFields } from './ContactFormFields'
 import { contactFormSchema } from './contact-form.schema'
 import type { ContactFormValues } from './contact-form.schema'
-import { renderWithProviders } from '@/test/helpers/render'
 
 // Radix Select polyfills for jsdom
 Element.prototype.scrollIntoView = vi.fn()

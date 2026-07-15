@@ -1,0 +1,7 @@
+{
+  "extends": "@bcordes/config/tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 
 const notificationTypes = [
   'TaskAssigned',

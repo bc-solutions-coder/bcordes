@@ -1,4 +1,4 @@
-import type { Notification } from '@/lib/wallow/types'
+import type { Notification } from '@bcordes/wallow/types'
 
 const FALLBACK = '/dashboard/notifications'
 const UUID_RE =

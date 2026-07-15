@@ -1,0 +1,30 @@
+{
+  "name": "@bcordes/wallow",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./service-client": "./src/service-client.ts",
+    "./errors": "./src/errors.ts",
+    "./config": "./src/config.ts",
+    "./types": "./src/types.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "dependencies": {
+    "openid-client": "^6.4.3",
+    "@bcordes/auth": "workspace:*",
+    "@bcordes/logger": "workspace:*",
+    "@bcordes/valkey": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-start": "~1.167.5"
+  },
+  "devDependencies": {
+    "@bcordes/config": "workspace:*"
+  }
+}

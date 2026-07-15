@@ -1,12 +1,12 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { createWallowClient } from '@bcordes/wallow/client'
 import type {
   Notification,
   NotificationSettings,
   PaginatedResponse,
   PushDevice,
-} from '@/lib/wallow/types'
-import { createWallowClient } from '@/lib/wallow/client'
+} from '@bcordes/wallow/types'
 
 export const fetchNotifications = createServerFn({ method: 'GET' }).handler(
   async () => {

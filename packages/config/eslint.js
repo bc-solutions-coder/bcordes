@@ -48,7 +48,10 @@ export const config = [
     ],
   },
   {
-    files: ['packages/ui/src/components/**'],
+    // The shadcn/Base UI primitives carry defensive conditions the type-aware
+    // rule flags as always-truthy/falsy. The form primitive (extracted into
+    // @bcordes/forms) is one of them, so it gets the same treatment.
+    files: ['packages/ui/src/components/**', 'packages/forms/src/**'],
     rules: {
       '@typescript-eslint/no-unnecessary-condition': 'off',
     },

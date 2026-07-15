@@ -6,7 +6,7 @@ export default defineConfig({
     // The Provider renders and the devtools plugin holds a React element, so
     // this project needs a DOM.
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['@bcordes/test-utils/setup'],
     include: ['src/**/*.test.{ts,tsx}'],
   },
 })

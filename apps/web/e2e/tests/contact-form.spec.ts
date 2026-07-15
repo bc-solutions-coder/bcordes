@@ -26,7 +26,9 @@ async function fillContactForm(
   } = overrides
 
   await page.getByLabel(/^Name/).fill(name)
-  await page.getByLabel(/^Email/).fill(email)
+  // Scope to the form textbox: the page footer also exposes an
+  // aria-label="Email" mailto link, so getByLabel(/Email/) is ambiguous.
+  await page.getByRole('textbox', { name: /Email/ }).fill(email)
   await page.getByLabel(/^Message/).fill(message)
 
   // Select "Project Type"
@@ -155,7 +157,8 @@ test.describe('Contact Form', () => {
       page.getByRole('button', { name: 'Send Message' }),
     ).toBeVisible()
     await expect(page.getByLabel(/^Name/)).toHaveValue('')
-    await expect(page.getByLabel(/^Email/)).toHaveValue('')
+    // Scope to the form textbox (footer aria-label="Email" link collides).
+    await expect(page.getByRole('textbox', { name: /Email/ })).toHaveValue('')
     await expect(page.getByLabel(/^Message/)).toHaveValue('')
   })
 })

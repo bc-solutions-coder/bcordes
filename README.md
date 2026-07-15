@@ -42,7 +42,7 @@
 
 - **Server-Side Rendering** — TanStack Start with Nitro for fast, SEO-friendly pages
 - **Authentication** — OIDC-based auth flow with sealed sessions and automatic token refresh
-- **Real-time Updates** — Microsoft SSE WebSocket integration for live data
+- **Real-time Updates** — Server-Sent Events (SSE) streaming for live data
 - **Modern UI** — Custom green-on-white theme built with Tailwind CSS v4 and shadcn/ui
 - **Database** — PostgreSQL 16
 - **Backend Integration** — Connected to the .NET Wallow API with retry logic
@@ -57,7 +57,7 @@
 | **Data**      | TanStack Query, PostgreSQL 16            |
 | **Styling**   | Tailwind CSS v4, shadcn/ui, Lucide icons |
 | **Auth**      | OpenID Connect, iron-webcrypto sessions  |
-| **Real-time** | Microsoft SSE                            |
+| **Real-time** | Server-Sent Events (SSE)                 |
 | **Forms**     | React Hook Form + Zod                    |
 | **Testing**   | Vitest, Testing Library                  |
 | **Tooling**   | ESLint, Prettier, Storybook 9            |
@@ -84,16 +84,42 @@ pnpm dev
 
 ## Project Structure
 
+This repo is a **pnpm workspace monorepo**: the releasable app lives in `apps/web`, and shared code is extracted into 13 internal `@bcordes/*` libraries under `packages/*`.
+
 ```
-src/
-├── routes/          # File-based route definitions
-├── components/      # React components (ui + features)
-├── server-fns/      # TanStack Start server functions
-├── lib/
-│   ├── auth/        # OIDC authentication
-│   └── wallow/      # Backend API client
-├── hooks/           # Custom React hooks
-└── content/         # Static content (blog, projects)
+.
+├── apps/
+│   └── web/                 # TanStack Start application (package: bcordes)
+│       ├── src/
+│       │   ├── routes/          # File-based route definitions (incl. api/notifications/stream.ts SSE)
+│       │   ├── components/      # App feature components
+│       │   ├── server-fns/      # TanStack Start server functions
+│       │   ├── hooks/           # App-local hooks (SSE event stream, auth, animations)
+│       │   └── content/         # Static content (blog, projects)
+│       └── e2e/                 # Playwright e2e suite
+└── packages/                # Internal @bcordes/* libraries (private, workspace:*)
+    ├── config/              # Shared ESLint / Prettier / tsconfig base
+    ├── utils/               # Framework-agnostic helpers
+    ├── logger/              # Structured logging
+    ├── valkey/              # Valkey/Redis client
+    ├── query/               # TanStack Query integration
+    ├── auth/                # OIDC authentication + sealed sessions
+    ├── authz/               # Authorization predicates
+    ├── server/              # Server middleware (CSRF, security headers)
+    ├── wallow/              # Wallow backend API client
+    ├── ui/                  # Base UI component library
+    ├── forms/               # Form field components
+    ├── navigation/          # Main/mobile navigation
+    └── test-utils/          # Shared test setup + render helpers
+```
+
+Each package exposes its public API from `src/index.ts` and is consumed via its `@bcordes/<name>` entry point. Work on a single project with pnpm filters:
+
+```bash
+pnpm --filter bcordes dev                    # run the app
+pnpm --filter @bcordes/ui test               # test one package
+pnpm -r typecheck                            # typecheck the whole workspace
+pnpm --filter bcordes exec playwright test   # run the e2e suite
 ```
 
 ## License

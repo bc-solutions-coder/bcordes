@@ -2,9 +2,9 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { getSession } from '@bcordes/auth/session'
 import { requireAdmin } from '@bcordes/auth/middleware'
-import type { Inquiry, InquiryComment } from '@/lib/wallow/types'
-import { createWallowClient } from '@/lib/wallow/client'
-import { serviceClient } from '@/lib/wallow/service-client'
+import { createWallowClient } from '@bcordes/wallow/client'
+import { serviceClient } from '@bcordes/wallow/service-client'
+import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
 import { STATUS_TO_API, STATUS_TO_FRONTEND } from '@/config/inquiries'
 
 function normalizeInquiryStatus(inquiry: Inquiry): Inquiry {

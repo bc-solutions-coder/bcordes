@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { ContactFormSuccess } from './ContactFormSuccess'
-import { renderWithProviders } from '@/test/helpers/render'
 
 describe('ContactFormSuccess', () => {
   it('renders success message', () => {

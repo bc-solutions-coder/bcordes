@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from '@bcordes/test-utils'
 import { NotificationRow } from './NotificationRow'
 import type * as BcordesUtils from '@bcordes/utils'
-import type { Notification } from '@/lib/wallow/types'
-import { renderWithProviders } from '@/test/helpers/render'
+import type { Notification } from '@bcordes/wallow/types'
 
 // Only the clock is faked. Spreading the original module keeps cn() real —
 // every shadcn primitive this row renders imports it from the same package.
