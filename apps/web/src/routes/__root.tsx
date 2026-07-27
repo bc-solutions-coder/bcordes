@@ -7,12 +7,10 @@ import {
 } from '@tanstack/react-router'
 
 import { Toaster } from '@bcordes/ui/components/sonner'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
-import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
+import { Footer, Header, reportWebVitals } from '@/app'
+import appCss from '@/app/styles.css?url'
 import { EventStreamProvider } from '@/features/notifications'
-import { reportWebVitals } from '@/lib/web-vitals'
 
 function DevTools() {
   const [Panel, setPanel] = useState<React.ReactNode>(null)

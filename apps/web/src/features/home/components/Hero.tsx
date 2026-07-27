@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@bcordes/ui/components/button'
-import { FadeInView } from '@/components/shared/FadeInView'
+import { FadeInView } from '@/shared/motion'
 import { useUser } from '@/shared/auth'
 
 interface Stat {

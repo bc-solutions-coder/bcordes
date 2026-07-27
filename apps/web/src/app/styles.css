@@ -10,12 +10,12 @@
 /* Tailwind's automatic source detection roots at this app and skips linked
    packages, so utilities used only inside @bcordes/ui (size-4, transition-none…)
    are otherwise never generated and the primitives render unstyled. */
-@source '../../../packages/ui/src';
+@source '../../../../packages/ui/src';
 
 /* Same reasoning for the extracted nav shells (@bcordes/navigation): the header
    chrome and mobile-sheet utilities live in that package's source, outside this
    app's auto-detected root, so Tailwind must be told to scan it too. */
-@source '../../../packages/navigation/src';
+@source '../../../../packages/navigation/src';
 
 body {
   @apply m-0;

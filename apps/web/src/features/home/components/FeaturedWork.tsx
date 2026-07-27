@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { Badge } from '@bcordes/ui/components/badge'
 import { Button } from '@bcordes/ui/components/button'
 import type { ShowcaseMeta } from '@/features/projects'
-import { FadeInView } from '@/components/shared/FadeInView'
+import { FadeInView } from '@/shared/motion'
 
 interface FeaturedWorkProps {
   showcases: Array<ShowcaseMeta>

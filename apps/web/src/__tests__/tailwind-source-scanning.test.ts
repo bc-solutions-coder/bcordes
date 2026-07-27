@@ -105,9 +105,9 @@ describe('tailwind @source scanning of @bcordes/ui', () => {
   })
 
   it('declares @source for the packages/ui sources', () => {
-    const styles = readFileSync(join(webDir, 'src/styles.css'), 'utf8')
+    const styles = readFileSync(join(webDir, 'src/app/styles.css'), 'utf8')
     const sources = [...styles.matchAll(/@source\s+['"]([^'"]+)['"]/g)].map(
-      ([, path]) => resolve(webDir, 'src', path),
+      ([, path]) => resolve(webDir, 'src/app', path),
     )
 
     expect(sources).toContain(uiSrc)

@@ -30,7 +30,7 @@ const noDeepPackageImports = {
 // config replaces (does not merge) rule options, so the last matching block for
 // a given files glob wins outright and must repeat every group it wants.
 const noDeepModuleImports = {
-  group: ['@/features/*/*', '@/shared/*/*'],
+  group: ['@/features/*/*', '@/shared/*/*', '@/app/*/*'],
   message:
     'Import a feature/shared module through its index (e.g. @/features/notifications), not its internals.',
 }
@@ -76,6 +76,13 @@ export const config = [
   // Ordering matters. The broad blocks come first and the narrower layer
   // blocks come after them, each repeating the groups it still wants, because
   // the last matching block wins outright for a given rule.
+  //
+  // The apps/web/src/{components,hooks,lib}/ layer blocks were retired along
+  // with the horizontal dirs they governed: the app flattened into features/,
+  // shared/ and app/, so those globs matched zero files. Their intent survives
+  // — the features/shared/app block below still denies importing from
+  // @/routes/*, and noDeepModuleImports denies reaching into any module's
+  // internals, which is what the old cross-layer denials amounted to.
 
   // Every workspace package and app: no reaching into package internals.
   {
@@ -116,82 +123,13 @@ export const config = [
     },
   },
 
-  // Components must not import from routes
-  {
-    files: ['apps/web/src/components/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            noDeepPackageImports,
-            noTildeAlias,
-            noDeepModuleImports,
-            {
-              group: ['@/routes/*'],
-              message:
-                'Components must not import from routes. Move shared logic to lib/ or hooks/.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  // Hooks must not import components or routes
-  {
-    files: ['apps/web/src/hooks/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            noDeepPackageImports,
-            noTildeAlias,
-            noDeepModuleImports,
-            {
-              group: ['@/routes/*'],
-              message: 'Hooks must not import from routes.',
-            },
-            {
-              group: ['@/components/*'],
-              message:
-                'Hooks must not import components. Extract shared logic to a utility.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
-  // Lib must not import from components, hooks, or routes
-  {
-    files: ['apps/web/src/lib/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            noDeepPackageImports,
-            noTildeAlias,
-            noDeepModuleImports,
-            {
-              group: ['@/routes/*', '@/components/*', '@/hooks/*'],
-              message:
-                'lib/ is a low-level layer. It must not import from routes, components, or hooks.',
-            },
-          ],
-        },
-      ],
-    },
-  },
-
   // features/shared are consumed BY routes and the app shell; they must never
-  // depend on routes (same layering direction as the existing components rule).
+  // depend on routes.
   {
     files: [
       'apps/web/src/features/**/*.{ts,tsx}',
       'apps/web/src/shared/**/*.{ts,tsx}',
+      'apps/web/src/app/**/*.{ts,tsx}',
     ],
     rules: {
       'no-restricted-imports': [

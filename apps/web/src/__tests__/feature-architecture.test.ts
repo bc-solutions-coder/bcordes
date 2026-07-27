@@ -64,14 +64,12 @@ const hasGroupWith = (
     (p) => Array.isArray(p.group) && members.every((m) => p.group?.includes(m)),
   )
 
-// The four existing app-scoped boundary blocks (exact `files` glob entries)
-// that must each carry the new deep-module deny group.
-const APP_BOUNDARY_GLOBS = [
-  'apps/web/src/**/*.{ts,tsx}',
-  'apps/web/src/components/**/*.{ts,tsx}',
-  'apps/web/src/hooks/**/*.{ts,tsx}',
-  'apps/web/src/lib/**/*.{ts,tsx}',
-]
+// The app-scoped boundary blocks (exact `files` glob entries) that must each carry
+// the deep-module deny group. Originally four: the components/, hooks/ and lib/
+// layer blocks were retired with the horizontal dirs they governed (bcordes-hcv.4.1),
+// leaving the app-wide block as the only one that has to repeat the group.
+// architecture-cleanup.test.ts asserts those three globs stay gone.
+const APP_BOUNDARY_GLOBS = ['apps/web/src/**/*.{ts,tsx}']
 
 describe('features/ and shared/ module roots exist', () => {
   it('has an apps/web/src/features/ root (tracked via .gitkeep)', () => {

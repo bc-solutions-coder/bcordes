@@ -136,8 +136,8 @@ const OLD_DIRS = ['components/dashboard', 'lib/notifications'] as const
 // are stable and each must reference '@/features/notifications' after the move.
 const CONSUMERS = [
   'routes/__root.tsx',
-  'components/layout/Header.tsx',
-  'components/layout/Header.test.tsx',
+  'app/components/layout/Header.tsx',
+  'app/components/layout/Header.test.tsx',
   'routes/dashboard/notifications.index.tsx',
   'routes/dashboard/notifications.index.test.tsx',
   'routes/dashboard/settings.index.tsx',

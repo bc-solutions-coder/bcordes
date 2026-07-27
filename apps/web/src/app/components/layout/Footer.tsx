@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Separator } from '@bcordes/ui/components/separator'
-import { NAV_LINKS, SOCIAL_LINKS } from '@/config/navigation'
+import { NAV_LINKS, SOCIAL_LINKS } from '../../config/navigation'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()

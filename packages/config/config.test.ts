@@ -145,23 +145,31 @@ describe('eslint config', () => {
   })
 
   it(
-    'still applies the app module-boundary rules to apps/web',
+    'still applies the app module-boundary rules to the app shell, features and shared',
     { timeout: 30_000 },
     () => {
-      const components = restrictedImportGroups(
-        'apps/web/src/components/home/Hero.tsx',
+      const appShell = restrictedImportGroups(
+        'apps/web/src/app/components/layout/Header.tsx',
       )
-      expect(components).toContain('~/*')
-      expect(components).toContain('@/routes/*')
+      expect(appShell).toContain('~/*')
+      expect(appShell).toContain('@/routes/*')
 
-      const hooks = restrictedImportGroups('apps/web/src/hooks/useThing.ts')
-      expect(hooks).toContain('@/routes/*')
-      expect(hooks).toContain('@/components/*')
-
-      const lib = restrictedImportGroups('apps/web/src/lib/thing.ts')
-      expect(lib).toEqual(
-        expect.arrayContaining(['@/routes/*', '@/components/*', '@/hooks/*']),
+      const feature = restrictedImportGroups(
+        'apps/web/src/features/about/components/AboutHero.tsx',
       )
+      expect(feature).toEqual(
+        expect.arrayContaining([
+          '@/routes/*',
+          '@/features/*/*',
+          '@/shared/*/*',
+          '@/app/*/*',
+        ]),
+      )
+
+      const shared = restrictedImportGroups(
+        'apps/web/src/shared/motion/index.ts',
+      )
+      expect(shared).toContain('@/routes/*')
     },
   )
 

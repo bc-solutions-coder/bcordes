@@ -93,9 +93,8 @@ This repo is a **pnpm workspace monorepo**: the releasable app lives in `apps/we
 │       ├── src/
 │       │   ├── routes/          # File-based route definitions (incl. api/notifications/stream.ts SSE)
 │       │   ├── features/        # Feature modules (home, about, projects, contact, inquiries, notifications) — each a public src index.ts, internals private
-│       │   ├── shared/          # Cross-cutting app modules (e.g. auth) with the same public-API discipline
-│       │   ├── components/      # Shared app components (layout, shared); feature components live under features/<name>/components/
-│       │   └── hooks/           # App-local hooks (SSE event stream, auth, animations)
+│       │   ├── shared/          # Cross-cutting app modules (auth, motion) with the same public-API discipline
+│       │   └── app/             # App-shell layer: layout components, navigation config, web-vitals, global styles
 │       └── e2e/                 # Playwright e2e suite
 └── packages/                # Internal @bcordes/* libraries (private, workspace:*)
     ├── config/              # Shared ESLint / Prettier / tsconfig base

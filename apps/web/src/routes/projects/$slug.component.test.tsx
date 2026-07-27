@@ -31,7 +31,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
-vi.mock('@/components/shared/FadeInView', () => ({
+vi.mock('@/shared/motion', () => ({
   FadeInView: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
   ),

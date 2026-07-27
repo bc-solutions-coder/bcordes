@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
+
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { FadeInView } from './FadeInView'
 
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
-
-vi.mock('@/hooks/useScrollAnimation', () => ({
+vi.mock('../hooks/useScrollAnimation', () => ({
   useScrollAnimation: vi.fn(() => ({
     ref: createRef(),
     isVisible: false,
   })),
 }))
 
-vi.mock('@/hooks/useReducedMotion', () => ({
+vi.mock('../hooks/useReducedMotion', () => ({
   useReducedMotion: vi.fn(() => false),
 }))
 

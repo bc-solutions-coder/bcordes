@@ -15,7 +15,7 @@ vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
 
-vi.mock('@/components/shared/FadeInView', () => ({
+vi.mock('@/shared/motion', () => ({
   FadeInView: ({
     children,
     ...rest

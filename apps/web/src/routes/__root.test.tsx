@@ -24,19 +24,17 @@ vi.mock('@tanstack/react-router', () => ({
   ScrollRestoration: () => null,
 }))
 
-vi.mock('@/components/layout/Header', () => ({
+vi.mock('@/app', () => ({
   Header: () => <div data-testid="header">Header</div>,
-}))
-
-vi.mock('@/components/layout/Footer', () => ({
   Footer: () => <div data-testid="footer">Footer</div>,
+  reportWebVitals: () => {},
 }))
 
 vi.mock('@bcordes/ui/components/sonner', () => ({
   Toaster: () => <div data-testid="toaster">Toaster</div>,
 }))
 
-vi.mock('@/styles.css?url', () => ({ default: 'styles.css' }))
+vi.mock('@/app/styles.css?url', () => ({ default: 'styles.css' }))
 
 vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
@@ -193,16 +191,15 @@ describe('__root route', () => {
         ),
         ScrollRestoration: () => null,
       }))
-      vi.doMock('@/components/layout/Header', () => ({
+      vi.doMock('@/app', () => ({
         Header: () => <div data-testid="header">Header</div>,
-      }))
-      vi.doMock('@/components/layout/Footer', () => ({
         Footer: () => <div data-testid="footer">Footer</div>,
+        reportWebVitals: () => {},
       }))
       vi.doMock('@bcordes/ui/components/sonner', () => ({
         Toaster: () => <div data-testid="toaster">Toaster</div>,
       }))
-      vi.doMock('@/styles.css?url', () => ({ default: 'styles.css' }))
+      vi.doMock('@/app/styles.css?url', () => ({ default: 'styles.css' }))
       vi.doMock('@/shared/auth', () => ({
         useUser: () => ({ user: null, isLoading: false }),
       }))

@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@bcordes/ui/components/card'
 import type { LucideIcon } from 'lucide-react'
-import { FadeInView } from '@/components/shared/FadeInView'
+import { FadeInView } from '@/shared/motion'
 
 interface Service {
   icon: LucideIcon

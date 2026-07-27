@@ -5,10 +5,10 @@ import { Link } from '@tanstack/react-router'
 
 import { MainNav } from '@bcordes/navigation'
 import { Button } from '@bcordes/ui/components/button'
+import { NAV_LINKS } from '../../config/navigation'
 import { MobileNav } from './MobileNav'
 import { UserMenu } from './UserMenu'
 import { NotificationBell } from '@/features/notifications'
-import { NAV_LINKS } from '@/config/navigation'
 import { useUser } from '@/shared/auth'
 
 const NAV_ITEMS = NAV_LINKS.map((link) => ({

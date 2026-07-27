@@ -1,18 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import { createRef } from 'react'
 import { FeaturedWork } from './FeaturedWork'
 import type { ShowcaseMeta } from '@/features/projects'
 
-vi.mock('@/hooks/useScrollAnimation', () => ({
-  useScrollAnimation: vi.fn(() => ({
-    ref: createRef(),
-    isVisible: true,
-  })),
-}))
-
-vi.mock('@/hooks/useReducedMotion', () => ({
-  useReducedMotion: vi.fn(() => true),
+vi.mock('@/shared/motion', () => ({
+  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
 vi.mock('@tanstack/react-router', () => ({

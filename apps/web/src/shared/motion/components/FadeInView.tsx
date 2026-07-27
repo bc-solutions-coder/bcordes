@@ -1,6 +1,6 @@
 import { cn } from '@bcordes/utils'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 
 interface FadeInViewProps {
   children: React.ReactNode

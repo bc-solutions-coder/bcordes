@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { NAV_LINKS, SOCIAL_LINKS } from '@/config/navigation'
+import { NAV_LINKS, SOCIAL_LINKS } from './navigation'
 
 describe('NAV_LINKS', () => {
   it('is a non-empty array', () => {

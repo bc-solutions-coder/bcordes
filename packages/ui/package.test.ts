@@ -92,11 +92,11 @@ const FORMER_IMPORTERS = [
   'apps/web/src/features/home/components/FeaturedWork.tsx',
   'apps/web/src/features/home/components/Hero.tsx',
   'apps/web/src/features/home/components/ServicesGrid.tsx',
-  'apps/web/src/components/layout/Footer.tsx',
-  'apps/web/src/components/layout/Header.tsx',
-  'apps/web/src/components/layout/MobileNav.tsx',
+  'apps/web/src/app/components/layout/Footer.tsx',
+  'apps/web/src/app/components/layout/Header.tsx',
+  'apps/web/src/app/components/layout/MobileNav.tsx',
   'apps/web/src/features/notifications/components/NotificationBell.tsx',
-  'apps/web/src/components/layout/UserMenu.tsx',
+  'apps/web/src/app/components/layout/UserMenu.tsx',
   'apps/web/src/features/projects/components/ProjectCard.tsx',
   'apps/web/src/features/projects/components/ProjectFilter.tsx',
   'apps/web/src/routes/__root.test.tsx',
@@ -245,7 +245,7 @@ describe('the theme tokens ship with the primitives that read them', () => {
   })
 
   it('leaves the app stylesheet owning tailwind, fonts and its own animations', () => {
-    const styles = readText(join(webDir, 'src/styles.css'))
+    const styles = readText(join(webDir, 'src/app/styles.css'))
 
     // The tokens are gone from here…
     expect(styles).not.toMatch(/--primary:\s*oklch/)
@@ -263,7 +263,7 @@ describe('the theme tokens ship with the primitives that read them', () => {
   it('leaves showcase.css in the app', () => {
     // It defines no tokens at all — it is markdown/blog presentation for
     // apps/web's showcase pages, and it is not a UI primitive.
-    expect(existsSync(join(webDir, 'src/styles/showcase.css'))).toBe(true)
+    expect(existsSync(join(webDir, 'src/app/styles/showcase.css'))).toBe(true)
     expect(existsSync(join(packageDir, 'src/styles/showcase.css'))).toBe(false)
   })
 })

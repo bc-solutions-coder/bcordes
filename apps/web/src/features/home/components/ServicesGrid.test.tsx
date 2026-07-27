@@ -1,17 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import { createRef } from 'react'
 import { ServicesGrid } from './ServicesGrid'
 
-vi.mock('@/hooks/useScrollAnimation', () => ({
-  useScrollAnimation: vi.fn(() => ({
-    ref: createRef(),
-    isVisible: true,
-  })),
-}))
-
-vi.mock('@/hooks/useReducedMotion', () => ({
-  useReducedMotion: vi.fn(() => true),
+vi.mock('@/shared/motion', () => ({
+  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
 describe('ServicesGrid', () => {

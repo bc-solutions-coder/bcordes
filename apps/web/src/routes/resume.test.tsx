@@ -11,7 +11,7 @@ vi.mock('lucide-react', () => ({
   ),
 }))
 
-vi.mock('@/components/shared/FadeInView', () => ({
+vi.mock('@/shared/motion', () => ({
   FadeInView: ({
     children,
     ...rest
