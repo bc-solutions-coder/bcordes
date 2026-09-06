@@ -11,3 +11,6 @@ _Avoid_: tenant, workspace
 **bcordes developer application**:
 The application registered to the bcordes organization through which people sign in to bcordes.
 _Avoid_: first-party Wallow application
+
+**Wallow identity provider**:
+The identity provider at wallow.dev through which people authenticate to bcordes.
