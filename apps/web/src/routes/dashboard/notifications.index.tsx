@@ -18,7 +18,7 @@ import { Badge } from '@bcordes/ui/components/badge'
 import { Button } from '@bcordes/ui/components/button'
 import { Checkbox } from '@bcordes/ui/components/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@bcordes/ui/components/tabs'
-import type { NotificationType } from '@/features/notifications'
+import type { Notification, NotificationType } from '@/features/notifications'
 import { serverRequireAuth } from '@/shared/auth'
 import {
   NotificationRow,
@@ -69,7 +69,6 @@ function NotificationsIndexPage() {
   const {
     unreadOnly,
     activeType,
-    page,
     setPage,
     filtered: filteredNotifications,
     unreadCount,

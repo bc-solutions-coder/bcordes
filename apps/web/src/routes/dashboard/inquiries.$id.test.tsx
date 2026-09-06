@@ -5,7 +5,6 @@ import { renderWithProviders } from '@bcordes/test-utils'
 import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
 
 if (!('ResizeObserver' in globalThis)) {
-  // @ts-expect-error polyfill for test environment
   globalThis.ResizeObserver = class ResizeObserver {
     observe() {}
     unobserve() {}

@@ -3,7 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createElement } from 'react'
 import { createMockUser } from '@bcordes/auth/testing'
-import { renderWithProviders } from '@bcordes/test-utils'
 import type { ReactNode } from 'react'
 
 // Mock global fetch

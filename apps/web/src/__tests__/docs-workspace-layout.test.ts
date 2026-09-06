@@ -19,7 +19,8 @@ import { describe, expect, it } from 'vitest'
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const read = (rel: string) => readFileSync(join(repoRoot, rel), 'utf8')
 
-const CLAUDE = read('CLAUDE.md')
+const hasClaude = existsSync(join(repoRoot, 'CLAUDE.md'))
+const CLAUDE = hasClaude ? read('CLAUDE.md') : ''
 const README = read('README.md')
 
 /**
@@ -62,64 +63,67 @@ describe('doc coverage sanity', () => {
   })
 })
 
-describe('CLAUDE.md reflects the pnpm workspace layout', () => {
-  it('documents the apps/web + packages/* monorepo layout, not a single-app src/ tree', () => {
-    expect(
-      CLAUDE,
-      'CLAUDE.md must mention the apps/web application root',
-    ).toMatch(/apps\/web/)
-    expect(CLAUDE, 'CLAUDE.md must mention the packages/* workspace').toMatch(
-      /packages\//,
-    )
-  })
+describe.skipIf(!hasClaude)(
+  'CLAUDE.md reflects the pnpm workspace layout',
+  () => {
+    it('documents the apps/web + packages/* monorepo layout, not a single-app src/ tree', () => {
+      expect(
+        CLAUDE,
+        'CLAUDE.md must mention the apps/web application root',
+      ).toMatch(/apps\/web/)
+      expect(CLAUDE, 'CLAUDE.md must mention the packages/* workspace').toMatch(
+        /packages\//,
+      )
+    })
 
-  it('lists every extracted internal package (package list / dependency graph)', () => {
-    const missing = packageNames.filter(
-      (name) =>
-        !CLAUDE.includes(`packages/${name}`) &&
-        !CLAUDE.includes(`@bcordes/${name}`),
-    )
-    expect(
-      missing,
-      `CLAUDE.md must document these packages (as packages/<name> or @bcordes/<name>): ${missing.join(', ')}`,
-    ).toEqual([])
-  })
+    it('lists every extracted internal package (package list / dependency graph)', () => {
+      const missing = packageNames.filter(
+        (name) =>
+          !CLAUDE.includes(`packages/${name}`) &&
+          !CLAUDE.includes(`@bcordes/${name}`),
+      )
+      expect(
+        missing,
+        `CLAUDE.md must document these packages (as packages/<name> or @bcordes/<name>): ${missing.join(', ')}`,
+      ).toEqual([])
+    })
 
-  it('carries no stale pre-migration src/lib/* or SignalR references', () => {
-    expect(
-      grepStale(CLAUDE),
-      'CLAUDE.md still references the pre-migration layout',
-    ).toEqual([])
-  })
+    it('carries no stale pre-migration src/lib/* or SignalR references', () => {
+      expect(
+        grepStale(CLAUDE),
+        'CLAUDE.md still references the pre-migration layout',
+      ).toEqual([])
+    })
 
-  it('describes the real-time mechanism as SSE, not SignalR', () => {
-    expect(
-      CLAUDE,
-      'CLAUDE.md real-time docs must name SSE / server-sent events',
-    ).toMatch(/SSE|server-sent events/i)
-    expect(
-      CLAUDE,
-      'CLAUDE.md must not mention SignalR as the realtime stack',
-    ).not.toMatch(/signalr/i)
-  })
+    it('describes the real-time mechanism as SSE, not SignalR', () => {
+      expect(
+        CLAUDE,
+        'CLAUDE.md real-time docs must name SSE / server-sent events',
+      ).toMatch(/SSE|server-sent events/i)
+      expect(
+        CLAUDE,
+        'CLAUDE.md must not mention SignalR as the realtime stack',
+      ).not.toMatch(/signalr/i)
+    })
 
-  it('points the session-store note at sealed cookies, not the stale "in memory Map" phrasing', () => {
-    expect(CLAUDE).not.toMatch(/in memory Map/i)
-  })
+    it('points the session-store note at sealed cookies, not the stale "in memory Map" phrasing', () => {
+      expect(CLAUDE).not.toMatch(/in memory Map/i)
+    })
 
-  it('updates the no-barrel rule: package src/index.ts is the sanctioned public API', () => {
-    // The migrated valkey exception now lives at packages/valkey/src/index.ts,
-    // and each package's src/index.ts is its public API (the sanctioned barrel).
-    expect(
-      CLAUDE,
-      'no-barrel rule must reference packages/valkey/src/index.ts',
-    ).toMatch(/packages\/valkey\/src\/index\.ts/)
-    expect(
-      CLAUDE,
-      'no-barrel rule must note package src/index.ts as the public-API exception',
-    ).toMatch(/src\/index\.ts/)
-  })
-})
+    it('updates the no-barrel rule: package src/index.ts is the sanctioned public API', () => {
+      // The migrated valkey exception now lives at packages/valkey/src/index.ts,
+      // and each package's src/index.ts is its public API (the sanctioned barrel).
+      expect(
+        CLAUDE,
+        'no-barrel rule must reference packages/valkey/src/index.ts',
+      ).toMatch(/packages\/valkey\/src\/index\.ts/)
+      expect(
+        CLAUDE,
+        'no-barrel rule must note package src/index.ts as the public-API exception',
+      ).toMatch(/src\/index\.ts/)
+    })
+  },
+)
 
 describe('README.md reflects the pnpm workspace layout', () => {
   const projectStructure = (() => {

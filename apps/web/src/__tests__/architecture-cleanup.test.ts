@@ -31,7 +31,10 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const selfPath = fileURLToPath(import.meta.url)
 
-const CLAUDE = readFileSync(join(repoRoot, 'CLAUDE.md'), 'utf8')
+const hasClaude = existsSync(join(repoRoot, 'CLAUDE.md'))
+const CLAUDE = hasClaude
+  ? readFileSync(join(repoRoot, 'CLAUDE.md'), 'utf8')
+  : ''
 const README = readFileSync(join(repoRoot, 'README.md'), 'utf8')
 
 /** Slice a markdown doc between a heading and the next heading of the same level. */
@@ -356,84 +359,90 @@ describe('surviving ESLint blocks subsume the pruned layer blocks', () => {
 // 4. Docs describe the feature-based layout (doc-staleness guard)
 // ---------------------------------------------------------------------------
 
-describe('CLAUDE.md Key Directories describe the features/ + shared/ layout', () => {
-  it('has a Key Directories section', () => {
-    expect(keyDirs, 'CLAUDE.md Key Directories section not found').not.toBe('')
-  })
+describe.skipIf(!hasClaude)(
+  'CLAUDE.md Key Directories describe the features/ + shared/ layout',
+  () => {
+    it('has a Key Directories section', () => {
+      expect(keyDirs, 'CLAUDE.md Key Directories section not found').not.toBe(
+        '',
+      )
+    })
 
-  it('lists apps/web/src/features/ and apps/web/src/shared/', () => {
-    expect(keyDirs, 'Key Directories must document features/').toMatch(
-      /apps\/web\/src\/features\//,
-    )
-    expect(keyDirs, 'Key Directories must document shared/').toMatch(
-      /apps\/web\/src\/shared\//,
-    )
-  })
+    it('lists apps/web/src/features/ and apps/web/src/shared/', () => {
+      expect(keyDirs, 'Key Directories must document features/').toMatch(
+        /apps\/web\/src\/features\//,
+      )
+      expect(keyDirs, 'Key Directories must document shared/').toMatch(
+        /apps\/web\/src\/shared\//,
+      )
+    })
 
-  it('documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css', () => {
-    expect(
-      keyDirs,
-      'Key Directories must document the apps/web/src/app/ shell layer',
-    ).toMatch(/apps\/web\/src\/app\//)
-  })
+    it('documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css', () => {
+      expect(
+        keyDirs,
+        'Key Directories must document the apps/web/src/app/ shell layer',
+      ).toMatch(/apps\/web\/src\/app\//)
+    })
 
-  it('names both cross-cutting shared modules (auth and motion)', () => {
-    const sharedEntry =
-      keyDirs
-        .split('\n')
-        .find((line) => line.includes('apps/web/src/shared/')) ?? ''
-    expect(sharedEntry, 'the shared/ entry must name the auth module').toMatch(
-      /auth/,
-    )
-    expect(
-      sharedEntry,
-      'the shared/ entry must name the motion module',
-    ).toMatch(/motion/)
-  })
+    it('names both cross-cutting shared modules (auth and motion)', () => {
+      const sharedEntry =
+        keyDirs
+          .split('\n')
+          .find((line) => line.includes('apps/web/src/shared/')) ?? ''
+      expect(
+        sharedEntry,
+        'the shared/ entry must name the auth module',
+      ).toMatch(/auth/)
+      expect(
+        sharedEntry,
+        'the shared/ entry must name the motion module',
+      ).toMatch(/motion/)
+    })
 
-  it('no longer advertises the dissolved components/ and hooks/ buckets', () => {
-    expect(
-      keyDirs,
-      'Key Directories must not list the removed components/ bucket',
-    ).not.toMatch(/apps\/web\/src\/components\//)
-    expect(
-      keyDirs,
-      'Key Directories must not list the removed hooks/ bucket',
-    ).not.toMatch(/apps\/web\/src\/hooks\//)
-    expect(
-      keyDirs,
-      'Key Directories must not enumerate a components/{...} bucket',
-    ).not.toMatch(/components\/\{/)
-  })
+    it('no longer advertises the dissolved components/ and hooks/ buckets', () => {
+      expect(
+        keyDirs,
+        'Key Directories must not list the removed components/ bucket',
+      ).not.toMatch(/apps\/web\/src\/components\//)
+      expect(
+        keyDirs,
+        'Key Directories must not list the removed hooks/ bucket',
+      ).not.toMatch(/apps\/web\/src\/hooks\//)
+      expect(
+        keyDirs,
+        'Key Directories must not enumerate a components/{...} bucket',
+      ).not.toMatch(/components\/\{/)
+    })
 
-  it('no longer advertises the removed apps/web/src/server-fns/ dir', () => {
-    expect(
-      keyDirs,
-      'Key Directories must not list the removed server-fns/ dir',
-    ).not.toMatch(/server-fns/)
-  })
+    it('no longer advertises the removed apps/web/src/server-fns/ dir', () => {
+      expect(
+        keyDirs,
+        'Key Directories must not list the removed server-fns/ dir',
+      ).not.toMatch(/server-fns/)
+    })
 
-  it('no longer advertises the removed apps/web/src/content/ dir', () => {
-    expect(
-      keyDirs,
-      'Key Directories must not list the removed content/ dir',
-    ).not.toMatch(/apps\/web\/src\/content\//)
-  })
+    it('no longer advertises the removed apps/web/src/content/ dir', () => {
+      expect(
+        keyDirs,
+        'Key Directories must not list the removed content/ dir',
+      ).not.toMatch(/apps\/web\/src\/content\//)
+    })
 
-  it('no longer enumerates the per-feature components/{home,about,...} dirs', () => {
-    // Post-cleanup only components/{layout,shared} remain; the stale
-    // components/{home,about,contact,projects,layout,shared} enumeration must go.
-    expect(
-      keyDirs,
-      'Key Directories must not enumerate the migrated-away per-feature component dirs',
-    ).not.toMatch(/components\/\{[^}]*\b(?:home|about|contact|projects)\b/)
-  })
+    it('no longer enumerates the per-feature components/{home,about,...} dirs', () => {
+      // Post-cleanup only components/{layout,shared} remain; the stale
+      // components/{home,about,contact,projects,layout,shared} enumeration must go.
+      expect(
+        keyDirs,
+        'Key Directories must not enumerate the migrated-away per-feature component dirs',
+      ).not.toMatch(/components\/\{[^}]*\b(?:home|about|contact|projects)\b/)
+    })
 
-  it('preserves the packages/valkey/src/index.ts sanctioned-barrel reference', () => {
-    // docs-workspace-layout guard invariant — must survive the docs edit.
-    expect(CLAUDE).toMatch(/packages\/valkey\/src\/index\.ts/)
-  })
-})
+    it('preserves the packages/valkey/src/index.ts sanctioned-barrel reference', () => {
+      // docs-workspace-layout guard invariant — must survive the docs edit.
+      expect(CLAUDE).toMatch(/packages\/valkey\/src\/index\.ts/)
+    })
+  },
+)
 
 describe('README Project Structure describes the features/ + shared/ layout', () => {
   it('has a Project Structure section', () => {

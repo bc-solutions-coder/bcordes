@@ -1,18 +1,23 @@
+import { createMockUser } from '@bcordes/auth/testing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { toast } from 'sonner'
 import { renderWithProviders } from '@bcordes/test-utils'
 import { ContactForm } from './ContactForm'
+import type { useUser } from '@/shared/auth'
 
 const mockSubmitInquiry = vi.fn()
-const mockUseUser = vi.fn(() => ({ user: null, isLoading: false }))
+const mockUseUser = vi.fn<typeof useUser>(() => ({
+  user: null,
+  isLoading: false,
+}))
 
 vi.mock('@/features/inquiries', () => ({
   submitInquiry: (...args: Array<unknown>) => mockSubmitInquiry(...args),
 }))
 
 vi.mock('@/shared/auth', () => ({
-  useUser: (...args: Array<unknown>) => mockUseUser(...args),
+  useUser: () => mockUseUser(),
 }))
 
 vi.mock('sonner', () => ({
@@ -288,7 +293,7 @@ describe('ContactForm', () => {
 
   it('pre-fills email and name when user has both', async () => {
     mockUseUser.mockReturnValue({
-      user: { email: 'jane@example.com', name: 'Jane Smith' },
+      user: createMockUser({ email: 'jane@example.com', name: 'Jane Smith' }),
       isLoading: false,
     })
 
@@ -302,7 +307,7 @@ describe('ContactForm', () => {
 
   it('pre-fills only email when user has email but no name', async () => {
     mockUseUser.mockReturnValue({
-      user: { email: 'jane@example.com', name: undefined },
+      user: createMockUser({ email: 'jane@example.com', name: '' }),
       isLoading: false,
     })
 
@@ -316,7 +321,7 @@ describe('ContactForm', () => {
 
   it('pre-fills only name when user has name but no email', async () => {
     mockUseUser.mockReturnValue({
-      user: { email: undefined, name: 'Jane Smith' },
+      user: createMockUser({ email: '', name: 'Jane Smith' }),
       isLoading: false,
     })
 

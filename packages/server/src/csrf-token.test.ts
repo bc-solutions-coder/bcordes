@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { SessionData, User } from '@bcordes/auth/types'
+import type { SessionData } from '@bcordes/auth/types'
 
 describe('CSRF token — session storage', () => {
   const originalEnv = { ...process.env }

@@ -53,10 +53,7 @@ function stubBrowserAPIs(options?: {
 }) {
   if (options?.omitServiceWorker) {
     // Create a navigator object without the serviceWorker property
-    const { serviceWorker: _, ...rest } = globalThis.navigator as Record<
-      string,
-      unknown
-    >
+    const { serviceWorker: _, ...rest } = globalThis.navigator
     vi.stubGlobal('navigator', rest)
   } else {
     vi.stubGlobal('navigator', {
@@ -70,8 +67,7 @@ function stubBrowserAPIs(options?: {
 
   if (options?.omitPushManager) {
     // Remove PushManager from window by deleting it
-    const w = globalThis.window as Record<string, unknown>
-    delete w.PushManager
+    Reflect.deleteProperty(globalThis.window, 'PushManager')
   } else {
     vi.stubGlobal('PushManager', vi.fn())
   }

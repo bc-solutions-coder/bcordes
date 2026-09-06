@@ -6,7 +6,6 @@ import {
   getShowcaseContent,
   getShowcases,
 } from '.'
-import type { ShowcaseMeta } from '.'
 
 describe('project content data functions', () => {
   describe('getShowcases', () => {

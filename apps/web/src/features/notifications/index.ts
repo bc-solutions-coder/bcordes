@@ -26,3 +26,4 @@ export {
   registerPushDevice,
   sendTestPush,
 } from './server-fns/notifications'
+export type { Notification } from '@bcordes/wallow/types'

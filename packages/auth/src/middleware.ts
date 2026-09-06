@@ -3,7 +3,7 @@ import logger from '@bcordes/logger'
 import { redactUser } from './redact'
 import { clearSession, getSession, setSession } from './session'
 import { fetchUserProfile, refreshToken } from './oidc'
-import type { SessionData, User } from './types'
+import type { User } from './types'
 
 const log = logger.child({ module: 'auth' })
 
@@ -20,22 +20,28 @@ export async function getAuthUser(): Promise<User | null> {
   // Token not yet expired (or expiry unknown) — return cached user
   if (!session.expiresAt || now < session.expiresAt - 30) {
     const expiresIn = session.expiresAt ? session.expiresAt - now : undefined
-    log.debug('session valid, returning cached user', {
-      user: redactUser(session.user),
-      expiresIn,
-    })
+    log.debug(
+      {
+        user: redactUser(session.user),
+        expiresIn,
+      },
+      'session valid, returning cached user',
+    )
     return session.user
   }
 
   // No refresh token available — return cached user as-is
   if (!session.refreshToken) {
-    log.warn('token expired but no refresh token available', {
-      user: redactUser(session.user),
-    })
+    log.warn(
+      {
+        user: redactUser(session.user),
+      },
+      'token expired but no refresh token available',
+    )
     return session.user
   }
 
-  log.info('token expired, attempting refresh', { userId: session.user.id })
+  log.info({ userId: session.user.id }, 'token expired, attempting refresh')
 
   try {
     const tokens = await refreshToken(session.refreshToken)
@@ -51,17 +57,23 @@ export async function getAuthUser(): Promise<User | null> {
       user,
       version,
     })
-    log.info('token refresh successful, session updated', {
-      user: redactUser(user),
-      version,
-    })
+    log.info(
+      {
+        user: redactUser(user),
+        version,
+      },
+      'token refresh successful, session updated',
+    )
     return user
   } catch (err) {
     // Refresh failed — clear the session to avoid returning stale credentials
-    log.error('token refresh failed, clearing session', {
-      userId: session.user.id,
-      error: err instanceof Error ? err.message : String(err),
-    })
+    log.error(
+      {
+        userId: session.user.id,
+        error: err instanceof Error ? err.message : String(err),
+      },
+      'token refresh failed, clearing session',
+    )
     clearSession()
     return null
   }
@@ -71,7 +83,7 @@ export async function getAuthUser(): Promise<User | null> {
 export async function requireAuth(returnTo?: string): Promise<User> {
   const user = await getAuthUser()
   if (!user) {
-    log.info('unauthenticated request, redirecting to login', { returnTo })
+    log.info({ returnTo }, 'unauthenticated request, redirecting to login')
     throw redirect({
       to: '/auth/login',
       search: returnTo ? { returnTo } : undefined,
@@ -90,10 +102,13 @@ export async function requireAdmin(): Promise<User> {
     throw error
   }
   if (!session.user.roles.includes('admin')) {
-    log.warn('admin check failed: missing admin role', {
-      userId: session.user.id,
-      roles: session.user.roles,
-    })
+    log.warn(
+      {
+        userId: session.user.id,
+        roles: session.user.roles,
+      },
+      'admin check failed: missing admin role',
+    )
     const error = new Error('Forbidden: admin role required')
     ;(error as unknown as Record<string, unknown>).status = 403
     throw error

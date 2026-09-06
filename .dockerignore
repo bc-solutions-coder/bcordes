@@ -23,3 +23,6 @@ DEPLOYMENT.md
 **/coverage
 **/.storybook
 **/storybook-static
+
+.env
+.worktrees/

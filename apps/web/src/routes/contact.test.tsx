@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, assert, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => config,
+  createFileRoute: () => (config: Record<string, unknown>) => ({
+    options: config,
+  }),
 }))
 
 vi.mock('lucide-react', () => ({
@@ -47,23 +49,23 @@ describe('contact route', () => {
     it('exports a route config with component', async () => {
       const mod = await import('./contact')
       expect(mod.Route).toBeDefined()
-      expect(mod.Route).toHaveProperty('component')
+      expect(mod.Route.options).toHaveProperty('component')
     })
   })
 
   describe('ContactPage component', () => {
     it('renders page heading', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       expect(screen.getByText('Get in Touch')).toBeTruthy()
     })
 
     it('renders contact info section with all items', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       expect(screen.getByText('Contact Information')).toBeTruthy()
       expect(screen.getByText('BC@bcordes.dev')).toBeTruthy()
@@ -74,8 +76,8 @@ describe('contact route', () => {
 
     it('renders email link with mailto href', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       const emailLink = screen.getByText('BC@bcordes.dev')
       expect(emailLink.closest('a')?.getAttribute('href')).toBe(
@@ -85,24 +87,24 @@ describe('contact route', () => {
 
     it('renders availability status', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       expect(screen.getByText('Available for projects')).toBeTruthy()
     })
 
     it('renders ContactForm', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       expect(screen.getByTestId('contact-form')).toBeTruthy()
     })
 
     it('renders Send a Message heading', async () => {
       const mod = await import('./contact')
-      const ContactPage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ContactPage = mod.Route.options.component
+      assert(ContactPage)
       render(<ContactPage />)
       expect(screen.getByText('Send a Message')).toBeTruthy()
     })

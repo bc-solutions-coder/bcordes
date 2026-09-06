@@ -50,12 +50,6 @@ const registerPushDeviceSchema = z.object({
 // notifications.ts – markNotificationRead / deregisterPushDevice
 const notificationIdSchema = z.object({ id: z.string().uuid() })
 
-// notifications.ts – updateChannelSetting
-const updateChannelSettingSchema = z.object({
-  channelType: z.string(),
-  isEnabled: z.boolean(),
-})
-
 // ─── Helpers ─────────────────────────────────────────────────────────
 
 const VALID_UUID = '550e8400-e29b-41d4-a716-446655440000'

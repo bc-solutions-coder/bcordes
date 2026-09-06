@@ -71,6 +71,11 @@ jobs:
 
       - name: Build
         run: pnpm --filter bcordes build
+        env:
+          NODE_ENV: production
+
+      - name: Verify production server and assets
+        run: bash scripts/verify-production.sh
 
   lint:
     runs-on: ubuntu-latest
@@ -97,3 +102,29 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Typecheck every workspace package
+        run: pnpm typecheck

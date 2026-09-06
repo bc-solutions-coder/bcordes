@@ -69,13 +69,17 @@ const fakeShowcases: Array<ShowcaseMeta> = [
 
 const head = (
   routeModule.Route as unknown as {
-    head: (ctx: { loaderData: { showcase: ShowcaseMeta } }) => {
+    head: (ctx: { loaderData: { showcase: ShowcaseMeta } | undefined }) => {
       meta: Array<Record<string, string>>
     }
   }
 ).head
 
 describe('Route config', () => {
+  it('has no project metadata when the loader did not find a project', () => {
+    expect(head({ loaderData: undefined })).toEqual({})
+  })
+
   it('exports a route config with head', () => {
     expect(routeModule.Route).toHaveProperty('head')
   })

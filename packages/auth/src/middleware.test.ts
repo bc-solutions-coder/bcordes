@@ -95,6 +95,7 @@ describe('getAuthUser', () => {
     const newUser = createMockUser({ name: 'Refreshed User' })
     mockRefreshToken.mockResolvedValue({
       accessToken: 'new-access-token',
+      idToken: 'new-id-token',
       refreshToken: 'new-refresh-token',
       expiresIn: 3600,
       subject: 'test-user-123',

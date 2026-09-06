@@ -382,10 +382,7 @@ describe('@bcordes/wallow/testing ships the mock client factory as a secondary e
   })
 
   it('builds a MockWallowClient whose verb methods are vitest mocks', async () => {
-    const { createMockWallowClient } =
-      (await import('./src/testing/index')) as {
-        createMockWallowClient: () => Record<string, unknown>
-      }
+    const { createMockWallowClient } = await import('./src/testing/index')
 
     const client = createMockWallowClient()
     // The mock mirrors the real WallowClient verb surface, extended with `head`.

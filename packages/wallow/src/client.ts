@@ -24,7 +24,6 @@ const REQUEST_TIMEOUT_MS = 30_000
 function buildFetchOptions(
   method: string,
   accessToken: string,
-  path: string,
   body?: unknown,
 ): RequestInit {
   return {
@@ -48,26 +47,44 @@ function doFetch(
 ): Promise<Response> {
   return fetch(
     `${WALLOW_BASE_URL}${path}`,
-    buildFetchOptions(method, accessToken, path, body),
+    buildFetchOptions(method, accessToken, body),
   )
 }
 
 async function refreshSession(
   currentSession: SessionData,
 ): Promise<SessionData> {
-  return withRefreshLock(currentSession.sessionId, async () => {
-    const tokens = await refreshToken(currentSession.refreshToken)
-    const updated: SessionData = {
-      ...currentSession,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      expiresAt: Math.floor(Date.now() / 1000) + tokens.expiresIn,
-      user: parseUserFromToken(tokens.idToken),
-      version: currentSession.version + 1,
-    }
-    await setSession(updated)
-    return updated
-  })
+  const refreshed = await withRefreshLock(
+    currentSession.sessionId,
+    async () => {
+      const tokens = await refreshToken(currentSession.refreshToken)
+      const updated: SessionData = {
+        ...currentSession,
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        expiresAt: Math.floor(Date.now() / 1000) + tokens.expiresIn,
+        user: parseUserFromToken(tokens.idToken),
+        version: currentSession.version + 1,
+      }
+      await setSession(updated)
+      return updated
+    },
+  )
+  if (refreshed) return refreshed
+
+  const latest = await getSession()
+  if (!latest) {
+    setResponseStatus(401)
+    throw new Error('No active session')
+  }
+  if (
+    latest.sessionId === currentSession.sessionId &&
+    latest.version > currentSession.version
+  ) {
+    return latest
+  }
+  setResponseStatus(503)
+  throw new Error('Session refresh in progress; retry the request')
 }
 
 /** Create an authenticated HTTP client for the Wallow backend API */
@@ -83,7 +100,11 @@ export async function createWallowClient(): Promise<WallowClient> {
     path: string,
     body?: unknown,
   ): Promise<Response> {
-    let currentSession = (await getSession())!
+    let currentSession = await getSession()
+    if (!currentSession) {
+      setResponseStatus(401)
+      throw new Error('No active session')
+    }
     let response: Response
 
     try {

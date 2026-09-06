@@ -114,7 +114,7 @@ describe('UserMenu', () => {
     const originalCreateElement = document.createElement.bind(document)
     vi.spyOn(document, 'createElement').mockImplementation((tag: string) => {
       const el = originalCreateElement(tag)
-      if (tag === 'form') {
+      if (el instanceof HTMLFormElement) {
         el.submit = mockSubmit
       }
       return el

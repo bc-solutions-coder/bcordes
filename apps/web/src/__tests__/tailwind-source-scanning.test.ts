@@ -1,6 +1,16 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  symlinkSync,
+} from 'node:fs'
+import { basename, dirname, join, resolve } from 'node:path'
+import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
@@ -59,17 +69,61 @@ let bundledCss = ''
 
 describe('tailwind @source scanning of @bcordes/ui', () => {
   beforeAll(() => {
-    execFileSync('pnpm', ['--filter', 'bcordes', 'build'], {
-      cwd: repoRoot,
-      stdio: 'pipe',
-    })
+    const buildRoot = mkdtempSync(join(tmpdir(), 'bcordes-css-build-'))
+    const excluded = new Set([
+      'node_modules',
+      '.output',
+      '.nitro',
+      '.tanstack',
+      'dist',
+      'coverage',
+      'test-results',
+      'playwright-report',
+    ])
+    try {
+      for (const entry of [
+        'package.json',
+        'pnpm-workspace.yaml',
+        'apps',
+        'packages',
+      ]) {
+        cpSync(join(repoRoot, entry), join(buildRoot, entry), {
+          recursive: true,
+          filter: (path) =>
+            !excluded.has(basename(path)) && !basename(path).startsWith('.env'),
+        })
+      }
+      for (const entry of [
+        '',
+        'apps/web',
+        ...readdirSync(join(repoRoot, 'packages')).map(
+          (name) => `packages/${name}`,
+        ),
+      ]) {
+        const dependencies = join(repoRoot, entry, 'node_modules')
+        if (existsSync(dependencies)) {
+          symlinkSync(
+            dependencies,
+            join(buildRoot, entry, 'node_modules'),
+            'dir',
+          )
+        }
+      }
+      execFileSync('pnpm', ['--filter', 'bcordes', 'build'], {
+        cwd: buildRoot,
+        env: { ...process.env, NODE_ENV: 'production' },
+        stdio: 'pipe',
+      })
 
-    const assets = join(webDir, '.output/public/assets')
-    const css = readdirSync(assets).filter((f) => f.endsWith('.css'))
-    expect(css.length).toBeGreaterThan(0)
-    bundledCss = css
-      .map((f) => readFileSync(join(assets, f), 'utf8'))
-      .join('\n')
+      const assets = join(buildRoot, 'apps/web/.output/public/assets')
+      const css = readdirSync(assets).filter((f) => f.endsWith('.css'))
+      expect(css.length).toBeGreaterThan(0)
+      bundledCss = css
+        .map((f) => readFileSync(join(assets, f), 'utf8'))
+        .join('\n')
+    } finally {
+      rmSync(buildRoot, { recursive: true, force: true })
+    }
   }, 300_000)
 
   it('sentinels reach the build only through packages/ui', () => {

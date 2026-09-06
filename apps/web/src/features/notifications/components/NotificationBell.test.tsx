@@ -1,17 +1,25 @@
+import { createMockUser } from '@bcordes/auth/testing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 import { NotificationBell } from './NotificationBell'
+import type { useUser } from '@/shared/auth'
+import type { EventStreamContextValue } from '../hooks/useEventStream'
 import type * as BcordesUtils from '@bcordes/utils'
 import type { Notification } from '@bcordes/wallow/types'
 
-const mockUseUser = vi.fn(() => ({ user: null, isLoading: false }))
-const mockSubscribe = vi.fn(() => vi.fn())
-const mockFetchNotifications = vi.fn(() => Promise.resolve([]))
+const mockUseUser = vi.fn<typeof useUser>(() => ({
+  user: null,
+  isLoading: false,
+}))
+const mockSubscribe = vi.fn<EventStreamContextValue['subscribe']>(() => vi.fn())
+const mockFetchNotifications = vi.fn<() => Promise<Array<Notification>>>(() =>
+  Promise.resolve([]),
+)
 const mockFetchUnreadCount = vi.fn(() => Promise.resolve(0))
 
 vi.mock('@/shared/auth', () => ({
-  useUser: (...args: Array<unknown>) => mockUseUser(...args),
+  useUser: () => mockUseUser(),
 }))
 
 vi.mock('../hooks/useEventStream', () => ({
@@ -19,9 +27,8 @@ vi.mock('../hooks/useEventStream', () => ({
 }))
 
 vi.mock('../server-fns/notifications', () => ({
-  fetchNotifications: (...args: Array<unknown>) =>
-    mockFetchNotifications(...args),
-  fetchUnreadCount: (...args: Array<unknown>) => mockFetchUnreadCount(...args),
+  fetchNotifications: () => mockFetchNotifications(),
+  fetchUnreadCount: () => mockFetchUnreadCount(),
   markNotificationRead: vi.fn(() => Promise.resolve()),
   markAllNotificationsRead: vi.fn(() => Promise.resolve()),
 }))
@@ -42,7 +49,7 @@ vi.mock('@bcordes/utils', async (importOriginal) => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: vi.fn(() => vi.fn()),
+  useNavigate: vi.fn<EventStreamContextValue['subscribe']>(() => vi.fn()),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),
@@ -74,7 +81,7 @@ describe('NotificationBell', () => {
 
   it('renders bell button when user is authenticated', () => {
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     renderWithProviders(<NotificationBell />)
@@ -83,7 +90,7 @@ describe('NotificationBell', () => {
 
   it('shows badge with unread count when > 0', async () => {
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(5)
@@ -96,7 +103,7 @@ describe('NotificationBell', () => {
 
   it('does not show badge when count is 0', () => {
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(0)
@@ -110,7 +117,7 @@ describe('NotificationBell', () => {
 
   it('shows empty state when popover is opened with no notifications', async () => {
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchNotifications.mockResolvedValue([])
@@ -150,7 +157,7 @@ describe('NotificationBell', () => {
       },
     ]
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchNotifications.mockResolvedValue(notifications)
@@ -185,7 +192,7 @@ describe('NotificationBell', () => {
       },
     ]
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchNotifications.mockResolvedValue(notifications)
@@ -224,7 +231,7 @@ describe('NotificationBell', () => {
       },
     ]
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchNotifications.mockResolvedValue(notifications)
@@ -267,7 +274,7 @@ describe('NotificationBell', () => {
       },
     ]
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchNotifications.mockResolvedValue(notifications)
@@ -288,16 +295,21 @@ describe('NotificationBell', () => {
 
   it('subscribes to NotificationCreated and optimistically bumps unread count', async () => {
     const { invalidateNotifications } = await import('../lib/query-utils')
-    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    let capturedCallback: Parameters<
+      EventStreamContextValue['subscribe']
+    >[1] = () => {}
     mockSubscribe.mockImplementation(
-      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+      (
+        _event: string,
+        cb: Parameters<EventStreamContextValue['subscribe']>[1],
+      ) => {
         capturedCallback = cb
         return vi.fn()
       },
     )
 
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(3)
@@ -308,7 +320,12 @@ describe('NotificationBell', () => {
     await screen.findByText('3')
 
     // Simulate a NotificationCreated event
-    capturedCallback({ payload: { title: 'Hello' } })
+    capturedCallback({
+      type: 'NotificationCreated',
+      module: 'notifications',
+      timestamp: new Date().toISOString(),
+      payload: { title: 'Hello' },
+    })
 
     await waitFor(() => {
       expect(invalidateNotifications).toHaveBeenCalled()
@@ -317,9 +334,14 @@ describe('NotificationBell', () => {
 
   it('shows toast when NotificationCreated fires and tab is visible', async () => {
     const { toast } = await import('sonner')
-    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    let capturedCallback: Parameters<
+      EventStreamContextValue['subscribe']
+    >[1] = () => {}
     mockSubscribe.mockImplementation(
-      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+      (
+        _event: string,
+        cb: Parameters<EventStreamContextValue['subscribe']>[1],
+      ) => {
         capturedCallback = cb
         return vi.fn()
       },
@@ -331,7 +353,7 @@ describe('NotificationBell', () => {
       .mockReturnValue('visible')
 
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(0)
@@ -347,7 +369,12 @@ describe('NotificationBell', () => {
     })
 
     // Invoke callback with a notification that has a title
-    capturedCallback({ payload: { title: 'New message arrived' } })
+    capturedCallback({
+      type: 'NotificationCreated',
+      module: 'notifications',
+      timestamp: new Date().toISOString(),
+      payload: { title: 'New message arrived' },
+    })
 
     expect(toast).toHaveBeenCalledWith('New message arrived')
 
@@ -356,9 +383,14 @@ describe('NotificationBell', () => {
 
   it('shows default toast text when notification has no title', async () => {
     const { toast } = await import('sonner')
-    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    let capturedCallback: Parameters<
+      EventStreamContextValue['subscribe']
+    >[1] = () => {}
     mockSubscribe.mockImplementation(
-      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+      (
+        _event: string,
+        cb: Parameters<EventStreamContextValue['subscribe']>[1],
+      ) => {
         capturedCallback = cb
         return vi.fn()
       },
@@ -369,7 +401,7 @@ describe('NotificationBell', () => {
       .mockReturnValue('visible')
 
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(0)
@@ -381,7 +413,12 @@ describe('NotificationBell', () => {
     })
 
     // Invoke callback without a title in payload
-    capturedCallback({ payload: {} })
+    capturedCallback({
+      type: 'NotificationCreated',
+      module: 'notifications',
+      timestamp: new Date().toISOString(),
+      payload: {},
+    })
 
     expect(toast).toHaveBeenCalledWith('New notification')
 
@@ -390,9 +427,14 @@ describe('NotificationBell', () => {
 
   it('does not show toast when tab is hidden', async () => {
     const { toast } = await import('sonner')
-    let capturedCallback: (envelope: Record<string, unknown>) => void = () => {}
+    let capturedCallback: Parameters<
+      EventStreamContextValue['subscribe']
+    >[1] = () => {}
     mockSubscribe.mockImplementation(
-      (_event: string, cb: (envelope: Record<string, unknown>) => void) => {
+      (
+        _event: string,
+        cb: Parameters<EventStreamContextValue['subscribe']>[1],
+      ) => {
         capturedCallback = cb
         return vi.fn()
       },
@@ -403,7 +445,7 @@ describe('NotificationBell', () => {
       .mockReturnValue('hidden')
 
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
     mockFetchUnreadCount.mockResolvedValue(0)
@@ -414,7 +456,12 @@ describe('NotificationBell', () => {
       expect(mockSubscribe).toHaveBeenCalled()
     })
 
-    capturedCallback({ payload: { title: 'Should not toast' } })
+    capturedCallback({
+      type: 'NotificationCreated',
+      module: 'notifications',
+      timestamp: new Date().toISOString(),
+      payload: { title: 'Should not toast' },
+    })
 
     expect(toast).not.toHaveBeenCalled()
 
@@ -423,7 +470,7 @@ describe('NotificationBell', () => {
 
   it('shows "View all notifications" link in popover', async () => {
     mockUseUser.mockReturnValue({
-      user: { id: '1', name: 'Test' },
+      user: createMockUser({ id: '1', name: 'Test' }),
       isLoading: false,
     })
 

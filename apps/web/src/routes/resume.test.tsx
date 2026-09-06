@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, assert, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => config,
+  createFileRoute: () => (config: Record<string, unknown>) => ({
+    options: config,
+  }),
 }))
 
 vi.mock('lucide-react', () => ({
@@ -48,23 +50,23 @@ describe('resume route', () => {
     it('exports a route config with component', async () => {
       const mod = await import('./resume')
       expect(mod.Route).toBeDefined()
-      expect(mod.Route).toHaveProperty('component')
+      expect(mod.Route.options).toHaveProperty('component')
     })
   })
 
   describe('ResumePage component', () => {
     it('renders page heading', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('Resume')).toBeTruthy()
     })
 
     it('renders experience subtitle', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(
         screen.getByText(
@@ -75,8 +77,8 @@ describe('resume route', () => {
 
     it('renders Download PDF link', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       const downloadLink = screen.getByText('Download PDF')
       expect(downloadLink.closest('a')?.getAttribute('href')).toBe(
@@ -86,8 +88,8 @@ describe('resume route', () => {
 
     it('renders Experience section with all jobs', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('Experience')).toBeTruthy()
       expect(screen.getByText('Freelance Software Engineer')).toBeTruthy()
@@ -100,8 +102,8 @@ describe('resume route', () => {
 
     it('renders Skills section with categories', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('Skills')).toBeTruthy()
       expect(screen.getByText('Frontend')).toBeTruthy()
@@ -113,8 +115,8 @@ describe('resume route', () => {
 
     it('renders skill badges', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('TypeScript')).toBeTruthy()
       expect(screen.getByText('React')).toBeTruthy()
@@ -124,8 +126,8 @@ describe('resume route', () => {
 
     it('renders Education section', async () => {
       const mod = await import('./resume')
-      const ResumePage = (mod.Route as { component: React.ComponentType })
-        .component
+      const ResumePage = mod.Route.options.component
+      assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('Education')).toBeTruthy()
       expect(

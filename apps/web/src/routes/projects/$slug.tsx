@@ -14,6 +14,7 @@ export const Route = createFileRoute('/projects/$slug')({
     return { showcase }
   },
   head: ({ loaderData }) => {
+    if (!loaderData) return {}
     const { showcase } = loaderData
     const title = `${showcase.title} | BC Solutions`
     return {

@@ -29,17 +29,23 @@ export async function getSession(): Promise<SessionData | null> {
     const sessionId = (await unseal(value, SESSION_SECRET, defaults)) as string
     const raw = await getValkey().get(keys.session(sessionId))
     if (!raw) {
-      log.warn('session cookie valid but no data in valkey', {
-        sessionId: redact(sessionId),
-      })
+      log.warn(
+        {
+          sessionId: redact(sessionId),
+        },
+        'session cookie valid but no data in valkey',
+      )
       return null
     }
-    log.debug('session loaded', { sessionId: redact(sessionId) })
+    log.debug({ sessionId: redact(sessionId) }, 'session loaded')
     return JSON.parse(raw) as SessionData
   } catch (err) {
-    log.warn('failed to load session', {
-      error: err instanceof Error ? err.message : String(err),
-    })
+    log.warn(
+      {
+        error: err instanceof Error ? err.message : String(err),
+      },
+      'failed to load session',
+    )
     return null
   }
 }
@@ -51,10 +57,13 @@ export async function setSession(data: SessionData): Promise<void> {
     'EX',
     SESSION_TTL_SECONDS,
   )
-  log.debug('session updated in valkey', {
-    sessionId: redact(data.sessionId),
-    version: data.version,
-  })
+  log.debug(
+    {
+      sessionId: redact(data.sessionId),
+      version: data.version,
+    },
+    'session updated in valkey',
+  )
   const sealed = await seal(data.sessionId, SESSION_SECRET, defaults)
   setCookie(COOKIE_NAME, sealed, {
     httpOnly: true,
@@ -75,10 +84,13 @@ export async function sealSessionCookie(data: SessionData): Promise<string> {
     'EX',
     SESSION_TTL_SECONDS,
   )
-  log.info('new session stored in valkey', {
-    sessionId: redact(data.sessionId),
-    userId: data.user.id,
-  })
+  log.info(
+    {
+      sessionId: redact(data.sessionId),
+      userId: data.user.id,
+    },
+    'new session stored in valkey',
+  )
   const sealed = await seal(data.sessionId, SESSION_SECRET, defaults)
   const parts = [
     `${COOKIE_NAME}=${sealed}`,
@@ -98,9 +110,12 @@ export function clearSession(): void {
       // Best-effort removal from Valkey — fire and forget
       unseal(value, SESSION_SECRET, defaults)
         .then((sessionId) => {
-          log.info('clearing session from valkey', {
-            sessionId: redact(sessionId as string),
-          })
+          log.info(
+            {
+              sessionId: redact(sessionId as string),
+            },
+            'clearing session from valkey',
+          )
           getValkey().del(keys.session(sessionId as string))
         })
         .catch(() => {})
@@ -127,13 +142,16 @@ export async function withRefreshLock<T>(
     'NX',
   )
   if (acquired !== 'OK') {
-    log.debug('refresh lock already held, skipping', {
-      sessionId: redact(sessionId),
-    })
+    log.debug(
+      {
+        sessionId: redact(sessionId),
+      },
+      'refresh lock already held, skipping',
+    )
     return undefined
   }
 
-  log.debug('refresh lock acquired', { sessionId: redact(sessionId) })
+  log.debug({ sessionId: redact(sessionId) }, 'refresh lock acquired')
 
   try {
     return await fn()

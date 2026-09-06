@@ -36,10 +36,6 @@ function enqueueUpstream(text: string) {
   upstreamController.enqueue(new TextEncoder().encode(text))
 }
 
-function closeUpstream() {
-  upstreamController.close()
-}
-
 /* ------------------------------------------------------------------ */
 /*  Tests                                                              */
 /* ------------------------------------------------------------------ */
@@ -328,7 +324,7 @@ describe('SSE stream proxy', () => {
       reader.cancel()
 
       const { default: mockLogger } = await import('@bcordes/logger')
-      const sseLog = mockLogger.child()
+      const sseLog = mockLogger.child({})
       expect(sseLog.debug).toHaveBeenCalledWith('Client disconnected')
     })
   })
@@ -339,23 +335,13 @@ describe('SSE stream proxy', () => {
 
   describe('SseManager SIGTERM drain', () => {
     it('should send reconnect event to all open connections when SIGTERM fires', async () => {
-      // Capture the SIGTERM handler via spy
-      let sigtermHandler: (() => void) | undefined
-      const onceSpy = vi
-        .spyOn(process, 'once')
-        .mockImplementation(
-          (event: string, handler: (...args: Array<unknown>) => void) => {
-            if (event === 'SIGTERM') {
-              sigtermHandler = handler as () => void
-            }
-            return process
-          },
-        )
+      const onceSpy = vi.spyOn(process, 'once')
+      const previousHandlers = new Set(process.listeners('SIGTERM'))
 
       const { handler } = await setupMocksAndImport()
 
       // Install the SIGTERM handler
-      const { installSigtermHandler, sseManager } =
+      const { installSigtermHandler } =
         await import('@/routes/api/notifications/stream')
       installSigtermHandler()
 
@@ -378,7 +364,12 @@ describe('SSE stream proxy', () => {
       await reader2.read() // consume ": connected"
 
       // Fire SIGTERM
-      sigtermHandler!()
+      const sigtermHandler = process
+        .listeners('SIGTERM')
+        .find((listener) => !previousHandlers.has(listener))
+      if (!sigtermHandler) throw new Error('SIGTERM handler was not installed')
+      sigtermHandler('SIGTERM')
+      process.removeListener('SIGTERM', sigtermHandler)
 
       // Both streams should receive a reconnect SSE event
       const { value: val1 } = await reader1.read()

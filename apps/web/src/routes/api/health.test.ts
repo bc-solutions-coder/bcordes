@@ -5,13 +5,23 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // ---------------------------------------------------------------------------
 
 const mockPing = vi.fn()
+const { capturedGet } = vi.hoisted(() => ({
+  capturedGet: vi.fn<() => Promise<Response>>(),
+}))
 
 vi.mock('@bcordes/valkey', () => ({
   getValkey: vi.fn(() => ({ ping: mockPing })),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (routeConfig: unknown) => routeConfig,
+  createFileRoute:
+    () =>
+    (routeConfig: {
+      server: { handlers: { GET: () => Promise<Response> } }
+    }) => {
+      capturedGet.mockImplementation(routeConfig.server.handlers.GET)
+      return { options: routeConfig }
+    },
 }))
 
 // ---------------------------------------------------------------------------
@@ -19,11 +29,8 @@ vi.mock('@tanstack/react-router', () => ({
 // ---------------------------------------------------------------------------
 
 async function callHealthHandler(): Promise<Response> {
-  const mod = await import('./health')
-  const route = mod.Route as {
-    server: { handlers: { GET: () => Promise<Response> } }
-  }
-  return route.server.handlers.GET()
+  await import('./health')
+  return capturedGet()
 }
 
 // ---------------------------------------------------------------------------

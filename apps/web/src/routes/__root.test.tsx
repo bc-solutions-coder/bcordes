@@ -1,5 +1,12 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, assert, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
+
+const { capturedHead, capturedShell } = vi.hoisted(() => {
+  const shell: {
+    component: React.ComponentType<{ children: React.ReactNode }> | undefined
+  } = { component: undefined }
+  return { capturedHead: vi.fn<() => unknown>(), capturedShell: shell }
+})
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
@@ -15,7 +22,16 @@ vi.mock('@tanstack/react-router', () => ({
       {children}
     </a>
   ),
-  createRootRouteWithContext: () => (config: unknown) => config,
+  createRootRouteWithContext:
+    () =>
+    (config: {
+      head: () => unknown
+      shellComponent: React.ComponentType<{ children: React.ReactNode }>
+    }) => {
+      capturedHead.mockImplementation(config.head)
+      capturedShell.component = config.shellComponent
+      return { options: config }
+    },
   HeadContent: () => null,
   Scripts: () => null,
   Outlet: ({ children }: { children?: React.ReactNode }) => (
@@ -49,14 +65,14 @@ describe('__root route', () => {
     it('exports a route config with notFoundComponent and head', async () => {
       const mod = await import('./__root')
       expect(mod.Route).toBeDefined()
-      expect(mod.Route).toHaveProperty('notFoundComponent')
-      expect(mod.Route).toHaveProperty('head')
-      expect(mod.Route).toHaveProperty('shellComponent')
+      expect(mod.Route.options).toHaveProperty('notFoundComponent')
+      expect(mod.Route.options).toHaveProperty('head')
+      expect(mod.Route.options).toHaveProperty('shellComponent')
     })
 
     it('head returns correct meta and links', async () => {
-      const mod = await import('./__root')
-      const headResult = (mod.Route as { head: () => unknown }).head()
+      await import('./__root')
+      const headResult = capturedHead()
       expect(headResult).toHaveProperty('meta')
       expect(headResult).toHaveProperty('links')
       expect(headResult).toHaveProperty('scripts')
@@ -66,25 +82,25 @@ describe('__root route', () => {
   describe('NotFound component', () => {
     it('renders 404 heading', async () => {
       const mod = await import('./__root')
-      const NotFound = (mod.Route as { notFoundComponent: React.ComponentType })
-        .notFoundComponent
-      render(<NotFound />)
+      const NotFound = mod.Route.options.notFoundComponent
+      assert(NotFound)
+      render(<NotFound isNotFound routeId="__root__" />)
       expect(screen.getByText('404')).toBeTruthy()
     })
 
     it('renders Page Not Found message', async () => {
       const mod = await import('./__root')
-      const NotFound = (mod.Route as { notFoundComponent: React.ComponentType })
-        .notFoundComponent
-      render(<NotFound />)
+      const NotFound = mod.Route.options.notFoundComponent
+      assert(NotFound)
+      render(<NotFound isNotFound routeId="__root__" />)
       expect(screen.getByText('Page Not Found')).toBeTruthy()
     })
 
     it('renders description text', async () => {
       const mod = await import('./__root')
-      const NotFound = (mod.Route as { notFoundComponent: React.ComponentType })
-        .notFoundComponent
-      render(<NotFound />)
+      const NotFound = mod.Route.options.notFoundComponent
+      assert(NotFound)
+      render(<NotFound isNotFound routeId="__root__" />)
       expect(
         screen.getByText(
           /The page you're looking for doesn't exist or has been moved/,
@@ -94,9 +110,9 @@ describe('__root route', () => {
 
     it('renders a Go Home link pointing to /', async () => {
       const mod = await import('./__root')
-      const NotFound = (mod.Route as { notFoundComponent: React.ComponentType })
-        .notFoundComponent
-      render(<NotFound />)
+      const NotFound = mod.Route.options.notFoundComponent
+      assert(NotFound)
+      render(<NotFound isNotFound routeId="__root__" />)
       const link = screen.getByText('Go Home')
       expect(link.closest('a')?.getAttribute('href')).toBe('/')
     })
@@ -104,14 +120,9 @@ describe('__root route', () => {
 
   describe('RootDocument (shellComponent)', () => {
     it('renders Header, Footer, children, and Toaster', async () => {
-      const mod = await import('./__root')
-      const RootDocument = (
-        mod.Route as {
-          shellComponent: React.ComponentType<{
-            children: React.ReactNode
-          }>
-        }
-      ).shellComponent
+      await import('./__root')
+      const RootDocument = capturedShell.component
+      assert(RootDocument)
       render(
         <RootDocument>
           <div data-testid="child-content">Page content</div>
@@ -183,7 +194,16 @@ describe('__root route', () => {
             {children}
           </a>
         ),
-        createRootRouteWithContext: () => (config: unknown) => config,
+        createRootRouteWithContext:
+          () =>
+          (config: {
+            head: () => unknown
+            shellComponent: React.ComponentType<{ children: React.ReactNode }>
+          }) => {
+            capturedHead.mockImplementation(config.head)
+            capturedShell.component = config.shellComponent
+            return { options: config }
+          },
         HeadContent: () => null,
         Scripts: () => null,
         Outlet: ({ children }: { children?: React.ReactNode }) => (
@@ -204,23 +224,11 @@ describe('__root route', () => {
         useUser: () => ({ user: null, isLoading: false }),
       }))
 
-      const { DevTools: DevToolsComponent } =
-        (await import('./__root')) as unknown as {
-          DevTools: React.ComponentType
-        }
-
-      // DevTools is not exported — access it via RootDocument rendered with DEV=true
-      // Since DevTools is internal, we test it indirectly through RootDocument
-      // However lines 27-39 are the setPanel callback. Let's test the RootDocument in DEV mode.
-      const mod = await import('./__root')
-      const RootDocument = (
-        mod.Route as {
-          shellComponent: React.ComponentType<{ children: React.ReactNode }>
-        }
-      ).shellComponent
+      await import('./__root')
+      const RootDocument = capturedShell.component
+      assert(RootDocument)
 
       const originalDev = import.meta.env.DEV
-      // @ts-expect-error -- overriding for test
       import.meta.env.DEV = true
 
       const { findByTestId } = render(
@@ -239,7 +247,6 @@ describe('__root route', () => {
         'Query From Package Subpath',
       )
 
-      // @ts-expect-error -- restoring for test
       import.meta.env.DEV = originalDev
     })
   })

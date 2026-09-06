@@ -180,9 +180,7 @@ describe("the '.' barrel exposes the redaction helpers", () => {
   })
 
   it('narrows a user to non-sensitive fields', async () => {
-    const { redactUser } = (await import('./src/index')) as {
-      redactUser: (u: Record<string, unknown>) => Record<string, unknown>
-    }
+    const { redactUser } = await import('./src/index')
 
     const result = redactUser({
       id: 'user-123',
@@ -348,10 +346,7 @@ describe('@bcordes/auth/testing ships the mock factories as a secondary entry', 
 
   it('produces User- and SessionData-shaped fixtures', async () => {
     const { createMockUser, createMockSession } =
-      (await import('./src/testing/index')) as {
-        createMockUser: () => Record<string, unknown>
-        createMockSession: () => Record<string, unknown>
-      }
+      await import('./src/testing/index')
 
     // Structural match against the ./types contract: proves the factories are
     // built against the real User / SessionData shapes, not ad-hoc bags.

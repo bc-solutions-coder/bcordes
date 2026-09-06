@@ -85,7 +85,7 @@ describe('createWallowClient', () => {
   const session = createMockSession()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.resetAllMocks()
     vi.useFakeTimers()
   })
 
@@ -119,12 +119,6 @@ describe('createWallowClient', () => {
   })
 
   it('retries with refreshed token on 401', async () => {
-    const refreshedSession = createMockSession({
-      accessToken: 'refreshed-access-token',
-      refreshToken: 'refreshed-refresh-token',
-      version: 2,
-    })
-
     // First getSession call (createWallowClient) returns session
     // Second getSession call (inside request()) returns session
     mockGetSession.mockResolvedValue(session)
@@ -140,11 +134,12 @@ describe('createWallowClient', () => {
         accessToken: 'refreshed-access-token',
         refreshToken: 'refreshed-refresh-token',
         idToken: 'refreshed-id-token',
+        subject: session.user.id,
         expiresIn: 3600,
       })
       mockParseUserFromToken.mockReturnValue(session.user)
       mockSetSession.mockResolvedValue(undefined)
-      return (fn as () => Promise<typeof refreshedSession>)()
+      return fn()
     })
 
     const client = await createWallowClient()
@@ -161,6 +156,44 @@ describe('createWallowClient', () => {
     expect((secondInit?.headers as Record<string, string>).Authorization).toBe(
       'Bearer refreshed-access-token',
     )
+  })
+
+  it('uses the session refreshed by a competing request without refreshing twice', async () => {
+    const refreshed = createMockSession({
+      accessToken: 'competing-token',
+      version: session.version + 1,
+    })
+    mockGetSession
+      .mockResolvedValueOnce(session)
+      .mockResolvedValueOnce(session)
+      .mockResolvedValue(refreshed)
+    mockWithRefreshLock.mockResolvedValueOnce(undefined)
+    mockFetch
+      .mockResolvedValueOnce(jsonResponse({}, 401))
+      .mockResolvedValueOnce(jsonResponse({ ok: true }))
+
+    const client = await createWallowClient()
+    const response = await client.get('/protected')
+
+    expect(response.status).toBe(200)
+    expect(
+      new Headers(mockFetch.mock.calls[1][1]?.headers).get('Authorization'),
+    ).toBe('Bearer competing-token')
+    expect(mockRefreshToken).not.toHaveBeenCalled()
+  })
+
+  it('reports a retryable failure when a competing refresh has not finished', async () => {
+    mockGetSession.mockResolvedValue(session)
+    mockWithRefreshLock.mockResolvedValueOnce(undefined)
+    mockFetch.mockResolvedValueOnce(jsonResponse({}, 401))
+
+    const client = await createWallowClient()
+    await expect(client.get('/protected')).rejects.toThrow(
+      'Session refresh in progress; retry the request',
+    )
+    expect(mockSetResponseStatus).toHaveBeenCalledWith(503)
+    expect(mockRefreshToken).not.toHaveBeenCalled()
+    expect(mockFetch).toHaveBeenCalledTimes(1)
   })
 
   it('retries after 429 with Retry-After header', async () => {
@@ -226,12 +259,6 @@ describe('createWallowClient', () => {
   })
 
   it('throws network error when retry fetch after 401 refresh throws', async () => {
-    const refreshedSession = createMockSession({
-      accessToken: 'refreshed-access-token',
-      refreshToken: 'refreshed-refresh-token',
-      version: 2,
-    })
-
     mockGetSession.mockResolvedValue(session)
 
     // First fetch returns 401, retry fetch throws network error
@@ -244,11 +271,12 @@ describe('createWallowClient', () => {
         accessToken: 'refreshed-access-token',
         refreshToken: 'refreshed-refresh-token',
         idToken: 'refreshed-id-token',
+        subject: session.user.id,
         expiresIn: 3600,
       })
       mockParseUserFromToken.mockReturnValue(session.user)
       mockSetSession.mockResolvedValue(undefined)
-      return (fn as () => Promise<typeof refreshedSession>)()
+      return fn()
     })
 
     const client = await createWallowClient()

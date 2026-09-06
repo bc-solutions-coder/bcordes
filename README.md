@@ -65,8 +65,10 @@
 
 ## Getting Started
 
+Use Node.js 24 and the pinned pnpm 10.28.2. Export `NODE_AUTH_TOKEN` with read access to `@bc-solutions-coder/sdk` on GitHub Packages before installing dependencies. Keep credentials outside tracked files.
+
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -116,7 +118,7 @@ Each package exposes its public API from `src/index.ts` and is consumed via its 
 
 ```bash
 pnpm --filter bcordes dev                    # run the app
-pnpm --filter @bcordes/ui test               # test one package
+pnpm exec vitest run --project @bcordes/ui               # test one package
 pnpm -r typecheck                            # typecheck the whole workspace
 pnpm --filter bcordes exec playwright test   # run the e2e suite
 ```
@@ -124,3 +126,22 @@ pnpm --filter bcordes exec playwright test   # run the e2e suite
 ## License
 
 Private repository.
+
+## Verification
+
+Run the checks from the workspace root. Typecheck includes application, package, and test code.
+
+```bash
+pnpm typecheck
+pnpm lint
+pnpm exec vitest run --coverage
+NODE_ENV=production pnpm build
+bash scripts/verify-production.sh
+pnpm --filter bcordes exec playwright install chromium
+E2E_NO_REUSE=1 pnpm --filter bcordes exec playwright test
+bash scripts/verify-docker.sh
+```
+
+The production smoke check starts the emitted Node server on an unused loopback port and verifies public HTML and CSS/JavaScript assets. The Docker check builds a fresh image using `NODE_AUTH_TOKEN` through a BuildKit secret, then performs the same checks on a container with generated runtime settings. Neither smoke check loads a private `.env` or needs the live backend. Playwright currently checks the dev server; set `E2E_PORT` if port 3000 is occupied. On Linux CI, install Chromium with `--with-deps`.
+
+The Tailwind bundle test builds a temporary source copy in production mode, so running tests does not replace the app's production output. Local-only `CLAUDE.md` documentation checks are skipped in clean checkouts; tracked README checks always run.
