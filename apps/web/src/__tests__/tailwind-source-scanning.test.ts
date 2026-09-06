@@ -1,4 +1,5 @@
-import { execFileSync } from 'node:child_process'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import {
   cpSync,
   existsSync,
@@ -65,10 +66,11 @@ function sourceFiles(dir: string): Array<string> {
   })
 }
 
+const execFileAsync = promisify(execFile)
 let bundledCss = ''
 
 describe('tailwind @source scanning of @bcordes/ui', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     const buildRoot = mkdtempSync(join(tmpdir(), 'bcordes-css-build-'))
     const excluded = new Set([
       'node_modules',
@@ -109,10 +111,9 @@ describe('tailwind @source scanning of @bcordes/ui', () => {
           )
         }
       }
-      execFileSync('pnpm', ['--filter', 'bcordes', 'build'], {
+      await execFileAsync('pnpm', ['--filter', 'bcordes', 'build'], {
         cwd: buildRoot,
         env: { ...process.env, NODE_ENV: 'production' },
-        stdio: 'pipe',
       })
 
       const assets = join(buildRoot, 'apps/web/.output/public/assets')

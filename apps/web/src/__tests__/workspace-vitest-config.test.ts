@@ -1,4 +1,5 @@
-import { execFileSync } from 'node:child_process'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import {
   existsSync,
   mkdtempSync,
@@ -35,6 +36,8 @@ import { afterAll, describe, expect, it } from 'vitest'
  * run with --coverage is pinned to a single unrelated test file and writes to a
  * throwaway reportsDirectory, so it neither recurses nor clobbers ./coverage.
  */
+
+const execFileAsync = promisify(execFile)
 
 const appDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -92,11 +95,11 @@ process.stdout.write(
 )
 `
 
-function loadConfig(path: string): {
+async function loadConfig(path: string): Promise<{
   test: ResolvedTestConfig | null
   pluginNames: Array<string | null>
-} {
-  const stdout = execFileSync(
+}> {
+  const { stdout } = await execFileAsync(
     process.execPath,
     ['--input-type=module', '-e', LOAD_CONFIG_SCRIPT, path],
     { cwd: dirname(path), encoding: 'utf8' },
@@ -124,23 +127,17 @@ interface CollectedTest {
   projectName: string
 }
 
-let collected: Array<CollectedTest> | undefined
+let collected: Promise<Array<CollectedTest>> | undefined
 
-function collectFromRootConfig(): Array<CollectedTest> {
-  // Collection is a ~30s child run; every test in this file wants the same
-  // answer, so pay for it once.
-  if (collected) return collected
-
-  const stdout = execFileSync(
-    'pnpm',
-    ['exec', 'vitest', 'list', '--json'],
-    // cwd = repo root, and NO --config/--root: this must work off the plain
-    // root config exactly the way `pnpm test` and CI invoke it.
-    { cwd: repoRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
-  )
-
-  collected = JSON.parse(stdout)
-  return collected!
+function collectFromRootConfig(): Promise<Array<CollectedTest>> {
+  // Share the collection promise so the worker can process RPC messages while
+  // the child collects the workspace, and every assertion sees the same run.
+  collected ??= execFileAsync('pnpm', ['exec', 'vitest', 'list', '--json'], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  }).then(({ stdout }) => JSON.parse(stdout))
+  return collected
 }
 
 describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
@@ -148,16 +145,16 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     expect(existsSync(rootConfigPath)).toBe(true)
   })
 
-  it('declares the workspace projects (apps/* and packages/*)', () => {
-    const { test } = loadConfig(rootConfigPath)
+  it('declares the workspace projects (apps/* and packages/*)', async () => {
+    const { test } = await loadConfig(rootConfigPath)
 
     expect(test?.projects).toEqual(
       expect.arrayContaining(['apps/*', 'packages/*']),
     )
   })
 
-  it('delegates app-scoped options to the project, keeping none itself', () => {
-    const { test } = loadConfig(rootConfigPath)
+  it('delegates app-scoped options to the project, keeping none itself', async () => {
+    const { test } = await loadConfig(rootConfigPath)
 
     // environment/setupFiles/include belong to apps/web now. Leaving them on the
     // root config is what pointed the whole run at a root `src/` that no longer
@@ -167,8 +164,8 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     expect(test?.include).toBeUndefined()
   })
 
-  it('owns the single merged coverage report', () => {
-    const { test } = loadConfig(rootConfigPath)
+  it('owns the single merged coverage report', async () => {
+    const { test } = await loadConfig(rootConfigPath)
     const coverage = test?.coverage
 
     expect(coverage?.provider).toBe('v8')
@@ -187,8 +184,8 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     expect(resolved).toBe(join(repoRoot, 'coverage'))
   })
 
-  it('scopes coverage sources to workspace packages, not a root src/', () => {
-    const { test } = loadConfig(rootConfigPath)
+  it('scopes coverage sources to workspace packages, not a root src/', async () => {
+    const { test } = await loadConfig(rootConfigPath)
     const include = test?.coverage?.include ?? []
 
     expect(include.some((glob) => glob.startsWith('apps/*/src/'))).toBe(true)
@@ -201,8 +198,8 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     expect(include).not.toContain('src/**/*.{ts,tsx}')
   })
 
-  it('keeps tests, stories, generated routes and ui primitives out of coverage', () => {
-    const { test } = loadConfig(rootConfigPath)
+  it('keeps tests, stories, generated routes and ui primitives out of coverage', async () => {
+    const { test } = await loadConfig(rootConfigPath)
     const exclude = test?.coverage?.exclude ?? []
     const matches = (needle: string) =>
       exclude.some((glob) => glob.includes(needle))
@@ -221,14 +218,14 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     expect(existsSync(appConfigPath)).toBe(true)
   })
 
-  it('keeps the app jsdom environment', () => {
-    const { test } = loadConfig(appConfigPath)
+  it('keeps the app jsdom environment', async () => {
+    const { test } = await loadConfig(appConfigPath)
 
     expect(test?.environment).toBe('jsdom')
   })
 
-  it('points setupFiles at a resolvable setup module', () => {
-    const { test } = loadConfig(appConfigPath)
+  it('points setupFiles at a resolvable setup module', async () => {
+    const { test } = await loadConfig(appConfigPath)
     const setupFiles = [test?.setupFiles ?? []].flat()
 
     expect(setupFiles.length).toBeGreaterThan(0)
@@ -249,8 +246,8 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     }
   })
 
-  it('has app-relative include globs covering both .ts and .tsx tests', () => {
-    const { test } = loadConfig(appConfigPath)
+  it('has app-relative include globs covering both .ts and .tsx tests', async () => {
+    const { test } = await loadConfig(appConfigPath)
     const include = test?.include ?? []
 
     expect(include.length).toBeGreaterThan(0)
@@ -270,8 +267,8 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     // by the root-run collection test below, not re-implemented here.
   })
 
-  it('keeps the tsconfig-paths plugin that resolves the @/ alias', () => {
-    const { pluginNames } = loadConfig(appConfigPath)
+  it('keeps the tsconfig-paths plugin that resolves the @/ alias', async () => {
+    const { pluginNames } = await loadConfig(appConfigPath)
 
     // Without it every `@/…` import in the suite fails to resolve.
     expect(pluginNames).toContain('vite-tsconfig-paths')
@@ -282,12 +279,12 @@ describe('the root run collects the whole workspace', () => {
   it(
     'discovers every app test file from the repo root with no extra flags',
     { timeout: 180_000 },
-    () => {
+    async () => {
       // Scoped to the app project: workspace packages under packages/* are
       // projects of their own and bring their own test files to the same run.
       const files = [
         ...new Set(
-          collectFromRootConfig()
+          (await collectFromRootConfig())
             .filter((entry) => entry.projectName === 'bcordes')
             .map((entry) => entry.file),
         ),
@@ -300,10 +297,10 @@ describe('the root run collects the whole workspace', () => {
   it(
     'collects each workspace package as a project of its own',
     { timeout: 180_000 },
-    () => {
+    async () => {
       // packages/* is not a decorative glob: an extracted package's tests must
       // run in the same root `pnpm vitest run` as the app's.
-      const packageTests = collectFromRootConfig().filter((entry) =>
+      const packageTests = (await collectFromRootConfig()).filter((entry) =>
         entry.file.startsWith(join(repoRoot, 'packages')),
       )
 
@@ -317,8 +314,8 @@ describe('the root run collects the whole workspace', () => {
   it(
     'collects at least the pre-migration test baseline',
     { timeout: 180_000 },
-    () => {
-      expect(collectFromRootConfig().length).toBeGreaterThanOrEqual(
+    async () => {
+      expect((await collectFromRootConfig()).length).toBeGreaterThanOrEqual(
         BASELINE_TEST_COUNT,
       )
     },
@@ -337,7 +334,7 @@ describe('merged coverage output', () => {
   it(
     'writes one lcov.info covering apps/web sources',
     { timeout: 180_000 },
-    () => {
+    async () => {
       const reportsDirectory = mkdtempSync(join(tmpdir(), 'bcordes-coverage-'))
       reportsDirectories.push(reportsDirectory)
 
@@ -346,7 +343,7 @@ describe('merged coverage output', () => {
       // the whole suite. reportsDirectory is redirected so ./coverage is untouched.
       // It must be a file that stays in apps/web for the whole migration — the
       // lib/ tests it used to point at are being extracted into packages/*.
-      execFileSync(
+      await execFileAsync(
         'pnpm',
         [
           'exec',
@@ -357,7 +354,7 @@ describe('merged coverage output', () => {
           `--coverage.reportsDirectory=${reportsDirectory}`,
           'routes/dashboard/settings.test.tsx',
         ],
-        { cwd: repoRoot, encoding: 'utf8', stdio: 'pipe' },
+        { cwd: repoRoot, encoding: 'utf8' },
       )
 
       const lcovPath = join(reportsDirectory, 'lcov.info')
