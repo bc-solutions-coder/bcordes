@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.7](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.6...bcordes-v0.1.7) (2026-07-05)
+
+### Bug Fixes
+
+- **wallow:** root API paths at /v1 for subdomain deployment ([d4abf36](https://github.com/bc-solutions-coder/bcordes/commit/d4abf36c4df7df739f8db3660f6a9e87401e6488))
+
 ## [0.1.6](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.5...bcordes-v0.1.6) (2026-07-04)
 
 ### Bug Fixes
