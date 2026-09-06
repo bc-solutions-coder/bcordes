@@ -14,3 +14,9 @@ _Avoid_: first-party Wallow application
 
 **Wallow identity provider**:
 The identity provider at wallow.dev through which people authenticate to bcordes.
+
+**Customer**:
+A person who submits inquiries and can access and comment on their own inquiries after signing in.
+
+**Staff**:
+People responsible for managing the bcordes organization’s inquiries, including their statuses.
