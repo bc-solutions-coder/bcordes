@@ -411,17 +411,16 @@ describe('the mock factories never reach the production bundle', () => {
     expect(Object.keys(barrel)).not.toContain('createMockSession')
   })
 
-  it('is imported only from test files, never from shipped source', () => {
+  it('is imported only from tests and E2E fixtures, never from shipped source', () => {
     const importers = filesMatching('@bcordes/auth/testing')
 
     // The rewrite happened (former @/test/mocks/auth consumers now point here)...
     expect(importers.length).toBeGreaterThan(0)
-    // ...and every consumer is a *.test.ts. apps/web's production build graph
-    // starts from route/source modules and excludes *.test.ts, so a
-    // testing-only import surface is the concrete guarantee the fixtures cannot
-    // ship to prod.
+    // Unit tests and browser fixtures are outside the production module graph.
     for (const file of importers) {
-      expect(file.endsWith('.test.ts')).toBe(true)
+      expect(
+        /\.test\.tsx?$/.test(file) || file.startsWith('apps/web/e2e/fixtures/'),
+      ).toBe(true)
     }
   })
 

@@ -1,5 +1,7 @@
 import { defineConfig } from 'vitest/config'
 
+process.env.SESSION_SECRET = 'unit-test-session-secret-at-least-32-characters'
+
 export default defineConfig({
   test: {
     projects: ['apps/*', 'packages/*'],

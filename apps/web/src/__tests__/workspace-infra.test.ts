@@ -131,7 +131,7 @@ describe('CI workflow', () => {
   })
 
   it('all jobs install with a frozen lockfile', () => {
-    expect(ci.match(/run: pnpm install --frozen-lockfile$/gm)).toHaveLength(3)
+    expect(ci.match(/run: pnpm install --frozen-lockfile$/gm)).toHaveLength(4)
   })
 })
 
@@ -156,7 +156,9 @@ describe('release-please config', () => {
   })
 
   it('manifest tracks apps/web at the current released version', () => {
-    expect(manifest).toEqual({ 'apps/web': '0.1.6' })
+    expect(manifest).toEqual({
+      'apps/web': JSON.parse(read('apps/web/package.json')).version,
+    })
   })
 
   it('CHANGELOG.md lives next to the package it describes', () => {

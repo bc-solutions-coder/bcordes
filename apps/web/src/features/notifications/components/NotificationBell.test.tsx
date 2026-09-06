@@ -49,7 +49,7 @@ vi.mock('@bcordes/utils', async (importOriginal) => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: vi.fn<EventStreamContextValue['subscribe']>(() => vi.fn()),
+  useNavigate: vi.fn(() => vi.fn()),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),

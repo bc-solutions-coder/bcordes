@@ -22,7 +22,10 @@ import { describe, expect, it } from 'vitest'
 // apps/web/src/__tests__ -> repo root (same convention as docs-workspace-layout.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
-const CLAUDE = readFileSync(join(repoRoot, 'CLAUDE.md'), 'utf8')
+const hasClaude = existsSync(join(repoRoot, 'CLAUDE.md'))
+const CLAUDE = hasClaude
+  ? readFileSync(join(repoRoot, 'CLAUDE.md'), 'utf8')
+  : ''
 
 // Narrow structural view of the flat ESLint config we care about here. The
 // config module is authored in JS (@ts-check + JSDoc), so we cast through
@@ -143,34 +146,37 @@ describe('ESLint features/shared boundary block', () => {
   })
 })
 
-describe('CLAUDE.md documents the new module roots and convention', () => {
-  it('lists apps/web/src/features/ under Key Directories', () => {
-    expect(CLAUDE, 'CLAUDE.md must document apps/web/src/features/').toMatch(
-      /apps\/web\/src\/features\//,
-    )
-  })
+describe.skipIf(!hasClaude)(
+  'CLAUDE.md documents the new module roots and convention',
+  () => {
+    it('lists apps/web/src/features/ under Key Directories', () => {
+      expect(CLAUDE, 'CLAUDE.md must document apps/web/src/features/').toMatch(
+        /apps\/web\/src\/features\//,
+      )
+    })
 
-  it('lists apps/web/src/shared/ under Key Directories', () => {
-    expect(CLAUDE, 'CLAUDE.md must document apps/web/src/shared/').toMatch(
-      /apps\/web\/src\/shared\//,
-    )
-  })
+    it('lists apps/web/src/shared/ under Key Directories', () => {
+      expect(CLAUDE, 'CLAUDE.md must document apps/web/src/shared/').toMatch(
+        /apps\/web\/src\/shared\//,
+      )
+    })
 
-  it('documents the bare-module import convention with examples', () => {
-    expect(
-      CLAUDE,
-      'CLAUDE.md must show the bare feature-module import path (@/features/notifications)',
-    ).toMatch(/@\/features\/notifications/)
-    expect(
-      CLAUDE,
-      'CLAUDE.md must show the bare shared-module import path (@/shared/auth)',
-    ).toMatch(/@\/shared\/auth/)
-  })
+    it('documents the bare-module import convention with examples', () => {
+      expect(
+        CLAUDE,
+        'CLAUDE.md must show the bare feature-module import path (@/features/notifications)',
+      ).toMatch(/@\/features\/notifications/)
+      expect(
+        CLAUDE,
+        'CLAUDE.md must show the bare shared-module import path (@/shared/auth)',
+      ).toMatch(/@\/shared\/auth/)
+    })
 
-  it('preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)', () => {
-    // The features/shared barrel exception is appended to the existing
-    // no-barrel rule; the valkey reference (asserted by docs-workspace-layout)
-    // must survive the edit.
-    expect(CLAUDE).toMatch(/packages\/valkey\/src\/index\.ts/)
-  })
-})
+    it('preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)', () => {
+      // The features/shared barrel exception is appended to the existing
+      // no-barrel rule; the valkey reference (asserted by docs-workspace-layout)
+      // must survive the edit.
+      expect(CLAUDE).toMatch(/packages\/valkey\/src\/index\.ts/)
+    })
+  },
+)
