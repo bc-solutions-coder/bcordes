@@ -186,3 +186,32 @@ test.describe('Public Pages', () => {
     })
   })
 })
+
+test('project navigation opens detail and unknown projects show not found', async ({
+  page,
+}) => {
+  await page.goto('/projects')
+  const project = page.locator('main a[href^="/projects/"]').first()
+  const path = await project.getAttribute('href')
+  expect(path).toBeTruthy()
+  await project.click()
+  await expect(page).toHaveURL(new RegExp(`${path}$`))
+  await expect(page.locator('main h1')).toBeVisible()
+  const missing = await page.goto('/projects/does-not-exist-e2e')
+  expect(missing?.status()).toBe(404)
+  await expect(
+    page.getByRole('heading', { name: /project not found/i }),
+  ).toBeVisible()
+})
+
+test('unauthenticated dashboard access redirects to login', async ({
+  request,
+}) => {
+  const response = await request.get('/dashboard/inquiries', {
+    maxRedirects: 0,
+  })
+  expect(response.status()).toBe(307)
+  expect(response.headers().location).toBe(
+    '/auth/login?returnTo=%2Fdashboard%2Finquiries',
+  )
+})

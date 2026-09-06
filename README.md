@@ -138,10 +138,10 @@ pnpm exec vitest run --coverage
 NODE_ENV=production pnpm build
 bash scripts/verify-production.sh
 pnpm --filter bcordes exec playwright install chromium
-E2E_NO_REUSE=1 pnpm --filter bcordes exec playwright test
+pnpm --filter bcordes exec playwright test
 bash scripts/verify-docker.sh
 ```
 
-The production smoke check starts the emitted Node server on an unused loopback port and verifies public HTML and CSS/JavaScript assets. The Docker check builds a fresh image using `NODE_AUTH_TOKEN` through a BuildKit secret, then performs the same checks on a container with generated runtime settings. Neither smoke check loads a private `.env` or needs the live backend. Playwright currently checks the dev server; set `E2E_PORT` if port 3000 is occupied. On Linux CI, install Chromium with `--with-deps`.
+The production smoke check starts the emitted Node server on an unused loopback port and verifies public HTML and CSS/JavaScript assets. The Docker check builds a fresh image using `NODE_AUTH_TOKEN` through a BuildKit secret, then performs the same checks on a container with generated runtime settings. Neither smoke check loads a private `.env` or needs the live backend. Playwright checks the production build with a controlled backend and disposable Valkey. It starts Valkey through Docker by default; CI supplies a disposable instance using `E2E_VALKEY_URL`. Set `E2E_PORT` if port 3000 is occupied. See [the browser test guide](apps/web/e2e/README.md) for fixture details. On Linux CI, install Chromium with `--with-deps`.
 
 The Tailwind bundle test builds a temporary source copy in production mode, so running tests does not replace the app's production output. Local-only `CLAUDE.md` documentation checks are skipped in clean checkouts; tracked README checks always run.

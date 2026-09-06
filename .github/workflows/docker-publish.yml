@@ -37,3 +37,22 @@ jobs:
           platforms: linux/amd64,linux/arm64
           secrets: |
             node_auth_token=${{ secrets.GITHUB_TOKEN }}
+
+  runtime:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify production container and assets
+        run: bash scripts/verify-docker.sh
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

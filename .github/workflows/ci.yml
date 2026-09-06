@@ -48,6 +48,16 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    services:
+      valkey:
+        image: valkey/valkey:8-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     permissions:
       contents: read
       packages: read
@@ -76,6 +86,22 @@ jobs:
 
       - name: Verify production server and assets
         run: bash scripts/verify-production.sh
+
+      - name: Install Chromium
+        run: pnpm --filter bcordes exec playwright install --with-deps chromium
+
+      - name: Verify production browser flows
+        run: pnpm --filter bcordes exec playwright test
+        env:
+          E2E_VALKEY_URL: redis://127.0.0.1:6379
+          E2E_PORT: 43183
+
+      - name: Upload browser failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-results
+          path: apps/web/test-results/
 
   lint:
     runs-on: ubuntu-latest

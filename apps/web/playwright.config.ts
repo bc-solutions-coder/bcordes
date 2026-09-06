@@ -1,21 +1,24 @@
 import { defineConfig, devices } from '@playwright/test'
 
-// This config lives at the apps/web root so it is auto-discovered by
-// `pnpm --filter bcordes exec playwright test` (cwd = apps/web). Without it,
-// Playwright falls back to testDir=cwd + its default `**/*.@(spec|test)` glob,
-// which matches the app's vitest `src/**/*.test.ts` files and blows up with a
-// vitest-vs-@playwright/test `expect` matcher collision. Scoping testDir to
-// ./e2e keeps the two runners' specs disjoint (vitest only collects `src/**`).
-//
-// Port is env-driven (E2E_PORT, default 3000) so the suite can boot on a free
-// port when 3000 is occupied. reuseExistingServer is opt-out via E2E_NO_REUSE=1
-// so a fresh dev server can be forced instead of silently reusing whatever
-// already holds the port.
+// Build first: browser checks run the same Node artifact deployed to production.
+// The fixture backend and Valkey occupy the next two ports unless overridden.
 const PORT = Number(process.env.E2E_PORT ?? 3000)
+process.env.SESSION_SECRET = 'e2e-only-session-secret-at-least-32-characters'
+process.env.E2E_BACKEND_PORT ??= String(PORT + 1)
+process.env.E2E_VALKEY_PORT ??= String(PORT + 2)
+process.env.VALKEY_URL =
+  process.env.E2E_VALKEY_URL ??
+  `redis://127.0.0.1:${process.env.E2E_VALKEY_PORT}`
+process.env.WALLOW_API_URL = `http://127.0.0.1:${process.env.E2E_BACKEND_PORT}`
+process.env.OIDC_ISSUER = process.env.WALLOW_API_URL
+process.env.OIDC_CLIENT_ID = 'e2e-browser'
+process.env.OIDC_CLIENT_SECRET = 'e2e-client-secret'
+process.env.OIDC_REDIRECT_URI = `http://localhost:${PORT}/auth/callback`
 const baseURL = `http://localhost:${PORT}`
 
 export default defineConfig({
   testDir: './e2e',
+  globalSetup: './e2e/fixtures/setup.ts',
   testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -38,9 +41,10 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: `pnpm exec vite dev --port ${PORT}`,
+    command: 'node .output/server/index.mjs',
+    env: { PORT: String(PORT), HOST: '127.0.0.1', NODE_ENV: 'production' },
     url: baseURL,
-    reuseExistingServer: !process.env.CI && !process.env.E2E_NO_REUSE,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 })

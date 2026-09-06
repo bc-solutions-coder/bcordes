@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { once } from 'node:events'
+import { createServer } from 'node:net'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url))
@@ -9,15 +10,24 @@ let server
 let output = ''
 
 async function startServer() {
+  const reservation = createServer()
+  reservation.listen(0, '127.0.0.1')
+  await once(reservation, 'listening')
+  const address = reservation.address()
+  assert.ok(address && typeof address !== 'string')
+  const port = String(address.port)
+  await new Promise((resolve, reject) =>
+    reservation.close((error) => (error ? reject(error) : resolve())),
+  )
   server = spawn(process.execPath, ['apps/web/.output/server/index.mjs'], {
     cwd: repoRoot,
     env: {
       ...process.env,
       NODE_ENV: 'production',
       HOST: '127.0.0.1',
-      PORT: '0',
+      PORT: port,
       NITRO_HOST: '127.0.0.1',
-      NITRO_PORT: '0',
+      NITRO_PORT: port,
       SESSION_SECRET: randomBytes(32).toString('hex'),
       WALLOW_API_URL: 'http://127.0.0.1:1',
       VALKEY_URL: 'redis://127.0.0.1:1',
@@ -85,7 +95,7 @@ async function verify(baseURL) {
     const response = await fetch(new URL(path, baseURL), {
       signal: AbortSignal.timeout(15_000),
     })
-    assert.equal(response.status, 200, `${extension} asset HTTP status`)
+    assert.equal(response.status, 200, `${path} HTTP status`)
     assert.match(response.headers.get('content-type') ?? '', contentType)
     assert.ok((await response.arrayBuffer()).byteLength > 0)
     console.log(`GET ${extension} asset: 200`)

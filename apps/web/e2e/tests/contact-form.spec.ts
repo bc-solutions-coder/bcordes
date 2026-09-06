@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import { mockRoute } from '../mocks/api'
 
 /**
  * Helper to fill in all required fields of the contact form.
@@ -44,51 +43,29 @@ async function fillContactForm(
   await page.getByRole('option', { name: timeline }).click()
 }
 
-/**
- * Mock the TanStack Start server-function POST that backs `submitInquiry`.
- * The browser sends a POST to a `/_server` path; we intercept it and
- * return a successful inquiry response.
- */
-async function mockSubmitInquiry(page: import('@playwright/test').Page) {
+function trackSubmission(page: import('@playwright/test').Page) {
   let requestCount = 0
-
-  await mockRoute(page, /\/_server/, async (route) => {
-    const request = route.request()
-
-    if (request.method() === 'POST') {
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && request.url().includes('/_server'))
       requestCount++
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: '00000000-0000-0000-0000-000000000001',
-          name: 'Jane Doe',
-          email: 'jane@example.com',
-          phone: '',
-          company: undefined,
-          projectType: 'Frontend',
-          budgetRange: '$5k-$15k',
-          timeline: '1-3 months',
-          message: 'I would like to discuss a new web application project.',
-          status: 'new',
-          createdAt: new Date().toISOString(),
-        }),
-      })
-    } else {
-      await route.continue()
-    }
   })
-
   return { getRequestCount: () => requestCount }
+}
+
+async function openContact(page: import('@playwright/test').Page) {
+  await Promise.all([
+    page.waitForResponse((response) => response.url().endsWith('/auth/me')),
+    page.goto('/contact'),
+  ])
 }
 
 test.describe('Contact Form', () => {
   test('submitting with all fields empty shows client-side validation errors without a network request', async ({
     page,
   }) => {
-    const { getRequestCount } = await mockSubmitInquiry(page)
+    const { getRequestCount } = trackSubmission(page)
 
-    await page.goto('/contact')
+    await openContact(page)
 
     // Click submit without filling anything
     await page.getByRole('button', { name: 'Send Message' }).click()
@@ -108,9 +85,9 @@ test.describe('Contact Form', () => {
   test('filling valid fields and submitting shows success confirmation', async ({
     page,
   }) => {
-    await mockSubmitInquiry(page)
+    trackSubmission(page)
 
-    await page.goto('/contact')
+    await openContact(page)
 
     await fillContactForm(page)
 
@@ -131,9 +108,9 @@ test.describe('Contact Form', () => {
   test('"Send Another Message" resets the form to its empty initial state', async ({
     page,
   }) => {
-    await mockSubmitInquiry(page)
+    trackSubmission(page)
 
-    await page.goto('/contact')
+    await openContact(page)
 
     // Submit a valid form first
     await fillContactForm(page)
