@@ -17,7 +17,7 @@ import { afterAll, describe, expect, it } from 'vitest'
  *
  * The workspace must run as ONE Vitest 3 run: a root config that owns the
  * project list and the single merged coverage report, plus a per-app config
- * that keeps the app's own environment/setupFiles/include. Before this bead the
+ * that keeps the app's own environment/setupFiles/include. Before this change the
  * root config still pointed at a root-level `src/` that no longer exists after
  * the move to apps/web, so `pnpm vitest run` at the repo root found NO test
  * files at all and exited 1.

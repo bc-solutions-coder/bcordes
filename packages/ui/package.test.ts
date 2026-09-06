@@ -204,7 +204,7 @@ describe('the primitives really moved out of apps/web', () => {
   it('leaves nothing behind under apps/web/src/components/ui', () => {
     // A leftover copy would keep `@/components/ui/shadcn/*` resolving and hide
     // a half-finished extraction. The whole `ui/` directory goes: the extra
-    // `ui/shadcn/` nesting is exactly the redundancy this bead flattens away.
+    // `ui/shadcn/` nesting is exactly the redundancy this change flattens away.
     expect(existsSync(oldDir)).toBe(false)
     expect(existsSync(join(webDir, 'src/components/ui'))).toBe(false)
   })

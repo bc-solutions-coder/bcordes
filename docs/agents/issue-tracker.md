@@ -13,7 +13,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 
 This repository is `bc-solutions-coder/bcordes`. Run `gh` inside this clone or pass `--repo bc-solutions-coder/bcordes`.
 
-GitHub Issues is the authoritative tracker. The five active beads issues were migrated; closed beads history was not imported. Migration metadata in each issue preserves the original ID. Use GitHub issue numbers for new references.
+GitHub Issues is the authoritative tracker. Use GitHub issue numbers for all work references.
 
 Priority labels use `priority:0` through `priority:4`, where 0 is critical and 4 is backlog. Preserve issue types with `bug`, `feature`, `task`, `epic`, or `chore` labels. Use `in-progress` for started work and assign it to the responsible GitHub account. GitHub assignment is not an atomic lock; re-read the issue before beginning work.
 

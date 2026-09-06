@@ -15,10 +15,6 @@ playwright-report
 .vinxi
 todos.json
 
-# Dolt database files (added by bd init)
-.dolt/
-*.db
-
 # Git worktrees
 .worktrees/
 
@@ -26,7 +22,6 @@ todos.json
 .scratch/
 
 # AI tooling config (local-only)
-.beads
 .claude
 .serena
 .superpowers
@@ -35,7 +30,3 @@ docs/superpowers
 CLAUDE.md
 AGENTS.md
 stats.html
-
-# Beads / Dolt files (added by bd init)
-.beads-credential-key
-.beads/proxieddb/
