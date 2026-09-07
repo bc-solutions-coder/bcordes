@@ -1,0 +1,84 @@
+original_key	original_title	accepted_disposition	result
+apps/web/src/features/about/components/AboutHero.test.tsx:14	AboutHero > renders the heading with name	rewrite	shows Bryan Cordes as the page heading
+apps/web/src/features/about/components/AboutHero.test.tsx:19	AboutHero > renders the role title	keep	renders the role title
+apps/web/src/features/about/components/AboutHero.test.tsx:24	"AboutHero > renders the ""About Me"" badge"	keep	"renders the ""About Me"" badge"
+apps/web/src/features/about/components/AboutHero.test.tsx:29	AboutHero > renders the description text	rename	introduces Bryan as a passionate software engineer
+apps/web/src/features/about/components/AboutHero.test.tsx:34	AboutHero > renders the profile image with alt text	keep	renders the profile image with alt text
+apps/web/src/features/about/components/AboutHero.test.tsx:41	"AboutHero > renders ""Available for Remote Work"" text"	keep	"renders ""Available for Remote Work"" text"
+apps/web/src/features/about/components/Timeline.test.tsx:14	Timeline > renders the section heading	rewrite	shows Career Journey as a section heading
+apps/web/src/features/about/components/Timeline.test.tsx:19	Timeline > renders the section description	rename	introduces the career timeline as professional growth
+apps/web/src/features/about/components/Timeline.test.tsx:24	Timeline > renders all timeline entry periods	rewrite	shows all five career periods from April 2026 through April 2019
+apps/web/src/features/about/components/Timeline.test.tsx:32	Timeline > renders all role titles	rewrite	shows two contract roles, two engineer roles, and one QA internship
+apps/web/src/features/about/components/Timeline.test.tsx:43	Timeline > renders all company names	keep	renders all company names
+apps/web/src/features/about/components/Timeline.test.tsx:52	Timeline > renders timeline entry descriptions	rename	describes enforcement workflows and monorepo experience
+apps/web/src/features/contact/components/ContactForm.test.tsx:46	ContactForm > renders all form fields	rewrite	offers labeled contact fields and project selectors
+apps/web/src/features/contact/components/ContactForm.test.tsx:61	ContactForm > renders the submit button	delete	Deleted; Retain ContactForm.test.tsx:69 and :84, which find and use Send Message
+apps/web/src/features/contact/components/ContactForm.test.tsx:69	ContactForm > shows validation errors when submitted with empty required fields	rewrite	shows required-field errors without submitting an empty form
+apps/web/src/features/contact/components/ContactForm.test.tsx:84	ContactForm > shows success message after successful submission	rewrite	submits entered inquiry details and lets the visitor start another message
+apps/web/src/features/contact/components/ContactForm.test.tsx:142	ContactForm > shows error toast when submission fails	rewrite	shows failure feedback and preserves entered details for retry
+apps/web/src/features/contact/components/ContactForm.test.tsx:207	ContactForm > shows loading spinner while submitting	rename	disables submission and shows Sending while the request is pending
+apps/web/src/features/contact/components/ContactForm.test.tsx:272	ContactForm > pre-fills email and name when user has both	rewrite	pre-fills and locks the signed-in name and email
+apps/web/src/features/contact/components/ContactForm.test.tsx:286	ContactForm > pre-fills only email when user has email but no name	rewrite	locks a known email while leaving a missing name editable
+apps/web/src/features/contact/components/ContactForm.test.tsx:300	ContactForm > pre-fills only name when user has name but no email	rewrite	locks a known name while leaving a missing email editable
+apps/web/src/features/contact/components/ContactFormFields.test.tsx:46	ContactFormFields > renders all form fields	delete	Deleted; Retain/rewrite ContactForm.test.tsx:46, which renders real ContactFormFields
+apps/web/src/features/contact/components/ContactFormFields.test.tsx:57	ContactFormFields > renders the submit button	delete	Deleted; Retain ContactForm.test.tsx:69, :84, :207
+apps/web/src/features/contact/components/ContactFormFields.test.tsx:65	ContactFormFields > disables name and email fields when disabledFields is set	keep	disables name and email fields when disabledFields is set
+apps/web/src/features/contact/components/ContactFormFields.test.tsx:74	ContactFormFields > does not disable fields when disabledFields is not set	keep	does not disable fields when disabledFields is not set
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx:7	ContactFormSuccess > renders success message	keep	renders success message
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx:14	ContactFormSuccess > renders Send Another Message button	delete	Deleted; Retain ContactFormSuccess.test.tsx:22 and planned integrated reset at ContactForm.test.tsx:84
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx:22	ContactFormSuccess > calls onSendAnother when button is clicked	keep	calls onSendAnother when button is clicked
+apps/web/src/features/home/components/FeaturedWork.test.tsx:59	FeaturedWork > renders nothing when showcases array is empty	rewrite	omits the featured-work section when there are no showcases
+apps/web/src/features/home/components/FeaturedWork.test.tsx:64	FeaturedWork > renders the section heading	rewrite	shows Featured Work as a section heading when showcases exist
+apps/web/src/features/home/components/FeaturedWork.test.tsx:69	FeaturedWork > renders the section description	keep	renders the section description
+apps/web/src/features/home/components/FeaturedWork.test.tsx:74	"FeaturedWork > renders ""View all work"" link pointing to /projects"	rewrite	links View all work to the projects page
+apps/web/src/features/home/components/FeaturedWork.test.tsx:80	FeaturedWork > renders project card titles	rewrite	shows a heading for each supplied project
+apps/web/src/features/home/components/FeaturedWork.test.tsx:86	FeaturedWork > renders project descriptions	keep	renders project descriptions
+apps/web/src/features/home/components/FeaturedWork.test.tsx:92	FeaturedWork > renders client names and years	rewrite	pairs each project with its client and year
+apps/web/src/features/home/components/FeaturedWork.test.tsx:100	FeaturedWork > renders at most 3 tags per project	rewrite	shows only the first three tags of each supplied project
+apps/web/src/features/home/components/FeaturedWork.test.tsx:108	FeaturedWork > renders project links with correct hrefs	rewrite	links each project title to its slug-specific project page
+apps/web/src/features/home/components/Hero.test.tsx:34	Hero > renders the headline text	rewrite	shows Professional Software Engineering as the page heading
+apps/web/src/features/home/components/Hero.test.tsx:40	Hero > renders the description paragraph	rename	introduces BC Solutions web application services
+apps/web/src/features/home/components/Hero.test.tsx:45	"Hero > renders ""Available for Projects"" status badge"	rewrite	announces availability for projects as a status
+apps/web/src/features/home/components/Hero.test.tsx:50	Hero > renders CTA buttons with correct links	rewrite	shows project and contact links to visitors without inquiry-read permission
+apps/web/src/features/home/components/Hero.test.tsx:59	Hero > renders statistics	rewrite	pairs experience, delivery, and satisfaction statistics with their values
+apps/web/src/features/home/components/Hero.test.tsx:69	Hero > has an aria-label on the intro section	rewrite	exposes the introduction as a named region
+apps/web/src/features/home/components/Hero.test.tsx:74	Hero > has a key statistics list with correct role	rename	exposes three items in the Key statistics list
+apps/web/src/features/home/components/ServicesGrid.test.tsx:14	ServicesGrid > renders the section heading	rewrite	shows What I Do as a section heading
+apps/web/src/features/home/components/ServicesGrid.test.tsx:19	ServicesGrid > renders the section description	rename	introduces comprehensive software services
+apps/web/src/features/home/components/ServicesGrid.test.tsx:24	ServicesGrid > renders all three service card titles	keep	renders all three service card titles
+apps/web/src/features/home/components/ServicesGrid.test.tsx:31	ServicesGrid > renders service descriptions	keep	renders service descriptions
+apps/web/src/features/home/components/ServicesGrid.test.tsx:42	ServicesGrid > renders skill tags for each service	rename	shows representative frontend, backend, and consulting skills
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:14	SkillsShowcase > renders the section heading	rewrite	shows Technologies & Skills as a section heading
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:19	SkillsShowcase > renders the section description	rename	introduces the professional technology toolkit
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:26	SkillsShowcase > renders all four category headings	rewrite	shows Frontend, Backend, Tools, and Cloud as category headings
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:34	SkillsShowcase > renders frontend skills	keep	renders frontend skills
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:44	SkillsShowcase > renders backend skills	keep	renders backend skills
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:54	SkillsShowcase > renders tools skills	keep	renders tools skills
+apps/web/src/features/home/components/SkillsShowcase.test.tsx:64	SkillsShowcase > renders cloud skills	keep	renders cloud skills
+apps/web/src/routes/about.test.tsx:40	about route > Route config > exports a route config with component	delete	Deleted; Retain real-page behavior in :48 and later content cases
+apps/web/src/routes/about.test.tsx:48	about route > AboutPage component > renders AboutHero	rewrite	renders the introduction when visiting the about page
+apps/web/src/routes/about.test.tsx:56	about route > AboutPage component > renders Timeline	rewrite	includes career history on the about page
+apps/web/src/routes/about.test.tsx:64	about route > AboutPage component > renders My Approach section	keep	renders My Approach section
+apps/web/src/routes/about.test.tsx:72	about route > AboutPage component > renders all four value cards	rename	names the four development principles
+apps/web/src/routes/about.test.tsx:83	about route > AboutPage component > renders CTA section with Get in Touch link	rewrite	offers a contact invitation to a signed-out visitor; offers a contact invitation to $label according to permission
+apps/web/src/routes/contact.test.tsx:49	contact route > Route config > exports a route config with component	delete	Deleted; Retain/rewrite :96 real form integration plus actual contact content checks
+apps/web/src/routes/contact.test.tsx:57	contact route > ContactPage component > renders page heading	rewrite	renders the Get in Touch page heading
+apps/web/src/routes/contact.test.tsx:65	contact route > ContactPage component > renders contact info section with all items	rewrite	offers named contact destinations and a remote-work location
+apps/web/src/routes/contact.test.tsx:77	contact route > ContactPage component > renders email link with mailto href	keep	renders email link with mailto href
+apps/web/src/routes/contact.test.tsx:88	contact route > ContactPage component > renders availability status	keep	renders availability status
+apps/web/src/routes/contact.test.tsx:96	contact route > ContactPage component > renders ContactForm	rewrite	offers a usable inquiry form on the contact page
+apps/web/src/routes/contact.test.tsx:104	contact route > ContactPage component > renders Send a Message heading	rewrite	renders the Send a Message section heading
+apps/web/src/routes/index.test.tsx:70	index route > Route config > exports a route config with component and loader	delete	Deleted; Retain real loading/rendering replacements at :77 and :84
+apps/web/src/routes/index.test.tsx:77	index route > Route config > loader returns showcases from getFeaturedShowcases	rewrite	loads featured projects for the home page
+apps/web/src/routes/index.test.tsx:84	index route > HomePage component > renders Hero, ServicesGrid, FeaturedWork, and SkillsShowcase	rewrite	renders the introduction, services, featured work, and skills on the home page
+apps/web/src/routes/index.test.tsx:95	index route > HomePage component > passes showcases to FeaturedWork	delete	Deleted; Delete only after real featured-project load/render assertions at :77/:84 pass
+apps/web/src/routes/index.test.tsx:103	"index route > HomePage component > renders ""Let's Work Together"" section"	keep	"renders ""Let's Work Together"" section"
+apps/web/src/routes/index.test.tsx:111	index route > HomePage component > renders Get in Touch link to /contact	rewrite	offers contact links to a $label according to inquiry-read permission
+apps/web/src/routes/resume.test.tsx:50	resume route > Route config > exports a route config with component	delete	Deleted; Retain :58 and content/download cases
+apps/web/src/routes/resume.test.tsx:58	resume route > ResumePage component > renders page heading	rewrite	renders Resume as the page heading
+apps/web/src/routes/resume.test.tsx:66	resume route > ResumePage component > renders experience subtitle	rename	states seven-plus years of professional engineering experience
+apps/web/src/routes/resume.test.tsx:78	resume route > ResumePage component > renders Download PDF link	rewrite	offers the resume PDF as a download
+apps/web/src/routes/resume.test.tsx:89	resume route > ResumePage component > renders Experience section with all jobs	rename	lists the current employers and engineering roles
+apps/web/src/routes/resume.test.tsx:108	resume route > ResumePage component > renders Skills section with categories	keep	renders Skills section with categories
+apps/web/src/routes/resume.test.tsx:121	resume route > ResumePage component > renders skill badges	rename	lists TypeScript, React, Node.js, and Docker skills
+apps/web/src/routes/resume.test.tsx:132	resume route > ResumePage component > renders Education section	keep	renders Education section

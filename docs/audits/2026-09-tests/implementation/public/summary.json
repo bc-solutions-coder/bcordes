@@ -1,0 +1,139 @@
+{
+  "issue": 96,
+  "baseRevision": "71b68a4",
+  "implementationRevisions": ["1ef1a43", "fd38131"],
+  "tests": {
+    "numPassedTests": 1212,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-07T23:56:12.960Z",
+    "duration": 12914.933,
+    "expected": 33,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1023,
+      "skipped": 0,
+      "pct": 95.07
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1085,
+      "skipped": 0,
+      "pct": 93.93
+    },
+    "functions": {
+      "total": 382,
+      "covered": 353,
+      "skipped": 0,
+      "pct": 92.4
+    },
+    "branches": {
+      "total": 671,
+      "covered": 608,
+      "skipped": 0,
+      "pct": 90.61
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageLosses": [],
+  "denominatorsUnchanged": true,
+  "defects": [
+    {
+      "defect": "changed-inquiry-name",
+      "exitCode": 1
+    },
+    {
+      "defect": "uncleared-contact-form",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-contact-failure-feedback",
+      "exitCode": 1
+    },
+    {
+      "defect": "unlocked-known-name",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-optional-company",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-client-validation",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-hero-heading",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-availability-status",
+      "exitCode": 1
+    },
+    {
+      "defect": "swapped-statistic-value",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-hero-permission",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-project-destination",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-featured-client",
+      "exitCode": 1
+    },
+    {
+      "defect": "unlimited-featured-tags",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-career-period",
+      "exitCode": 1
+    },
+    {
+      "defect": "empty-home-loader",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-about-introduction",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-contact-form",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-resume-download",
+      "exitCode": 1
+    },
+    {
+      "defect": "unfiltered-home-loader",
+      "exitCode": 1
+    }
+  ],
+  "commands": [
+    "pnpm test --coverage --reporter=json",
+    "pnpm --filter bcordes exec playwright test --reporter=json",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ]
+}
