@@ -1,18 +1,72 @@
-import { isValidElement } from 'react'
-import { describe, expect, it } from 'vitest'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
-import devtoolsPlugin from './devtools'
-import type { ReactElement } from 'react'
+import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { Provider, getContext } from './index'
+import type pluginDefinition from './devtools'
 
-describe('devtools', () => {
-  it('default-exports a TanStack Devtools plugin named "Tanstack Query"', () => {
-    expect(devtoolsPlugin.name).toBe('Tanstack Query')
-  })
+let devtoolsPlugin: typeof pluginDefinition
+beforeAll(async () => {
+  vi.stubEnv('NODE_ENV', 'development')
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((media: string) => ({
+      media,
+      matches: false,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(() => true),
+    })),
+  )
+  devtoolsPlugin = (await import('./devtools')).default
+})
+afterAll(() => {
+  vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
+})
 
-  it('renders the real ReactQueryDevtoolsPanel', () => {
-    expect(isValidElement(devtoolsPlugin.render)).toBe(true)
-    expect((devtoolsPlugin.render as ReactElement).type).toBe(
-      ReactQueryDevtoolsPanel,
-    )
+afterEach(() => {
+  cleanup()
+  localStorage.clear()
+})
+
+it('labels the query inspector in the developer tools', async () => {
+  const { queryClient } = getContext()
+  render(
+    <Provider queryClient={queryClient}>
+      <TanStackDevtools
+        plugins={[devtoolsPlugin]}
+        config={{ defaultOpen: true }}
+      />
+    </Provider>,
+  )
+  expect(
+    await screen.findByText('Tanstack Query', { exact: true }),
+  ).toBeVisible()
+})
+
+it('shows cached queries and their data in the query inspector', async () => {
+  const { queryClient } = getContext()
+  queryClient.setQueryData(['inspector-fixture'], {
+    message: 'Cached inspection value',
   })
+  render(
+    <Provider queryClient={queryClient}>
+      <TanStackDevtools
+        plugins={[devtoolsPlugin]}
+        config={{ defaultOpen: true }}
+      />
+    </Provider>,
+  )
+  expect(
+    await screen.findByText('Tanstack Query', { exact: true }),
+  ).toBeVisible()
+  fireEvent.click(
+    await screen.findByText('["inspector-fixture"]', { exact: true }),
+  )
+  expect(await screen.findByRole('textbox', { name: 'message:' })).toHaveValue(
+    'Cached inspection value',
+  )
 })

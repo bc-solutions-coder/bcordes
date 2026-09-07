@@ -1,0 +1,107 @@
+original_key	original_title	accepted_disposition	result
+packages/logger/package.test.ts:43	declares the workspace package conventions	delete	Deleted
+packages/logger/package.test.ts:52	exports its source entrypoint (no build step, no dist/)	delete	Deleted
+packages/logger/package.test.ts:59	declares pino as a runtime dep and pino-pretty as a dev dep	delete	Deleted
+packages/logger/package.test.ts:71	leaves nothing behind at apps/web/src/lib/logger.ts	delete	Deleted
+packages/logger/package.test.ts:75	default-exports a working pino logger	rewrite	packages/logger/src/logger.test.ts (actual subprocess output)
+packages/logger/package.test.ts:94	is a workspace: dependency of apps/web	delete	Deleted
+packages/logger/package.test.ts:100	takes pino and pino-pretty off apps/web	delete	Deleted
+packages/logger/package.test.ts:108	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/logger/package.test.ts:115	resolves its '.' export from apps/web	delete	Deleted
+packages/logger/package.test.ts:125	leaves no @/lib/logger import anywhere	delete	Deleted
+packages/logger/package.test.ts:129	redirects every former importer to @bcordes/logger	delete	Deleted
+packages/logger/package.test.ts:135	leaves no direct pino import in apps/web	delete	Deleted
+packages/logger/package.test.ts:142	collects the package's own tests as its own project	delete	Deleted
+packages/query/src/devtools.test.tsx:8	"default-exports a TanStack Devtools plugin named ""Tanstack Query"""	rewrite	labels the query inspector in the developer tools
+packages/query/src/devtools.test.tsx:12	renders the real ReactQueryDevtoolsPanel	rewrite	shows cached queries in the query inspector
+packages/query/src/index.test.ts:6	exposes getContext, which mints a fresh QueryClient	delete	Deleted
+packages/query/src/index.test.ts:14	exposes Provider	delete	Deleted
+packages/query/src/index.test.ts:18	does not re-export the devtools panel, which stays on its own subpath so @tanstack/react-query-devtools is not pulled into the app bundle	delete	Deleted
+packages/query/src/root-provider.test.tsx:46	returns an object with a QueryClient instance	delete	Deleted
+packages/query/src/root-provider.test.tsx:52	returns a new QueryClient on each call	rewrite	keeps query data isolated between contexts
+packages/query/src/root-provider.test.tsx:60	renders children	keep	renders children
+packages/query/src/root-provider.test.tsx:71	makes QueryClient accessible to children via useQueryClient	rewrite	renders data from the supplied query cache
+packages/query/src/root-provider.test.tsx:89	renders multiple children	keep	renders multiple children
+packages/query/src/root-provider.test.tsx:101	cleans up on unmount without errors	delete	Deleted
+packages/query/src/root-provider.test.tsx:111	uses the provided queryClient, not a default one	rewrite	uses caller freshness settings to avoid refetching cached data
+packages/query/src/root-provider.test.tsx:134	serves server-hydrated query data to children without refetching	keep	serves server-hydrated query data to children without refetching
+packages/test-utils/package.test.ts:72	declares the workspace package conventions	delete	Deleted
+packages/test-utils/package.test.ts:81	exposes the harness as a barrel plus a ./setup subpath (no build step, no dist/)	delete	Deleted
+packages/test-utils/package.test.ts:93	ships the testing-library + jsdom harness as runtime dependencies	delete	Deleted
+packages/test-utils/package.test.ts:104	owns the workspace render-provider deps it wraps	delete	Deleted
+packages/test-utils/package.test.ts:113	names neither @bcordes/auth nor @bcordes/wallow in its manifest	delete	Deleted
+packages/test-utils/package.test.ts:118	imports nothing from @bcordes/auth or @bcordes/wallow in its source	delete	Deleted
+packages/test-utils/package.test.ts:129	re-exports renderWithProviders and the testing-library surface	rewrite	packages/test-utils/src/render.test.tsx (public render consumer outcomes)
+packages/test-utils/package.test.ts:145	keeps app-specific mock fixtures OUT of the generic barrel	delete	Deleted
+packages/test-utils/package.test.ts:156	leaves no render helper behind under apps/web/src/test	delete	Deleted
+packages/test-utils/package.test.ts:160	leaves no setup harness behind under apps/web/src/test	delete	Deleted
+packages/test-utils/package.test.ts:166	deletes every duplicated per-project setup.ts	delete	Deleted
+packages/test-utils/package.test.ts:172	keeps the package as the single home of the setup harness	delete	Deleted
+packages/test-utils/package.test.ts:179	leaves no @/test/helpers/render import anywhere	delete	Deleted
+packages/test-utils/package.test.ts:183	redirects former importers to @bcordes/test-utils	delete	Deleted
+packages/test-utils/package.test.ts:200	repoints all five setupFiles at @bcordes/test-utils/setup	rewrite	packages/config/runner-behavior.test.ts (implemented #91)
+packages/test-utils/package.test.ts:211	is added under devDependencies (never dependencies) of each jsdom consumer	delete	Deleted
+packages/test-utils/package.test.ts:221	is not pulled into the node-env leaf packages	delete	Deleted
+packages/test-utils/package.test.ts:238	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/test-utils/package.test.ts:245	resolves its '.' export from apps/web	delete	Deleted
+packages/test-utils/package.test.ts:253	resolves its './setup' subpath from apps/web	delete	Deleted
+packages/utils/package.test.ts:44	declares the workspace package conventions	delete	Deleted
+packages/utils/package.test.ts:53	exports its source entrypoint (no build step, no dist/)	delete	Deleted
+packages/utils/package.test.ts:60	declares the runtime dependencies it actually imports	delete	Deleted
+packages/utils/package.test.ts:72	holds the sources at packages/utils/src	delete	Deleted
+packages/utils/package.test.ts:77	leaves nothing behind at apps/web/src/lib	delete	Deleted
+packages/utils/package.test.ts:82	re-exports cn and the format helpers from its index, and they work	delete	Deleted
+packages/utils/package.test.ts:92	is a workspace: dependency of apps/web	delete	Deleted
+packages/utils/package.test.ts:98	takes clsx, tailwind-merge and date-fns off apps/web	delete	Deleted
+packages/utils/package.test.ts:110	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/utils/package.test.ts:117	resolves its '.' export from apps/web	delete	Deleted
+packages/utils/package.test.ts:127	leaves no @/lib/utils or @/lib/format import anywhere	delete	Deleted
+packages/utils/package.test.ts:132	points the shadcn utils alias at the package	delete	Deleted
+packages/utils/package.test.ts:138	redirects every former importer to @bcordes/utils	delete	Deleted
+packages/utils/package.test.ts:153	collects the package's own tests as its own project	delete	Deleted
+packages/utils/src/format.test.ts:14	"returns ""just now"" for less than 60 seconds ago"	keep	"returns ""just now"" for less than 60 seconds ago"
+packages/utils/src/format.test.ts:18	returns minutes ago for 1-59 minutes	keep	returns minutes ago for 1-59 minutes
+packages/utils/src/format.test.ts:23	"returns ""1m ago"" at exactly 60 seconds"	keep	"returns ""1m ago"" at exactly 60 seconds"
+packages/utils/src/format.test.ts:27	returns hours ago for 1-23 hours	keep	returns hours ago for 1-23 hours
+packages/utils/src/format.test.ts:32	"returns ""1h ago"" at exactly 60 minutes"	keep	"returns ""1h ago"" at exactly 60 minutes"
+packages/utils/src/format.test.ts:36	returns days ago for 1-6 days	keep	returns days ago for 1-6 days
+packages/utils/src/format.test.ts:41	falls back to short date for 7+ days	keep	falls back to short date for 7+ days
+packages/utils/src/format.test.ts:45	falls back to short date for much older dates	keep	falls back to short date for much older dates
+packages/utils/src/format.test.ts:51	"formats a date as ""Jan 5, 2025, 02:30 PM"""	keep	"formats a date as ""Jan 5, 2025, 02:30 PM"""
+packages/utils/src/format.test.ts:56	formats midnight as 12:00 AM	keep	formats midnight as 12:00 AM
+packages/utils/src/format.test.ts:61	formats noon as 12:00 PM	keep	formats noon as 12:00 PM
+packages/utils/src/format.test.ts:66	pads minutes with leading zero	keep	pads minutes with leading zero
+packages/utils/src/format.test.ts:71	handles PM hours correctly	keep	handles PM hours correctly
+packages/utils/src/utils.test.ts:5	merges multiple class names	keep	merges multiple class names
+packages/utils/src/utils.test.ts:9	resolves conflicting Tailwind classes (last wins)	keep	resolves conflicting Tailwind classes (last wins)
+packages/utils/src/utils.test.ts:15	handles conditional class names with falsy values	keep	handles conditional class names with falsy values
+packages/utils/src/utils.test.ts:19	returns empty string for no input	keep	returns empty string for no input
+packages/utils/src/utils.test.ts:23	returns empty string for all-falsy input	keep	returns empty string for all-falsy input
+packages/utils/src/utils.test.ts:27	handles array inputs	keep	handles array inputs
+packages/utils/src/utils.test.ts:31	handles object inputs for conditional classes	keep	handles object inputs for conditional classes
+packages/utils/src/utils.test.ts:35	merges conflicting Tailwind modifiers correctly	keep	merges conflicting Tailwind modifiers correctly
+packages/valkey/package.test.ts:54	declares the workspace package conventions	delete	Deleted
+packages/valkey/package.test.ts:63	exports its source entrypoint (no build step, no dist/)	delete	Deleted
+packages/valkey/package.test.ts:70	owns ioredis as a runtime dep and its types as a dev dep	delete	Deleted
+packages/valkey/package.test.ts:81	leaves nothing behind under apps/web/src/lib/valkey	delete	Deleted
+packages/valkey/package.test.ts:85	keeps client.ts and keys.ts behind the barrel	delete	Deleted
+packages/valkey/package.test.ts:92	exports exactly getValkey and keys at runtime	delete	Deleted
+packages/valkey/package.test.ts:99	re-exports the Redis type from the barrel	delete	Deleted
+packages/valkey/package.test.ts:105	exposes every key builder through the barrel	delete	Deleted
+packages/valkey/package.test.ts:115	surfaces getValkey through the barrel, still lazy and still guarded	delete	Deleted
+packages/valkey/package.test.ts:124	is a workspace: dependency of apps/web	delete	Deleted
+packages/valkey/package.test.ts:130	takes ioredis and @types/ioredis off apps/web	delete	Deleted
+packages/valkey/package.test.ts:138	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/valkey/package.test.ts:145	resolves its '.' export from apps/web	delete	Deleted
+packages/valkey/package.test.ts:155	leaves no @/lib/valkey import anywhere	delete	Deleted
+packages/valkey/package.test.ts:159	redirects every former importer to @bcordes/valkey	delete	Deleted
+packages/valkey/package.test.ts:167	leaves no direct ioredis import in apps/web	delete	Deleted
+packages/valkey/package.test.ts:174	collects the package's own tests as its own project	delete	Deleted
+packages/valkey/src/client.test.ts:21	returns the same instance when called twice (singleton)	keep	returns the same instance when called twice (singleton)
+packages/valkey/src/client.test.ts:29	throws a descriptive error when REDIS_URL is not set	keep	throws a descriptive error when REDIS_URL is not set
+packages/valkey/src/client.test.ts:35	passes REDIS_URL value to Redis constructor	rewrite	connects once to the configured endpoint on first use
+packages/valkey/src/client.test.ts:50	session(id) returns bcordes:session:<id>	keep	session(id) returns bcordes:session:<id>
+packages/valkey/src/client.test.ts:55	sessionLock(id) returns bcordes:lock:session:<id>	keep	sessionLock(id) returns bcordes:lock:session:<id>
+packages/valkey/src/client.test.ts:60	serviceToken() returns bcordes:service-token	keep	serviceToken() returns bcordes:service-token
+packages/valkey/src/client.test.ts:65	serviceTokenLock() returns bcordes:lock:service-token	keep	serviceTokenLock() returns bcordes:lock:service-token
+packages/valkey/src/client.test.ts:70	oidcConfig() returns bcordes:oidc-config	keep	oidcConfig() returns bcordes:oidc-config

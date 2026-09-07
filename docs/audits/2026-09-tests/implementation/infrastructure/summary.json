@@ -1,0 +1,89 @@
+{
+  "issue": 94,
+  "baseRevision": "e4b28d3",
+  "tests": {
+    "numPassedTests": 1222,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1014,
+      "skipped": 0,
+      "pct": 94.23
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1075,
+      "skipped": 0,
+      "pct": 93.07
+    },
+    "functions": {
+      "total": 382,
+      "covered": 347,
+      "skipped": 0,
+      "pct": 90.83
+    },
+    "branches": {
+      "total": 671,
+      "covered": 606,
+      "skipped": 0,
+      "pct": 90.31
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageLosses": [],
+  "defects": [
+    {
+      "defect": "shared-query-context",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-provider-client",
+      "exitCode": 1
+    },
+    {
+      "defect": "empty-inspector",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-inspector-label",
+      "exitCode": 1
+    },
+    {
+      "defect": "enabled-query-retries",
+      "exitCode": 1
+    },
+    {
+      "defect": "shared-render-cache",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-render-options",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-log-level",
+      "exitCode": 1
+    },
+    {
+      "defect": "eager-cache-connection",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-cache-namespace",
+      "exitCode": 1
+    },
+    {
+      "defect": "unmerged-utility-classes",
+      "exitCode": 1
+    }
+  ],
+  "denominatorsUnchanged": true
+}
