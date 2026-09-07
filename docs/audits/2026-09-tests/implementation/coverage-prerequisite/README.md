@@ -1,6 +1,6 @@
 # Enforced behavior coverage prerequisite
 
-Implementation for [Reach and enforce meaningful 90% coverage](https://github.com/bc-solutions-coder/bcordes/issues/90), compared with baseline commit `d0523a0`. Status: implemented, review pending.
+Implementation for [Reach and enforce meaningful 90% coverage](https://github.com/bc-solutions-coder/bcordes/issues/90), compared with baseline commit `d0523a0`. Status: implemented and reviewed.
 
 The full workspace run passes 1,349 tests, none failed or skipped. Coverage is **93.97% lines, 92.83% statements, 90.11% branches and 90.15% functions**, with all four thresholds enforced at 90%. The include/exclude configuration and every metric denominator remain unchanged. [area-comparison.tsv](area-comparison.tsv) verifies no affected file loses coverage; [coverage-summary.json](coverage-summary.json) preserves actual measurements. The narrow branch/function margins require checking every later cleanup batch.
 
@@ -22,6 +22,10 @@ The runner demonstrably rejected the earlier 89.67% branch result with exit 1. A
 These 61 added runtime cases must be reused, not recreated, by later tickets. Five new test files and one shared disposable-server helper join the inventory. Existing auth/Valkey discovery inventories were minimally updated to admit the added files; those obsolete inventories retain their accepted later-removal dispositions. No existing test was deleted. The partial-coverage probe title was updated to describe its enforced-failure outcome.
 
 Integration tests run actual owned session/SDK/Valkey code; only the framework request context and external HTTP responses are controlled. Each file owns a disposable loopback Valkey container with cleanup even if port discovery fails. Docker is now required for these unit integration cases and is documented in the testing guide. No live identity provider or production credential is used. Request middleware tests invoke registered handlers through a response-validating harness, not the built HTTP transport; existing and future browser checks remain separately required.
+
+## Review
+
+Spec review: no findings. Standards review: no hard violations; one nonblocking suggestion to share synthetic BFF environment setup. The shared server lifecycle is already centralized; explicit per-suite BFF configuration is retained for readable isolation and differing authentication scenarios.
 
 ## Verification
 

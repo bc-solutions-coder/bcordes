@@ -1,6 +1,6 @@
 {
   "baseline_revision": "d0523a0",
-  "status": "implemented; review pending",
+  "status": "implemented and reviewed",
   "passed": 1349,
   "failed": 0,
   "skipped": 0,
@@ -91,5 +91,10 @@
     }
   ],
   "measurement_scope_changed": false,
-  "cleanup_deletions": 0
+  "cleanup_deletions": 0,
+  "review": {
+    "spec_findings": 0,
+    "standards_hard_violations": 0,
+    "standards_nonblocking_suggestions": 1
+  }
 }
