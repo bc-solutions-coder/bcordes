@@ -60,7 +60,7 @@ export function UserMenu() {
           </AvatarFallback>
         </Avatar>
         <span className="max-w-[120px] truncate">
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive against runtime OIDC data */}
+          {/* oxlint-disable-next-line typescript/no-unnecessary-condition -- defensive against runtime OIDC data */}
           {user.name ?? user.email ?? 'User'}
         </span>
       </DropdownMenuTrigger>

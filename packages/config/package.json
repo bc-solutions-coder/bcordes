@@ -7,10 +7,7 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    "./eslint": "./eslint.js",
-    "./tsconfig.base.json": "./tsconfig.base.json"
-  },
-  "dependencies": {
-    "@tanstack/eslint-config": "^0.4.0"
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./oxlint-plugin": "./oxlint-plugin.js"
   }
 }

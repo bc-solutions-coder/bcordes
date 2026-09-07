@@ -8,24 +8,9 @@ import { describe, expect, it } from 'vitest'
 const packageDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(packageDir, '../..')
 const webDir = join(repoRoot, 'apps/web')
-const eslintBin = join(repoRoot, 'node_modules/.bin/eslint')
 const tscBin = join(repoRoot, 'node_modules/.bin/tsc')
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, 'utf8'))
-
-/** Every `no-restricted-imports` group eslint applies to `filePath`, flattened. */
-const restrictedImportGroups = (filePath: string): Array<string> => {
-  const config = JSON.parse(
-    execFileSync(eslintBin, ['--print-config', filePath], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-    }),
-  )
-  const rule = config.rules?.['no-restricted-imports']
-  if (!Array.isArray(rule)) return []
-  const options = rule[1] as { patterns?: Array<{ group?: Array<string> }> }
-  return (options.patterns ?? []).flatMap((pattern) => pattern.group ?? [])
-}
 
 describe('@bcordes/config package manifest', () => {
   it('declares the workspace package conventions', () => {
@@ -37,20 +22,20 @@ describe('@bcordes/config package manifest', () => {
     expect(manifest.type).toBe('module')
   })
 
-  it('exports the eslint config and the tsconfig base, and both files exist', () => {
+  it('exports the Oxlint plugin and the tsconfig base, and both files exist', () => {
     const manifest = readJson(join(packageDir, 'package.json'))
 
     expect(manifest.exports).toMatchObject({
-      './eslint': './eslint.js',
+      './oxlint-plugin': './oxlint-plugin.js',
       './tsconfig.base.json': './tsconfig.base.json',
     })
-    expect(existsSync(join(packageDir, 'eslint.js'))).toBe(true)
+    expect(existsSync(join(packageDir, 'oxlint-plugin.js'))).toBe(true)
     expect(existsSync(join(packageDir, 'tsconfig.base.json'))).toBe(true)
   })
 })
 
 describe('workspace wiring', () => {
-  it('is a workspace: dependency of the repo root (root eslint.config.js imports it)', () => {
+  it('is a workspace: dependency of the repo root', () => {
     const root = readJson(join(repoRoot, 'package.json'))
 
     expect(root.devDependencies['@bcordes/config']).toBe('workspace:*')
@@ -72,9 +57,9 @@ describe('workspace wiring', () => {
   it('resolves its export subpaths from apps/web', () => {
     const requireFromWeb = createRequire(join(webDir, 'package.json'))
 
-    expect(realpathSync(requireFromWeb.resolve('@bcordes/config/eslint'))).toBe(
-      realpathSync(join(packageDir, 'eslint.js')),
-    )
+    expect(
+      realpathSync(requireFromWeb.resolve('@bcordes/config/oxlint-plugin')),
+    ).toBe(realpathSync(join(packageDir, 'oxlint-plugin.js')))
     expect(
       realpathSync(
         requireFromWeb.resolve('@bcordes/config/tsconfig.base.json'),
@@ -128,61 +113,4 @@ describe('tsconfig base', () => {
 
     expect(resolved.compilerOptions.paths['@/*']).toEqual(['./src/*'])
   })
-})
-
-describe('eslint config', () => {
-  it('is sourced from @bcordes/config/eslint by the root eslint.config.js', () => {
-    const rootConfig = readFileSync(join(repoRoot, 'eslint.config.js'), 'utf8')
-
-    expect(rootConfig).toMatch(/from ['"]@bcordes\/config\/eslint['"]/)
-  })
-
-  it(
-    'still applies the app module-boundary rules to the app shell, features and shared',
-    { timeout: 30_000 },
-    () => {
-      const appShell = restrictedImportGroups(
-        'apps/web/src/app/components/layout/Header.tsx',
-      )
-      expect(appShell).toContain('~/*')
-      expect(appShell).toContain('@/routes/*')
-
-      const feature = restrictedImportGroups(
-        'apps/web/src/features/about/components/AboutHero.tsx',
-      )
-      expect(feature).toEqual(
-        expect.arrayContaining([
-          '@/routes/*',
-          '@/features/*/*',
-          '@/shared/*/*',
-          '@/app/*/*',
-        ]),
-      )
-
-      const shared = restrictedImportGroups(
-        'apps/web/src/shared/motion/index.ts',
-      )
-      expect(shared).toContain('@/routes/*')
-    },
-  )
-
-  it(
-    'applies package-level boundaries to packages/',
-    { timeout: 30_000 },
-    () => {
-      const auth = restrictedImportGroups('packages/auth/src/session.ts')
-      expect(auth.some((group) => group.startsWith('@bcordes/ui'))).toBe(true)
-
-      const deepImport = (groups: Array<string>) =>
-        groups.some(
-          (group) => group.startsWith('@bcordes/') && group.includes('/src'),
-        )
-      expect(
-        deepImport(restrictedImportGroups('packages/ui/src/button.tsx')),
-      ).toBe(true)
-      expect(
-        deepImport(restrictedImportGroups('apps/web/src/lib/thing.ts')),
-      ).toBe(true)
-    },
-  )
 })

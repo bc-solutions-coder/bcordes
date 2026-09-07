@@ -13,7 +13,7 @@
     "build": "pnpm --filter bcordes build",
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck",
-    "lint": "node --max-old-space-size=8192 ./node_modules/eslint/bin/eslint.js",
+    "lint": "oxlint --type-aware",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "check": "oxfmt && pnpm lint --fix",
@@ -23,7 +23,7 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
       "oxfmt --no-error-on-unmatched-pattern",
-      "eslint --fix"
+      "oxlint --type-aware --fix --no-error-on-unmatched-pattern"
     ],
     "*.{json,css,md,yml,yaml}": [
       "oxfmt --no-error-on-unmatched-pattern"
@@ -31,13 +31,16 @@
   },
   "devDependencies": {
     "@bcordes/config": "workspace:*",
+    "@stylistic/eslint-plugin": "5.10.0",
     "@vitest/coverage-v8": "^5.0.0",
-    "eslint": "^10.1.0",
+    "eslint-plugin-import-x": "4.17.1",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "lint-staged": "^16.4.0",
     "oxfmt": "0.67.0",
-    "typescript": "^5.9.3",
+    "oxlint": "1.82.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "typescript": "7.0.2",
     "vitest": "^5.0.0"
   }
 }

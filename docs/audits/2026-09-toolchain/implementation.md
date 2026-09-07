@@ -266,3 +266,40 @@ PR run 34072010469 took 627 seconds, including 134 seconds of initial queue;
 its build/runtime execution was 493/71 seconds. These differ in revision and
 trigger, so they are illustrative Docker-workflow samples, not matched full-PR
 medians or proof of the overall 25% target. #61 remains dependent on #57.
+
+## TypeScript 7 and Oxlint, #57
+
+The user approved alpha JS plugin support, then the custom syntax-only naming
+rule after the upstream naming plugin failed. The [lint inventory](lint-migration.md)
+records all 74 baseline mappings, explicit options, scopes and the trial evidence.
+Oxlint 1.82.0 plus oxlint-tsgolint 7.0.2001 replaces the ESLint command and TanStack
+preset. Three JS rules preserve generic naming, comment spacing and import order.
+Standalone typechecks use TypeScript 7.0.2; no TS6 fallback is installed.
+
+Final compiler selection exposed a stale local `packages/config/node_modules/.bin/tsc`
+left from the removed preset. It pointed to TypeScript 5.9.3 despite the current
+lockfile resolving only 7.0.2. Removing that package's generated node_modules and
+running frozen install cleared it. Recursive compiler-version checks then report
+7.0.2 in all 14 non-root workspaces; recursive typechecks were rerun afterward.
+No source workaround or dependency override was needed.
+
+Validation on local macOS arm64, Node 24.11.1 and pnpm 11.26.0:
+
+- Frozen install, peer dependency check, lint, all workspace typechecks and
+  formatting pass. The real CLI fixture covers naming and architecture behavior,
+  typed exceptions/suppression, both upstream JS rules and autofix idempotence.
+- All 120 test files and 1,288 tests pass. Coverage remains 83.24% statements,
+  75.74% branches, 84.19% functions and 84.32% lines on the same 102 source paths.
+  Three obsolete/configuration-shape tests become two CLI behavior tests; other
+  source-test changes only adapt existing assertions. #46 still owns 90% coverage.
+- Production build, public page/asset smoke, all 24 Chromium checks and native
+  Linux arm64 Docker build/runtime verification pass, including both redirect
+  domain configurations.
+- Static Storybook builds with TypeScript 7. The Button story renders destructive
+  and disabled arguments correctly with no browser page errors.
+- Both review axes found documentation updates only; stale lint/heap guidance
+  and ambiguous historical trial wording were corrected. Documentation links pass.
+
+ESLint remains a transitive peer of the two upstream JS plugins, not a lint pass.
+No complete-PR performance claim is made; matched CI evidence remains #61 and
+final migration review remains #77.

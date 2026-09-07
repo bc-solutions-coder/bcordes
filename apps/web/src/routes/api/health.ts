@@ -7,7 +7,7 @@ export const Route = createFileRoute('/api/health')({
       GET: async () => {
         try {
           const result = await getValkey().ping()
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          // oxlint-disable-next-line typescript/no-unnecessary-condition
           if (result !== 'PONG') {
             return new Response(
               JSON.stringify({ status: 'unhealthy', valkey: 'ping failed' }),

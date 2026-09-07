@@ -10,7 +10,7 @@
     "serve": "vite preview",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint",
+    "lint": "pnpm --workspace-root lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

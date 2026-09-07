@@ -20,7 +20,7 @@ Use `@/` for imports within the app. Cross-module imports go through the module'
 
 Consume workspace packages through the exports in their `package.json`, such as `@bcordes/ui/components/button` or `@bcordes/auth/middleware`. Never import through `@bcordes/*/src/*`. Add a `workspace:*` dependency to the consuming package when introducing a package import.
 
-[Shared ESLint rules](../packages/config/eslint.js) reject deep module imports, the removed `~/` alias, and route imports from `features`, `shared`, or `app`. Routes compose these modules. The headless auth package cannot import UI. Keep React Query devtools behind the existing dynamic import of `@bcordes/query/devtools` so they stay out of the production bundle.
+[Workspace Oxlint rules](../.oxlintrc.json) reject deep module imports, the removed `~/` alias, and route imports from `features`, `shared`, or `app`. Routes compose these modules. The headless auth package cannot import UI. Keep React Query devtools behind the existing dynamic import of `@bcordes/query/devtools` so they stay out of the production bundle.
 
 ## Add a feature
 
@@ -35,3 +35,9 @@ Consume workspace packages through the exports in their `package.json`, such as 
 ## Keep guidance close to its owner
 
 Comments should explain a constraint, surprising choice, or contract that the code cannot express clearly. Remove comments that repeat a name or statement. Put implementation walkthroughs and design background in the relevant guide and leave a short relative link where it helps. Preserve directives and necessary security rationale. Track proposed work in GitHub Issues, not documentation plans.
+
+Use the [Oxc editor extension](https://oxc.rs/docs/guide/usage/linter/editors.html)
+for Oxlint diagnostics and Oxfmt formatting. Workspace lint runs native typed
+checks plus JS plugins for generic type-parameter naming, comment spacing and
+import ordering. Import/package sorting stays disabled in Oxfmt. Run
+`pnpm typecheck` for the standalone TypeScript 7 compiler checks.

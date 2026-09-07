@@ -10,13 +10,13 @@ Run commands from the repository root after [setup](setup.md).
 | `pnpm exec vitest run apps/web/src/features/contact` | Tests matching one feature path                                   |
 | `pnpm exec vitest run --coverage`                    | Workspace tests and coverage reports in `coverage/`               |
 | `pnpm typecheck`                                     | TypeScript in every workspace package                             |
-| `pnpm lint`                                          | Shared ESLint rules, including module boundaries                  |
+| `pnpm lint`                                          | Oxlint typed rules, JS plugins and module boundaries              |
 | `pnpm format:check`                                  | Oxfmt formatting without modifying files                          |
 | `python3 scripts/check-docs.py`                      | Local documentation links and heading anchors                     |
 | `pnpm build`                                         | Production app build                                              |
 | `bash scripts/verify-production.sh`                  | Built server, public HTML pages, and referenced CSS and JS assets |
 
-`pnpm format` rewrites formatting with Oxfmt. `pnpm check` also runs ESLint with fixes. Use `pnpm exec oxfmt --check <path>` for a file-specific check. The [pre-commit hook](../.husky/pre-commit) runs Oxfmt and the active linter through `lint-staged`; it does not replace tests or type checking.
+`pnpm format` rewrites formatting with Oxfmt. `pnpm check` also runs Oxlint with fixes. Use `pnpm exec oxfmt --check <path>` for a file-specific check. The [pre-commit hook](../.husky/pre-commit) runs Oxfmt and the active linter through `lint-staged`; it does not replace tests or type checking.
 
 Oxfmt preserves single quotes, no semicolons, trailing commas and an 80-column
 width. Import, package-key and Tailwind-class sorting are disabled. Lockfiles
@@ -25,10 +25,8 @@ your editor's [Oxc formatter integration](https://oxc.rs/docs/guide/usage/format
 to use the repository's `.oxfmtrc.json`; remove any workspace Prettier formatter
 selection. CI runs the non-mutating `pnpm format:check` gate.
 
-The root lint command sets an 8 GiB V8 heap limit for the current typed ESLint
-configuration. CI uses that same command; local machines need enough available
-memory for it. This is a supported resource allowance, not a reduction in lint
-coverage. Generated `apps/web/storybook-static/` output is ignored by lint,
+The root lint command enables native typed checks and the configured JS plugins.
+CI uses the same command. Generated `apps/web/storybook-static/` output is ignored by lint,
 formatting and Git, so building Storybook does not change source checks.
 
 ## Write behavior tests

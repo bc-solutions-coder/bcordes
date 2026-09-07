@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// Checks module boundaries, ESLint rules and the documented directory layout.
+// Checks module boundaries, Oxlint rules and the documented directory layout.
 // See [Development](../../../../docs/development.md) for module ownership.
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
@@ -172,7 +172,7 @@ describe('no stale deep-import specifiers remain', () => {
 })
 
 // These globs target removed directories; current module blocks enforce their boundaries.
-const DEAD_ESLINT_GLOBS = [
+const DEAD_OXLINT_GLOBS = [
   'apps/web/src/components/**/*.{ts,tsx}',
   'apps/web/src/hooks/**/*.{ts,tsx}',
   'apps/web/src/lib/**/*.{ts,tsx}',
@@ -185,18 +185,15 @@ const MODULE_GLOBS = [
   'apps/web/src/app/**/*.{ts,tsx}',
 ]
 
-// Use a nonliteral import because the JavaScript config has no type declarations.
 type RestrictedPattern = { group?: Array<string>; message?: string }
 type Block = { files?: Array<string>; rules?: Record<string, unknown> }
 
-const eslintSpecifier = '@bcordes/config/eslint'
-const eslintModule = (await import(eslintSpecifier)) as {
-  config: Array<Block>
-}
-const eslintBlocks = eslintModule.config
+const oxlintBlocks: Array<Block> = JSON.parse(
+  readFileSync(join(repoRoot, '.oxlintrc.json'), 'utf8'),
+).overrides
 
 const blocksFor = (glob: string): Array<Block> =>
-  eslintBlocks.filter((b) => Array.isArray(b.files) && b.files.includes(glob))
+  oxlintBlocks.filter((b) => Array.isArray(b.files) && b.files.includes(glob))
 
 const patternsOf = (block: Block | undefined): Array<RestrictedPattern> => {
   const rule = block?.rules?.['no-restricted-imports']
@@ -213,8 +210,8 @@ const hasGroupWith = (
     (p) => Array.isArray(p.group) && members.every((m) => p.group?.includes(m)),
   )
 
-describe('dead ESLint module-boundary blocks are pruned', () => {
-  it.each(DEAD_ESLINT_GLOBS)('no block is scoped to %s', (glob) => {
+describe('dead Oxlint module-boundary blocks are pruned', () => {
+  it.each(DEAD_OXLINT_GLOBS)('no block is scoped to %s', (glob) => {
     expect(
       blocksFor(glob),
       `the ${glob} block matches zero files after the flatten and must be removed`,
@@ -224,51 +221,51 @@ describe('dead ESLint module-boundary blocks are pruned', () => {
   it('no block scopes any removed horizontal dir under apps/web/src', () => {
     const removedDirRe =
       /^apps\/web\/src\/(?:components|hooks|lib|config|styles)\//
-    const offenders = eslintBlocks
+    const offenders = oxlintBlocks
       .flatMap((b) => b.files ?? [])
       .filter((glob) => removedDirRe.test(glob))
     expect(
       offenders,
-      `these ESLint files globs target removed dirs: ${offenders.join(', ')}`,
+      `these Oxlint files globs target removed dirs: ${offenders.join(', ')}`,
     ).toEqual([])
   })
 })
 
-describe('surviving ESLint blocks subsume the pruned layer blocks', () => {
+describe('surviving Oxlint blocks subsume the pruned layer blocks', () => {
   it('the app-wide block still denies deep module imports', () => {
     const [block] = blocksFor(APP_WIDE_GLOB)
-    expect(block, `no ESLint block found for ${APP_WIDE_GLOB}`).toBeDefined()
+    expect(block, `no Oxlint block found for ${APP_WIDE_GLOB}`).toBeDefined()
     expect(
       hasGroupWith(
         patternsOf(block),
-        '@/features/*/*',
-        '@/shared/*/*',
-        '@/app/*/*',
+        '@/features/*/**',
+        '@/shared/*/**',
+        '@/app/*/**',
       ),
       'the app-wide block must deny deep imports into features/, shared/ and app/',
     ).toBe(true)
   })
 
   it('one block scopes features/, shared/ and app/ together', () => {
-    const carriers = eslintBlocks.filter(
+    const carriers = oxlintBlocks.filter(
       (b) =>
         Array.isArray(b.files) &&
         MODULE_GLOBS.every((g) => b.files?.includes(g)),
     )
     expect(
       carriers.length,
-      'no ESLint block scopes apps/web/src/{features,shared,app} together',
+      'no Oxlint block scopes apps/web/src/{features,shared,app} together',
     ).toBe(1)
   })
 
   it('that block carries the no-importing-routes rule the layer blocks used to', () => {
-    const [block] = eslintBlocks.filter(
+    const [block] = oxlintBlocks.filter(
       (b) =>
         Array.isArray(b.files) &&
         MODULE_GLOBS.every((g) => b.files?.includes(g)),
     )
     expect(
-      hasGroupWith(patternsOf(block), '@/routes/*'),
+      hasGroupWith(patternsOf(block), '@/routes/**'),
       'the features/shared/app block must deny importing from @/routes/*',
     ).toBe(true)
   })

@@ -10,8 +10,7 @@ if (!('ResizeObserver' in globalThis)) {
     unobserve() {}
     disconnect() {}
   }
-  globalThis.ResizeObserver =
-    ResizeObserver as unknown as typeof globalThis.ResizeObserver
+  globalThis.ResizeObserver = ResizeObserver
 }
 
 // jsdom does not implement Element.prototype.scrollIntoView, which listbox-style

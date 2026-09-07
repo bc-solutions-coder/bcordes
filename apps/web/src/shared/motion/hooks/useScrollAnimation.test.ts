@@ -53,9 +53,7 @@ describe('useScrollAnimation', () => {
 
     const { result } = renderHook(() => {
       const hookResult = useScrollAnimation<HTMLDivElement>()
-      ;(
-        hookResult.ref as React.MutableRefObject<HTMLDivElement | null>
-      ).current = div
+      hookResult.ref.current = div
       return hookResult
     })
 
@@ -78,9 +76,7 @@ describe('useScrollAnimation', () => {
         threshold: 0.5,
         rootMargin: '10px',
       })
-      ;(
-        hookResult.ref as React.MutableRefObject<HTMLDivElement | null>
-      ).current = div
+      hookResult.ref.current = div
       return hookResult
     })
 
@@ -101,9 +97,7 @@ describe('useScrollAnimation', () => {
       const hookResult = useScrollAnimation<HTMLDivElement>({
         triggerOnce: true,
       })
-      ;(
-        hookResult.ref as React.MutableRefObject<HTMLDivElement | null>
-      ).current = div
+      hookResult.ref.current = div
       return hookResult
     })
 
@@ -124,9 +118,7 @@ describe('useScrollAnimation', () => {
       const hookResult = useScrollAnimation<HTMLDivElement>({
         triggerOnce: false,
       })
-      ;(
-        hookResult.ref as React.MutableRefObject<HTMLDivElement | null>
-      ).current = div
+      hookResult.ref.current = div
       return hookResult
     })
 
@@ -150,9 +142,7 @@ describe('useScrollAnimation', () => {
 
     const { unmount } = renderHook(() => {
       const hookResult = useScrollAnimation<HTMLDivElement>()
-      ;(
-        hookResult.ref as React.MutableRefObject<HTMLDivElement | null>
-      ).current = div
+      hookResult.ref.current = div
       return hookResult
     })
 
