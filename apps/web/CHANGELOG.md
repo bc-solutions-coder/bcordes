@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.8](https://github.com/bc-solutions-coder/bcordes/compare/v0.1.7...v0.1.8) (2026-09-07)
+
+
+### Features
+
+* migrate Wallow SDK auth and deployment integration ([14731fb](https://github.com/bc-solutions-coder/bcordes/commit/14731fb6d24bea512d6cbc5d1e1ad2e220865ad1))
+
+
+### Bug Fixes
+
+* keep Vitest workers responsive during build and collection checks ([9926e4c](https://github.com/bc-solutions-coder/bcordes/commit/9926e4c3a0fff180cb1370152cd711afb4a435cb))
+* make workspace tests independent of private checkout settings ([3808b5a](https://github.com/bc-solutions-coder/bcordes/commit/3808b5a0a23540dbf8c94a454f295f784ef7922f))
+* stabilize FBA types and production verification ([4d393d9](https://github.com/bc-solutions-coder/bcordes/commit/4d393d9ec41d1e134dc8d78e6fc74d5d557216ea))
+
 ## [0.1.7](https://github.com/bc-solutions-coder/bcordes/compare/bcordes-v0.1.6...bcordes-v0.1.7) (2026-07-05)
 
 ### Bug Fixes
