@@ -1,126 +1,86 @@
-import { render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { RouterProvider, createMemoryHistory } from '@tanstack/react-router'
 
-const mockCreateRouter = vi.fn()
-const mockSetupRouterSsrQueryIntegration = vi.fn()
-
-vi.mock('@tanstack/react-router', () => ({
-  createRouter: mockCreateRouter,
+const { loadDestination } = vi.hoisted(() => ({
+  loadDestination: vi.fn(() => 'Loaded project'),
 }))
-
-vi.mock('@tanstack/react-router-ssr-query', () => ({
-  setupRouterSsrQueryIntegration: mockSetupRouterSsrQueryIntegration,
-}))
-
-const mockQueryClient = { defaultOptions: {} }
-const mockGetContext = vi.fn(() => ({ queryClient: mockQueryClient }))
-const mockProvider = vi.fn(({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-))
-
-vi.mock('@bcordes/query', () => ({
-  getContext: mockGetContext,
-  Provider: mockProvider,
-}))
-
-vi.mock('./routeTree.gen', () => ({
-  routeTree: { __isRouteTree: true },
-}))
-
-describe('getRouter', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockCreateRouter.mockReturnValue({ __isRouter: true })
+vi.mock('./routeTree.gen', async () => {
+  const { createRootRoute, createRoute, Link } =
+    await import('@tanstack/react-router')
+  const root = createRootRoute()
+  const home = createRoute({
+    getParentRoute: () => root,
+    path: '/',
+    component: () => <Link to="/projects">Projects</Link>,
   })
-
-  it('creates a router with the route tree and context from TanStack Query', async () => {
-    const { getRouter } = await import('./router')
-    getRouter()
-
-    expect(mockGetContext).toHaveBeenCalledOnce()
-    expect(mockCreateRouter).toHaveBeenCalledOnce()
-
-    const config = mockCreateRouter.mock.calls[0][0]
-    expect(config.routeTree).toEqual({ __isRouteTree: true })
-    expect(config.context).toEqual({ queryClient: mockQueryClient })
+  const destination = createRoute({
+    getParentRoute: () => root,
+    path: '/projects',
+    loader: loadDestination,
+    component: () => <h1>{destination.useLoaderData()}</h1>,
   })
+  return { routeTree: root.addChildren([home, destination]) }
+})
 
-  it('sets defaultPreload to intent', async () => {
-    const { getRouter } = await import('./router')
-    getRouter()
+beforeEach(() => {
+  vi.clearAllMocks()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => vi.unstubAllGlobals())
 
-    const config = mockCreateRouter.mock.calls[0][0]
-    expect(config.defaultPreload).toBe('intent')
+it('loads the selected route and renders its loader result', async () => {
+  const { getRouter } = await import('./router')
+  const router = getRouter()
+  router.update({
+    context: router.options.context,
+    history: createMemoryHistory({ initialEntries: ['/'] }),
   })
+  await router.load()
+  render(<RouterProvider router={router} />)
+  fireEvent.click(await screen.findByRole('link', { name: 'Projects' }))
+  expect(
+    await screen.findByRole('heading', { name: 'Loaded project' }),
+  ).toBeVisible()
+  expect(router.state.location.pathname).toBe('/projects')
+})
 
-  it('provides a Wrap component that renders TanstackQuery.Provider', async () => {
-    const { getRouter } = await import('./router')
-    getRouter()
-
-    const config = mockCreateRouter.mock.calls[0][0]
-    expect(config.Wrap).toBeDefined()
-    expect(typeof config.Wrap).toBe('function')
+it('loads the destination on link intent before navigation', async () => {
+  const { getRouter } = await import('./router')
+  const router = getRouter()
+  router.update({
+    context: router.options.context,
+    history: createMemoryHistory({ initialEntries: ['/'] }),
   })
+  await router.load()
+  render(<RouterProvider router={router} />)
+  const link = await screen.findByRole('link', { name: 'Projects' })
+  expect(loadDestination).not.toHaveBeenCalled()
+  fireEvent.mouseEnter(link)
+  await waitFor(() => expect(loadDestination).toHaveBeenCalledOnce())
+  expect(router.state.location.pathname).toBe('/')
+  fireEvent.click(link)
+  expect(
+    await screen.findByRole('heading', { name: 'Loaded project' }),
+  ).toBeVisible()
+})
 
-  it('sets up SSR query integration with the router and queryClient', async () => {
-    const { getRouter } = await import('./router')
-    getRouter()
-
-    expect(mockSetupRouterSsrQueryIntegration).toHaveBeenCalledOnce()
-    expect(mockSetupRouterSsrQueryIntegration).toHaveBeenCalledWith({
-      router: { __isRouter: true },
-      queryClient: mockQueryClient,
-    })
-  })
-
-  it('returns the created router instance', async () => {
-    const { getRouter } = await import('./router')
-    const router = getRouter()
-
-    expect(router).toEqual({ __isRouter: true })
-  })
-
-  it('creates a fresh context on each invocation', async () => {
-    const { getRouter } = await import('./router')
-
-    getRouter()
-    getRouter()
-
-    expect(mockGetContext).toHaveBeenCalledTimes(2)
-    expect(mockCreateRouter).toHaveBeenCalledTimes(2)
-  })
-
-  it('Wrap component renders TanstackQuery.Provider with children', async () => {
-    const { getRouter } = await import('./router')
-    getRouter()
-
-    const config = mockCreateRouter.mock.calls[0][0]
-    const Wrap = config.Wrap as React.FC<{ children: React.ReactNode }>
-
-    render(
-      <Wrap>
-        <span data-testid="child">hello</span>
-      </Wrap>,
-    )
-
-    expect(screen.getByTestId('child')).toHaveTextContent('hello')
-    expect(mockProvider).toHaveBeenCalled()
-    expect(mockProvider.mock.calls[0][0]).toMatchObject({
-      queryClient: mockQueryClient,
-    })
-  })
-
-  it('spreads the rqContext into the router context', async () => {
-    const extendedContext = {
-      queryClient: mockQueryClient,
-      extraProp: 'test-value',
-    }
-    mockGetContext.mockReturnValueOnce(extendedContext)
-
-    const { getRouter } = await import('./router')
-    getRouter()
-
-    const config = mockCreateRouter.mock.calls[0][0]
-    expect(config.context).toEqual(extendedContext)
-  })
+it('isolates query data between independently created routers', async () => {
+  const { getRouter } = await import('./router')
+  const first = getRouter()
+  const second = getRouter()
+  first.options.context.queryClient.setQueryData(['customer'], 'First customer')
+  expect(
+    second.options.context.queryClient.getQueryData(['customer']),
+  ).toBeUndefined()
+  second.options.context.queryClient.setQueryData(
+    ['customer'],
+    'Second customer',
+  )
+  expect(first.options.context.queryClient.getQueryData(['customer'])).toBe(
+    'First customer',
+  )
+  expect(second.options.context.queryClient.getQueryData(['customer'])).toBe(
+    'Second customer',
+  )
 })

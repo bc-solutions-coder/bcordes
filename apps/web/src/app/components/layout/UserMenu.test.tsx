@@ -2,24 +2,9 @@ import { logout } from '@bc-solutions-coder/sdk'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
+import { Toaster } from '@bcordes/ui/components/sonner'
+import { renderRoute } from '../../../../testing/render-route'
 import { UserMenu } from './UserMenu'
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    children,
-    to,
-    ...props
-  }: {
-    children: React.ReactNode
-    to: string
-    [key: string]: unknown
-  }) => (
-    <a href={to} {...props}>
-      {children}
-    </a>
-  ),
-}))
 
 const mockUseUser = vi.fn()
 vi.mock('@/shared/auth', () => ({
@@ -27,11 +12,13 @@ vi.mock('@/shared/auth', () => ({
 }))
 
 beforeEach(() => {
+  vi.stubGlobal('scrollTo', vi.fn())
   vi.clearAllMocks()
 })
 
 afterEach(() => {
   cleanup()
+  vi.unstubAllGlobals()
 })
 
 vi.mock('@bc-solutions-coder/sdk', () => ({
@@ -39,82 +26,137 @@ vi.mock('@bc-solutions-coder/sdk', () => ({
 }))
 
 describe('UserMenu', () => {
-  it('returns null when loading', () => {
+  it('hides account actions while user identity is loading', async () => {
     mockUseUser.mockReturnValue({ user: null, isLoading: true })
-    const { container } = renderWithProviders(<UserMenu />)
-    expect(container.innerHTML).toBe('')
+    await renderRoute(<UserMenu />)
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 
-  it('shows Sign In link when no user', () => {
+  it('offers a sign-in link when signed out', async () => {
     mockUseUser.mockReturnValue({ user: null, isLoading: false })
-    renderWithProviders(<UserMenu />)
-    const signIn = screen.getByText('Sign In')
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
+    const signIn = screen.getByRole('link', { name: 'Sign In' })
     expect(signIn).toBeInTheDocument()
-    expect(signIn.closest('a')).toHaveAttribute('href', '/bff/login')
+    expect(signIn).toHaveAttribute('href', '/bff/login')
   })
 
-  it('shows user name and initials when authenticated', () => {
+  it('shows user name and initials when authenticated', async () => {
     mockUseUser.mockReturnValue({
       user: { name: 'Bryan Cordes', email: 'bryan@example.com' },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
     expect(screen.getByText('Bryan Cordes')).toBeInTheDocument()
     expect(screen.getByText('BC')).toBeInTheDocument()
   })
 
-  it('shows fallback initials when name is a single word', () => {
+  it('shows the first initial for a single-word name', async () => {
     mockUseUser.mockReturnValue({
       user: { name: 'Bryan', email: 'bryan@example.com' },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
     expect(screen.getByText('B')).toBeInTheDocument()
   })
 
-  it('shows fallback "?" when user has no name', () => {
+  it('shows fallback "?" when user has no name', async () => {
     mockUseUser.mockReturnValue({
       user: { name: undefined, email: 'test@example.com' },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
     expect(screen.getByText('?')).toBeInTheDocument()
   })
 
-  it('falls back to email when name is null', () => {
+  it('falls back to email when name is null', async () => {
     mockUseUser.mockReturnValue({
       user: { name: null, email: 'test@example.com' },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
     expect(screen.getByText('test@example.com')).toBeInTheDocument()
   })
 
-  it('falls back to "User" when name and email are null', () => {
+  it('falls back to "User" when name and email are null', async () => {
     mockUseUser.mockReturnValue({
       user: { name: null, email: null },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
     expect(screen.getByText('User')).toBeInTheDocument()
   })
 
-  it('sign out calls SDK logout', async () => {
+  it('offers the dashboard destination and signs out through the SDK', async () => {
     mockUseUser.mockReturnValue({
       user: { name: 'Bryan Cordes', email: 'bryan@example.com' },
       isLoading: false,
     })
-    renderWithProviders(<UserMenu />)
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
 
-    const trigger = screen.getByText('Bryan Cordes').closest('button')!
+    const trigger = screen.getByRole('button', { name: /Bryan Cordes/ })
     fireEvent.click(trigger)
 
-    const signOut = await screen.findByText('Sign Out')
+    expect(
+      await screen.findByRole('menuitem', { name: 'Dashboard' }),
+    ).toHaveAttribute('href', '/dashboard/inquiries')
+    const signOut = await screen.findByRole('menuitem', { name: 'Sign Out' })
     expect(signOut).toBeInTheDocument()
 
-    fireEvent.click(signOut)
+    expect(fireEvent.click(signOut)).toBe(false)
     expect(logout).toHaveBeenCalledOnce()
-
-    vi.restoreAllMocks()
+  })
+  it('reports a failed sign-out so the user can try again', async () => {
+    mockUseUser.mockReturnValue({
+      user: { name: 'Bryan Cordes', email: 'bryan@example.com' },
+      isLoading: false,
+    })
+    vi.mocked(logout).mockRejectedValueOnce(new Error('Logout unavailable'))
+    await renderRoute(
+      <>
+        <UserMenu />
+        <Toaster />
+      </>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: /Bryan Cordes/ }))
+    fireEvent.click(await screen.findByRole('menuitem', { name: 'Sign Out' }))
+    expect(
+      await screen.findByText('Unable to sign out. Please try again.'),
+    ).toBeVisible()
   })
 })

@@ -1,99 +1,121 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getAuthUser, requireAuth } from '@bcordes/auth/middleware'
-import type { User } from '@bcordes/auth/types'
+import { createWallowSdk } from '@bc-solutions-coder/sdk'
+import { createMockSession } from '@bcordes/auth/testing'
+import { getSession } from '@bcordes/auth/session'
+import { createRequestSdk } from '@bcordes/auth/sdk'
 
-// Exercise server handlers directly.
-vi.mock('@tanstack/react-start', () => {
-  const createServerFn = () => {
-    let handlerFn: (...args: Array<unknown>) => unknown
+vi.mock('@bcordes/auth/session', () => ({ getSession: vi.fn() }))
+vi.mock('@bcordes/auth/sdk', () => ({ createRequestSdk: vi.fn() }))
+
+vi.mock('@tanstack/react-start', () => ({
+  createServerFn: () => {
+    let validate = (input: unknown) => input
     const chain = {
-      inputValidator: () => chain,
-      handler: (fn: (...args: Array<unknown>) => unknown) => {
-        handlerFn = fn
-        const callable = (...args: Array<unknown>) => handlerFn(...args)
-        callable.handler = handlerFn
-        callable.inputValidator = () => chain
-        return callable
+      inputValidator: (validator: { parse: (input: unknown) => unknown }) => {
+        validate = (input) => validator.parse(input)
+        return chain
       },
+      handler:
+        (handler: (context: { data: unknown }) => Promise<unknown>) =>
+        async (options?: { data?: unknown }) =>
+          handler({ data: validate(options?.data) }),
     }
     return chain
-  }
-  return { createServerFn }
-})
-
-vi.mock('@bcordes/auth/middleware', () => ({
-  getAuthUser: vi.fn(),
-  requireAuth: vi.fn(),
+  },
 }))
 
-const mockedGetAuthUser = vi.mocked(getAuthUser)
-const mockedRequireAuth = vi.mocked(requireAuth)
-
 const { fetchCurrentUserRoles, serverRequireAuth } = await import('./auth')
+beforeEach(() => vi.resetAllMocks())
 
-describe('fetchCurrentUserRoles', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+function profile(fetch: typeof globalThis.fetch) {
+  vi.mocked(getSession).mockResolvedValue(createMockSession())
+  vi.mocked(createRequestSdk).mockResolvedValue(
+    createWallowSdk({ baseUrl: 'https://fixture.example', fetch }),
+  )
+}
 
-  it('returns roles when user is authenticated', async () => {
-    const user: User = {
-      id: 'u-1',
-      name: 'Alice',
-      email: 'alice@example.com',
+describe('Current user capabilities', () => {
+  it('returns the authenticated profile roles and permissions', async () => {
+    profile(() =>
+      Promise.resolve(
+        Response.json({
+          id: 'test-user-123',
+          roles: ['admin', 'user'],
+          permissions: ['InquiriesRead'],
+        }),
+      ),
+    )
+    expect(await fetchCurrentUserRoles()).toEqual({
       roles: ['admin', 'user'],
-      permissions: [],
-      tenantId: 't-1',
-      tenantName: 'Tenant',
-    }
-    mockedGetAuthUser.mockResolvedValue(user)
-
-    const result = await fetchCurrentUserRoles()
-    expect(result).toEqual({ roles: ['admin', 'user'], permissions: [] })
-    expect(mockedGetAuthUser).toHaveBeenCalledOnce()
+      permissions: ['InquiriesRead'],
+    })
   })
-
-  it('returns empty roles when no user is authenticated', async () => {
-    mockedGetAuthUser.mockResolvedValue(null)
-
-    const result = await fetchCurrentUserRoles()
-    expect(result).toEqual({ roles: [], permissions: [] })
+  it('returns empty roles and permissions when signed out', async () => {
+    vi.mocked(getSession).mockResolvedValue(null)
+    expect(await fetchCurrentUserRoles()).toEqual({
+      roles: [],
+      permissions: [],
+    })
   })
 })
 
-describe('serverRequireAuth', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('delegates to requireAuth with returnTo', async () => {
-    const user: User = {
-      id: 'u-1',
-      name: 'Alice',
-      email: 'alice@example.com',
-      roles: ['user'],
-      permissions: [],
-      tenantId: 't-1',
-      tenantName: 'Tenant',
-    }
-    mockedRequireAuth.mockResolvedValue(user)
-
-    await serverRequireAuth({ data: { returnTo: '/dashboard' } })
-    expect(mockedRequireAuth).toHaveBeenCalledWith('/dashboard')
-  })
-
-  it('delegates to requireAuth without returnTo', async () => {
-    mockedRequireAuth.mockResolvedValue({
-      id: 'u-1',
-      name: 'Alice',
-      email: 'alice@example.com',
-      roles: ['user'],
-      permissions: [],
-      tenantId: 't-1',
-      tenantName: 'Tenant',
+describe('Server authorization', () => {
+  it.each([
+    [{ returnTo: '/dashboard' }, '/bff/login?returnTo=%2Fdashboard'],
+    [{}, '/bff/login'],
+    [{ returnTo: '' }, '/bff/login'],
+    [
+      { returnTo: 'https://example.com/path' },
+      '/bff/login?returnTo=https%3A%2F%2Fexample.com%2Fpath',
+    ],
+  ])('preserves the login redirect for %j', async (data, href) => {
+    vi.mocked(getSession).mockResolvedValue(null)
+    await expect(serverRequireAuth({ data })).rejects.toMatchObject({
+      options: { href },
     })
-
-    await serverRequireAuth({ data: {} })
-    expect(mockedRequireAuth).toHaveBeenCalledWith(undefined)
+  })
+  it.each([
+    null,
+    [],
+    'dashboard',
+    42,
+    { returnTo: 42 },
+    { returnTo: null },
+    { returnTo: {} },
+  ])('rejects malformed input %j before checking the session', async (data) => {
+    await expect(
+      Reflect.apply(serverRequireAuth, undefined, [{ data }]),
+    ).rejects.toThrow()
+    expect(getSession).not.toHaveBeenCalled()
+    expect(createRequestSdk).not.toHaveBeenCalled()
+  })
+  it('waits for authorization before completing an allowed request', async () => {
+    let resolveResponse: (response: Response) => void = () => {
+      throw new Error('Response fixture is not initialized')
+    }
+    const response = new Promise<Response>((resolve) => {
+      resolveResponse = resolve
+    })
+    const fetch = vi.fn(() => response)
+    profile(fetch)
+    let completed = false
+    const request = serverRequireAuth({ data: {} }).then(() => {
+      completed = true
+    })
+    await vi.waitFor(() => expect(fetch).toHaveBeenCalledOnce())
+    expect(completed).toBe(false)
+    resolveResponse(Response.json({ id: 'test-user-123' }))
+    await request
+    expect(completed).toBe(true)
+  })
+  it('propagates an authorization service failure', async () => {
+    profile(() =>
+      Promise.resolve(
+        Response.json({ message: 'Unavailable' }, { status: 503 }),
+      ),
+    )
+    await expect(serverRequireAuth({ data: {} })).rejects.toMatchObject({
+      status: 503,
+    })
   })
 })

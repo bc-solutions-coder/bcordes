@@ -64,16 +64,6 @@ describe('/api/health', () => {
     expect(response.headers.get('Content-Type')).toBe('application/json')
   })
 
-  it('returns 503 with "unreachable" when Valkey ping times out', async () => {
-    mockPing.mockRejectedValue(new Error('ETIMEDOUT'))
-
-    const response = await callHealthHandler()
-    const body = await response.json()
-
-    expect(response.status).toBe(503)
-    expect(body).toEqual({ status: 'unhealthy', valkey: 'unreachable' })
-  })
-
   it('returns 503 with "ping failed" when Valkey ping returns empty string', async () => {
     mockPing.mockResolvedValue('')
 

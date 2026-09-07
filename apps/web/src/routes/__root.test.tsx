@@ -1,250 +1,96 @@
-import { afterEach, assert, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
-
-const { capturedHead, capturedShell } = vi.hoisted(() => {
-  const shell: {
-    component: React.ComponentType<{ children: React.ReactNode }> | undefined
-  } = { component: undefined }
-  return { capturedHead: vi.fn<() => unknown>(), capturedShell: shell }
-})
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    ...rest
-  }: {
-    to: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  ),
-  createRootRouteWithContext:
-    () =>
-    (config: {
-      head: () => unknown
-      shellComponent: React.ComponentType<{ children: React.ReactNode }>
-    }) => {
-      capturedHead.mockImplementation(config.head)
-      capturedShell.component = config.shellComponent
-      return { options: config }
-    },
-  HeadContent: () => null,
-  Scripts: () => null,
-  Outlet: ({ children }: { children?: React.ReactNode }) => (
-    <div data-testid="outlet">{children}</div>
-  ),
-  ScrollRestoration: () => null,
-}))
-
-vi.mock('@/features/notifications', () => ({
-  EventStreamProvider: ({ children }: { children: React.ReactNode }) =>
-    children,
-}))
-
-vi.mock('@/app', () => ({
-  Header: () => <div data-testid="header">Header</div>,
-  Footer: () => <div data-testid="footer">Footer</div>,
-  reportWebVitals: () => {},
-}))
-
-vi.mock('@bcordes/ui/components/sonner', () => ({
-  Toaster: () => <div data-testid="toaster">Toaster</div>,
-}))
-
-vi.mock('@/app/styles.css?url', () => ({ default: 'styles.css' }))
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router'
+import { Provider, getContext } from '@bcordes/query'
+import { Route } from './__root'
 
 vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
+vi.mock('@tanstack/react-devtools', () => ({
+  TanStackDevtools: ({ plugins }: { plugins: Array<{ name: string }> }) => (
+    <nav aria-label="Developer tools">
+      {plugins.map((plugin) => (
+        <button key={plugin.name}>{plugin.name}</button>
+      ))}
+    </nav>
+  ),
+}))
+vi.mock('@tanstack/react-router-devtools', () => ({
+  TanStackRouterDevtoolsPanel: () => null,
+}))
 
-describe('__root route', () => {
-  afterEach(() => {
-    cleanup()
+beforeEach(() => {
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+  vi.unstubAllEnvs()
+})
+
+async function missingPage() {
+  const root = createRootRoute({
+    notFoundComponent: Route.options.notFoundComponent,
   })
-
-  describe('Route config', () => {
-    it('exports a route config with notFoundComponent and head', async () => {
-      const mod = await import('./__root')
-      expect(mod.Route).toBeDefined()
-      expect(mod.Route.options).toHaveProperty('notFoundComponent')
-      expect(mod.Route.options).toHaveProperty('head')
-      expect(mod.Route.options).toHaveProperty('shellComponent')
-    })
-
-    it('head returns correct meta and links', async () => {
-      await import('./__root')
-      const headResult = capturedHead()
-      expect(headResult).toHaveProperty('meta')
-      expect(headResult).toHaveProperty('links')
-      expect(headResult).toHaveProperty('scripts')
-    })
+  const home = createRoute({
+    getParentRoute: () => root,
+    path: '/',
+    component: () => <h1>Home destination</h1>,
   })
-
-  describe('NotFound component', () => {
-    it('renders 404 heading', async () => {
-      const mod = await import('./__root')
-      const NotFound = mod.Route.options.notFoundComponent
-      assert(NotFound)
-      render(<NotFound isNotFound routeId="__root__" />)
-      expect(screen.getByText('404')).toBeTruthy()
-    })
-
-    it('renders Page Not Found message', async () => {
-      const mod = await import('./__root')
-      const NotFound = mod.Route.options.notFoundComponent
-      assert(NotFound)
-      render(<NotFound isNotFound routeId="__root__" />)
-      expect(screen.getByText('Page Not Found')).toBeTruthy()
-    })
-
-    it('renders description text', async () => {
-      const mod = await import('./__root')
-      const NotFound = mod.Route.options.notFoundComponent
-      assert(NotFound)
-      render(<NotFound isNotFound routeId="__root__" />)
-      expect(
-        screen.getByText(
-          /The page you're looking for doesn't exist or has been moved/,
-        ),
-      ).toBeTruthy()
-    })
-
-    it('renders a Go Home link pointing to /', async () => {
-      const mod = await import('./__root')
-      const NotFound = mod.Route.options.notFoundComponent
-      assert(NotFound)
-      render(<NotFound isNotFound routeId="__root__" />)
-      const link = screen.getByText('Go Home')
-      expect(link.closest('a')?.getAttribute('href')).toBe('/')
-    })
+  const router = createRouter({
+    routeTree: root.addChildren([home]),
+    history: createMemoryHistory({ initialEntries: ['/missing'] }),
   })
+  await router.load()
+  render(<RouterProvider router={router} />)
+}
 
-  describe('RootDocument (shellComponent)', () => {
-    it('renders Header, Footer, children, and Toaster', async () => {
-      await import('./__root')
-      const RootDocument = capturedShell.component
-      assert(RootDocument)
-      render(
-        <RootDocument>
-          <div data-testid="child-content">Page content</div>
-        </RootDocument>,
-      )
-      expect(screen.getByTestId('header')).toBeTruthy()
-      expect(screen.getByTestId('footer')).toBeTruthy()
-      expect(screen.getByTestId('toaster')).toBeTruthy()
-      expect(screen.getByTestId('child-content')).toBeTruthy()
-    })
+it('explains that an unknown page was not found', async () => {
+  await missingPage()
+  expect(await screen.findByRole('heading', { name: '404' })).toBeVisible()
+  expect(screen.getByRole('heading', { name: 'Page Not Found' })).toBeVisible()
+  expect(
+    screen.getByText(
+      /The page you're looking for doesn't exist or has been moved/,
+    ),
+  ).toBeVisible()
+})
+
+it('returns home from an unknown page', async () => {
+  await missingPage()
+  fireEvent.click(await screen.findByRole('link', { name: 'Go Home' }))
+  expect(
+    await screen.findByRole('heading', { name: 'Home destination' }),
+  ).toBeVisible()
+})
+
+it('offers the named router and query inspectors from the development shell', async () => {
+  vi.stubEnv('DEV', true)
+  const context = getContext()
+  const home = createRoute({
+    getParentRoute: () => Route,
+    path: '/',
+    component: () => <h1>Page content</h1>,
   })
-
-  describe('DevTools component', () => {
-    it('renders devtools panel after dynamic imports resolve', async () => {
-      // Render plugin names to identify the query plugin loaded from the package subpath.
-      const mockTanStackDevtools = ({
-        children,
-        plugins,
-      }: {
-        children?: React.ReactNode
-        config?: unknown
-        plugins?: Array<{ name: string }>
-      }) => (
-        <div data-testid="tanstack-devtools">
-          <ul data-testid="devtools-plugin-names">
-            {plugins?.map((plugin) => (
-              <li key={plugin.name}>{plugin.name}</li>
-            ))}
-          </ul>
-          {children}
-        </div>
-      )
-      const mockRouterDevtoolsPanel = () => (
-        <div data-testid="router-devtools-panel" />
-      )
-      const mockQueryPlugin = {
-        name: 'Query From Package Subpath',
-        render: <div />,
-      }
-
-      vi.doMock('@tanstack/react-devtools', () => ({
-        TanStackDevtools: mockTanStackDevtools,
-      }))
-      vi.doMock('@tanstack/react-router-devtools', () => ({
-        TanStackRouterDevtoolsPanel: mockRouterDevtoolsPanel,
-      }))
-      vi.doMock('@bcordes/query/devtools', () => ({
-        default: mockQueryPlugin,
-      }))
-
-      vi.resetModules()
-
-      vi.doMock('@tanstack/react-router', () => ({
-        Link: ({
-          to,
-          children,
-          ...rest
-        }: {
-          to: string
-          children: React.ReactNode
-          [key: string]: unknown
-        }) => (
-          <a href={to} {...rest}>
-            {children}
-          </a>
-        ),
-        createRootRouteWithContext:
-          () =>
-          (config: {
-            head: () => unknown
-            shellComponent: React.ComponentType<{ children: React.ReactNode }>
-          }) => {
-            capturedHead.mockImplementation(config.head)
-            capturedShell.component = config.shellComponent
-            return { options: config }
-          },
-        HeadContent: () => null,
-        Scripts: () => null,
-        Outlet: ({ children }: { children?: React.ReactNode }) => (
-          <div data-testid="outlet">{children}</div>
-        ),
-        ScrollRestoration: () => null,
-      }))
-      vi.doMock('@/app', () => ({
-        Header: () => <div data-testid="header">Header</div>,
-        Footer: () => <div data-testid="footer">Footer</div>,
-        reportWebVitals: () => {},
-      }))
-      vi.doMock('@bcordes/ui/components/sonner', () => ({
-        Toaster: () => <div data-testid="toaster">Toaster</div>,
-      }))
-      vi.doMock('@/app/styles.css?url', () => ({ default: 'styles.css' }))
-      vi.doMock('@/shared/auth', () => ({
-        useUser: () => ({ user: null, isLoading: false }),
-      }))
-
-      await import('./__root')
-      const RootDocument = capturedShell.component
-      assert(RootDocument)
-
-      const originalDev = import.meta.env.DEV
-      import.meta.env.DEV = true
-
-      const { findByTestId } = render(
-        <RootDocument>
-          <div>Content</div>
-        </RootDocument>,
-      )
-
-      const devtools = await findByTestId('tanstack-devtools')
-      expect(devtools).toBeTruthy()
-
-      expect(await findByTestId('devtools-plugin-names')).toHaveTextContent(
-        'Query From Package Subpath',
-      )
-
-      import.meta.env.DEV = originalDev
-    })
+  const router = createRouter({
+    routeTree: Route.addChildren([home]),
+    context,
+    history: createMemoryHistory({ initialEntries: ['/'] }),
+    Wrap: ({ children }) => <Provider {...context}>{children}</Provider>,
   })
+  await router.load()
+  render(<RouterProvider router={router} />)
+  expect(
+    await screen.findByRole('button', { name: 'Tanstack Router' }),
+  ).toBeVisible()
+  expect(
+    await screen.findByRole('button', { name: 'Tanstack Query' }),
+  ).toBeVisible()
 })

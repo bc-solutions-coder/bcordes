@@ -74,7 +74,6 @@ const FORMER_IMPORTERS = [
   'apps/web/src/app/components/layout/UserMenu.tsx',
   'apps/web/src/features/projects/components/ProjectCard.tsx',
   'apps/web/src/features/projects/components/ProjectFilter.tsx',
-  'apps/web/src/routes/__root.test.tsx',
   'apps/web/src/routes/dashboard/inquiries.$id.tsx',
   'apps/web/src/routes/dashboard/inquiries.index.tsx',
   'apps/web/src/routes/dashboard/notifications.index.tsx',

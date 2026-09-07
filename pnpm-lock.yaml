@@ -180,6 +180,9 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^7.0.1
         version: 7.0.1(rolldown@1.2.7)(rollup@4.57.0)
+      seroval:
+        specifier: 1.6.4
+        version: 1.6.4
       storybook:
         specifier: 11.0.0-alpha.0
         version: 11.0.0-alpha.0(@types/react@19.2.18)(prettier@3.8.1)(react@19.2.8)

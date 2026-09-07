@@ -19,20 +19,17 @@ vi.mock('@bcordes/logger', () => {
   return { default: mockLogger }
 })
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (routeConfig: unknown) => routeConfig,
-}))
-
-const routeModule = await import('./me')
-const handler = (
-  routeModule.Route as unknown as {
-    server: {
-      handlers: {
-        GET: () => Promise<Response>
-      }
-    }
-  }
-).server.handlers.GET
+const { Route } = await import('./me')
+const handlers = Route.options.server?.handlers
+if (
+  !handlers ||
+  typeof handlers === 'function' ||
+  !handlers.GET ||
+  typeof handlers.GET !== 'function'
+) {
+  throw new Error('GET /auth/me handler is unavailable')
+}
+const handler = handlers.GET
 
 const fakeUser: User = {
   id: 'user-1',
@@ -52,20 +49,24 @@ describe('GET /auth/me', () => {
   it('returns user JSON when authenticated', async () => {
     vi.mocked(getAuthUser).mockResolvedValue(fakeUser)
 
-    const res = await handler()
+    const res: unknown = await Reflect.apply(handler, undefined, [])
 
+    if (!(res instanceof Response)) throw new Error('Expected an HTTP response')
+    expect(res.headers.get('Cache-Control')).toBe('no-store')
     expect(res.status).toBe(200)
-    const body = await res.json()
+    const body: unknown = await res.json()
     expect(body).toEqual(fakeUser)
   })
 
   it('returns null when not authenticated', async () => {
     vi.mocked(getAuthUser).mockResolvedValue(null)
 
-    const res = await handler()
+    const res: unknown = await Reflect.apply(handler, undefined, [])
 
+    if (!(res instanceof Response)) throw new Error('Expected an HTTP response')
+    expect(res.headers.get('Cache-Control')).toBe('no-store')
     expect(res.status).toBe(200)
-    const body = await res.json()
+    const body: unknown = await res.json()
     expect(body).toBeNull()
   })
 })

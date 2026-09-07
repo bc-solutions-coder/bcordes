@@ -13,6 +13,7 @@ beforeEach(() => vi.stubGlobal('scrollTo', vi.fn()))
 afterEach(() => {
   cleanup()
   vi.unstubAllGlobals()
+  vi.unstubAllEnvs()
 })
 
 async function failingRoute(error: unknown) {
@@ -55,6 +56,29 @@ it('recovers a transient render failure when the customer tries again', async ()
 it('offers home navigation when the thrown value is not an Error', async () => {
   await failingRoute('failed render')
   expect(await screen.findByText('Something Went Wrong')).toBeVisible()
+  fireEvent.click(screen.getByRole('link', { name: 'Go Home' }))
+  expect(
+    await screen.findByRole('heading', { name: 'Home destination' }),
+  ).toBeVisible()
+})
+
+it('shows the thrown Error message in development', async () => {
+  vi.stubEnv('DEV', true)
+  await failingRoute(new Error('Development diagnostic fixture'))
+  expect(
+    await screen.findByText('Development diagnostic fixture'),
+  ).toBeVisible()
+})
+
+it('keeps production errors generic and allows home navigation', async () => {
+  vi.stubEnv('DEV', false)
+  await failingRoute(new Error('Private diagnostic fixture'))
+  expect(
+    await screen.findByText('An unexpected error occurred. Please try again.'),
+  ).toBeVisible()
+  expect(
+    screen.queryByText('Private diagnostic fixture'),
+  ).not.toBeInTheDocument()
   fireEvent.click(screen.getByRole('link', { name: 'Go Home' }))
   expect(
     await screen.findByRole('heading', { name: 'Home destination' }),

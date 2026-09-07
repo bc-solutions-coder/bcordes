@@ -1,0 +1,133 @@
+{
+  "issue": 95,
+  "baseRevision": "799fc64",
+  "tests": {
+    "numPassedTests": 1211,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-07T23:25:27.413Z",
+    "duration": 37394.809,
+    "expected": 32,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1023,
+      "skipped": 0,
+      "pct": 95.07
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1084,
+      "skipped": 0,
+      "pct": 93.85
+    },
+    "functions": {
+      "total": 382,
+      "covered": 351,
+      "skipped": 0,
+      "pct": 91.88
+    },
+    "branches": {
+      "total": 671,
+      "covered": 608,
+      "skipped": 0,
+      "pct": 90.61
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageLosses": [],
+  "denominatorsUnchanged": true,
+  "defects": [
+    {
+      "defect": "wrong-navigation-destination",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-motion-subscription-cleanup",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-intersection-observation",
+      "exitCode": 1
+    },
+    {
+      "defect": "repeated-reveal-default",
+      "exitCode": 1
+    },
+    {
+      "defect": "disabled-route-preloading",
+      "exitCode": 1
+    },
+    {
+      "defect": "shared-router-query-cache",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-router-hydration",
+      "exitCode": 1
+    },
+    {
+      "defect": "cacheable-auth-response",
+      "exitCode": 1
+    },
+    {
+      "defect": "unawaited-authorization",
+      "exitCode": 1
+    },
+    {
+      "defect": "permissive-auth-validation",
+      "exitCode": 1
+    },
+    {
+      "defect": "disabled-render-recovery",
+      "exitCode": 1
+    },
+    {
+      "defect": "exposed-production-diagnostic",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-reveal-delay",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-logout-feedback",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-generated-title",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-browser-reveal-threshold",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-browser-reduced-motion",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-browser-caller-presentation",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-built-auth-validation",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-built-header-elevation",
+      "exitCode": 1
+    }
+  ]
+}

@@ -1,97 +1,46 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, renderHook } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, renderHook } from '@testing-library/react'
+import { controlMotion } from '../../../../testing/motion'
+import { useReducedMotion } from './useReducedMotion'
 
-type ChangeListener = (event: MediaQueryListEvent) => void
-
-function createMatchMediaStub(initialMatches: boolean) {
-  let listener: ChangeListener | null = null
-  const mql = {
-    matches: initialMatches,
-    media: '(prefers-reduced-motion: reduce)',
-    onchange: null,
-    addEventListener: vi.fn((_event: string, cb: ChangeListener) => {
-      listener = cb
-    }),
-    removeEventListener: vi.fn((_event: string, _cb: ChangeListener) => {
-      listener = null
-    }),
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  }
-  return {
-    mql,
-    trigger(matches: boolean) {
-      if (listener) listener({ matches } as MediaQueryListEvent)
-    },
-    stub: vi.fn().mockReturnValue(mql),
-  }
-}
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
 describe('useReducedMotion', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('returns false when prefers-reduced-motion is not set', async () => {
-    const { stub } = createMatchMediaStub(false)
-    vi.stubGlobal('matchMedia', stub)
-
-    const { useReducedMotion } = await import('./useReducedMotion')
-    const { result } = renderHook(() => useReducedMotion())
-
+  it('returns false when prefers-reduced-motion is not set', () => {
+    const motion = controlMotion()
+    const { result } = renderHook(useReducedMotion)
     expect(result.current).toBe(false)
-    expect(stub).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)')
-  })
-
-  it('returns true when prefers-reduced-motion is set', async () => {
-    const { stub } = createMatchMediaStub(true)
-    vi.stubGlobal('matchMedia', stub)
-
-    const { useReducedMotion } = await import('./useReducedMotion')
-    const { result } = renderHook(() => useReducedMotion())
-
-    expect(result.current).toBe(true)
-  })
-
-  it('responds to change events', async () => {
-    const { stub, trigger } = createMatchMediaStub(false)
-    vi.stubGlobal('matchMedia', stub)
-
-    const { useReducedMotion } = await import('./useReducedMotion')
-    const { result } = renderHook(() => useReducedMotion())
-
-    expect(result.current).toBe(false)
-
-    act(() => {
-      trigger(true)
-    })
-
-    expect(result.current).toBe(true)
-
-    act(() => {
-      trigger(false)
-    })
-
-    expect(result.current).toBe(false)
-  })
-
-  it('cleans up event listener on unmount', async () => {
-    const { stub, mql } = createMatchMediaStub(false)
-    vi.stubGlobal('matchMedia', stub)
-
-    const { useReducedMotion } = await import('./useReducedMotion')
-    const { unmount } = renderHook(() => useReducedMotion())
-
-    unmount()
-
-    expect(mql.removeEventListener).toHaveBeenCalledWith(
-      'change',
-      expect.any(Function),
+    expect(motion.matchMedia).toHaveBeenCalledWith(
+      '(prefers-reduced-motion: reduce)',
     )
+  })
+  it('returns true when prefers-reduced-motion is set', () => {
+    controlMotion(true)
+    const { result } = renderHook(useReducedMotion)
+    expect(result.current).toBe(true)
+  })
+  it('updates the preference when reduced motion is enabled and disabled', () => {
+    const motion = controlMotion()
+    const { result } = renderHook(useReducedMotion)
+    expect(result.current).toBe(false)
+    act(() => motion.change(true))
+    expect(result.current).toBe(true)
+    act(() => motion.change(false))
+    expect(result.current).toBe(false)
+  })
+  it('stops listening after unmount while another subscriber continues receiving changes', () => {
+    const motion = controlMotion()
+    const first = renderHook(useReducedMotion)
+    const second = renderHook(useReducedMotion)
+    expect(motion.listeners.size).toBe(2)
+    first.unmount()
+    expect(motion.listeners.size).toBe(1)
+    act(() => motion.change(true))
+    expect(second.result.current).toBe(true)
+    second.unmount()
+    expect(motion.listeners.size).toBe(0)
   })
 })

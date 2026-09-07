@@ -1,64 +1,66 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, screen } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
+import { renderRoute } from '../../../../testing/render-route'
 import { Footer } from './Footer'
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    children,
-    to,
-    ...props
-  }: {
-    children: React.ReactNode
-    to: string
-    [key: string]: unknown
-  }) => (
-    <a href={to} {...props}>
-      {children}
-    </a>
-  ),
-}))
+beforeEach(() => vi.stubGlobal('scrollTo', vi.fn()))
 
 afterEach(() => {
   cleanup()
+  vi.unstubAllGlobals()
 })
 
 describe('Footer', () => {
-  it('renders copyright text with current year', () => {
-    renderWithProviders(<Footer />)
+  it('renders copyright text with current year', async () => {
+    await renderRoute(<Footer />)
     const year = new Date().getFullYear()
     expect(
       screen.getByText(new RegExp(`${year} BC Solutions`)),
     ).toBeInTheDocument()
   })
 
-  it('renders navigation links', () => {
-    renderWithProviders(<Footer />)
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Projects' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Resume' })).toBeInTheDocument()
+  it('links Home, Projects, About, and Resume to their public pages', async () => {
+    await renderRoute(<Footer />)
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute(
+      'href',
+      '/',
+    )
+    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute(
+      'href',
+      '/projects',
+    )
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute(
+      'href',
+      '/about',
+    )
+    expect(screen.getByRole('link', { name: 'Resume' })).toHaveAttribute(
+      'href',
+      '/resume',
+    )
   })
 
-  it('renders social links with correct aria labels', () => {
-    renderWithProviders(<Footer />)
-    expect(screen.getByLabelText('GitHub')).toBeInTheDocument()
-    expect(screen.getByLabelText('LinkedIn')).toBeInTheDocument()
-    expect(screen.getByLabelText('Email')).toBeInTheDocument()
-  })
-
-  it('renders social links with correct hrefs', () => {
-    renderWithProviders(<Footer />)
-    expect(screen.getByLabelText('GitHub')).toHaveAttribute(
+  it('offers named GitHub, LinkedIn, and email links to the correct destinations', async () => {
+    await renderRoute(<Footer />)
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
       'href',
       'https://github.com/BC-Solutions-Coder',
     )
-    expect(screen.getByLabelText('LinkedIn')).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
       'href',
       'https://www.linkedin.com/in/bryancordes',
     )
-    expect(screen.getByLabelText('Email')).toHaveAttribute(
+    for (const name of ['GitHub', 'LinkedIn']) {
+      expect(screen.getByRole('link', { name })).toHaveAttribute(
+        'target',
+        '_blank',
+      )
+      expect(screen.getByRole('link', { name })).toHaveAttribute(
+        'rel',
+        'noopener noreferrer',
+      )
+    }
+    expect(screen.getByRole('link', { name: 'Email' })).toHaveAttribute(
       'href',
       'mailto:BC@bcordes.dev',
     )

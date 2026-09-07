@@ -29,7 +29,6 @@ const NEW_FILES = [
   'app/components/layout/UserMenu.tsx',
   'app/components/layout/UserMenu.test.tsx',
   'app/config/navigation.ts',
-  'app/config/navigation.test.ts',
   'app/lib/web-vitals.ts',
   'app/styles.css',
   'app/styles/showcase.css',
@@ -53,10 +52,7 @@ const OLD_SPECIFIERS = [
   ['root styles asset', ['@/styles', 'css'].join('.')],
 ] as const
 
-const APP_BARREL_CONSUMERS = [
-  'routes/__root.tsx',
-  'routes/__root.test.tsx',
-] as const
+const APP_BARREL_CONSUMERS = ['routes/__root.tsx'] as const
 
 const APP_STYLES_SPECIFIER = ['@/app/styles', 'css'].join('.')
 

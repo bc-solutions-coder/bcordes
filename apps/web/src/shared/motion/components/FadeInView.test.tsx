@@ -1,137 +1,54 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { createRef } from 'react'
-
-import { useScrollAnimation } from '../hooks/useScrollAnimation'
-import { useReducedMotion } from '../hooks/useReducedMotion'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { act, cleanup, render, screen } from '@testing-library/react'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
 import { FadeInView } from './FadeInView'
 
-vi.mock('../hooks/useScrollAnimation', () => ({
-  useScrollAnimation: vi.fn(() => ({
-    ref: createRef(),
-    isVisible: false,
-  })),
-}))
+let intersections: ReturnType<typeof controlIntersections>
+beforeEach(() => {
+  intersections = controlIntersections()
+  controlMotion()
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-vi.mock('../hooks/useReducedMotion', () => ({
-  useReducedMotion: vi.fn(() => false),
-}))
+it('renders children without a requested delay', () => {
+  render(
+    <FadeInView>
+      <p>Hello</p>
+    </FadeInView>,
+  )
+  const child = screen.getByText('Hello')
+  expect(child).toBeInTheDocument()
+  expect(child.parentElement).toHaveStyle({ transitionDelay: '0ms' })
+})
 
-const mockedUseScrollAnimation = vi.mocked(useScrollAnimation)
-const mockedUseReducedMotion = vi.mocked(useReducedMotion)
+it('preserves the requested delay when the observed content enters the reveal region', () => {
+  render(
+    <FadeInView delay={300}>
+      <p>Delayed content</p>
+    </FadeInView>,
+  )
+  const container = screen.getByText('Delayed content').parentElement
+  if (!container) throw new Error('Reveal container missing')
+  expect(container).toHaveStyle({ transitionDelay: '300ms' })
+  act(() => intersections.intersect(container, true))
+  expect(intersections.isObserved(container)).toBe(false)
+  expect(container).toHaveStyle({ transitionDelay: '300ms' })
+})
 
-describe('FadeInView', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockedUseScrollAnimation.mockReturnValue({
-      ref: createRef() as React.RefObject<HTMLDivElement>,
-      isVisible: false,
-    })
-    mockedUseReducedMotion.mockReturnValue(false)
-  })
-
-  it('renders children', () => {
-    render(
-      <FadeInView>
-        <p>Hello</p>
-      </FadeInView>,
-    )
-    expect(screen.getByText('Hello')).toBeTruthy()
-  })
-
-  it('applies hidden classes when isVisible is false and motion not reduced', () => {
-    mockedUseScrollAnimation.mockReturnValue({
-      ref: createRef() as React.RefObject<HTMLDivElement>,
-      isVisible: false,
-    })
-    mockedUseReducedMotion.mockReturnValue(false)
-
-    const { container } = render(
-      <FadeInView>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.className).toContain('opacity-0')
-    expect(wrapper.className).toContain('translate-y-8')
-  })
-
-  it('applies visible classes when isVisible is true', () => {
-    mockedUseScrollAnimation.mockReturnValue({
-      ref: createRef() as React.RefObject<HTMLDivElement>,
-      isVisible: true,
-    })
-    mockedUseReducedMotion.mockReturnValue(false)
-
-    const { container } = render(
-      <FadeInView>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.className).toContain('opacity-100')
-    expect(wrapper.className).toContain('translate-y-0')
-    expect(wrapper.className).not.toContain('opacity-0')
-  })
-
-  it('shows children visible regardless when reducedMotion is true', () => {
-    mockedUseScrollAnimation.mockReturnValue({
-      ref: createRef() as React.RefObject<HTMLDivElement>,
-      isVisible: false,
-    })
-    mockedUseReducedMotion.mockReturnValue(true)
-
-    const { container } = render(
-      <FadeInView>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.className).toContain('opacity-100')
-    expect(wrapper.className).toContain('translate-y-0')
-    expect(wrapper.className).not.toContain('opacity-0')
-  })
-
-  it('sets transitionDelay to 0ms when reducedMotion is true', () => {
-    mockedUseReducedMotion.mockReturnValue(true)
-
-    const { container } = render(
-      <FadeInView delay={200}>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.style.transitionDelay).toBe('0ms')
-  })
-
-  it('reflects delay prop in transitionDelay style', () => {
-    mockedUseReducedMotion.mockReturnValue(false)
-
-    const { container } = render(
-      <FadeInView delay={300}>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.style.transitionDelay).toBe('300ms')
-  })
-
-  it('applies custom className', () => {
-    const { container } = render(
-      <FadeInView className="my-custom-class">
-        <p>Content</p>
-      </FadeInView>,
-    )
-    const wrapper = container.firstElementChild as HTMLElement
-    expect(wrapper.className).toContain('my-custom-class')
-  })
-
-  it('passes threshold to useScrollAnimation', () => {
-    render(
-      <FadeInView threshold={0.5}>
-        <p>Content</p>
-      </FadeInView>,
-    )
-    expect(mockedUseScrollAnimation).toHaveBeenCalledWith({ threshold: 0.5 })
-  })
+it('removes the requested delay when the browser preference changes to reduced motion', () => {
+  const motion = controlMotion()
+  render(
+    <FadeInView delay={200}>
+      <p>Motion preference content</p>
+    </FadeInView>,
+  )
+  const container = screen.getByText('Motion preference content').parentElement
+  expect(container).toHaveStyle({ transitionDelay: '200ms' })
+  act(() => motion.change(true))
+  expect(container).toHaveStyle({ transitionDelay: '0ms' })
+  act(() => motion.change(false))
+  expect(container).toHaveStyle({ transitionDelay: '200ms' })
 })

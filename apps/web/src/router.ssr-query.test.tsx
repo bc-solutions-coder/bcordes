@@ -1,14 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query'
-import * as Query from '@bcordes/query'
 
 // Verify the router and its rendered children share the hydrated query client.
-
-vi.mock('@bcordes/query', async (importOriginal) => {
-  const actual = await importOriginal<typeof Query>()
-  return { ...actual, getContext: vi.fn(actual.getContext) }
-})
 
 vi.mock('./routeTree.gen', async () => {
   const { createRootRoute } = await import('@tanstack/react-router')
@@ -34,34 +28,13 @@ function dehydratedRouterPayload(data: string) {
 }
 
 describe('router SSR query integration', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('sources the router query client from @bcordes/query', async () => {
-    const { getRouter } = await import('./router')
-    const router = getRouter()
-
-    expect(Query.getContext).toHaveBeenCalledOnce()
-    expect(router.options.context.queryClient).toBeInstanceOf(QueryClient)
-  })
-
-  it('installs the SSR hydration hook on the router', async () => {
-    const { getRouter } = await import('./router')
-    const router = getRouter()
-
-    expect(Query.getContext).toHaveBeenCalledOnce()
-    expect(typeof router.options.hydrate).toBe('function')
-  })
-
-  it('hydrates server-dehydrated state into the query client the package created', async () => {
+  it('hydrates server data into the router cache', async () => {
     const { getRouter } = await import('./router')
     const router = getRouter()
     const queryClient = router.options.context.queryClient
 
     await router.options.hydrate?.(dehydratedRouterPayload('from-server'))
 
-    expect(Query.getContext).toHaveBeenCalledOnce()
     expect(queryClient.getQueryData(SSR_KEY)).toBe('from-server')
   })
 
@@ -95,7 +68,6 @@ describe('router SSR query integration', () => {
       </Wrap>,
     )
 
-    expect(Query.getContext).toHaveBeenCalledOnce()
     expect(await screen.findByTestId('value')).toHaveTextContent('from-server')
     expect(queryFn).not.toHaveBeenCalled()
   })

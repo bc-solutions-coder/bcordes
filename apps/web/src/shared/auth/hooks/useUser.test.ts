@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createElement } from 'react'
@@ -6,7 +6,6 @@ import { createMockUser } from '@bcordes/auth/testing'
 import type { ReactNode } from 'react'
 
 const mockFetch = vi.fn()
-vi.stubGlobal('fetch', mockFetch)
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -21,11 +20,14 @@ function createWrapper() {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.stubGlobal('fetch', mockFetch)
 })
 
+afterEach(() => vi.unstubAllGlobals())
+
 describe('useUser', () => {
-  it('returns null user when fetch fails', async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, status: 401 })
+  it('returns no user after an unauthorized response', async () => {
+    mockFetch.mockResolvedValueOnce(new Response(null, { status: 401 }))
 
     const { useUser } = await import('./useUser')
     const { result } = renderHook(() => useUser(), {
@@ -55,19 +57,9 @@ describe('useUser', () => {
       expect(result.current.isLoading).toBe(false)
     })
 
+    expect(mockFetch).toHaveBeenCalledWith('/auth/me')
     expect(result.current.user).toEqual(mockUser)
     expect(result.current.user?.name).toBe('Bryan Cordes')
-  })
-
-  it('calls /auth/me endpoint', async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, status: 401 })
-
-    const { useUser } = await import('./useUser')
-    renderHook(() => useUser(), { wrapper: createWrapper() })
-
-    await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/auth/me')
-    })
   })
 })
 
@@ -93,7 +85,7 @@ describe('useRequireUser', () => {
   })
 
   it('returns isAuthenticated false when user is null', async () => {
-    mockFetch.mockResolvedValueOnce({ ok: false, status: 401 })
+    mockFetch.mockResolvedValueOnce(new Response(null, { status: 401 }))
 
     const { useRequireUser } = await import('./useUser')
     const { result } = renderHook(() => useRequireUser(), {

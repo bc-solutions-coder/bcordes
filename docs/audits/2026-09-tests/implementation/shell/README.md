@@ -1,0 +1,29 @@
+# Shell, routing, motion and authorization behavior
+
+Implementation for [issue 95](https://github.com/bc-solutions-coder/bcordes/issues/95), based on `799fc64`. [dispositions.tsv](dispositions.tsv) maps all 86 owned original test keys to their resulting behavior or deletion.
+
+Header, Footer, MobileNav and UserMenu use real routing and rendered controls. Named destinations replace navigation-array and component-marker inventories. Coverage includes visitor/customer/admin contact availability, account destinations, mobile closure, and actual sign-out failure toasts. Logout clicks prevent ordinary anchor navigation. The header remains usable across scroll transitions; browser computed styles separately establish elevation.
+
+Router tests load destinations, preload on link intent without navigating, and isolate query data between router instances. The existing SSR hydrated-consumer test retains its real cache and rendered data outcomes without provider call counts. Root tests render generated server document metadata and shell navigation, exercise unknown-page home navigation, and reuse the prerequisite transient render-error reset test. Development diagnostics and generic production errors have explicit cases. The small local devtools host double checks the shell's actual configured names; the browser opens the real application host and finds the live auth query. Production excludes developer controls.
+
+Motion hooks use identity-aware listener and observed-target registries. Removing the wrong callback or target cannot silently clean up a sibling. Default one-time reveal omits its option and remains revealed after exit; repeated reveal supports entry, exit and reentry. FadeInView uses real hooks for delay/preference behavior. A controlled component browser fixture loads the actual app stylesheet and component, checking opacity, position, threshold, requested delay, reduced motion and caller styling. It is outside the product route tree. Each Vite worker uses its own temporary cache and closes its server before deleting the cache.
+
+The registered authorization validator is exercised with malformed inputs before the real owned middleware reaches its controlled session/SDK boundaries. Tests preserve existing returnTo semantics, including empty and external strings, wait for authorization completion, propagate service failures, and return actual profile roles/permissions. The built transport test captures a real client request, preserves its framework headers, serializes inputs with Seroval, and closes the discovery page before observing controlled profile calls. Four valid controls reach the backend; seven malformed inputs return serialized validation errors with no profile call. The existing framework transports both success and validation errors with HTTP 200. No new returnTo policy was introduced. `/auth/me` retains exact bodies and asserts `Cache-Control: no-store` in both identity states.
+
+Synthetic-session browser checks use the existing local Valkey/backend setup and normal CI Playwright invocation. No live identity provider or production credential is needed. Configuring these checks in CI is separate from claiming a remote CI run passed.
+
+## Early source-guard retirement
+
+Three stale inventory entries blocked the replacements: the deleted navigation test's existence, the old root test's mocked app import, and the same root test's mocked UI import. Their entries were removed from `apps/web/src/__tests__/app-shell-module.test.ts` and `packages/ui/package.test.ts`. No source assertion was added. The first two remove expanded cases owned by issue 103; the third prunes an expected importer inside a retained issue 100 inventory case. Their remaining file cleanup stays with those owners.
+
+A scrolled-reload probe assumed browser scroll restoration persisted through app hydration. Its inconsistent position was a fixture assumption, not sufficient evidence of an app defect. Final browser cases cover actual scroll transitions and a controlled initial browser scroll-position input. The production implementation is unchanged.
+
+## Verification
+
+All 1,211 full-workspace tests pass with no failures or skips. Coverage is 95.07% lines, 93.85% statements, 90.61% branches and 91.88% functions. Denominators and all four 90% thresholds are unchanged; no retained source file loses covered lines, statements, branches or functions. All 32 browser tests pass with no skips or retries. [summary.json](summary.json) records the results; [coverage-summary.json](coverage-summary.json) preserves per-file measurements.
+
+Twenty deliberate defects failed, covering navigation destinations, listener/observer cleanup, default reveal persistence, preload, router cache sharing, hydration, no-store responses, awaited authorization, registered validation, render recovery, production diagnostics, delay, logout feedback, generated title, browser threshold/reduced motion/caller styling, built transport validation and built header elevation. Each source mutation was restored in `finally`. Built mutations were rebuilt before their probes, then the restored production artifact was rebuilt before final browser verification.
+
+Typecheck, build, lint, formatting, documentation links and diff checks pass. Commands: `pnpm test --coverage --reporter=json`, `pnpm --filter bcordes exec playwright test --reporter=json`, `pnpm typecheck`, `pnpm build`, `pnpm lint`, `pnpm format:check`, `python3 scripts/check-docs.py`, `git diff --check`. Final navigation title edits received a focused passing run.
+
+A concurrent full unit/browser run overloaded the inspector timing budget; the final complete unit run passed alone, matching the normal sequential CI workflow. Browser output has no unhandled development-module error after pre-optimizing the fixture's dynamically loaded dependencies. No remote CI success is claimed.

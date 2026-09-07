@@ -1,0 +1,87 @@
+original_key	original_title	accepted_disposition	result
+apps/web/src/app/components/layout/Footer.test.tsx:28	renders copyright text with current year	keep	renders copyright text with current year
+apps/web/src/app/components/layout/Footer.test.tsx:36	renders navigation links	rewrite	links Home, Projects, About, and Resume to their public pages
+apps/web/src/app/components/layout/Footer.test.tsx:44	renders social links with correct aria labels	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/components/layout/Footer.test.tsx:51	renders social links with correct hrefs	rewrite	offers named GitHub, LinkedIn, and email links to the correct destinations
+apps/web/src/app/components/layout/Header.test.tsx:50	renders all navigation link labels	rewrite	links Home, Projects, About, and Resume to their public pages
+apps/web/src/app/components/layout/Header.test.tsx:59	"renders logo/home link pointing to ""/"""	rewrite	links the BC Solutions logo to the home page
+apps/web/src/app/components/layout/Header.test.tsx:68	"renders ""Get in Touch"" CTA linking to /contact"	rewrite	sets contact-link availability for a %s using inquiry-read permission
+apps/web/src/app/components/layout/Header.test.tsx:78	adds shadow class when scrolled down	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: adds header elevation after scrolling and removes it at the top; elevates the header when the browser reports an initially scrolled document
+apps/web/src/app/components/layout/Header.test.tsx:94	removes shadow class when scrolled back to top	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: adds header elevation after scrolling and removes it at the top
+apps/web/src/app/components/layout/Header.test.tsx:116	renders child component stubs	rewrite	offers account and mobile navigation while scrolling from %i
+apps/web/src/app/components/layout/MobileNav.test.tsx:45	renders the hamburger menu button	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/components/layout/MobileNav.test.tsx:52	renders nav links when sheet is opened	rewrite	opens public navigation links and closes after selecting a destination
+apps/web/src/app/components/layout/MobileNav.test.tsx:63	shows Sign In button when user is not authenticated	rewrite	offers a sign-in link when signed out
+apps/web/src/app/components/layout/MobileNav.test.tsx:71	shows Dashboard and Sign Out when user is authenticated	rewrite	offers dashboard and sign-out actions when authenticated
+apps/web/src/app/components/layout/MobileNav.test.tsx:89	calls SDK logout when Sign Out is clicked	rewrite	closes navigation and reports a failed sign-out
+apps/web/src/app/components/layout/UserMenu.test.tsx:42	returns null when loading	rewrite	hides account actions while user identity is loading
+apps/web/src/app/components/layout/UserMenu.test.tsx:48	shows Sign In link when no user	rewrite	offers a sign-in link when signed out
+apps/web/src/app/components/layout/UserMenu.test.tsx:56	shows user name and initials when authenticated	keep	shows user name and initials when authenticated
+apps/web/src/app/components/layout/UserMenu.test.tsx:66	shows fallback initials when name is a single word	rename	shows the first initial for a single-word name
+apps/web/src/app/components/layout/UserMenu.test.tsx:75	"shows fallback ""?"" when user has no name"	keep	"shows fallback ""?"" when user has no name"
+apps/web/src/app/components/layout/UserMenu.test.tsx:84	falls back to email when name is null	keep	falls back to email when name is null
+apps/web/src/app/components/layout/UserMenu.test.tsx:93	"falls back to ""User"" when name and email are null"	keep	"falls back to ""User"" when name and email are null"
+apps/web/src/app/components/layout/UserMenu.test.tsx:102	sign out calls SDK logout	rewrite	offers the dashboard destination and signs out through the SDK; reports a failed sign-out so the user can try again
+apps/web/src/app/config/navigation.test.ts:5	is a non-empty array	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:9	each entry has href and label strings	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:18	contains a Home link pointing to /	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:26	is a non-empty array	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:30	each entry has label, href, and icon	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:40	contains GitHub, LinkedIn, and Email links	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:47	GitHub link points to a github.com URL	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/app/config/navigation.test.ts:52	Email link uses mailto:	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.ssr-query.test.tsx:59	sources the router query client from @bcordes/query	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.ssr-query.test.tsx:67	installs the SSR hydration hook on the router	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.ssr-query.test.tsx:75	hydrates server-dehydrated state into the query client the package created	rewrite	hydrates server data into the router cache
+apps/web/src/router.ssr-query.test.tsx:86	serves the hydrated data to components under the router's Wrap without refetching	rewrite	serves the hydrated data to components under the router's Wrap without refetching
+apps/web/src/router.test.tsx:36	creates a router with the route tree and context from TanStack Query	rewrite	loads the selected route and renders its loader result
+apps/web/src/router.test.tsx:48	sets defaultPreload to intent	rewrite	loads the destination on link intent before navigation
+apps/web/src/router.test.tsx:56	provides a Wrap component that renders TanstackQuery.Provider	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.test.tsx:65	sets up SSR query integration with the router and queryClient	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.test.tsx:76	returns the created router instance	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.test.tsx:83	creates a fresh context on each invocation	rewrite	isolates query data between independently created routers
+apps/web/src/router.test.tsx:93	Wrap component renders TanstackQuery.Provider with children	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/router.test.tsx:113	spreads the rqContext into the router context	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/routes/__root.test.tsx:70	exports a route config with notFoundComponent and head	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/routes/__root.test.tsx:78	head returns correct meta and links	rewrite	apps/web/src/routes/__root.shell.test.tsx: generates the site title, description, canonical URL and identity metadata
+apps/web/src/routes/__root.test.tsx:88	renders 404 heading	rewrite	explains that an unknown page was not found
+apps/web/src/routes/__root.test.tsx:96	renders Page Not Found message	keep	explains that an unknown page was not found (retained message assertion)
+apps/web/src/routes/__root.test.tsx:104	renders description text	rename	explains that an unknown page was not found (retained explanation)
+apps/web/src/routes/__root.test.tsx:116	renders a Go Home link pointing to /	keep	returns home from an unknown page
+apps/web/src/routes/__root.test.tsx:127	renders Header, Footer, children, and Toaster	rewrite	apps/web/src/routes/__root.shell.test.tsx: serves page content with named header and footer navigation and a sign-in destination; logout feedback uses the actual Toaster
+apps/web/src/routes/__root.test.tsx:144	renders devtools panel after dynamic imports resolve	rewrite	offers the named router and query inspectors from the development shell; apps/web/e2e/tests/shell-motion.spec.ts: offers the real router and query inspectors during development; excludes developer controls from the production page
+apps/web/src/routes/api/health.test.ts:34	"returns 200 with status ""healthy"" when Valkey ping returns PONG"	keep	"returns 200 with status ""healthy"" when Valkey ping returns PONG"
+apps/web/src/routes/api/health.test.ts:45	"returns 503 with ""ping failed"" when Valkey ping returns unexpected value"	keep	"returns 503 with ""ping failed"" when Valkey ping returns unexpected value"
+apps/web/src/routes/api/health.test.ts:56	"returns 503 with ""unreachable"" when Valkey ping throws"	keep	"returns 503 with ""unreachable"" when Valkey ping throws"
+apps/web/src/routes/api/health.test.ts:67	"returns 503 with ""unreachable"" when Valkey ping times out"	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/routes/api/health.test.ts:77	"returns 503 with ""ping failed"" when Valkey ping returns empty string"	keep	"returns 503 with ""ping failed"" when Valkey ping returns empty string"
+apps/web/src/routes/api/health.test.ts:87	"returns 503 with ""ping failed"" when Valkey ping returns null"	keep	"returns 503 with ""ping failed"" when Valkey ping returns null"
+apps/web/src/routes/auth/me.test.ts:52	returns user JSON when authenticated	rewrite	returns user JSON when authenticated
+apps/web/src/routes/auth/me.test.ts:62	returns null when not authenticated	rewrite	returns null when not authenticated
+apps/web/src/shared/auth/hooks/useUser.test.ts:27	returns null user when fetch fails	rename	returns no user after an unauthorized response
+apps/web/src/shared/auth/hooks/useUser.test.ts:42	returns populated user on success	rewrite	returns populated user on success
+apps/web/src/shared/auth/hooks/useUser.test.ts:62	calls /auth/me endpoint	delete	Deleted; retained behavior is covered by consumer outcomes in this slice
+apps/web/src/shared/auth/hooks/useUser.test.ts:75	returns isAuthenticated true when user exists	keep	returns isAuthenticated true when user exists
+apps/web/src/shared/auth/hooks/useUser.test.ts:95	returns isAuthenticated false when user is null	keep	returns isAuthenticated false when user is null
+apps/web/src/shared/auth/server-fns/auth.test.ts:39	returns roles when user is authenticated	rewrite	returns the authenticated profile roles and permissions
+apps/web/src/shared/auth/server-fns/auth.test.ts:56	returns empty roles when no user is authenticated	rename	returns empty roles and permissions when signed out
+apps/web/src/shared/auth/server-fns/auth.test.ts:69	delegates to requireAuth with returnTo	rewrite	preserves the login redirect for %j; waits for authorization before completing an allowed request; propagates an authorization service failure
+apps/web/src/shared/auth/server-fns/auth.test.ts:85	delegates to requireAuth without returnTo	rewrite	preserves the login redirect for %j (empty input and returnTo)
+apps/web/src/shared/motion/components/FadeInView.test.tsx:33	renders children	keep	renders children without a requested delay
+apps/web/src/shared/motion/components/FadeInView.test.tsx:42	applies hidden classes when isVisible is false and motion not reduced	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation
+apps/web/src/shared/motion/components/FadeInView.test.tsx:59	applies visible classes when isVisible is true	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation
+apps/web/src/shared/motion/components/FadeInView.test.tsx:77	shows children visible regardless when reducedMotion is true	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: shows content immediately and removes its requested delay under reduced motion
+apps/web/src/shared/motion/components/FadeInView.test.tsx:95	sets transitionDelay to 0ms when reducedMotion is true	rewrite	removes the requested delay when the browser preference changes to reduced motion; browser reduced-motion computed styles
+apps/web/src/shared/motion/components/FadeInView.test.tsx:107	reflects delay prop in transitionDelay style	rewrite	preserves the requested delay when the observed content enters the reveal region; browser computed delay
+apps/web/src/shared/motion/components/FadeInView.test.tsx:119	applies custom className	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation
+apps/web/src/shared/motion/components/FadeInView.test.tsx:129	passes threshold to useScrollAnimation	rewrite	apps/web/e2e/tests/shell-motion.spec.ts: reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts:40	returns false when prefers-reduced-motion is not set	keep	returns false when prefers-reduced-motion is not set
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts:51	returns true when prefers-reduced-motion is set	keep	returns true when prefers-reduced-motion is set
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts:61	responds to change events	rename	updates the preference when reduced motion is enabled and disabled
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts:83	cleans up event listener on unmount	rewrite	stops listening after unmount while another subscriber continues receiving changes
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:42	isVisible starts as false	rename	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: remains hidden when no element is attached
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:49	becomes true on intersection	rewrite	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: reveals the attached element when it intersects
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:71	passes options to IntersectionObserver	keep	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: configures the reveal region with the requested threshold and margin
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:95	unobserves element after intersection when triggerOnce is true (default)	rewrite	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: stays visible after its first intersection by default
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:118	toggles visibility when triggerOnce is false	rewrite	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: hides the element again after it leaves when repeated animation is enabled
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts:146	cleans up observer on unmount	rewrite	apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx: stops observing its element after unmount while another observer remains active
