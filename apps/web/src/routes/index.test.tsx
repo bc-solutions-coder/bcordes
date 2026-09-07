@@ -5,9 +5,22 @@ import { renderFileRoute } from '../../testing/render-file-route'
 import { controlIntersections, controlMotion } from '../../testing/motion'
 import { Route } from './index'
 import type { useUser } from '@/shared/auth'
+import type { ShowcaseMeta } from '@/features/projects'
 
 const { identity } = vi.hoisted(() => ({ identity: vi.fn<typeof useUser>() }))
 vi.mock('@/shared/auth', () => ({ useUser: identity }))
+vi.mock('@/features/projects/content/wallow', async () => ({
+  ...(await vi.importActual('@/features/projects/content/wallow')),
+  meta: {
+    slug: 'wallow',
+    title: 'Wallow',
+    description: 'A newer project excluded from featured work.',
+    client: 'BC Solutions, LLC',
+    year: 2026,
+    tags: ['TypeScript'],
+    featured: false,
+  } satisfies ShowcaseMeta,
+}))
 
 beforeEach(() => {
   identity.mockReturnValue({ user: null, isLoading: false })
@@ -27,10 +40,9 @@ describe('Home page', () => {
       'href',
       '/projects/bcordes',
     )
-    expect(screen.getByRole('link', { name: /Wallow/ })).toHaveAttribute(
-      'href',
-      '/projects/wallow',
-    )
+    expect(
+      screen.queryByRole('link', { name: /Wallow/ }),
+    ).not.toBeInTheDocument()
   })
 
   it('renders the introduction, services, featured work, and skills on the home page', async () => {
