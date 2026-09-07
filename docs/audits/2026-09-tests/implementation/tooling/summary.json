@@ -1,0 +1,69 @@
+{
+  "issue": 91,
+  "baseRevision": "32560daa12ce930dbdc975ede83c6cda0462a80c",
+  "passed": 1339,
+  "failed": 0,
+  "pending": 0,
+  "coverage": {
+    "lines": {
+      "total": 1078,
+      "covered": 1013,
+      "skipped": 0,
+      "pct": 93.97
+    },
+    "statements": {
+      "total": 1158,
+      "covered": 1075,
+      "skipped": 0,
+      "pct": 92.83
+    },
+    "functions": {
+      "total": 386,
+      "covered": 348,
+      "skipped": 0,
+      "pct": 90.15
+    },
+    "branches": {
+      "total": 668,
+      "covered": 602,
+      "skipped": 0,
+      "pct": 90.11
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "defects": [
+    {
+      "defect": "missing-project",
+      "exitCode": 1
+    },
+    {
+      "defect": "ignored-type-errors",
+      "exitCode": 1
+    },
+    {
+      "defect": "disabled-rule",
+      "exitCode": 1
+    },
+    {
+      "defect": "unenforced-thresholds",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-dom-setup",
+      "exitCode": 1
+    }
+  ],
+  "commands": [
+    "pnpm test --coverage --reporter=json --outputFile=/tmp/bcordes-tooling-verified.json",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ]
+}

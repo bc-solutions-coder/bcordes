@@ -1,0 +1,17 @@
+original_key	original_title	accepted_disposition	result
+packages/config/config.test.ts:31	declares the workspace package conventions	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:40	exports the eslint config and the tsconfig base, and both files exist	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:53	is a workspace: dependency of the repo root (root eslint.config.js imports it)	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:59	is a workspace: dependency of apps/web (its tsconfig extends it)	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:65	is linked into apps/web/node_modules by pnpm install	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:72	resolves its export subpaths from apps/web	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:87	holds the shared compiler options and not the app-specific alias	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:102	is what apps/web extends	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:108	feeds apps/web its compiler options through the exports map (tsc --showConfig)	rewrite	packages/config/config.test.ts
+packages/config/config.test.ts:134	is sourced from @bcordes/config/eslint by the root eslint.config.js	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/config.test.ts:140	still applies the app module-boundary rules to the app shell, features and shared	rewrite	packages/config/oxlint-plugin.test.ts
+packages/config/config.test.ts:169	applies package-level boundaries to packages/	rewrite	packages/config/oxlint-plugin.test.ts
+packages/config/typecheck-coverage.test.ts:33	discovers every workspace package (sanity: apps/web + all packages/*)	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/typecheck-coverage.test.ts:40	root `typecheck` fans out recursively to every workspace package	rewrite	packages/config/typecheck-coverage.test.ts
+packages/config/typecheck-coverage.test.ts:46	every workspace package.json declares a `typecheck` script	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates
+packages/config/typecheck-coverage.test.ts:54	every `typecheck` script follows the established `tsc --noEmit` pattern	delete	deleted; consumer outcomes covered by compiler, linter, runner and root gates

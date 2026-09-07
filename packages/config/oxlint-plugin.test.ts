@@ -14,7 +14,7 @@ import { expect, it } from 'vitest'
 const packageDir = dirname(fileURLToPath(import.meta.url))
 const root = resolve(packageDir, '../..')
 
-it('checks type parameter names through the real Oxlint parser', () => {
+it('reports invalid type parameter names and accepts supported names and suppression', () => {
   const directory = mkdtempSync(join(tmpdir(), 'bcordes-naming-'))
   try {
     writeFileSync(
@@ -46,17 +46,23 @@ it('checks type parameter names through the real Oxlint parser', () => {
         `export type Box<${name}> = { value: ${name} }`,
       )
     }
+    const declarations = {
+      'function.ts':
+        'export function identity<Bad>(value: Bad): Bad { return value }',
+      'class.ts': 'export class Box<Bad> {}',
+      'interface.ts': 'export interface Container<Bad> {}',
+      'arrow.tsx': 'export const arrow = <Bad,>(value: Bad) => value',
+      'method.ts': 'export type Method = { read<Bad>(): Bad }',
+    }
+    for (const [file, source] of Object.entries(declarations))
+      writeFileSync(join(directory, file), source)
     writeFileSync(
-      join(directory, 'declarations.tsx'),
-      `
-      export function identity<Bad>(value: Bad): Bad { return value }
-      export class Box<Bad> {}
-      export interface Container<Bad> {}
-      export const arrow = <Bad,>(value: Bad) => value
-      export type Method = { read<Bad>(): Bad }
-      export type Conditional<T> = T extends Array<infer Bad> ? Bad : never
-      export type Mapped<T> = { [Key in keyof T]: T[Key] }
-    `,
+      join(directory, 'infer.ts'),
+      'export type Conditional<T> = T extends Array<infer Bad> ? Bad : never',
+    )
+    writeFileSync(
+      join(directory, 'mapped.ts'),
+      'export type Mapped<T> = { [Key in keyof T]: T[Key] }',
     )
     writeFileSync(
       join(directory, 'suppressed.ts'),
@@ -86,9 +92,21 @@ it('checks type parameter names through the real Oxlint parser', () => {
         ]),
       )
     }
+    for (const filename of Object.keys(declarations)) {
+      expect(output.diagnostics).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            filename,
+            code: 'bcordes(type-parameter-name)',
+          }),
+        ]),
+      )
+    }
     for (const name of [
       ...valid.map((_, index) => String(index)),
       'suppressed',
+      'infer',
+      'mapped',
     ]) {
       expect(output.diagnostics).not.toEqual(
         expect.arrayContaining([
@@ -101,7 +119,7 @@ it('checks type parameter names through the real Oxlint parser', () => {
   }
 })
 
-it('preserves workspace boundaries, typed guard exceptions and JS style rules', () => {
+it('rejects forbidden imports and style violations, permits exceptions, and fixes supported style errors', () => {
   const directory = mkdtempSync(join(tmpdir(), 'bcordes-lint-'))
   try {
     const config = JSON.parse(
@@ -135,6 +153,21 @@ it('preserves workspace boundaries, typed guard exceptions and JS style rules', 
       }),
     )
     const cases = [
+      {
+        path: 'apps/web/src/routes/shared-deep.ts',
+        source: "import '@/shared/auth/hooks/useUser'",
+        rule: 'eslint(no-restricted-imports)',
+      },
+      {
+        path: 'apps/web/src/routes/app-deep.ts',
+        source: "import '@/app/components/layout/Header'",
+        rule: 'eslint(no-restricted-imports)',
+      },
+      {
+        path: 'apps/web/src/routes/package-deep.ts',
+        source: "import '@bcordes/auth/src/session'",
+        rule: 'eslint(no-restricted-imports)',
+      },
       {
         path: 'apps/web/src/features/example/routes.ts',
         source: "import '@/routes/index'",
@@ -198,6 +231,18 @@ it('preserves workspace boundaries, typed guard exceptions and JS style rules', 
       },
     ]
     const clean = [
+      {
+        path: 'apps/web/src/app/example/public.ts',
+        source: "import '@/features/home'",
+      },
+      {
+        path: 'apps/web/src/features/example/public.ts',
+        source: "import '@/shared/auth'",
+      },
+      {
+        path: 'apps/web/src/shared/example/public.ts',
+        source: "import '@bcordes/utils'",
+      },
       {
         path: 'apps/web/src/routes/public.ts',
         source: "import '@/features/home'",

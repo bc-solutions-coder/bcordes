@@ -144,11 +144,6 @@ const staleImportRe = new RegExp(
   )})(?:['"]|/)`,
 )
 
-// Match nested module imports; the raw app stylesheet has no nested path segment.
-const deepModuleRe = new RegExp(
-  `${LEAD}@\\/(?:features|shared|app)\\/[a-z0-9-]+\\/`,
-)
-
 describe('no stale deep-import specifiers remain', () => {
   it('no source imports/mocks a migrated-away path', () => {
     const offenders = allSources
@@ -157,16 +152,6 @@ describe('no stale deep-import specifiers remain', () => {
     expect(
       offenders,
       `these files still import a migrated-away specifier: ${offenders.join(', ')}`,
-    ).toEqual([])
-  })
-
-  it('no source reaches deep into a feature/shared/app module', () => {
-    const offenders = allSources
-      .filter((f) => deepModuleRe.test(readFileSync(f, 'utf8')))
-      .map((f) => f.slice(repoRoot.length + 1))
-    expect(
-      offenders,
-      `these files deep-import a module's internals (use the bare @/features/<name>, @/shared/<name> or @/app): ${offenders.join(', ')}`,
     ).toEqual([])
   })
 })
