@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
+import * as contact from '@/features/contact'
 
 // Contact consumes inquiries through its public module; the contact form schema stays internal.
 
@@ -194,13 +195,10 @@ describe('every contact consumer resolves via the new @/features/contact path', 
 })
 
 describe('the public API resolves the three named exports', () => {
-  it('@/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const contactSpecifier = '@/features/contact'
-    const mod = (await import(contactSpecifier)) as Record<string, unknown>
+  it('@/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess', () => {
     for (const name of EXPECTED_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof contact[name],
         `@/features/contact must export a ${name} component`,
       ).toBe('function')
     }

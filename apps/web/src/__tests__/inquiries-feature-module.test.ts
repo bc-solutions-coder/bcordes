@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
+import * as inquiries from '@/features/inquiries'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -195,19 +196,16 @@ describe('every dashboard consumer resolves via the new @/features/inquiries pat
 })
 
 describe('the public API resolves the expected exports', () => {
-  it('@/features/inquiries exports the seven server fns and four status maps', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const inquiriesSpecifier = '@/features/inquiries'
-    const mod = (await import(inquiriesSpecifier)) as Record<string, unknown>
+  it('@/features/inquiries exports the seven server fns and four status maps', () => {
     for (const name of SERVER_FN_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof inquiries[name],
         `@/features/inquiries must export a ${name} server fn`,
       ).toBe('function')
     }
     for (const name of LIB_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof inquiries[name],
         `@/features/inquiries must export the ${name} status map`,
       ).toBe('object')
     }

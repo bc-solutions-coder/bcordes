@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
+import * as notifications from '@/features/notifications'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -256,14 +257,7 @@ describe('every notifications consumer resolves via the new @/features/notificat
 })
 
 describe('the public API resolves the expected value exports', () => {
-  it('@/features/notifications exports the components, hooks, lib helpers, and server fns', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const notificationsSpecifier = '@/features/notifications'
-    const mod = (await import(notificationsSpecifier)) as Record<
-      string,
-      unknown
-    >
-
+  it('@/features/notifications exports the components, hooks, lib helpers, and server fns', () => {
     const FUNCTION_EXPORTS = [
       ...COMPONENT_EXPORTS,
       'EventStreamProvider',
@@ -278,13 +272,13 @@ describe('the public API resolves the expected value exports', () => {
 
     for (const name of FUNCTION_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof notifications[name],
         `@/features/notifications must export a ${name} function`,
       ).toBe('function')
     }
 
     expect(
-      Array.isArray(mod['notificationTypes']),
+      Array.isArray(notifications.notificationTypes),
       '@/features/notifications must export the notificationTypes array',
     ).toBe(true)
   })

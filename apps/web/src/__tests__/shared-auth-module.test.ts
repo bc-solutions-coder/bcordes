@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
+import * as auth from '@/shared/auth'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -128,13 +129,10 @@ describe('no source imports the old auth paths', () => {
 })
 
 describe('the public API resolves the expected named exports', () => {
-  it('@/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const authSpecifier = '@/shared/auth'
-    const mod = (await import(authSpecifier)) as Record<string, unknown>
+  it('@/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles', () => {
     for (const name of EXPECTED_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof auth[name],
         `@/shared/auth must export a ${name} function`,
       ).toBe('function')
     }

@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import * as motion from '@/shared/motion'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -107,13 +108,10 @@ describe('no source imports the old motion paths', () => {
 })
 
 describe('the public API resolves the expected named exports', () => {
-  it('@/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const motionSpecifier = '@/shared/motion'
-    const mod = (await import(motionSpecifier)) as Record<string, unknown>
+  it('@/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView', () => {
     for (const name of EXPECTED_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof motion[name],
         `@/shared/motion must export a ${name} function`,
       ).toBe('function')
     }

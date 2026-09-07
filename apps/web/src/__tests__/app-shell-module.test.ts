@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
+import * as app from '@/app'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -196,12 +197,9 @@ describe('every app-shell consumer resolves via the new @/app path', () => {
 })
 
 describe('the public API resolves the expected named exports', () => {
-  it('@/app exports Header, Footer, reportWebVitals', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const appSpecifier = '@/app'
-    const mod = (await import(appSpecifier)) as Record<string, unknown>
+  it('@/app exports Header, Footer, reportWebVitals', () => {
     for (const name of REEXPORTS.map(([n]) => n)) {
-      expect(typeof mod[name], `@/app must export a ${name} function`).toBe(
+      expect(typeof app[name], `@/app must export a ${name} function`).toBe(
         'function',
       )
     }

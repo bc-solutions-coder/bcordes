@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import * as about from '@/features/about'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -78,13 +79,10 @@ describe('no source imports the old @/components/about path', () => {
 })
 
 describe('the public API resolves the three named exports', () => {
-  it('@/features/about exports AboutHero, Timeline, ValueIcon', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const aboutSpecifier = '@/features/about'
-    const mod = (await import(aboutSpecifier)) as Record<string, unknown>
+  it('@/features/about exports AboutHero, Timeline, ValueIcon', () => {
     for (const name of EXPECTED_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof about[name],
         `@/features/about must export a ${name} component`,
       ).toBe('function')
     }

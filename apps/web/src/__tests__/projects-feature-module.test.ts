@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import * as projects from '@/features/projects'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -152,13 +153,10 @@ describe('every consumer resolves via the new @/features/projects path', () => {
 })
 
 describe('the public API resolves the merged value exports', () => {
-  it('@/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const projectsSpecifier = '@/features/projects'
-    const mod = (await import(projectsSpecifier)) as Record<string, unknown>
+  it('@/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers', () => {
     for (const name of RUNTIME_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof projects[name],
         `@/features/projects must export ${name} as a function`,
       ).toBe('function')
     }
