@@ -1,12 +1,13 @@
 name: Validate Docker Build
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
 
 concurrency:
-  group: docker-validate-${{ github.event.pull_request.number }}
+  group: docker-validate-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -20,9 +21,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -34,11 +32,22 @@ jobs:
           push: false
           cache-from: type=gha,scope=bcordes-docker
           cache-to: type=gha,scope=bcordes-docker,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          tags: bcordes:ci-${{ github.sha }}
+          outputs: type=docker,dest=${{ runner.temp }}/bcordes-image.tar
           secrets: |
             node_auth_token=${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload the built image
+        uses: actions/upload-artifact@v4
+        with:
+          name: bcordes-image-${{ github.sha }}
+          path: ${{ runner.temp }}/bcordes-image.tar
+          compression-level: 0
+          retention-days: 1
+
   runtime:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -52,7 +61,16 @@ jobs:
         with:
           node-version: 24
 
+      - name: Download the built image
+        uses: actions/download-artifact@v4
+        with:
+          name: bcordes-image-${{ github.sha }}
+          path: ${{ runner.temp }}
+
+      - name: Load the built image
+        run: docker load --input "$RUNNER_TEMP/bcordes-image.tar"
+
       - name: Verify production container and assets
-        run: bash scripts/verify-docker.sh
+        run: bash scripts/verify-docker.sh --image "$VERIFY_IMAGE"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERIFY_IMAGE: bcordes:ci-${{ github.sha }}

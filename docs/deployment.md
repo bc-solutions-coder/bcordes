@@ -77,3 +77,17 @@ builder retains it. GitHub's layer cache does not itself persist the cache
 mount onto a fresh runner. Source changes should reuse installation; manifest
 or lockfile changes must invalidate it. Registry credentials remain a BuildKit
 secret read through a temporary config in the install step.
+
+## Reusing the PR image
+
+PR Docker validation builds one native linux/amd64 image, tagged with the
+workflow revision, and passes its Docker archive to the runtime job. That job
+loads the archive and invokes `verify-docker.sh --image <local-image>` without
+rebuilding or requiring a registry token. The build and runtime job names remain
+unchanged. A manual workflow trigger supports checking this same path and its
+cache behavior without publishing an image.
+
+Without `--image`, local verification still builds and checks an image and
+requires NODE_AUTH_TOKEN. Publication remains gated on successful CI and builds
+both linux/amd64 and linux/arm64. Release promotion still resolves the released
+revision's SHA tag to a digest; nightly is not a substitute for that revision.

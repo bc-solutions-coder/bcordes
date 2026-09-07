@@ -51,7 +51,7 @@ bash scripts/verify-production.sh http://127.0.0.1:3000
 
 The [browser verification guide](../apps/web/e2e/README.md) owns Playwright commands, ports, Valkey setup, and fixture behavior. The suite runs the production artifact against a controlled backend. Its login checks stop at the identity-provider redirect; it does not authenticate against live OIDC or establish live Wallow compatibility.
 
-For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with Docker available and `NODE_AUTH_TOKEN` exported. It builds the image using a secret mount, starts a disposable Valkey container, and checks the same image under two runtime redirect configurations. See [deployment](deployment.md) for release checks and the outstanding platform verification gate.
+For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with Docker available and `NODE_AUTH_TOKEN` exported. It builds the image using a secret mount, starts a disposable Valkey container, and checks the same image under two runtime redirect configurations. Use `bash scripts/verify-docker.sh --image <local-image>` to check an already-built image without registry credentials. PR runtime verification uses that path. See [deployment](deployment.md) for release checks.
 
 ## Match CI
 

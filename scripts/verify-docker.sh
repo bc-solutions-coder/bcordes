@@ -2,8 +2,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-: "${NODE_AUTH_TOKEN:?Export NODE_AUTH_TOKEN with package read access}"
 verify_image="${IMAGE:-bcordes:verify-$$}"
+verify_build=true
+if [ "$#" -eq 0 ]; then
+  : "${NODE_AUTH_TOKEN:?Export NODE_AUTH_TOKEN with package read access}"
+elif [ "$#" -eq 2 ] && [ "$1" = --image ]; then
+  verify_image="$2"
+  verify_build=false
+else
+  echo 'Usage: verify-docker.sh [--image LOCAL_IMAGE]' >&2
+  exit 2
+fi
 verify_name="bcordes-verify-$$"
 verify_network="$verify_name-network"
 verify_cache="$verify_name-valkey"
@@ -14,7 +23,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
-docker build --secret id=node_auth_token,env=NODE_AUTH_TOKEN -t "$verify_image" .
+if [ "$verify_build" = true ]; then
+  docker build --secret id=node_auth_token,env=NODE_AUTH_TOKEN -t "$verify_image" .
+else
+  docker image inspect "$verify_image" >/dev/null
+fi
 docker network create "$verify_network" >/dev/null
 docker run -d --rm --name "$verify_cache" --network "$verify_network" valkey/valkey:8-alpine >/dev/null
 for verify_domain in bcordes.example alternate.example; do

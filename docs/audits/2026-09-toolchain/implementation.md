@@ -232,3 +232,20 @@ Actual GitHub cross-run reuse remains part of #76/#61 verification.
 All 1289 remaining tests, workspace types, lint, formatting and Docker
 production runtime checks pass. Actionlint validates both cache workflow edits.
 Both review axes reported no implementation findings.
+
+## PR image reuse, #76
+
+The Docker build job exports a native linux/amd64 image tagged with the workflow
+revision. The dependent runtime job downloads and loads that run's archive,
+then verifies it through `--image`; no second build or private-registry token
+is needed. The build/runtime job names remain unchanged. Publication still
+builds amd64 and arm64 after CI; release promotion still uses the released
+revision's SHA tag and digest. A manual trigger permits exercising the same
+non-publishing validation path.
+
+Local prebuilt verification passed without NODE_AUTH_TOKEN in 5.70 seconds,
+including both runtime configurations. Invalid arguments return usage/exit 2.
+The default build-and-verify path also passes. All 1289 tests, types, lint,
+formatting, actionlint, bash syntax and documentation-link checks pass. Both
+review axes reported no findings. Actual workflow/artifact execution, GitHub
+cache reuse and timing evidence are pending the pushed workflow run.
