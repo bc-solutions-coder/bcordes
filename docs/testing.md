@@ -48,6 +48,6 @@ For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with D
 
 ## Match CI
 
-[CI](../.github/workflows/ci.yml) runs Vitest with coverage, lint, recursive type checking, a production build, production smoke checks, and Chromium browser flows. Browser failures upload `apps/web/e2e/test-results/`; coverage uploads separately. CI uses Node 24 and the package manager version declared in the root manifest.
+[CI](../.github/workflows/ci.yml) runs Vitest with coverage, lint, recursive type checking, a production build, production smoke checks, Chromium browser flows, and a static Storybook build. Browser failures upload `apps/web/e2e/test-results/`; coverage uploads separately. CI uses Node 24 and the package manager version declared in the root manifest.
 
 Run the checks affected by a change before handing it off. A passing fixture suite proves behavior against those fixtures; external platform registration, credentials, and deployed API contracts still need the [deployment checks](deployment.md).

@@ -1,10 +1,12 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const MockRedis = vi.fn(() => ({
-  on: vi.fn().mockReturnThis(),
-  connect: vi.fn().mockResolvedValue(undefined),
-}))
+const MockRedis = vi.fn(function () {
+  return {
+    on: vi.fn().mockReturnThis(),
+    connect: vi.fn().mockResolvedValue(undefined),
+  }
+})
 
 vi.mock('ioredis', () => ({
   default: MockRedis,

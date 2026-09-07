@@ -75,7 +75,9 @@ beforeEach(() => {
   mockEventSources = []
   vi.stubGlobal(
     'EventSource',
-    vi.fn((url: string) => createMockEventSource(url)),
+    vi.fn(function (url: string) {
+      return createMockEventSource(url)
+    }),
   )
   // Use direct connections unless a test enables BroadcastChannel.
   vi.stubGlobal('BroadcastChannel', undefined)
@@ -534,7 +536,7 @@ describe('useEventStream', () => {
       vi.useFakeTimers()
       // Visibility reconnect requires a leader; enable BroadcastChannel.
       mockChannelInstances = []
-      const BCClass = vi.fn((name: string) => {
+      const BCClass = vi.fn(function (name: string) {
         const instance = {
           name,
           postMessage: vi.fn(),
@@ -700,7 +702,7 @@ describe('useEventStream', () => {
     beforeEach(() => {
       vi.useFakeTimers()
       mockChannelInstances = []
-      MockBroadcastChannelClass = vi.fn((name: string) => {
+      MockBroadcastChannelClass = vi.fn(function (name: string) {
         const instance = {
           name,
           postMessage: vi.fn(),

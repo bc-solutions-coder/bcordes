@@ -88,3 +88,41 @@ All export lists, runtime assertions, mocks and timeout values are preserved.
 The focused eight-file run passed all 187 cases with a 100 ms test timeout;
 workspace typechecking also passed. The original failed full runs are recorded
 on #83, and #70 still owns the tests' eventual disposition.
+
+## Storybook and test runner, #73
+
+Pinned Storybook and its React/Vite framework to `11.0.0-alpha.0`, the approved
+next exception. Vitest and coverage-v8 are matched at 5.0.0. This arrangement
+works with the existing Vite 7.3.1 and TypeScript 5.9.3, so no compatibility
+grouping with Vite 8 was necessary.
+
+The first full run failed 26 cases because Redis, EventSource and
+BroadcastChannel constructor mocks used arrow functions. Vitest now constructs
+mock implementations with `new`. Changing those mocks to ordinary functions
+preserved their returned objects and all behavior assertions; all 33 focused
+cases passed, followed by all 1297 tests in 120 files with coverage.
+
+The static Storybook build passed and is now part of CI's build job. Browser
+verification of the development server rendered the Button story without page
+errors, changed its variant through Controls to match the Destructive story's
+computed color, and verified the disabled control disables the rendered button.
+The current story inventory has no standalone docs entry. The configuration
+has no docs add-on; the story's autodocs tag alone does not publish a docs page.
+The default docgen preset is react-docgen, and the framework dynamically loads
+the TypeScript docgen plugin only when selected. No TS6 fallback was introduced;
+the actual TS7 check remains #57.
+
+### Coverage measurement transition
+
+[coverage-vitest5.json](coverage-vitest5.json) includes exactly the same 102
+source paths as the original coverage snapshot. No coverage configuration,
+exclusion or threshold changed. The
+[Vitest migration guide](https://v4.vitest.dev/guide/migration#v8-code-coverage-major-changes)
+explains the newer AST-based remapping and removal of non-executable lines.
+For example, Hero has five executable lines in the new report versus 108 lines
+in the old report; its new report also counts the map callback as a function.
+
+New totals: 83.13% statements, 75.74% branches, 84.19% functions and 84.20%
+lines. These are not directly comparable with v3 percentages and do not meet
+the future cleanup's 90% gate. #46 records the revised measurement and retains
+ownership of that shortfall. Passing tests is not a coverage-target claim.

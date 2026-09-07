@@ -109,6 +109,9 @@ jobs:
           name: browser-results
           path: apps/web/e2e/test-results/
 
+      - name: Build Storybook
+        run: pnpm --filter bcordes build-storybook
+
   lint:
     runs-on: ubuntu-latest
     permissions:
