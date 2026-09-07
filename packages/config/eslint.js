@@ -39,7 +39,6 @@ export const config = [
       'apps/web/e2e/**',
       'apps/web/public/**',
       'eslint.config.js',
-      'prettier.config.js',
       // These configs have no covering tsconfig for type-aware lint rules.
       'packages/config/eslint.js',
       'vitest.config.ts',

@@ -126,3 +126,22 @@ New totals: 83.13% statements, 75.74% branches, 84.19% functions and 84.20%
 lines. These are not directly comparable with v3 percentages and do not meet
 the future cleanup's 90% gate. #46 records the revised measurement and retains
 ownership of that shortfall. Passing tests is not a coverage-target claim.
+
+## Oxfmt, #72
+
+Replaced direct Prettier tooling with Oxfmt 0.67.0 in commands and staged
+hooks, added a non-mutating CI formatting gate, and documented editor setup.
+The configuration preserves no semicolons, single quotes, trailing commas,
+80 columns, and lockfile/generated Storybook exclusions. Import, package-key
+and Tailwind-class sorting are explicitly disabled. pnpm recorded exact
+release-age exceptions for this release and its platform bindings.
+
+Temporary JS/TS, JSON, YAML, CSS and Markdown fixtures produced the expected
+formatting and passed a second, non-mutating check. Import and package-key
+order stayed unchanged. An explicitly supplied ignored lockfile stayed byte
+identical with the staged hook's no-error-on-unmatched-pattern option. The
+repository check retained generated Storybook output without formatting it.
+
+All 1297 tests, workspace typechecks, lint and format:check passed. Only four
+existing files required formatting changes; those are committed separately.
+Both standards and spec reviews reported no implementation findings.
