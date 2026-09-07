@@ -19,8 +19,8 @@ packages/auth/package.test.ts:199	collects the package's own tests as its own pr
 packages/auth/package.test.ts:226	adds ./testing to the exports map without disturbing the library subpaths	delete	Deleted
 packages/auth/package.test.ts:240	resolves the '/testing' subpath from apps/web	delete	Deleted
 packages/auth/package.test.ts:248	exports exactly the four session/user mock factories	delete	Deleted
-packages/auth/package.test.ts:262	produces User- and SessionData-shaped fixtures	rewrite	packages/auth/src/testing/index.test.ts (four fixture behavior cases)
-packages/auth/package.test.ts:291	honours overrides and builds admin fixtures	rewrite	packages/auth/src/testing/index.test.ts (four fixture behavior cases)
+packages/auth/package.test.ts:262	produces User- and SessionData-shaped fixtures	rewrite	packages/auth/src/testing/index.test.ts; packages/authz/src/fixtures.test.ts (session factories and public authorization consumers)
+packages/auth/package.test.ts:291	honours overrides and builds admin fixtures	rewrite	packages/auth/src/testing/index.test.ts; packages/authz/src/fixtures.test.ts (session factories and public authorization consumers)
 packages/auth/package.test.ts:304	is typed against the auth type surface rather than any	delete	Deleted
 packages/auth/package.test.ts:313	keeps the testing helpers out of the '.' barrel	delete	Deleted
 packages/auth/package.test.ts:322	is imported only from tests and E2E fixtures, never from shipped source	delete	Deleted
