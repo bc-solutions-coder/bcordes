@@ -4,7 +4,7 @@ Fort Myers, Naples | (239) 777-8800 | Bryan.Cordes@bcordes.dev | [LinkedIn](http
 
 ## Profile
 
-Results-driven Software Engineer with 6+ years of experience designing, developing, and optimizing web applications, APIs, and enterprise solutions. Skilled in modern frameworks including Angular, React, Svelte, Blazor, and Nest.js, with expertise in monorepo architectures, API development, and cloud infrastructure (AWS, Terraform). Proven track record of improving system performance, integrating automation, and delivering user-focused solutions that streamline business processes. Experienced with Atlassian tools, IoT devices, and e-commerce platforms, with a focus on scalability, maintainability, and best practices (SOLID, DRY, PCI compliance). Strong collaborator with a passion for technical innovation and high-quality delivery.
+Software engineer with 6+ years of experience building web applications, APIs and enterprise software. Experience with Angular, React, Svelte, Blazor and Nest.js, monorepos, and AWS/Terraform infrastructure.
 
 ## Experience
 

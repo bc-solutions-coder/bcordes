@@ -14,7 +14,7 @@ pnpm-debug.log
 *.swp
 *.log
 README.md
-DEPLOYMENT.md
+docs/deployment.md
 .github
 .vscode
 .idea

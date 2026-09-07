@@ -1,0 +1,29 @@
+baseline_path	baseline_blob	outcome	current_documents	evidence
+CONTEXT.md	1c7d2401d808d1387fdd3a961a6b051d9747c29c	retained	CONTEXT.md	Domain glossary remains accurate; no implementation content added.
+DEPLOYMENT.md	dac0221fd1c0f87c240b392799d3498b98fdca31	replaced	docs/deployment.md;docs/configuration.md	Moved operational guidance; corrected image-publication scope and Compose settings.
+LOCAL_DEV.md	dab944bc007db896ad31e852ad2f6efabe01a684	replaced	docs/setup.md	Removed obsolete database workflow; verified synthetic preview startup with Valkey.
+README.md	33af5b14f702d53b76d7661fe438f9a6135e85e0	rewritten	README.md	Short entry point with current setup, workspace tree and docs index.
+apps/web/CHANGELOG.md	0c50826d21ceeeed454843650f934eb1b569559e	retained	apps/web/CHANGELOG.md	Release history kept as history.
+apps/web/e2e/README.md	ceb04d226cdd3f06d352eeaf2fee162370057957	retained	apps/web/e2e/README.md	Canonical browser invocation and fixture details linked from testing guide.
+docs/agents/domain.md	dd841d56e5063fedbefbc3a6e4795cacbd4cba89	retained	docs/agents/domain.md	Domain/ADR lookup rules remain applicable.
+docs/agents/issue-tracker.md	6eb5690ee8cde821058f99807e2ae175fb943b6e	trimmed	docs/agents/issue-tracker.md	Removed inactive external-PR triage tutorial; preserved tracker operations.
+docs/agents/triage-labels.md	b716855d485f3865f9dfde2a82141721f065b2e7	rewritten	docs/agents/triage-labels.md	One label/meaning mapping; removed incorrect template instruction.
+docs/api/FRONTEND_SETUP_GUIDE.md	1176993cf5f7c6ad3b868a87afcb7d4e42256973	removed	docs/setup.md;docs/wallow.md;docs/authentication.md	Replaced copied custom-auth scaffold with current app guidance.
+docs/api/NOTIFICATIONS_GUIDE.md	4cc80411125af90ed8e7e62cb8d0da267a54e3e6	removed	docs/notifications.md	Replaced copied backend manual with current frontend integration and release limits.
+docs/architecture-review.md	ddb964c9884a43e395ce703aeebc5a7c1ab3b8b1	removed	docs/development.md;docs/ui.md	Retained verified module and theme rationale; removed old recommendations.
+docs/auth-walkthrough.md	69653c6899cb6231bf15721d4e2407cb5cfc6261	replaced	docs/authentication.md	Preserved current auth constraints under agreed topic name.
+docs/design-doc-architecture-improvements.md	c5232f1c5419f8c6e9d7bdd3620b0f75afb0454e	removed	docs/development.md;docs/ui.md	Removed superseded recipes; current conventions link their implementations.
+docs/plans/2026-03-26-sse-event-stream-fix-design.md	09b0461b9d564deec782a3ffaada7aa3511d51e1	removed-prior	docs/notifications.md	Deleted in 098cca1; verified provider/tab rationale documented without unproven guarantees.
+docs/plans/2026-03-26-sse-event-stream-fix-implementation.md	24b9a20041bd214b7062370145d4f9170fdf18ee	removed-prior	docs/testing.md;docs/notifications.md	Deleted in 098cca1; current source/tests linked instead of old edit recipes.
+docs/resume.md	9894cc9c1b4bdc7d3a4a93f5031b9458f8cd0c42	trimmed	docs/resume.md	Shortened profile only; retained owner-provided career facts and metrics without certifying them.
+docs/wallow-sdk.md	4397ecb2d81fee1d48cac7c4abc546dc2ad8b20f	replaced	docs/wallow.md	Moved SDK guidance and added a typechecked operation example.
+packages/wallow/README.md	568071f25f39eca1ce7d993a49b57ff94fa24d6a	updated	packages/wallow/README.md	Brief package entry with current central-guide links.
+docs/README.md	new	supporting-change	docs/README.md	Task-oriented index for all current guides.
+docs/configuration.md	new	supporting-change	docs/configuration.md	Canonical variable and Compose-settings reference.
+docs/development.md	new	supporting-change	docs/development.md	Current module boundaries and feature implementation steps.
+docs/ui.md	new	supporting-change	docs/ui.md	Current UI/forms/theming guidance and verified compatibility behavior.
+docs/testing.md	new	supporting-change	docs/testing.md	Check selection and links to canonical browser fixture details.
+scripts/check-docs.py	new	supporting-change	scripts/check-docs.py	Checks local documentation links and headings; validated positive and negative cases.
+.dockerignore	68a0f8831ac8737c92094529e33a30b1c3a07cda	supporting-change	.dockerignore	Moved deployment-guide exclusion to its new path.
+apps/web/src/__tests__/architecture-cleanup.test.ts	a954e642376671b61d0d2420262bf5873369ecdc	supporting-change	apps/web/src/__tests__/architecture-cleanup.test.ts	Changed only expected heading casing; no assertions added.
+apps/web/src/__tests__/docs-workspace-layout.test.ts	25629318584b315cdc5cbe6263b77665ae64dbc8	supporting-change	apps/web/src/__tests__/docs-workspace-layout.test.ts	Changed only expected heading casing; no assertions added.

@@ -127,9 +127,9 @@ describe.skipIf(!hasClaude)(
 
 describe('README.md reflects the pnpm workspace layout', () => {
   const projectStructure = (() => {
-    const start = README.indexOf('## Project Structure')
+    const start = README.indexOf('## Project structure')
     if (start === -1) return ''
-    const rest = README.slice(start + '## Project Structure'.length)
+    const rest = README.slice(start + '## Project structure'.length)
     const end = rest.indexOf('\n## ')
     return end === -1 ? rest : rest.slice(0, end)
   })()

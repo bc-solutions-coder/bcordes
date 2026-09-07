@@ -48,7 +48,7 @@ const section = (doc: string, heading: string): string => {
 }
 
 const keyDirs = section(CLAUDE, '### Key Directories')
-const projectStructure = section(README, '## Project Structure')
+const projectStructure = section(README, '## Project structure')
 
 // ---------------------------------------------------------------------------
 // 1. Emptied horizontal directories removed

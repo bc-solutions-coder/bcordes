@@ -1,9 +1,9 @@
 # @bcordes/wallow
 
-Wallow SDK clients and application-facing types.
+Client factories and application types for the published Wallow SDK.
 
-- `createWallowClient()` creates a request-scoped SDK client through the SDK BFF and the current user session.
-- `getInquiryService()` uses the SDK service client and shared Valkey adapter for anonymous inquiry submissions.
-- Inquiry and notification DTOs come from `@bc-solutions-coder/sdk`. User-facing errors use `@bc-solutions-coder/api-errors`.
+- `createWallowClient()` creates a client for the current user request through the SDK BFF.
+- `getInquiryService()` creates the shared service client for anonymous inquiry submissions.
+- `types` exports SDK-derived inquiry and notification types plus local event types.
 
-See [SDK integration](../../docs/wallow-sdk.md) for request ownership and [deployment](../../DEPLOYMENT.md) for runtime configuration and release gates.
+See [Wallow SDK usage](../../docs/wallow.md) for operations, errors, and cache updates; [authentication](../../docs/authentication.md) for access checks; and [configuration](../../docs/configuration.md) for runtime settings.
