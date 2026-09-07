@@ -21,3 +21,9 @@ Each temporary defect failed its relevant probe with exit 1, and the original fi
 - Removing UI setup broke both its DOM matcher and cleanup checks.
 
 Verification results and runtime totals are recorded in [summary.json](summary.json). Coverage thresholds and exclusions remain unchanged. This slice does not claim completion of the parent cleanup or remote CI.
+
+## Review follow-up
+
+Standards review found no documented violations or actionable Fowler smells. Its minor temporary-directory cleanup observation is fixed by discovering packages before creating the directory.
+
+Spec review requested the remaining accepted mutation evidence. All 21 recorded defects now fail the relevant probes, including individual strict-null and implicit-any options, unused locals/parameters, fallthrough, side-effect imports, JavaScript emission, broken alias resolution, class-only diagnostic suppression, each import-boundary category, and a missing boundary file matcher. The class-only mutation fails the assertion for `class.ts` before the aggregate count; enabled emission fails the explicit generated-file check. Each change was restored, followed by a passing configuration-project run. No configuration mutation remains.

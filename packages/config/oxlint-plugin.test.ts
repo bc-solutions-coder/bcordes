@@ -81,7 +81,6 @@ it('reports invalid type parameter names and accepts supported names and suppres
     )
     expect(result.status).toBe(1)
     const output = JSON.parse(result.stdout)
-    expect(output.diagnostics).toHaveLength(invalid.length + 5)
     for (const [index] of invalid.entries()) {
       expect(output.diagnostics).toEqual(
         expect.arrayContaining([
@@ -114,6 +113,7 @@ it('reports invalid type parameter names and accepts supported names and suppres
         ]),
       )
     }
+    expect(output.diagnostics).toHaveLength(invalid.length + 5)
   } finally {
     rmSync(directory, { recursive: true, force: true })
   }

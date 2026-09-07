@@ -43,8 +43,8 @@ export function workspacePackages() {
 }
 
 export function copyWorkspace() {
-  const directory = mkdtempSync(join(tmpdir(), 'bcordes-tool-input-'))
   const packages = workspacePackages()
+  const directory = mkdtempSync(join(tmpdir(), 'bcordes-tool-input-'))
   try {
     const files = execFileSync(
       'git',

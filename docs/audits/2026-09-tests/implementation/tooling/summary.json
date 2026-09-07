@@ -56,6 +56,70 @@
     {
       "defect": "missing-dom-setup",
       "exitCode": 1
+    },
+    {
+      "defect": "compiler-strict",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noUnusedLocals",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noUnusedParameters",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noFallthroughCasesInSwitch",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noUncheckedSideEffectImports",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noEmit",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-alias",
+      "exitCode": 1
+    },
+    {
+      "defect": "class-declaration-diagnostic",
+      "exitCode": 1
+    },
+    {
+      "defect": "auth-ui-restriction",
+      "exitCode": 1
+    },
+    {
+      "defect": "package-deep-import-restriction",
+      "exitCode": 1
+    },
+    {
+      "defect": "tilde-alias-restriction",
+      "exitCode": 1
+    },
+    {
+      "defect": "route-import-restriction",
+      "exitCode": 1
+    },
+    {
+      "defect": "app-module-deep-import-restriction",
+      "exitCode": 1
+    },
+    {
+      "defect": "boundary-file-matcher",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-strictNullChecks",
+      "exitCode": 1
+    },
+    {
+      "defect": "compiler-noImplicitAny",
+      "exitCode": 1
     }
   ],
   "commands": [
