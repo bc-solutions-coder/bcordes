@@ -1,0 +1,79 @@
+{
+  "source_commit": "4c1a4daf2000687c5069f797436dc148662e0663",
+  "status": "proposed; awaiting human review; implementation pending",
+  "files": 19,
+  "baseline_declarations": 287,
+  "baseline_test_declarations": 215,
+  "current_test_declarations": 214,
+  "suite_declarations": 72,
+  "runtime_cases": 214,
+  "proposed_baseline_test_dispositions": {
+    "delete": 140,
+    "rewrite": 17,
+    "keep": 53,
+    "rename": 5
+  },
+  "proposed_whole_file_deletions": [
+    "packages/auth/package.test.ts",
+    "packages/query/src/index.test.ts",
+    "packages/server/package.test.ts",
+    "packages/utils/package.test.ts",
+    "packages/valkey/package.test.ts"
+  ],
+  "owned_worktree_hashes": {
+    "packages/auth/package.test.ts": "95d4aa6741cf376e26ba787fc752a1ed15da94a1be4eddbcadc50fc6943e6de3",
+    "packages/auth/src/middleware.test.ts": "29b349989b7e05f282c7be71eca7a12c0654072c893c77709bd97fcd043f53bd",
+    "packages/auth/src/redact.test.ts": "4e67bdf0ee6a417e4c118ca5067152527afe1d9c643873c1a277457946e446ee",
+    "packages/authz/src/predicates.test.ts": "727728e4f947d14c7671094f8c3bdf53ddcb2f8ba03a86e71799dd04630796de",
+    "packages/config/config.test.ts": "57eefca6668d9d3450e7fbf41be0a18b3018833913d4e16782b0ce43ca8e749c",
+    "packages/config/typecheck-coverage.test.ts": "6bc164f0bcfc6118478cb7ad0c4ad3c1889a01e00bd9c3470341d85c0f65a313",
+    "packages/logger/package.test.ts": "9dc7878e38bd407624869c1528937ea071fb6eeb023f58d683c5d8515dc20a1a",
+    "packages/query/src/devtools.test.tsx": "c6e161959faa975025bffcfb00c4684fd53bdec4364d7389017dc841f32f30c1",
+    "packages/query/src/index.test.ts": "496361e30221eb4c991c06423dc910e4e5a46f65942382d081e029dbfe2877e3",
+    "packages/query/src/root-provider.test.tsx": "827156d4dc48d3dce0082d44203bd89bf0966bde1e69c8042f73f2ffa84e133e",
+    "packages/server/package.test.ts": "859582b41446073eebd2bd5e13e75b2c98aa76dd30a9098257924611460f2f2b",
+    "packages/server/src/security-headers.test.ts": "17068afb546a3e89faf3e7aef179306e91029bdd94fe17ef9cd3e4ca8fd2c555",
+    "packages/test-utils/package.test.ts": "71134a82fb4731c4c2c2f3fc1791302617857cdb7d34a9da49d8b979161569e3",
+    "packages/utils/package.test.ts": "6231e11a99215bc22beacea8e1e4a16bb75cf24694e36b7ccbc539973b374d7d",
+    "packages/utils/src/format.test.ts": "e2044d64cb99a8450d8afe272164477aa7f9a16170a1a4494a7622fa9488431a",
+    "packages/utils/src/utils.test.ts": "19437d68669e34c2ceb5c245b85291bdf13d741eafed0eed1680db024f2adae4",
+    "packages/valkey/package.test.ts": "3d93b743845f9c400b00029fc070f2a8c6ed73e2d178b8c2e9e8d8c107575e13",
+    "packages/valkey/src/client.test.ts": "3f06360868af98e9cc886f2d7b9db75e0cf1f7795585441f76644ec3e2bf6695",
+    "packages/wallow/package.test.ts": "fca33320b60e5058cebc446fb7c124effd04d8bca56ade805eef6e4cbb16ac7d"
+  },
+  "baseline_drift": {
+    "packages/test-utils/package.test.ts": "Concurrent toolchain work removed baseline line104 dependency-manifest case (two assertions). Later declarations shift -7 lines; no other owned test file differs from baseline. Removed row retained in ledger with blank current_line."
+  },
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "packages/auth/package.test.ts",
+      "packages/auth/src/middleware.test.ts",
+      "packages/auth/src/redact.test.ts",
+      "packages/authz/src/predicates.test.ts",
+      "packages/config/config.test.ts",
+      "packages/config/typecheck-coverage.test.ts",
+      "packages/logger/package.test.ts",
+      "packages/query/src/devtools.test.tsx",
+      "packages/query/src/index.test.ts",
+      "packages/query/src/root-provider.test.tsx",
+      "packages/server/package.test.ts",
+      "packages/server/src/security-headers.test.ts",
+      "packages/test-utils/package.test.ts",
+      "packages/utils/package.test.ts",
+      "packages/utils/src/format.test.ts",
+      "packages/utils/src/utils.test.ts",
+      "packages/valkey/package.test.ts",
+      "packages/valkey/src/client.test.ts",
+      "packages/wallow/package.test.ts",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-infra-run.json"
+    ],
+    "passed": 214,
+    "failed": 0,
+    "skipped": 0
+  }
+}

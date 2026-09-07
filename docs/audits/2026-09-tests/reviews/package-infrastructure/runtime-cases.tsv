@@ -1,0 +1,215 @@
+file	title	status
+packages/config/config.test.ts	@bcordes/config package manifest declares the workspace package conventions	passed
+packages/config/config.test.ts	@bcordes/config package manifest exports the eslint config and the tsconfig base, and both files exist	passed
+packages/config/config.test.ts	workspace wiring is a workspace: dependency of the repo root (root eslint.config.js imports it)	passed
+packages/config/config.test.ts	workspace wiring is a workspace: dependency of apps/web (its tsconfig extends it)	passed
+packages/config/config.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/config/config.test.ts	workspace wiring resolves its export subpaths from apps/web	passed
+packages/config/config.test.ts	tsconfig base holds the shared compiler options and not the app-specific alias	passed
+packages/config/config.test.ts	tsconfig base is what apps/web extends	passed
+packages/config/config.test.ts	tsconfig base feeds apps/web its compiler options through the exports map (tsc --showConfig)	passed
+packages/config/config.test.ts	eslint config is sourced from @bcordes/config/eslint by the root eslint.config.js	passed
+packages/config/config.test.ts	eslint config still applies the app module-boundary rules to the app shell, features and shared	passed
+packages/config/config.test.ts	eslint config applies package-level boundaries to packages/	passed
+packages/config/typecheck-coverage.test.ts	workspace typecheck coverage discovers every workspace package (sanity: apps/web + all packages/*)	passed
+packages/config/typecheck-coverage.test.ts	workspace typecheck coverage root `typecheck` fans out recursively to every workspace package	passed
+packages/config/typecheck-coverage.test.ts	workspace typecheck coverage every workspace package.json declares a `typecheck` script	passed
+packages/config/typecheck-coverage.test.ts	workspace typecheck coverage every `typecheck` script follows the established `tsc --noEmit` pattern	passed
+packages/query/src/devtools.test.tsx	"devtools default-exports a TanStack Devtools plugin named ""Tanstack Query"""	passed
+packages/query/src/devtools.test.tsx	devtools renders the real ReactQueryDevtoolsPanel	passed
+packages/query/src/index.test.ts	@bcordes/query entry point exposes getContext, which mints a fresh QueryClient	passed
+packages/query/src/index.test.ts	@bcordes/query entry point exposes Provider	passed
+packages/query/src/index.test.ts	@bcordes/query entry point does not re-export the devtools panel, which stays on its own subpath so @tanstack/react-query-devtools is not pulled into the app bundle	passed
+packages/query/src/root-provider.test.tsx	root-provider getContext returns an object with a QueryClient instance	passed
+packages/query/src/root-provider.test.tsx	root-provider getContext returns a new QueryClient on each call	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider renders children	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider makes QueryClient accessible to children via useQueryClient	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider renders multiple children	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider cleans up on unmount without errors	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider uses the provided queryClient, not a default one	passed
+packages/query/src/root-provider.test.tsx	root-provider Provider serves server-hydrated query data to children without refetching	passed
+packages/authz/src/predicates.test.ts	hasRole returns true when the user has the role	passed
+packages/authz/src/predicates.test.ts	hasRole returns false when the user lacks the role	passed
+packages/authz/src/predicates.test.ts	hasRole returns false for a null user	passed
+packages/authz/src/predicates.test.ts	hasAnyRole returns true when the user has at least one	passed
+packages/authz/src/predicates.test.ts	hasAnyRole returns false when the user has none	passed
+packages/authz/src/predicates.test.ts	hasAnyRole returns false for an empty candidate list	passed
+packages/authz/src/predicates.test.ts	hasPermission returns true when the permission is present	passed
+packages/authz/src/predicates.test.ts	hasPermission returns false when permissions are empty	passed
+packages/authz/src/predicates.test.ts	can grants when a role grants the action	passed
+packages/authz/src/predicates.test.ts	can denies when no role grants the action	passed
+packages/authz/src/predicates.test.ts	can denies for a null user	passed
+packages/logger/package.test.ts	@bcordes/logger package manifest declares the workspace package conventions	passed
+packages/logger/package.test.ts	@bcordes/logger package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/logger/package.test.ts	@bcordes/logger package manifest declares pino as a runtime dep and pino-pretty as a dev dep	passed
+packages/logger/package.test.ts	the source really moved out of apps/web leaves nothing behind at apps/web/src/lib/logger.ts	passed
+packages/logger/package.test.ts	the source really moved out of apps/web default-exports a working pino logger	passed
+packages/logger/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/logger/package.test.ts	workspace wiring takes pino and pino-pretty off apps/web	passed
+packages/logger/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/logger/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/logger/package.test.ts	every importer was rewritten leaves no @/lib/logger import anywhere	passed
+packages/logger/package.test.ts	every importer was rewritten redirects every former importer to @bcordes/logger	passed
+packages/logger/package.test.ts	every importer was rewritten leaves no direct pino import in apps/web	passed
+packages/logger/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/server/package.test.ts	@bcordes/server package manifest declares the workspace package conventions	passed
+packages/server/package.test.ts	@bcordes/server package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/server/package.test.ts	the middleware really moved out of apps/web leaves nothing behind under apps/web/src/server/middleware	passed
+packages/server/package.test.ts	the middleware really moved out of apps/web carries every source module into packages/server/src	passed
+packages/server/package.test.ts	the middleware really moved out of apps/web brings the behaviour tests along with their modules	passed
+packages/server/package.test.ts	the package entry point exports applySecurityHeaders	passed
+packages/server/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/server/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/server/package.test.ts	workspace wiring resolves its subpath exports from apps/web	passed
+packages/server/package.test.ts	every former importer was retired leaves no @/server/middleware import anywhere	passed
+packages/server/package.test.ts	every former importer was retired leaves no @/server-fns/csrf import anywhere	passed
+packages/server/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/server/src/security-headers.test.ts	preserves redirects and multiple session cookies while adding security headers	passed
+packages/server/src/security-headers.test.ts	keeps streamed response content readable	passed
+packages/test-utils/package.test.ts	@bcordes/test-utils package manifest declares the workspace package conventions	passed
+packages/test-utils/package.test.ts	@bcordes/test-utils package manifest exposes the harness as a barrel plus a ./setup subpath (no build step, no dist/)	passed
+packages/test-utils/package.test.ts	@bcordes/test-utils package manifest ships the testing-library + jsdom harness as runtime dependencies	passed
+packages/test-utils/package.test.ts	no dependency inversion: test-utils never depends on its consumers names neither @bcordes/auth nor @bcordes/wallow in its manifest	passed
+packages/test-utils/package.test.ts	no dependency inversion: test-utils never depends on its consumers imports nothing from @bcordes/auth or @bcordes/wallow in its source	passed
+packages/test-utils/package.test.ts	the '.' barrel exposes the generic harness surface re-exports renderWithProviders and the testing-library surface	passed
+packages/test-utils/package.test.ts	the '.' barrel exposes the generic harness surface keeps app-specific mock fixtures OUT of the generic barrel	passed
+packages/test-utils/package.test.ts	the generic harness really moved out of apps/web leaves no render helper behind under apps/web/src/test	passed
+packages/test-utils/package.test.ts	the generic harness really moved out of apps/web leaves no setup harness behind under apps/web/src/test	passed
+packages/test-utils/package.test.ts	the four verbatim setup.ts copies collapse into the package deletes every duplicated per-project setup.ts	passed
+packages/test-utils/package.test.ts	the four verbatim setup.ts copies collapse into the package keeps the package as the single home of the setup harness	passed
+packages/test-utils/package.test.ts	every render-helper importer was repointed leaves no @/test/helpers/render import anywhere	passed
+packages/test-utils/package.test.ts	every render-helper importer was repointed redirects former importers to @bcordes/test-utils	passed
+packages/test-utils/package.test.ts	every jsdom Vitest project loads setup from the package repoints all five setupFiles at @bcordes/test-utils/setup	passed
+packages/test-utils/package.test.ts	the harness is a devDependency-only consumer everywhere is added under devDependencies (never dependencies) of each jsdom consumer	passed
+packages/test-utils/package.test.ts	the harness is a devDependency-only consumer everywhere is not pulled into the node-env leaf packages	passed
+packages/test-utils/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/test-utils/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/test-utils/package.test.ts	workspace wiring resolves its './setup' subpath from apps/web	passed
+packages/utils/package.test.ts	@bcordes/utils package manifest declares the workspace package conventions	passed
+packages/utils/package.test.ts	@bcordes/utils package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/utils/package.test.ts	@bcordes/utils package manifest declares the runtime dependencies it actually imports	passed
+packages/utils/package.test.ts	the source really moved out of apps/web holds the sources at packages/utils/src	passed
+packages/utils/package.test.ts	the source really moved out of apps/web leaves nothing behind at apps/web/src/lib	passed
+packages/utils/package.test.ts	the source really moved out of apps/web re-exports cn and the format helpers from its index, and they work	passed
+packages/utils/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/utils/package.test.ts	workspace wiring takes clsx, tailwind-merge and date-fns off apps/web	passed
+packages/utils/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/utils/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/utils/package.test.ts	every importer was rewritten leaves no @/lib/utils or @/lib/format import anywhere	passed
+packages/utils/package.test.ts	every importer was rewritten points the shadcn utils alias at the package	passed
+packages/utils/package.test.ts	every importer was rewritten redirects every former importer to @bcordes/utils	passed
+packages/utils/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/utils/src/format.test.ts	"formatRelativeTime returns ""just now"" for less than 60 seconds ago"	passed
+packages/utils/src/format.test.ts	formatRelativeTime returns minutes ago for 1-59 minutes	passed
+packages/utils/src/format.test.ts	"formatRelativeTime returns ""1m ago"" at exactly 60 seconds"	passed
+packages/utils/src/format.test.ts	formatRelativeTime returns hours ago for 1-23 hours	passed
+packages/utils/src/format.test.ts	"formatRelativeTime returns ""1h ago"" at exactly 60 minutes"	passed
+packages/utils/src/format.test.ts	formatRelativeTime returns days ago for 1-6 days	passed
+packages/utils/src/format.test.ts	formatRelativeTime falls back to short date for 7+ days	passed
+packages/utils/src/format.test.ts	formatRelativeTime falls back to short date for much older dates	passed
+packages/utils/src/format.test.ts	"formatDateTime formats a date as ""Jan 5, 2025, 02:30 PM"""	passed
+packages/utils/src/format.test.ts	formatDateTime formats midnight as 12:00 AM	passed
+packages/utils/src/format.test.ts	formatDateTime formats noon as 12:00 PM	passed
+packages/utils/src/format.test.ts	formatDateTime pads minutes with leading zero	passed
+packages/utils/src/format.test.ts	formatDateTime handles PM hours correctly	passed
+packages/utils/src/utils.test.ts	cn merges multiple class names	passed
+packages/utils/src/utils.test.ts	cn resolves conflicting Tailwind classes (last wins)	passed
+packages/utils/src/utils.test.ts	cn handles conditional class names with falsy values	passed
+packages/utils/src/utils.test.ts	cn returns empty string for no input	passed
+packages/utils/src/utils.test.ts	cn returns empty string for all-falsy input	passed
+packages/utils/src/utils.test.ts	cn handles array inputs	passed
+packages/utils/src/utils.test.ts	cn handles object inputs for conditional classes	passed
+packages/utils/src/utils.test.ts	cn merges conflicting Tailwind modifiers correctly	passed
+packages/valkey/package.test.ts	@bcordes/valkey package manifest declares the workspace package conventions	passed
+packages/valkey/package.test.ts	@bcordes/valkey package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/valkey/package.test.ts	@bcordes/valkey package manifest owns ioredis as a runtime dep and its types as a dev dep	passed
+packages/valkey/package.test.ts	the source really moved out of apps/web leaves nothing behind under apps/web/src/lib/valkey	passed
+packages/valkey/package.test.ts	the source really moved out of apps/web keeps client.ts and keys.ts behind the barrel	passed
+packages/valkey/package.test.ts	the scoped barrel keeps its public API exports exactly getValkey and keys at runtime	passed
+packages/valkey/package.test.ts	the scoped barrel keeps its public API re-exports the Redis type from the barrel	passed
+packages/valkey/package.test.ts	the scoped barrel keeps its public API exposes every key builder through the barrel	passed
+packages/valkey/package.test.ts	the scoped barrel keeps its public API surfaces getValkey through the barrel, still lazy and still guarded	passed
+packages/valkey/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/valkey/package.test.ts	workspace wiring takes ioredis and @types/ioredis off apps/web	passed
+packages/valkey/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/valkey/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/valkey/package.test.ts	every importer was rewritten leaves no @/lib/valkey import anywhere	passed
+packages/valkey/package.test.ts	every importer was rewritten redirects every former importer to @bcordes/valkey	passed
+packages/valkey/package.test.ts	every importer was rewritten leaves no direct ioredis import in apps/web	passed
+packages/valkey/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/valkey/src/client.test.ts	valkey client getValkey returns the same instance when called twice (singleton)	passed
+packages/valkey/src/client.test.ts	valkey client getValkey throws a descriptive error when REDIS_URL is not set	passed
+packages/valkey/src/client.test.ts	valkey client getValkey passes REDIS_URL value to Redis constructor	passed
+packages/valkey/src/client.test.ts	valkey client keys session(id) returns bcordes:session:<id>	passed
+packages/valkey/src/client.test.ts	valkey client keys sessionLock(id) returns bcordes:lock:session:<id>	passed
+packages/valkey/src/client.test.ts	valkey client keys serviceToken() returns bcordes:service-token	passed
+packages/valkey/src/client.test.ts	valkey client keys serviceTokenLock() returns bcordes:lock:service-token	passed
+packages/valkey/src/client.test.ts	valkey client keys oidcConfig() returns bcordes:oidc-config	passed
+packages/auth/package.test.ts	@bcordes/auth package manifest declares the workspace package conventions	passed
+packages/auth/package.test.ts	@bcordes/auth package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/auth/package.test.ts	@bcordes/auth package manifest owns its OIDC and sealing runtime deps	passed
+packages/auth/package.test.ts	@bcordes/auth package manifest depends on the already-extracted logger and valkey packages	passed
+packages/auth/package.test.ts	@bcordes/auth package manifest keeps the TanStack framework surface as peer deps	passed
+packages/auth/package.test.ts	the library really moved out of apps/web leaves nothing behind under apps/web/src/lib/auth	passed
+packages/auth/package.test.ts	the library really moved out of apps/web carries every source module into packages/auth/src	passed
+packages/auth/package.test.ts	the '.' barrel exposes the redaction helpers exports exactly redact and redactUser at runtime	passed
+packages/auth/package.test.ts	the '.' barrel exposes the redaction helpers redacts secrets to their last four characters	passed
+packages/auth/package.test.ts	the '.' barrel exposes the redaction helpers narrows a user to non-sensitive fields	passed
+packages/auth/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/auth/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/auth/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/auth/package.test.ts	every importer was rewritten leaves no @/lib/auth import anywhere	passed
+packages/auth/package.test.ts	every importer was rewritten redirects former importers to @bcordes/auth	passed
+packages/auth/package.test.ts	no cycle: authz never leaks into auth imports nothing from @bcordes/authz inside packages/auth	passed
+packages/auth/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry adds ./testing to the exports map without disturbing the library subpaths	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry resolves the '/testing' subpath from apps/web	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry exports exactly the four session/user mock factories	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry produces User- and SessionData-shaped fixtures	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry honours overrides and builds admin fixtures	passed
+packages/auth/package.test.ts	@bcordes/auth/testing ships the mock factories as a secondary entry is typed against the auth type surface rather than any	passed
+packages/auth/package.test.ts	the mock factories never reach the production bundle keeps the testing helpers out of the '.' barrel	passed
+packages/auth/package.test.ts	the mock factories never reach the production bundle is imported only from tests and E2E fixtures, never from shipped source	passed
+packages/auth/package.test.ts	the mock factories never reach the production bundle retires the old @/test/mocks/auth module entirely	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter returns null without a session	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter uses API-expanded permissions instead of session scopes	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter rejects a profile belonging to another session user	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter treats an expired SDK session as signed out	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter redirects unauthenticated navigation to SDK login	passed
+packages/auth/src/middleware.test.ts	SDK identity adapter denies staff access when an admin role lacks the API capability	passed
+packages/auth/src/redact.test.ts	"redact returns ""[empty]"" for undefined"	passed
+packages/auth/src/redact.test.ts	"redact returns ""[empty]"" for null"	passed
+packages/auth/src/redact.test.ts	"redact returns ""[empty]"" for empty string"	passed
+packages/auth/src/redact.test.ts	"redact returns ""[redacted]"" for a 3-char string"	passed
+packages/auth/src/redact.test.ts	"redact returns ""[redacted]"" for a 4-char string"	passed
+packages/auth/src/redact.test.ts	"redact returns ""[redacted:...bcde]"" for a 5-char string"	passed
+packages/auth/src/redact.test.ts	"redact returns a string starting with ""[redacted:..."" and ending with last 4 chars for a long token"	passed
+packages/auth/src/redact.test.ts	redactUser includes id, name, roles, and tenantId from the input	passed
+packages/auth/src/redact.test.ts	redactUser contains exactly the allowed keys	passed
+packages/auth/src/redact.test.ts	redactUser does not include email, permissions, or tenantName	passed
+packages/wallow/package.test.ts	@bcordes/wallow package manifest declares the workspace package conventions	passed
+packages/wallow/package.test.ts	@bcordes/wallow package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/wallow/package.test.ts	@bcordes/wallow package manifest owns the auth, logger and valkey packages it imports	passed
+packages/wallow/package.test.ts	@bcordes/wallow package manifest owns its OAuth client-credentials runtime dep	passed
+packages/wallow/package.test.ts	@bcordes/wallow package manifest keeps the TanStack server surface as a peer dep	passed
+packages/wallow/package.test.ts	the client really moved out of apps/web leaves nothing behind under apps/web/src/lib/wallow	passed
+packages/wallow/package.test.ts	the client really moved out of apps/web carries every source module into packages/wallow/src	passed
+packages/wallow/package.test.ts	the '.' barrel exposes the public runtime surface exports exactly the client factory, service client and error helpers	passed
+packages/wallow/package.test.ts	the '.' barrel exposes the public runtime surface re-exports callable client factory and service client	passed
+packages/wallow/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/wallow/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/wallow/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/wallow/package.test.ts	every importer was rewritten leaves no @/lib/wallow import anywhere	passed
+packages/wallow/package.test.ts	every importer was rewritten redirects former importers to @bcordes/wallow	passed
+packages/wallow/package.test.ts	no cycle: wallow never leaks back into auth imports nothing from @bcordes/wallow inside packages/auth	passed
+packages/wallow/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry adds ./testing to the exports map without disturbing the library subpaths	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry resolves the '/testing' subpath from apps/web	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry exports exactly the mock client factory and the two response builders	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry builds a MockWallowClient whose verb methods are vitest mocks	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry defaults every mock verb to a 200 JSON response	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry builds JSON and text Responses from the helper factories	passed
+packages/wallow/package.test.ts	@bcordes/wallow/testing ships the mock client factory as a secondary entry is typed against the wallow client surface rather than any	passed
+packages/wallow/package.test.ts	the mock client factory never reaches the production bundle keeps the testing helpers out of the '.' barrel	passed
+packages/wallow/package.test.ts	the mock client factory never reaches the production bundle is imported only from test files, never from shipped source	passed
+packages/wallow/package.test.ts	the mock client factory never reaches the production bundle retires the old @/test/mocks/wallow module entirely	passed
