@@ -1,6 +1,6 @@
-# Public pages, contact, and projects review proposal
+# Public pages, contact, and projects accepted review
 
-Draft for [Review public pages, contact, and projects tests](https://github.com/bc-solutions-coder/bcordes/issues/63). **Awaiting human acceptance. No tests have changed and no replacement has been implemented.**
+Accepted plan for [Review public pages, contact, and projects tests](https://github.com/bc-solutions-coder/bcordes/issues/63). The user approved the complete proposal with "looks good to me". **Implementation remains pending; no tests have changed and no replacement has been implemented.**
 
 ## Complete owned inventory
 
@@ -19,7 +19,7 @@ Unrelated untracked Storybook output and toolchain-audit work were present befor
 
 No entire file is proposed for deletion. Many rewrites only strengthen a query or remove a weak assertion; this count does not imply 76 new tests. Deleted metadata, shape, count and stub cases have explicit retained or replacement evidence in the ledger. Conditional replacements must pass before corresponding removals can land.
 
-## Recommendations requiring acceptance
+## Accepted recommendations
 
 ### Preserve content contracts and make titles accurate
 
@@ -66,4 +66,4 @@ The resume DOM test establishes a download link and its semantics, not that the 
 
 The existing [homepage browser statistic mismatch](https://github.com/bc-solutions-coder/bcordes/issues/53) remains a tracked browser issue. These component tests use current content and do not resolve that browser failure. Cross-group ownership is preserved; no proposed deletion depends on another group's unresolved test disposition. Within this group, a deletion linked to a rewritten case is conditional on that replacement's evidence.
 
-Accepting this proposal chooses the recorded dispositions and replacement requirements, not immediate deletion or a passing coverage claim. Implementation must first meet the accepted coverage gate, refresh the inventory for intervening changes, run affected tests and full coverage, prove new/substantial rewrites fail for the intended defect, and run relevant browser/build checks. Final reconciliation must include proposed new files and all surviving/renamed cases.
+The user accepted the recorded dispositions and replacement requirements, not immediate deletion or a passing coverage claim. Implementation must first meet the accepted coverage gate, refresh the inventory for intervening changes, run affected tests and full coverage, prove new/substantial rewrites fail for the intended defect, and run relevant browser/build checks. Final reconciliation must include proposed new files and all surviving/renamed cases.

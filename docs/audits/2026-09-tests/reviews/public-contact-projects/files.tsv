@@ -1,23 +1,23 @@
 file	tests	suites	proposed_file_disposition	case_counts	status
-apps/web/src/features/about/components/AboutHero.test.tsx	6	1	rewrite	"{""keep"": 4, ""rename"": 1, ""rewrite"": 1}"	proposed
-apps/web/src/features/about/components/Timeline.test.tsx	6	1	rewrite	"{""keep"": 1, ""rename"": 2, ""rewrite"": 3}"	proposed
-apps/web/src/features/contact/components/ContactForm.test.tsx	9	1	rewrite	"{""delete"": 1, ""rename"": 1, ""rewrite"": 7}"	proposed
-apps/web/src/features/contact/components/ContactFormFields.test.tsx	4	1	rewrite	"{""delete"": 2, ""keep"": 2}"	proposed
-apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	3	1	rewrite	"{""delete"": 1, ""keep"": 2}"	proposed
-apps/web/src/features/home/components/FeaturedWork.test.tsx	9	1	rewrite	"{""keep"": 2, ""rewrite"": 7}"	proposed
-apps/web/src/features/home/components/Hero.test.tsx	7	1	rewrite	"{""rename"": 2, ""rewrite"": 5}"	proposed
-apps/web/src/features/home/components/ServicesGrid.test.tsx	5	1	rewrite	"{""keep"": 2, ""rename"": 2, ""rewrite"": 1}"	proposed
-apps/web/src/features/home/components/SkillsShowcase.test.tsx	7	1	rewrite	"{""keep"": 4, ""rename"": 1, ""rewrite"": 2}"	proposed
-apps/web/src/features/projects/components/ProjectCard.test.tsx	8	1	rewrite	"{""delete"": 1, ""keep"": 5, ""rename"": 1, ""rewrite"": 1}"	proposed
-apps/web/src/features/projects/components/ProjectFilter.test.tsx	11	3	rewrite	"{""keep"": 5, ""rewrite"": 6}"	proposed
-apps/web/src/features/projects/content/bcordes.test.tsx	30	3	rewrite	"{""delete"": 10, ""keep"": 15, ""rewrite"": 5}"	proposed
-apps/web/src/features/projects/content/index.test.ts	17	5	rewrite	"{""delete"": 3, ""keep"": 5, ""rewrite"": 9}"	proposed
-apps/web/src/features/projects/content/wallow.test.tsx	29	3	rewrite	"{""delete"": 10, ""keep"": 13, ""rewrite"": 6}"	proposed
-apps/web/src/routes/about.test.tsx	6	3	rewrite	"{""delete"": 1, ""keep"": 1, ""rename"": 1, ""rewrite"": 3}"	proposed
-apps/web/src/routes/contact.test.tsx	7	3	rewrite	"{""delete"": 1, ""keep"": 2, ""rewrite"": 4}"	proposed
-apps/web/src/routes/index.test.tsx	6	3	rewrite	"{""delete"": 2, ""keep"": 1, ""rewrite"": 3}"	proposed
-apps/web/src/routes/projects/$slug.component.test.tsx	15	2	rewrite	"{""delete"": 2, ""keep"": 7, ""rename"": 1, ""rewrite"": 5}"	proposed
-apps/web/src/routes/projects/$slug.test.ts	10	2	rewrite	"{""delete"": 2, ""keep"": 5, ""rename"": 1, ""rewrite"": 2}"	proposed
-apps/web/src/routes/projects/index.component.test.tsx	14	1	rewrite	"{""keep"": 11, ""rewrite"": 3}"	proposed
-apps/web/src/routes/projects/index.test.ts	5	2	rewrite	"{""delete"": 2, ""keep"": 1, ""rename"": 1, ""rewrite"": 1}"	proposed
-apps/web/src/routes/resume.test.tsx	8	3	rewrite	"{""delete"": 1, ""keep"": 2, ""rename"": 3, ""rewrite"": 2}"	proposed
+apps/web/src/features/about/components/AboutHero.test.tsx	6	1	rewrite	"{""keep"": 4, ""rename"": 1, ""rewrite"": 1}"	accepted-plan
+apps/web/src/features/about/components/Timeline.test.tsx	6	1	rewrite	"{""keep"": 1, ""rename"": 2, ""rewrite"": 3}"	accepted-plan
+apps/web/src/features/contact/components/ContactForm.test.tsx	9	1	rewrite	"{""delete"": 1, ""rename"": 1, ""rewrite"": 7}"	accepted-plan
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	4	1	rewrite	"{""delete"": 2, ""keep"": 2}"	accepted-plan
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	3	1	rewrite	"{""delete"": 1, ""keep"": 2}"	accepted-plan
+apps/web/src/features/home/components/FeaturedWork.test.tsx	9	1	rewrite	"{""keep"": 2, ""rewrite"": 7}"	accepted-plan
+apps/web/src/features/home/components/Hero.test.tsx	7	1	rewrite	"{""rename"": 2, ""rewrite"": 5}"	accepted-plan
+apps/web/src/features/home/components/ServicesGrid.test.tsx	5	1	rewrite	"{""keep"": 2, ""rename"": 2, ""rewrite"": 1}"	accepted-plan
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	7	1	rewrite	"{""keep"": 4, ""rename"": 1, ""rewrite"": 2}"	accepted-plan
+apps/web/src/features/projects/components/ProjectCard.test.tsx	8	1	rewrite	"{""delete"": 1, ""keep"": 5, ""rename"": 1, ""rewrite"": 1}"	accepted-plan
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	11	3	rewrite	"{""keep"": 5, ""rewrite"": 6}"	accepted-plan
+apps/web/src/features/projects/content/bcordes.test.tsx	30	3	rewrite	"{""delete"": 10, ""keep"": 15, ""rewrite"": 5}"	accepted-plan
+apps/web/src/features/projects/content/index.test.ts	17	5	rewrite	"{""delete"": 3, ""keep"": 5, ""rewrite"": 9}"	accepted-plan
+apps/web/src/features/projects/content/wallow.test.tsx	29	3	rewrite	"{""delete"": 10, ""keep"": 13, ""rewrite"": 6}"	accepted-plan
+apps/web/src/routes/about.test.tsx	6	3	rewrite	"{""delete"": 1, ""keep"": 1, ""rename"": 1, ""rewrite"": 3}"	accepted-plan
+apps/web/src/routes/contact.test.tsx	7	3	rewrite	"{""delete"": 1, ""keep"": 2, ""rewrite"": 4}"	accepted-plan
+apps/web/src/routes/index.test.tsx	6	3	rewrite	"{""delete"": 2, ""keep"": 1, ""rewrite"": 3}"	accepted-plan
+apps/web/src/routes/projects/$slug.component.test.tsx	15	2	rewrite	"{""delete"": 2, ""keep"": 7, ""rename"": 1, ""rewrite"": 5}"	accepted-plan
+apps/web/src/routes/projects/$slug.test.ts	10	2	rewrite	"{""delete"": 2, ""keep"": 5, ""rename"": 1, ""rewrite"": 2}"	accepted-plan
+apps/web/src/routes/projects/index.component.test.tsx	14	1	rewrite	"{""keep"": 11, ""rewrite"": 3}"	accepted-plan
+apps/web/src/routes/projects/index.test.ts	5	2	rewrite	"{""delete"": 2, ""keep"": 1, ""rename"": 1, ""rewrite"": 1}"	accepted-plan
+apps/web/src/routes/resume.test.tsx	8	3	rewrite	"{""delete"": 1, ""keep"": 2, ""rename"": 3, ""rewrite"": 2}"	accepted-plan
