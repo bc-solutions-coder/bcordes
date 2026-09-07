@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/bc-solutions-coder/bcordes/compare/v0.1.8...v0.1.9) (2026-09-07)
+
+
+### Features
+
+* adopt TypeScript 7 and Oxlint with naming plugin ([#57](https://github.com/bc-solutions-coder/bcordes/issues/57)) ([366b5ed](https://github.com/bc-solutions-coder/bcordes/commit/366b5edc6ddbb0d0216a41633416e45a4a2a7a71))
+
 ## [0.1.8](https://github.com/bc-solutions-coder/bcordes/compare/v0.1.7...v0.1.8) (2026-09-07)
 
 ### Features
