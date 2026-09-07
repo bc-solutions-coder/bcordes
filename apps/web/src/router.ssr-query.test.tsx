@@ -89,9 +89,8 @@ describe('router SSR query integration', () => {
 
     await router.options.hydrate?.(dehydratedRouterPayload('from-server'))
 
-    const queryFn = vi.fn(
-      (): Promise<string> =>
-        Promise.reject(new Error('must not refetch hydrated data')),
+    const queryFn = vi.fn((): Promise<string> =>
+      Promise.reject(new Error('must not refetch hydrated data')),
     )
 
     function Consumer() {

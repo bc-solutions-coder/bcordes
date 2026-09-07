@@ -135,9 +135,8 @@ describe('root-provider', () => {
       const queryClient = new QueryClient()
       hydrate(queryClient, dehydratedServerState('from-server'))
 
-      const queryFn = vi.fn(
-        (): Promise<string> =>
-          Promise.reject(new Error('must not refetch hydrated data')),
+      const queryFn = vi.fn((): Promise<string> =>
+        Promise.reject(new Error('must not refetch hydrated data')),
       )
 
       function Consumer() {
