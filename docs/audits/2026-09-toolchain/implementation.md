@@ -183,3 +183,20 @@ a 1.19 MB stats.html; the existing visualizer remains compatible. A direct
 warning-handler probe preserved suppression of dependency-only unused imports
 and forwarding of application and unrelated warnings. The sole remaining peer
 warning is the pre-existing ESLint/import-x mismatch owned by #57.
+
+## React and visual verification, #59
+
+React and React DOM are matched at 19.2.8 across all six consumers; their
+types are 19.2.18 and 19.2.7. Existing ^19.2.4 workspace peers accept the new
+patch release. No compiler plugin, application code or styles changed.
+Tailwind 4.3.3 was verified in the prerequisite Vite slice.
+
+All 1297 tests, lint, workspace types, production build/smoke, 24 browser
+tests and static Storybook build passed. Browser probes filled the contact
+form, inspected desktop and 390-pixel mobile layouts, checked no horizontal
+overflow, and opened/closed the mobile navigation dialog. Screenshots showed
+the expected green theme, form layout and navigation sheet; the computed
+primary token was oklch(39% .11 142). Static Storybook's Button controls changed
+the destructive variant and disabled the button. Neither browser probe reported
+a page error. Shared-package class discovery remains covered by the passing
+CSS build test.
