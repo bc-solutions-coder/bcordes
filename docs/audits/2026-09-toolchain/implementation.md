@@ -200,3 +200,9 @@ primary token was oklch(39% .11 142). Static Storybook's Button controls changed
 the destructive variant and disabled the button. Neither browser probe reported
 a page error. Shared-package class discovery remains covered by the passing
 CSS build test.
+
+Review found old React 19.2.4 peer graphs in auth and Wallow. pnpm dedupe
+removed those and other older compatible duplicate packages without adding
+any versions. The final graph contains only React/React DOM 19.2.8. Full
+types, lint, 1297 tests, app build/smoke, 24 browser tests, Storybook and Docker
+verification passed again; the reviewer confirmed the finding resolved.
