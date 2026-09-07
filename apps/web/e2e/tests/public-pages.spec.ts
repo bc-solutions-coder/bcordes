@@ -29,7 +29,7 @@ test.describe('Public Pages', () => {
     test('displays key statistics', async ({ page }) => {
       await page.goto('/')
 
-      await expect(page.getByText('6+')).toBeVisible()
+      await expect(page.getByText('7+', { exact: true })).toBeVisible()
       await expect(page.getByText('Years Experience')).toBeVisible()
       await expect(page.getByText('25+')).toBeVisible()
       await expect(page.getByText('Projects Delivered')).toBeVisible()
