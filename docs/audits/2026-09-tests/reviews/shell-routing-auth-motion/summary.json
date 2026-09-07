@@ -1,0 +1,44 @@
+{
+  "source_commit": "ba946c898db45c86785d76af883fdac7d5612426",
+  "files": 15,
+  "declarations": 108,
+  "test_declarations": 86,
+  "suite_declarations": 22,
+  "baseline_runtime_cases": 86,
+  "proposed_test_dispositions": {
+    "keep": 18,
+    "rewrite": 42,
+    "delete": 20,
+    "rename": 6
+  },
+  "owned_test_changes_since_baseline": [],
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "apps/web/src/app/components/layout/Footer.test.tsx",
+      "apps/web/src/app/components/layout/Header.test.tsx",
+      "apps/web/src/app/components/layout/MobileNav.test.tsx",
+      "apps/web/src/app/components/layout/UserMenu.test.tsx",
+      "apps/web/src/app/config/navigation.test.ts",
+      "apps/web/src/router.ssr-query.test.tsx",
+      "apps/web/src/router.test.tsx",
+      "apps/web/src/routes/__root.test.tsx",
+      "apps/web/src/routes/api/health.test.ts",
+      "apps/web/src/routes/auth/me.test.ts",
+      "apps/web/src/shared/auth/hooks/useUser.test.ts",
+      "apps/web/src/shared/auth/server-fns/auth.test.ts",
+      "apps/web/src/shared/motion/components/FadeInView.test.tsx",
+      "apps/web/src/shared/motion/hooks/useReducedMotion.test.ts",
+      "apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-shell-routing-run.json"
+    ],
+    "passed": 86,
+    "failed": 0,
+    "skipped": 0
+  },
+  "status": "proposed; awaiting human review"
+}

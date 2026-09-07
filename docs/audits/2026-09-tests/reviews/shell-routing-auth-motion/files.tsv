@@ -1,0 +1,16 @@
+file	tests	suites	proposed_file_disposition	case_counts	status
+apps/web/src/app/components/layout/Footer.test.tsx	4	1	rewrite	"{""delete"": 1, ""keep"": 1, ""rewrite"": 2}"	proposed
+apps/web/src/app/components/layout/Header.test.tsx	6	1	rewrite	"{""rewrite"": 6}"	proposed
+apps/web/src/app/components/layout/MobileNav.test.tsx	5	1	rewrite	"{""delete"": 1, ""rewrite"": 4}"	proposed
+apps/web/src/app/components/layout/UserMenu.test.tsx	8	1	rewrite	"{""keep"": 4, ""rename"": 1, ""rewrite"": 3}"	proposed
+apps/web/src/app/config/navigation.test.ts	8	2	delete	"{""delete"": 8}"	proposed
+apps/web/src/router.ssr-query.test.tsx	4	1	rewrite	"{""delete"": 2, ""rewrite"": 2}"	proposed
+apps/web/src/router.test.tsx	8	1	rewrite	"{""delete"": 5, ""rewrite"": 3}"	proposed
+apps/web/src/routes/__root.test.tsx	8	5	rewrite	"{""delete"": 1, ""keep"": 2, ""rename"": 1, ""rewrite"": 4}"	proposed
+apps/web/src/routes/api/health.test.ts	6	1	rewrite	"{""delete"": 1, ""keep"": 5}"	proposed
+apps/web/src/routes/auth/me.test.ts	2	1	rewrite	"{""rewrite"": 2}"	proposed
+apps/web/src/shared/auth/hooks/useUser.test.ts	5	2	rewrite	"{""delete"": 1, ""keep"": 2, ""rename"": 1, ""rewrite"": 1}"	proposed
+apps/web/src/shared/auth/server-fns/auth.test.ts	4	2	rewrite	"{""rename"": 1, ""rewrite"": 3}"	proposed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	8	1	rewrite	"{""keep"": 1, ""rewrite"": 7}"	proposed
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	4	1	rewrite	"{""keep"": 2, ""rename"": 1, ""rewrite"": 1}"	proposed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	6	1	rewrite	"{""keep"": 1, ""rename"": 1, ""rewrite"": 4}"	proposed
