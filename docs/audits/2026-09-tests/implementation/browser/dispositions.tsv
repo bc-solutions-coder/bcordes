@@ -1,0 +1,25 @@
+original_key	original_title	accepted_disposition	planned_title	result_title
+apps/web/e2e/tests/contact-form.spec.ts:55	submitting with all fields empty shows client-side validation errors without a network request	rewrite	empty contact form displays required-field errors without submitting an inquiry	submitting with all fields empty shows client-side validation errors without a network request
+apps/web/e2e/tests/contact-form.spec.ts:74	filling valid fields and submitting shows success confirmation	rewrite	valid guest contact submission sends entered inquiry data and displays confirmation	filling valid fields and submitting shows success confirmation
+apps/web/e2e/tests/contact-form.spec.ts:96	Send Another Message resets the form to its empty initial state	rewrite	Send Another Message clears all previously entered guest fields and selections	"""Send Another Message"" resets the form to its empty initial state"
+apps/web/e2e/tests/dashboard.spec.ts:3	authenticated session reaches inquiries through the real server	rewrite	signed-in customer sees submitted inquiries using their own backend session	authenticated session reaches inquiries through the real server
+apps/web/e2e/tests/dashboard.spec.ts:22	notification bell displays backend data and marks it read	rewrite	marking all notifications read in the bell updates the backend and survives reload	notification bell marks this session read and preserves zero unread after reload
+apps/web/e2e/tests/public-pages.spec.ts:5	loads with 200 status and displays the hero headline	keep	loads with 200 status and displays the hero headline	loads with 200 status and displays the hero headline
+apps/web/e2e/tests/public-pages.spec.ts:17	displays hero call-to-action buttons	rewrite	hero links navigate to projects and contact	hero actions navigate to projects and contact
+apps/web/e2e/tests/public-pages.spec.ts:29	displays key statistics	rewrite	shows experience and delivered-project figures with their labels	displays key statistics
+apps/web/e2e/tests/public-pages.spec.ts:38	has navigation links pointing to correct hrefs	rewrite	public-page navigation exposes working destination links	header navigation works from home, about, projects and contact
+apps/web/e2e/tests/public-pages.spec.ts:62	loads and contains the about section heading	keep	loads and contains the about section heading	loads and contains the about section heading
+apps/web/e2e/tests/public-pages.spec.ts:70	displays the role subtitle	keep	displays the role subtitle	displays the role subtitle
+apps/web/e2e/tests/public-pages.spec.ts:76	"displays the ""My Approach"" values section"	keep	"displays the ""My Approach"" values section"	"displays the ""My Approach"" values section"
+apps/web/e2e/tests/public-pages.spec.ts:96	has navigation links visible	delete		Deleted; consolidated into header navigation from all four starting pages
+apps/web/e2e/tests/public-pages.spec.ts:107	loads and displays the page heading	keep	loads and displays the page heading	loads and displays the page heading
+apps/web/e2e/tests/public-pages.spec.ts:115	lists at least one project card	rewrite	lists named projects with working detail links	lists named projects with their detail links
+apps/web/e2e/tests/public-pages.spec.ts:123	displays project count text	rewrite	project count matches visible results as filters change	project filters show the correct named results and reset the count
+apps/web/e2e/tests/public-pages.spec.ts:129	has navigation links visible	delete		Deleted; consolidated into header navigation from all four starting pages
+apps/web/e2e/tests/public-pages.spec.ts:140	loads and renders the page heading	keep	loads and renders the page heading	loads and renders the page heading
+apps/web/e2e/tests/public-pages.spec.ts:151	renders the contact form with required fields	rename	renders the named contact fields and submit button	renders the named contact fields and submit button
+apps/web/e2e/tests/public-pages.spec.ts:163	renders contact information section	keep	renders contact information section	renders contact information section
+apps/web/e2e/tests/public-pages.spec.ts:173	has navigation links visible	delete		Deleted; consolidated into header navigation from all four starting pages
+apps/web/e2e/tests/public-pages.spec.ts:184	project navigation opens detail and unknown projects show not found	rewrite	project links open the matching detail and unknown slugs return a 404 page	project navigation opens detail and unknown projects show not found
+apps/web/e2e/tests/public-pages.spec.ts:201	unauthenticated dashboard access redirects to login	rename	unauthenticated inquiry requests receive a login redirect preserving returnTo	unauthenticated inquiry request returns a 307 login redirect with returnTo
+apps/web/e2e/tests/sdk-boundaries.spec.ts:3	SDK session survives rejected logout and direct API access is restricted	rewrite	untrusted mutations are rejected without destroying the signed-in session	Split into five independently named cases; see runtime-cases.tsv

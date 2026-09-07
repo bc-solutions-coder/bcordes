@@ -65,6 +65,13 @@ const securityHeaders = createMiddleware().server(async ({ next }) => {
 const wallow = createMiddleware().server(async ({ request, next }) => {
   const path = new URL(request.url).pathname
   const bff = getBff()
+  if (
+    path === '/bff/logout' &&
+    !['GET', 'HEAD', 'OPTIONS'].includes(request.method) &&
+    request.headers.get('origin') !== new URL(bff.config.redirectUri).origin
+  ) {
+    return new Response('Forbidden', { status: 403 })
+  }
   if (path === '/bff' || path.startsWith('/bff/')) return bff.handleBff(request)
   if (path === '/api/events' && request.method === 'GET') {
     const params = new URL(request.url).searchParams

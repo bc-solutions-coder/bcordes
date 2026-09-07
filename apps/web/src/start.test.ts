@@ -115,6 +115,17 @@ it.each(['POST', 'PUT', 'DELETE'])(
   },
 )
 
+it('rejects cross-origin logout before delegating to the session handler', async () => {
+  const response = await requestThroughMiddleware(
+    new Request('https://app.example/bff/logout', {
+      method: 'POST',
+      headers: { origin: 'https://other.example' },
+    }),
+  )
+  expect(response.status).toBe(403)
+  expect(await response.text()).toBe('Forbidden')
+})
+
 it.each(['GET', 'HEAD', 'OPTIONS', 'POST'])(
   'preserves a supported %s response with security headers',
   async (method) => {

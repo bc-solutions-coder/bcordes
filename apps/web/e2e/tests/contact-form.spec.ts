@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/guest'
 
 async function fillContactForm(
   page: import('@playwright/test').Page,
@@ -33,15 +33,7 @@ async function fillContactForm(
 
   await page.getByRole('combobox', { name: /Timeline/ }).click()
   await page.getByRole('option', { name: timeline }).click()
-}
-
-function trackSubmission(page: import('@playwright/test').Page) {
-  let requestCount = 0
-  page.on('request', (request) => {
-    if (request.method() === 'POST' && request.url().includes('/_server'))
-      requestCount++
-  })
-  return { getRequestCount: () => requestCount }
+  await expect(page.getByRole('option', { name: timeline })).not.toBeVisible()
 }
 
 async function openContact(page: import('@playwright/test').Page) {
@@ -54,9 +46,8 @@ async function openContact(page: import('@playwright/test').Page) {
 test.describe('Contact Form', () => {
   test('submitting with all fields empty shows client-side validation errors without a network request', async ({
     page,
+    guestBackend,
   }) => {
-    const { getRequestCount } = trackSubmission(page)
-
     await openContact(page)
 
     await page.getByRole('button', { name: 'Send Message' }).click()
@@ -68,14 +59,19 @@ test.describe('Contact Form', () => {
     await expect(page.getByText('Please select a budget range')).toBeVisible()
     await expect(page.getByText('Please select a timeline')).toBeVisible()
 
-    expect(getRequestCount()).toBe(0)
+    expect(
+      guestBackend
+        .requests(guestBackend.owner)
+        .filter(
+          (item) => item.method === 'POST' && item.path === '/v1/inquiries',
+        ),
+    ).toHaveLength(0)
   })
 
   test('filling valid fields and submitting shows success confirmation', async ({
     page,
+    guestBackend,
   }) => {
-    trackSubmission(page)
-
     await openContact(page)
 
     await fillContactForm(page)
@@ -85,6 +81,28 @@ test.describe('Contact Form', () => {
     await expect(
       page.getByRole('heading', { name: 'Message Sent!' }),
     ).toBeVisible()
+    expect(
+      guestBackend
+        .requests(guestBackend.owner)
+        .filter((item) => item.path === '/v1/inquiries'),
+    ).toEqual([
+      {
+        method: 'POST',
+        path: '/v1/inquiries',
+        owner: guestBackend.owner,
+        credential: 'service',
+        body: {
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          phone: '',
+          company: null,
+          projectType: 'Frontend',
+          budgetRange: '$5k-$15k',
+          timeline: '1-3 months',
+          message: 'I would like to discuss a new web application project.',
+        },
+      },
+    ])
     await expect(
       page.getByText(/get back to you within 24-48 hours/i),
     ).toBeVisible()
@@ -95,12 +113,13 @@ test.describe('Contact Form', () => {
 
   test('"Send Another Message" resets the form to its empty initial state', async ({
     page,
+    guestBackend,
   }) => {
-    trackSubmission(page)
-
     await openContact(page)
 
     await fillContactForm(page)
+    await page.getByLabel(/^Phone/).fill('555-0100')
+    await page.getByLabel(/^Company/).fill('Browser Company')
     await page.getByRole('button', { name: 'Send Message' }).click()
 
     await expect(
@@ -119,5 +138,34 @@ test.describe('Contact Form', () => {
     await expect(page.getByLabel(/^Name/)).toHaveValue('')
     await expect(page.getByRole('textbox', { name: /Email/ })).toHaveValue('')
     await expect(page.getByLabel(/^Message/)).toHaveValue('')
+    await expect(page.getByLabel(/^Phone/)).toHaveValue('')
+    await expect(page.getByLabel(/^Company/)).toHaveValue('')
+    for (const [name, placeholder] of [
+      ['Project Type', 'Select project type'],
+      ['Budget Range', 'Select budget range'],
+      ['Timeline', 'Select timeline'],
+    ]) {
+      await expect(
+        page.getByRole('combobox', { name: new RegExp(name) }),
+      ).toContainText(placeholder)
+    }
+    await page.getByRole('button', { name: 'Send Message' }).click()
+    for (const message of [
+      'Name is required',
+      'Email is required',
+      'Message is required',
+      'Please select a project type',
+      'Please select a budget range',
+      'Please select a timeline',
+    ])
+      await expect(page.getByText(message)).toBeVisible()
+    const submissions = guestBackend
+      .requests(guestBackend.owner)
+      .filter((item) => item.path === '/v1/inquiries')
+    expect(submissions).toHaveLength(1)
+    expect(submissions[0].body).toMatchObject({
+      phone: '555-0100',
+      company: 'Browser Company',
+    })
   })
 })

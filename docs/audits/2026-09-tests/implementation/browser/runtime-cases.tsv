@@ -1,0 +1,26 @@
+file	title	result	attempts
+tests/contact-form.spec.ts	submitting with all fields empty shows client-side validation errors without a network request	expected	1
+tests/contact-form.spec.ts	filling valid fields and submitting shows success confirmation	expected	1
+tests/contact-form.spec.ts	"""Send Another Message"" resets the form to its empty initial state"	expected	1
+tests/dashboard.spec.ts	authenticated session reaches inquiries through the real server	expected	1
+tests/dashboard.spec.ts	notification bell marks this session read and preserves zero unread after reload	expected	1
+tests/public-pages.spec.ts	project navigation opens detail and unknown projects show not found	expected	1
+tests/public-pages.spec.ts	unauthenticated inquiry request returns a 307 login redirect with returnTo	expected	1
+tests/public-pages.spec.ts	loads with 200 status and displays the hero headline	expected	1
+tests/public-pages.spec.ts	hero actions navigate to projects and contact	expected	1
+tests/public-pages.spec.ts	displays key statistics	expected	1
+tests/public-pages.spec.ts	header navigation works from home, about, projects and contact	expected	1
+tests/public-pages.spec.ts	loads and contains the about section heading	expected	1
+tests/public-pages.spec.ts	displays the role subtitle	expected	1
+tests/public-pages.spec.ts	"displays the ""My Approach"" values section"	expected	1
+tests/public-pages.spec.ts	loads and displays the page heading	expected	1
+tests/public-pages.spec.ts	lists named projects with their detail links	expected	1
+tests/public-pages.spec.ts	project filters show the correct named results and reset the count	expected	1
+tests/public-pages.spec.ts	loads and renders the page heading	expected	1
+tests/public-pages.spec.ts	renders the named contact fields and submit button	expected	1
+tests/public-pages.spec.ts	renders contact information section	expected	1
+tests/sdk-boundaries.spec.ts	cross-origin logout is rejected and preserves the same user	expected	1
+tests/sdk-boundaries.spec.ts	trusted-origin logout rejects an invalid CSRF token and preserves the session	expected	1
+tests/sdk-boundaries.spec.ts	trusted logout with this session CSRF token ends the session	expected	1
+tests/sdk-boundaries.spec.ts	direct API access is unavailable without forwarding to the backend	expected	1
+tests/sdk-boundaries.spec.ts	a real notification mutation succeeds locally and rejects a cross-origin replay without another write	expected	1

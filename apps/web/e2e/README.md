@@ -27,3 +27,9 @@ at the redirect to the identity provider; they do not authenticate against OIDC.
 
 On Linux CI, install Chromium system dependencies with
 `pnpm --filter bcordes exec playwright install --with-deps chromium`.
+
+Authenticated fixtures register a unique session owner with the backend. Observations contain method, path, owner, credential category and parsed body; they never return access tokens. A session's observations and notification state are removed at teardown. Tests read `/__sessions/<owner>/requests` rather than a shared request log.
+
+Contact scenarios start an exclusive backend and production application process on assigned loopback ports. Their service-token requests cannot mix with another guest scenario. The backend validates submitted inquiry fields and enum values, and the test asserts actual SDK defaults (`phone: ""`, `company: null`). Each scenario attaches its own backend observations to the browser report.
+
+For later controlled scenarios, POST `{ method, path, status?, pending? }` to `/__sessions/<owner>/control`. Only that owner's matching requests are affected. DELETE the same endpoint to release pending requests and remove the control. Deleting the session also releases its pending requests. These endpoints exist only in the local test backend.

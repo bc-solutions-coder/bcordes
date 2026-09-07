@@ -1,0 +1,120 @@
+{
+  "issue": 92,
+  "baseRevision": "5559de6",
+  "browser": {
+    "startTime": "2026-09-07T22:18:21.417Z",
+    "duration": 8349.724999999999,
+    "expected": 25,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "unit": {
+    "numPassedTests": 1340,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1080,
+      "covered": 1015,
+      "skipped": 0,
+      "pct": 93.98
+    },
+    "statements": {
+      "total": 1160,
+      "covered": 1077,
+      "skipped": 0,
+      "pct": 92.84
+    },
+    "functions": {
+      "total": 386,
+      "covered": 348,
+      "skipped": 0,
+      "pct": 90.15
+    },
+    "branches": {
+      "total": 673,
+      "covered": 607,
+      "skipped": 0,
+      "pct": 90.19
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "defects": [
+    {
+      "defect": "wrong-contact-name",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-07T22:14:15.324Z",
+        "duration": 6717.313999999999,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "wrong-hero-destination",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-07T22:14:30.569Z",
+        "duration": 8003.644000000001,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "wrong-project-count",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-07T22:14:46.842Z",
+        "duration": 8085.009999999999,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "lost-session-correlation",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-07T22:14:59.611Z",
+        "duration": 3180.5060000000003,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "unpersisted-read",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-07T22:15:04.119Z",
+        "duration": 8326.345,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "rejected-valid-logout",
+      "exitCode": 1,
+      "unexpected": 1
+    }
+  ],
+  "regression": {
+    "crossOriginLogout": "failed with valid CSRF before guard; passes after guard"
+  },
+  "fixtureControlProbe": "passed pending/failure isolation, release and deletion over actual HTTP"
+}
