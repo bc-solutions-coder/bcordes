@@ -1,0 +1,55 @@
+{
+  "source_commit": "dfbe151b4fc7f5772aa63755e5d43e44bab81e9f",
+  "status": "proposed; awaiting human review",
+  "files": 22,
+  "declarations": 265,
+  "test_declarations": 222,
+  "suite_declarations": 43,
+  "proposed_test_dispositions": {
+    "rewrite": 76,
+    "keep": 90,
+    "rename": 17,
+    "delete": 39
+  },
+  "proposed_whole_file_deletions": [],
+  "owned_test_changes_since_baseline": [],
+  "initial_unrelated_untracked_paths": [
+    "apps/web/storybook-static/",
+    "docs/audits/2026-09-toolchain/"
+  ],
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "apps/web/src/features/about/components/AboutHero.test.tsx",
+      "apps/web/src/features/about/components/Timeline.test.tsx",
+      "apps/web/src/features/contact/components/ContactForm.test.tsx",
+      "apps/web/src/features/contact/components/ContactFormFields.test.tsx",
+      "apps/web/src/features/contact/components/ContactFormSuccess.test.tsx",
+      "apps/web/src/features/home/components/FeaturedWork.test.tsx",
+      "apps/web/src/features/home/components/Hero.test.tsx",
+      "apps/web/src/features/home/components/ServicesGrid.test.tsx",
+      "apps/web/src/features/home/components/SkillsShowcase.test.tsx",
+      "apps/web/src/features/projects/components/ProjectCard.test.tsx",
+      "apps/web/src/features/projects/components/ProjectFilter.test.tsx",
+      "apps/web/src/features/projects/content/bcordes.test.tsx",
+      "apps/web/src/features/projects/content/index.test.ts",
+      "apps/web/src/features/projects/content/wallow.test.tsx",
+      "apps/web/src/routes/about.test.tsx",
+      "apps/web/src/routes/contact.test.tsx",
+      "apps/web/src/routes/index.test.tsx",
+      "apps/web/src/routes/projects/$slug.component.test.tsx",
+      "apps/web/src/routes/projects/$slug.test.ts",
+      "apps/web/src/routes/projects/index.component.test.tsx",
+      "apps/web/src/routes/projects/index.test.ts",
+      "apps/web/src/routes/resume.test.tsx",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-public-run.json"
+    ],
+    "passed": 222,
+    "failed": 0,
+    "skipped": 0
+  }
+}
