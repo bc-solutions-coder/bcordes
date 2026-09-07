@@ -2,14 +2,14 @@
   "issue": 95,
   "baseRevision": "799fc64",
   "tests": {
-    "numPassedTests": 1211,
+    "numPassedTests": 1216,
     "numFailedTests": 0,
     "numPendingTests": 0
   },
   "browser": {
-    "startTime": "2026-09-07T23:25:27.413Z",
-    "duration": 37394.809,
-    "expected": 32,
+    "startTime": "2026-09-07T23:39:31.917Z",
+    "duration": 12782.289999999999,
+    "expected": 33,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
@@ -29,9 +29,9 @@
     },
     "functions": {
       "total": 382,
-      "covered": 351,
+      "covered": 352,
       "skipped": 0,
-      "pct": 91.88
+      "pct": 92.14
     },
     "branches": {
       "total": 671,
@@ -127,6 +127,14 @@
     },
     {
       "defect": "missing-built-header-elevation",
+      "exitCode": 1
+    },
+    {
+      "defect": "exposed-non-error-diagnostic",
+      "exitCode": 1
+    },
+    {
+      "defect": "exposed-built-production-diagnostic",
       "exitCode": 1
     }
   ]
