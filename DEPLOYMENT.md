@@ -24,7 +24,7 @@ Set `BCORDES_IMAGE` to a tested image digest, preferably `ghcr.io/bc-solutions-c
 
 Supply the developer client ID/secret, issuer, approved scopes, and separate inquiry service ID/secret. Keep the stable random `COOKIE_PASSWORD` at least 32 characters long. Set `VALKEY_PASSWORD` and a matching `REDIS_URL`, URL-encoding the password in the URL. Keep the named Valkey volume across updates. Set `SESSION_TTL_SECONDS` no longer than the Wallow refresh-token policy permits.
 
-The web container joins external `wallow_wallow` under alias `bcordes-web`. Its default internal API and metadata addresses use `wallow-api:8080`; confirm that alias against the deployed stack. Valkey is reachable only on the app's private session network. Neither container publishes host ports.
+The web container joins external `wallow_wallow` under alias `bcordes-web`. Its default internal API and metadata addresses use `wallow-api:8080`; confirm that alias against the deployed stack. Valkey is reachable only on the app's private session network. Use `bcordes-session-store` as the `REDIS_URL` hostname; the generic `valkey` name can resolve to Wallow's Valkey on the shared network. Neither container publishes host ports.
 
 Existing Newt discovers the `pangolin.public-resources.bcordes.*` labels and targets `bcordes-web:3000`. Confirm that Newt watches this stack and that the `bcordes.dev` resource/DNS entry is available. No extra tunnel, Docker socket, IP registration or second authentication gate is required. A staging deployment needs distinct Pangolin resource labels, network alias and BFF app ID.
 

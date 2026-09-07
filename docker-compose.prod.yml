@@ -23,7 +23,7 @@ services:
       COOKIE_SECURE: 'true'
       COOKIE_SAMESITE: lax
       SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-86400}
-      REDIS_URL: ${REDIS_URL:?Set redis://default:URL_ENCODED_PASSWORD@valkey:6379}
+      REDIS_URL: ${REDIS_URL:?Set redis://default:URL_ENCODED_PASSWORD@bcordes-session-store:6379}
       WALLOW_TRUSTED_PROXIES: ${WALLOW_TRUSTED_PROXIES:-private}
     depends_on:
       valkey:
@@ -65,7 +65,9 @@ services:
       REDISCLI_AUTH: ${VALKEY_PASSWORD:?Set the session-store password}
     volumes:
       - valkey_data:/data
-    networks: [sessions]
+    networks:
+      sessions:
+        aliases: [bcordes-session-store]
     healthcheck:
       test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s
