@@ -1,0 +1,126 @@
+file	title	status
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — URL validation rejects absolute http:// actionUrl and falls back to switch result	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — URL validation accepts a valid relative actionUrl and returns it directly	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — URL validation rejects protocol-relative //evil.com actionUrl and falls through to switch	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — URL validation rejects javascript: actionUrl and falls through to switch	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — entityId validation produces correct route when entityId is a valid UUID	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — entityId validation returns fallback when entityId is a non-UUID string	passed
+apps/web/src/__tests__/notification-routing.test.ts	getNotificationRoute — missing data fallback returns fallback when no actionUrl and no entityId are present	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index loader returns notifications from fetchNotifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component renders empty state when no notifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component renders empty state with unread message when filtering unread	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component renders notification rows when present	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component shows unread count badge when unreadCount > 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component does not show unread count badge when unreadCount is 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component ""Mark all as read"" button is disabled when unreadCount === 0"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component ""Mark all as read"" button is enabled when unreadCount > 0"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component renders filter chip buttons for all notification types	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component shows ""Showing N notification(s)"" summary text"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component clicking a notification row triggers navigate	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component shows selected count when items are selected	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component shows ""Select all"" when no items are selected"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component shows spinner when mark all read mutation is pending	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component shows ""Load more"" button when 20 or more notifications"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component does not show ""Load more"" button when fewer than 20 notifications"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	"notifications.index component ""Load more"" calls setPage when clicked"	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component markAllRead onError calls toast.error with failure message	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component clicking an unread notification calls markNotificationRead	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	notifications.index component clicking a read notification does not call markNotificationRead	passed
+apps/web/src/routes/dashboard/notifications.test.tsx	notifications layout route exports a route with a component	passed
+apps/web/src/routes/dashboard/notifications.test.tsx	notifications layout route renders an Outlet	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell returns null when useUser returns null user	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell renders bell button when user is authenticated	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell shows badge with unread count when > 0	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell does not show badge when count is 0	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell shows empty state when popover is opened with no notifications	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell renders notification items in popover when notifications exist	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	"NotificationBell calls markAllRead when ""Mark all as read"" is clicked"	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell navigates and marks notification read when clicking a notification	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell shows toast.error when markAllRead mutation fails	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell subscribes to NotificationCreated and optimistically bumps unread count	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell shows toast when NotificationCreated fires and tab is visible	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell shows default toast text when notification has no title	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	NotificationBell does not show toast when tab is hidden	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	"NotificationBell shows ""View all notifications"" link in popover"	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow renders notification title and message	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow calls onClick when the row is clicked	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow calls onClick when Enter key is pressed	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow calls onClick when Space key is pressed	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow does not call onClick for other keys	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow shows unread indicator for unread notifications	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow does not show unread indicator for read notifications	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	NotificationRow calls onSelect when checkbox is toggled	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream starts connection on mount and transitions connecting -> connected	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream dispatches generic message events to type-matched subscribers	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream dispatches named SSE events to type-matched subscribers	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream does not dispatch to handlers for non-matching types	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream unsubscribe removes the handler	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream exponential backoff reconnect reconnects with exponential backoff on error	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream exponential backoff reconnect increases backoff delay for consecutive failures	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream exponential backoff reconnect caps backoff at 30 seconds	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream closes EventSource and clears timers on unmount	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream clears reconnect timer on unmount during backoff	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream attempt cap stops reconnecting after 10 consecutive errors	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream connection timeout closes EventSource and transitions to reconnecting after 10s timeout when onopen never fires	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream visibility-aware reconnect reconnects immediately when tab becomes visible while disconnected	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream visibility-aware reconnect resets attempts and reconnects when visible after max attempts reached	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream reconnect SSE event resets attempt counter and schedules fresh connection on named reconnect event	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election broadcasts claim on mount	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election only one EventSource is created when useEventStream is mounted — the tab becomes leader	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election becomes follower when existing leader responds to claim	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election a follower promotes itself to leader after 7s without heartbeat	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election an event message on BroadcastChannel calls follower subscribers without an open EventSource	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election follower promotes itself after receiving leader-resign message and timeout elapses	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	"useEventStream BroadcastChannel leader election on leader unmount, postMessage is called with { type: ""leader-resign"" }"	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream BroadcastChannel leader election follower does not reconnect on visibility change	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream ignores malformed message data gracefully	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	useEventStream using hook outside provider throws	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	useEventStreamEvents subscribes for each event key on mount	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	useEventStreamEvents calls unsubscribe functions on unmount	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	useEventStreamEvents subscribes to a single event	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	useEventStreamEvents handles empty events record	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	useNotificationFilters returns the full array when no filters are active	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	"useNotificationFilters handleTabChange(""unread"") filters to unread only and resets page"	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	"useNotificationFilters handleTabChange(""all"") removes unread filter"	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	useNotificationFilters handleTypeFilter filters by type and toggles off on second call	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	useNotificationFilters unreadCount reflects only unread items regardless of filters	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	useNotificationFilters combines unread and type filters	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection allSelected is false initially	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection selectAll(true) adds all filtered IDs	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection selectAll(false) clears selection	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection selectOne adds and removes a single ID	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection clearSelection empties the set	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection allSelected is true only when all filtered items are selected	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	useNotificationSelection allSelected is false when filtered list is empty	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications isSupported is true when serviceWorker and PushManager exist	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications isSupported is false when serviceWorker is missing	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications isSupported is false when PushManager is missing	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications isRegistered is true when listPushDevices returns devices	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications isRegistered is false when listPushDevices returns empty array	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications enable mutation calls fetchVapidPublicKey, registers SW, subscribes, and calls registerPushDevice	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications disable mutation calls deregisterPushDevice with the device id	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications sendTest mutation calls sendTestPush	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications onError callbacks logs to console.error when enable fails	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications onError callbacks logs to console.error when disable fails	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	usePushNotifications onError callbacks logs to console.error when sendTest fails	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	unwraps the published channel settings response	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	normalizes string counts	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	does not send unsupported push subscriptions to the platform	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	invalidateNotifications invalidates the notifications list query	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	invalidateNotifications invalidates the unread-count query	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	invalidateNotifications calls invalidateQueries exactly twice	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute actionUrl takes priority returns actionUrl verbatim when present, regardless of type	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskAssigned with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskCompleted with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskComment with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquirySubmitted with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryStatusChanged with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryComment with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute billing type BillingInvoice produces /dashboard/billing	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute unknown type falls back returns /dashboard/notifications for an unrecognized type	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back TaskAssigned without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back TaskCompleted without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back TaskComment without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back InquirySubmitted without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back InquiryStatusChanged without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	getNotificationRoute missing entityId falls back InquiryComment without entityId falls back to /dashboard/notifications	passed

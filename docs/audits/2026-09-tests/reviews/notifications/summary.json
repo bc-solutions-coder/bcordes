@@ -1,0 +1,43 @@
+{
+  "source_commit": "204e9c41a7cfe0c010e36f51c56495d84fd8ebb8",
+  "status": "proposed; awaiting human review; implementation pending",
+  "files": 13,
+  "declarations": 151,
+  "test_declarations": 117,
+  "suite_declarations": 34,
+  "runtime_cases": 125,
+  "proposed_test_dispositions": {
+    "rename": 22,
+    "delete": 10,
+    "keep": 33,
+    "rewrite": 52
+  },
+  "proposed_whole_file_deletions": [],
+  "owned_test_changes_since_baseline": [],
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "apps/web/src/__tests__/notification-routing.test.ts",
+      "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "apps/web/src/features/notifications/components/NotificationRow.test.tsx",
+      "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts",
+      "apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts",
+      "apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts",
+      "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "apps/web/src/features/notifications/lib/query-utils.test.ts",
+      "apps/web/src/features/notifications/lib/routing.test.ts",
+      "apps/web/src/features/notifications/server-fns/notifications.test.ts",
+      "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "apps/web/src/routes/dashboard/notifications.test.tsx",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-notification-run.json"
+    ],
+    "passed": 125,
+    "failed": 0,
+    "skipped": 0
+  }
+}

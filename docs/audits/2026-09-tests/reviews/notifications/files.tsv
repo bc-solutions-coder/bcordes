@@ -1,0 +1,14 @@
+file	tests	suites	keep	rename	rewrite	delete	whole_file_deletion
+apps/web/src/__tests__/notification-routing.test.ts	7	3	1	3	0	3	no
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	14	1	6	2	6	0	no
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	8	1	3	1	4	0	no
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	25	7	10	4	11	0	no
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	4	1	0	0	3	1	no
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	6	1	3	1	2	0	no
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	7	1	0	7	0	0	no
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	11	7	3	1	7	0	no
+apps/web/src/features/notifications/lib/query-utils.test.ts	3	1	0	0	2	1	no
+apps/web/src/features/notifications/lib/routing.test.ts	7	7	6	1	0	0	no
+apps/web/src/features/notifications/server-fns/notifications.test.ts	3	0	1	2	0	0	no
+apps/web/src/routes/dashboard/notifications.index.test.tsx	20	3	0	0	16	4	no
+apps/web/src/routes/dashboard/notifications.test.tsx	2	1	0	0	1	1	no
