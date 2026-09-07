@@ -1,6 +1,6 @@
-# Shell, routing, auth, and motion review proposal
+# Shell, routing, auth, and motion accepted review
 
-Draft for [Review shell, routing, auth, and motion tests](https://github.com/bc-solutions-coder/bcordes/issues/62). **Awaiting human review. No dispositions are accepted and no tests have been changed.**
+Accepted plan for [Review shell, routing, auth, and motion tests](https://github.com/bc-solutions-coder/bcordes/issues/62). The user approved the full proposal with "looks good to me". **Implementation remains pending; no tests have been changed.**
 
 ## Coverage of the review
 
@@ -19,7 +19,7 @@ A targeted run of all 15 owned files passed all 86 tests with none skipped. That
 
 These are test-case counts, not file deletion counts. The only proposed entire-file removal is `app/config/navigation.test.ts`, conditional on consumer tests covering actual named destinations. Other file proposals retain behavior while removing or replacing weak assertions. A rewrite can be small, such as removing an incidental call-count assertion while keeping a strong hydration check.
 
-## Recommendations requiring acceptance
+## Accepted recommendations
 
 ### Consolidate structural checks into exercised behavior
 
@@ -55,6 +55,6 @@ Local duplicate/replacement references are all within this group except supporti
 
 ## Acceptance and implementation boundary
 
-Accepting this proposal chooses the listed dispositions and replacement requirements. It does not mean the replacements exist, that coverage is adequate, or that deletion can land immediately. The approved global 90% prerequisite, per-area review, deliberate-defect evidence for new/substantial rewrites, and appropriate full-suite/browser/build gates all still apply.
+The user accepted the listed dispositions and replacement requirements. It does not mean the replacements exist, that coverage is adequate, or that deletion can land immediately. The approved global 90% prerequisite, per-area review, deliberate-defect evidence for new/substantial rewrites, and appropriate full-suite/browser/build gates all still apply.
 
 Implementation must resolve the listed prerequisite evidence before deleting its corresponding test, refresh the baseline for intervening changes, and record the final paths/titles in the execution ledger. The partition handoff remains blocked until this and the other review tickets are accepted and their combined inventory is reconciled.
