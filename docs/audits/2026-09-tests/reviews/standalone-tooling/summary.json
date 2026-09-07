@@ -1,13 +1,8 @@
 {
   "source_commit": "7760e6442e493f3903f47a871302221a288bde40",
-  "status": "proposed; awaiting human review; implementation pending",
+  "status": "accepted plan; implementation pending",
   "review_rows": 48,
   "additional_behavioral_test_cases": 0,
-  "proposed_check_dispositions": {
-    "keep": 41,
-    "rename": 3,
-    "rewrite": 4
-  },
   "scope_counts": {
     "excluded-agent-resource": 3,
     "verification-contract": 22,
@@ -62,5 +57,11 @@
   },
   "new_replacement_ownership": {
     "scripts/verify-production.test.mjs": "Proposed CLI/HTTP fixture regression scenarios owned by this review; not implemented or counted as current cases."
+  },
+  "acceptance": "User accepted the complete proposal: looks good lets continue.",
+  "accepted_check_dispositions": {
+    "keep": 41,
+    "rename": 3,
+    "rewrite": 4
   }
 }
