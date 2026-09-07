@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import * as home from '@/features/home'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
@@ -82,13 +83,10 @@ describe('no source imports the old @/components/home path', () => {
 })
 
 describe('the public API resolves the four named exports', () => {
-  it('@/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase', async () => {
-    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
-    const homeSpecifier = '@/features/home'
-    const mod = (await import(homeSpecifier)) as Record<string, unknown>
+  it('@/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase', () => {
     for (const name of EXPECTED_EXPORTS) {
       expect(
-        typeof mod[name],
+        typeof home[name],
         `@/features/home must export a ${name} component`,
       ).toBe('function')
     }
