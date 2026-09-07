@@ -78,31 +78,6 @@ it('finds a persisted session from its cookie and stops finding it after destruc
   expect(await getSession()).toBeNull()
 })
 
-it('uses each request session to fetch the current profile through the real SDK and BFF', async () => {
-  const backend = vi.fn<typeof fetch>((input, init) => {
-    const request = input instanceof Request ? input : new Request(input, init)
-    expect(request.url).toBe('https://backend.example/v1/identity/users/me')
-    return Promise.resolve(
-      Response.json({ id: request.headers.get('authorization') }),
-    )
-  })
-  vi.stubGlobal('fetch', backend)
-  const bff = getBff()
-  for (const token of ['alice-token', 'bob-token']) {
-    const ref = await bff.store.write(
-      createMockSession({ sessionId: token, accessToken: token }),
-    )
-    requestContext.request = new Request('https://app.example/dashboard', {
-      headers: { cookie: `${bff.config.cookieName}=${ref}` },
-    })
-    const sdk = await createRequestSdk()
-    const profile = await usersGetCurrentUser({ client: sdk.client })
-    expect(profile.id).toBe(`Bearer ${token}`)
-    await bff.store.destroy(ref)
-  }
-  expect(backend).toHaveBeenCalledTimes(2)
-})
-
 it.each([
   [
     {

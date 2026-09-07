@@ -62,7 +62,7 @@ describe('can', () => {
       }),
     ).toBe(true)
   })
-  it('denies when no role grants the action', () => {
+  it('denies when neither roles nor direct permissions grant the action', () => {
     expect(
       can(user({ roles: ['viewer'] }), 'inquiry:delete', {
         admin: ['inquiry:delete'],

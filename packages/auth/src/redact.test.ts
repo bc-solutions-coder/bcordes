@@ -28,11 +28,10 @@ describe('redact', () => {
     expect(redact('abcde')).toBe('[redacted:...bcde]')
   })
 
-  it('returns a string starting with "[redacted:..." and ending with last 4 chars for a long token', () => {
+  it('reveals only the final four characters of a long secret', () => {
     const token = 'eyJhbGciOiJSUzI1'
     const result = redact(token)
-    expect(result).toMatch(/^\[redacted:\.\.\./)
-    expect(result).toMatch(/UzI1\]$/)
+    expect(result).toBe('[redacted:...UzI1]')
   })
 })
 
@@ -60,12 +59,5 @@ describe('redactUser', () => {
     expect(Object.keys(result).sort()).toEqual(
       ['id', 'name', 'roles', 'tenantId'].sort(),
     )
-  })
-
-  it('does not include email, permissions, or tenantName', () => {
-    const result = redactUser(user) as Record<string, unknown>
-    expect(result).not.toHaveProperty('email')
-    expect(result).not.toHaveProperty('permissions')
-    expect(result).not.toHaveProperty('tenantName')
   })
 })

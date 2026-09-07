@@ -23,7 +23,7 @@ it('preserves redirects and multiple session cookies while adding security heade
   )
 })
 
-it('keeps streamed response content readable', async () => {
+it('preserves event-stream content type and readable response body', async () => {
   const response = applySecurityHeaders(
     new Response('data: event\n\n', {
       headers: { 'Content-Type': 'text/event-stream' },

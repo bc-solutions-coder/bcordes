@@ -1,0 +1,76 @@
+{
+  "issue": 93,
+  "baseRevision": "80945b0",
+  "tests": {
+    "numPassedTests": 1280,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1014,
+      "skipped": 0,
+      "pct": 94.23
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1075,
+      "skipped": 0,
+      "pct": 93.07
+    },
+    "functions": {
+      "total": 382,
+      "covered": 346,
+      "skipped": 0,
+      "pct": 90.57
+    },
+    "branches": {
+      "total": 671,
+      "covered": 606,
+      "skipped": 0,
+      "pct": 90.31
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "defects": [
+    {
+      "defect": "fixture-admin-capability",
+      "exitCode": 1
+    },
+    {
+      "defect": "fixture-overrides",
+      "exitCode": 1
+    },
+    {
+      "defect": "secret-middle-leak",
+      "exitCode": 1
+    },
+    {
+      "defect": "private-user-field-leak",
+      "exitCode": 1
+    },
+    {
+      "defect": "public-client-cookie-loss",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-service-identity",
+      "exitCode": 1
+    }
+  ],
+  "removedFiles": [
+    "packages/auth/package.test.ts",
+    "packages/server/package.test.ts",
+    "packages/wallow/package.test.ts",
+    "packages/wallow/src/testing/index.ts"
+  ],
+  "movedCase": "per-request SDK profile case moved from auth session integration to public Wallow client suite",
+  "removedExport": "@bcordes/wallow/testing",
+  "consumerSearch": "Only obsolete Wallow package tests used the legacy factory; no app, script or other package consumer found."
+}

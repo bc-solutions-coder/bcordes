@@ -1,0 +1,94 @@
+original_key	original_title	accepted_disposition	result
+packages/auth/package.test.ts:48	declares the workspace package conventions	delete	Deleted
+packages/auth/package.test.ts:57	maps the old file layout to subpath exports (no build step, no dist/)	delete	Deleted
+packages/auth/package.test.ts:69	owns its OIDC and sealing runtime deps	delete	Deleted
+packages/auth/package.test.ts:77	depends on the already-extracted logger and valkey packages	delete	Deleted
+packages/auth/package.test.ts:84	keeps the TanStack framework surface as peer deps	delete	Deleted
+packages/auth/package.test.ts:96	leaves nothing behind under apps/web/src/lib/auth	delete	Deleted
+packages/auth/package.test.ts:100	carries every source module into packages/auth/src	delete	Deleted
+packages/auth/package.test.ts:108	exports exactly redact and redactUser at runtime	delete	Deleted
+packages/auth/package.test.ts:116	redacts secrets to their last four characters	delete	Deleted
+packages/auth/package.test.ts:126	narrows a user to non-sensitive fields	delete	Deleted
+packages/auth/package.test.ts:151	is a workspace: dependency of apps/web	delete	Deleted
+packages/auth/package.test.ts:157	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/auth/package.test.ts:164	resolves its '.' export from apps/web	delete	Deleted
+packages/auth/package.test.ts:174	leaves no @/lib/auth import anywhere	delete	Deleted
+packages/auth/package.test.ts:178	redirects former importers to @bcordes/auth	delete	Deleted
+packages/auth/package.test.ts:193	imports nothing from @bcordes/authz inside packages/auth	delete	Deleted
+packages/auth/package.test.ts:199	collects the package's own tests as its own project	delete	Deleted
+packages/auth/package.test.ts:226	adds ./testing to the exports map without disturbing the library subpaths	delete	Deleted
+packages/auth/package.test.ts:240	resolves the '/testing' subpath from apps/web	delete	Deleted
+packages/auth/package.test.ts:248	exports exactly the four session/user mock factories	delete	Deleted
+packages/auth/package.test.ts:262	produces User- and SessionData-shaped fixtures	rewrite	packages/auth/src/testing/index.test.ts (four fixture behavior cases)
+packages/auth/package.test.ts:291	honours overrides and builds admin fixtures	rewrite	packages/auth/src/testing/index.test.ts (four fixture behavior cases)
+packages/auth/package.test.ts:304	is typed against the auth type surface rather than any	delete	Deleted
+packages/auth/package.test.ts:313	keeps the testing helpers out of the '.' barrel	delete	Deleted
+packages/auth/package.test.ts:322	is imported only from tests and E2E fixtures, never from shipped source	delete	Deleted
+packages/auth/package.test.ts:334	retires the old @/test/mocks/auth module entirely	delete	Deleted
+packages/auth/src/middleware.test.ts:23	returns null without a session	keep	returns null without a session
+packages/auth/src/middleware.test.ts:28	uses API-expanded permissions instead of session scopes	rename	uses profile permissions when session claims differ
+packages/auth/src/middleware.test.ts:49	rejects a profile belonging to another session user	keep	rejects a profile belonging to another session user
+packages/auth/src/middleware.test.ts:54	treats an expired SDK session as signed out	rename	returns signed out when the profile request is unauthorized
+packages/auth/src/middleware.test.ts:59	redirects unauthenticated navigation to SDK login	rename	redirects signed-out navigation to login with the encoded return path
+packages/auth/src/middleware.test.ts:65	denies staff access when an admin role lacks the API capability	keep	denies staff access when an admin role lacks the API capability
+packages/auth/src/redact.test.ts:7	"returns ""[empty]"" for undefined"	keep	"returns ""[empty]"" for undefined"
+packages/auth/src/redact.test.ts:11	"returns ""[empty]"" for null"	keep	"returns ""[empty]"" for null"
+packages/auth/src/redact.test.ts:15	"returns ""[empty]"" for empty string"	keep	"returns ""[empty]"" for empty string"
+packages/auth/src/redact.test.ts:19	"returns ""[redacted]"" for a 3-char string"	keep	"returns ""[redacted]"" for a 3-char string"
+packages/auth/src/redact.test.ts:23	"returns ""[redacted]"" for a 4-char string"	keep	"returns ""[redacted]"" for a 4-char string"
+packages/auth/src/redact.test.ts:27	"returns ""[redacted:...bcde]"" for a 5-char string"	keep	"returns ""[redacted:...bcde]"" for a 5-char string"
+packages/auth/src/redact.test.ts:31	"returns a string starting with ""[redacted:..."" and ending with last 4 chars for a long token"	rewrite	reveals only the final four characters of a long secret
+packages/auth/src/redact.test.ts:50	includes id, name, roles, and tenantId from the input	keep	includes id, name, roles, and tenantId from the input
+packages/auth/src/redact.test.ts:58	contains exactly the allowed keys	keep	contains exactly the allowed keys
+packages/auth/src/redact.test.ts:65	does not include email, permissions, or tenantName	delete	Deleted
+packages/authz/src/predicates.test.ts:17	returns true when the user has the role	keep	returns true when the user has the role
+packages/authz/src/predicates.test.ts:20	returns false when the user lacks the role	keep	returns false when the user lacks the role
+packages/authz/src/predicates.test.ts:23	returns false for a null user	keep	returns false for a null user
+packages/authz/src/predicates.test.ts:29	returns true when the user has at least one	keep	returns true when the user has at least one
+packages/authz/src/predicates.test.ts:34	returns false when the user has none	keep	returns false when the user has none
+packages/authz/src/predicates.test.ts:39	returns false for an empty candidate list	keep	returns false for an empty candidate list
+packages/authz/src/predicates.test.ts:45	returns true when the permission is present	keep	returns true when the permission is present
+packages/authz/src/predicates.test.ts:50	returns false when permissions are empty	keep	returns false when permissions are empty
+packages/authz/src/predicates.test.ts:58	grants when a role grants the action	keep	grants when a role grants the action
+packages/authz/src/predicates.test.ts:65	denies when no role grants the action	rename	denies when neither roles nor direct permissions grant the action
+packages/authz/src/predicates.test.ts:72	denies for a null user	keep	denies for a null user
+packages/server/package.test.ts:45	declares the workspace package conventions	delete	Deleted
+packages/server/package.test.ts:54	maps the old file layout to subpath exports (no build step, no dist/)	delete	Deleted
+packages/server/package.test.ts:66	leaves nothing behind under apps/web/src/server/middleware	delete	Deleted
+packages/server/package.test.ts:72	carries every source module into packages/server/src	delete	Deleted
+packages/server/package.test.ts:78	brings the behaviour tests along with their modules	delete	Deleted
+packages/server/package.test.ts:93	exports applySecurityHeaders	delete	Deleted
+packages/server/package.test.ts:101	is a workspace: dependency of apps/web	delete	Deleted
+packages/server/package.test.ts:107	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/server/package.test.ts:114	resolves its subpath exports from apps/web	delete	Deleted
+packages/server/package.test.ts:124	leaves no @/server/middleware import anywhere	delete	Deleted
+packages/server/package.test.ts:128	leaves no @/server-fns/csrf import anywhere	delete	Deleted
+packages/server/package.test.ts:134	collects the package's own tests as its own project	delete	Deleted
+packages/server/src/security-headers.test.ts:4	preserves redirects and multiple session cookies while adding security headers	keep	preserves redirects and multiple session cookies while adding security headers
+packages/server/src/security-headers.test.ts:26	keeps streamed response content readable	rename	preserves event-stream content type and readable response body
+packages/wallow/package.test.ts:48	declares the workspace package conventions	delete	Deleted
+packages/wallow/package.test.ts:57	maps the old file layout to subpath exports (no build step, no dist/)	delete	Deleted
+packages/wallow/package.test.ts:69	owns the auth, logger and valkey packages it imports	delete	Deleted
+packages/wallow/package.test.ts:77	owns its OAuth client-credentials runtime dep	delete	Deleted
+packages/wallow/package.test.ts:85	keeps the TanStack server surface as a peer dep	delete	Deleted
+packages/wallow/package.test.ts:95	leaves nothing behind under apps/web/src/lib/wallow	delete	Deleted
+packages/wallow/package.test.ts:99	carries every source module into packages/wallow/src	delete	Deleted
+packages/wallow/package.test.ts:107	exports exactly the client factory, service client and error helpers	delete	Deleted
+packages/wallow/package.test.ts:116	re-exports callable client factory and service client	rewrite	packages/wallow/src/client.test.ts (request session and repeated service submissions)
+packages/wallow/package.test.ts:129	is a workspace: dependency of apps/web	delete	Deleted
+packages/wallow/package.test.ts:135	is linked into apps/web/node_modules by pnpm install	delete	Deleted
+packages/wallow/package.test.ts:142	resolves its '.' export from apps/web	delete	Deleted
+packages/wallow/package.test.ts:152	leaves no @/lib/wallow import anywhere	delete	Deleted
+packages/wallow/package.test.ts:156	redirects former importers to @bcordes/wallow	delete	Deleted
+packages/wallow/package.test.ts:173	imports nothing from @bcordes/wallow inside packages/auth	delete	Deleted
+packages/wallow/package.test.ts:179	collects the package's own tests as its own project	delete	Deleted
+packages/wallow/package.test.ts:211	adds ./testing to the exports map without disturbing the library subpaths	delete	Deleted
+packages/wallow/package.test.ts:225	resolves the '/testing' subpath from apps/web	delete	Deleted
+packages/wallow/package.test.ts:233	exports exactly the mock client factory and the two response builders	delete	Deleted
+packages/wallow/package.test.ts:246	builds a MockWallowClient whose verb methods are vitest mocks	delete	Deleted
+packages/wallow/package.test.ts:265	defaults every mock verb to a 200 JSON response	delete	Deleted
+packages/wallow/package.test.ts:282	builds JSON and text Responses from the helper factories	delete	Deleted
+packages/wallow/package.test.ts:300	is typed against the wallow client surface rather than any	delete	Deleted
+packages/wallow/package.test.ts:309	keeps the testing helpers out of the '.' barrel	delete	Deleted
+packages/wallow/package.test.ts:321	is imported only from test files, never from shipped source	delete	Deleted
+packages/wallow/package.test.ts:329	retires the old @/test/mocks/wallow module entirely	delete	Deleted

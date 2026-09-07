@@ -10,8 +10,7 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./service-client": "./src/service-client.ts",
-    "./types": "./src/types.ts",
-    "./testing": "./src/testing/index.ts"
+    "./types": "./src/types.ts"
   },
   "dependencies": {
     "@bcordes/auth": "workspace:*",
