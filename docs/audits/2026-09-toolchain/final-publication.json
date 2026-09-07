@@ -1,0 +1,26 @@
+{
+  "revision": "7d68a6378629b8c6b8e6d7057c2344e7a7481af5",
+  "ci_run": 34148731668,
+  "publication_run": 34148882112,
+  "ci_conclusion": "success",
+  "publication_conclusion": "success",
+  "image": "ghcr.io/bc-solutions-coder/bcordes@sha256:f313af846dc7b4ea9c3870cc1d1ca6900e2aa55c542e2cf3c7a88d1c31584d98",
+  "platforms": [
+    {
+      "platform": "linux/amd64",
+      "digest": "sha256:60ff13fd378abfde1888c4119a4af98de9687392145958ce822c27ad2f18c1d1"
+    },
+    {
+      "platform": "linux/arm64",
+      "digest": "sha256:70ab6be828d8316e523571b864214c87fe728e29a39d4bf79fe425fbbcee8504"
+    }
+  ],
+  "previous_release_source": {
+    "git_tag": "v0.1.8",
+    "revision": "905b7a4e88cae07a33a4b122575f75681771c3d0",
+    "image": "ghcr.io/bc-solutions-coder/bcordes@sha256:ed19541d10488f46b773acb5c542cebebb56dc2069d8f464169bdadc66e0c513",
+    "status": "Published SHA source verified; not confirmed as the deployed production image. Semver tag 0.1.8 absent because pre-existing promotion output wiring skipped that job."
+  },
+  "deployed_production_image": null,
+  "actual_semver_promotion": "Not run; verification required on the next approved release."
+}

@@ -1,0 +1,113 @@
+{
+  "revision": "7d68a6378629b8c6b8e6d7057c2344e7a7481af5",
+  "environment": "macOS arm64; Node 24.11.1; pnpm 11.26.0; fresh worktree without node_modules, warm pnpm store and Docker cache",
+  "commands": [
+    {
+      "name": "install",
+      "command": ["pnpm", "install", "--frozen-lockfile"],
+      "started_at": "2026-09-07T17:43:56.875396+00:00",
+      "elapsed_seconds": 3.79,
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "command": ["pnpm", "format:check"],
+      "started_at": "2026-09-07T17:44:00.675986+00:00",
+      "elapsed_seconds": 1.49,
+      "exit_code": 0
+    },
+    {
+      "name": "lint",
+      "command": ["pnpm", "lint"],
+      "started_at": "2026-09-07T17:44:02.181527+00:00",
+      "elapsed_seconds": 2.4,
+      "exit_code": 0
+    },
+    {
+      "name": "compiler-selection",
+      "command": ["pnpm", "-r", "exec", "tsc", "--version"],
+      "started_at": "2026-09-07T17:44:04.587455+00:00",
+      "elapsed_seconds": 1.38,
+      "exit_code": 0
+    },
+    {
+      "name": "typecheck",
+      "command": ["pnpm", "typecheck"],
+      "started_at": "2026-09-07T17:44:05.980566+00:00",
+      "elapsed_seconds": 2.89,
+      "exit_code": 0
+    },
+    {
+      "name": "coverage",
+      "command": ["pnpm", "exec", "vitest", "run", "--coverage"],
+      "started_at": "2026-09-07T17:44:08.881865+00:00",
+      "elapsed_seconds": 16.66,
+      "exit_code": 0
+    },
+    {
+      "name": "build",
+      "command": ["pnpm", "build"],
+      "started_at": "2026-09-07T17:44:25.549245+00:00",
+      "elapsed_seconds": 3.76,
+      "exit_code": 0
+    },
+    {
+      "name": "production",
+      "command": ["bash", "scripts/verify-production.sh"],
+      "started_at": "2026-09-07T17:44:29.318200+00:00",
+      "elapsed_seconds": 5.21,
+      "exit_code": 0
+    },
+    {
+      "name": "browser-install",
+      "command": [
+        "pnpm",
+        "--filter",
+        "bcordes",
+        "exec",
+        "playwright",
+        "install",
+        "chromium"
+      ],
+      "started_at": "2026-09-07T17:44:34.536078+00:00",
+      "elapsed_seconds": 1.29,
+      "exit_code": 0
+    },
+    {
+      "name": "browser",
+      "command": [
+        "pnpm",
+        "--filter",
+        "bcordes",
+        "exec",
+        "playwright",
+        "test",
+        "--reporter=line"
+      ],
+      "started_at": "2026-09-07T17:44:35.841080+00:00",
+      "elapsed_seconds": 7.68,
+      "exit_code": 0
+    },
+    {
+      "name": "storybook",
+      "command": ["pnpm", "--filter", "bcordes", "build-storybook"],
+      "started_at": "2026-09-07T17:44:43.529798+00:00",
+      "elapsed_seconds": 3.08,
+      "exit_code": 0
+    },
+    {
+      "name": "docker",
+      "command": ["bash", "scripts/verify-docker.sh"],
+      "started_at": "2026-09-07T17:44:46.625065+00:00",
+      "elapsed_seconds": 12.1,
+      "exit_code": 0
+    },
+    {
+      "name": "peers",
+      "command": ["pnpm", "peers", "check"],
+      "started_at": "2026-09-07T17:44:58.732325+00:00",
+      "elapsed_seconds": 0.73,
+      "exit_code": 0
+    }
+  ]
+}

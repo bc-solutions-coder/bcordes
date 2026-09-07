@@ -1,0 +1,13 @@
+{
+  "revision": "7d68a63",
+  "desktop": "contact inputs retain entered values",
+  "mobile": {
+    "width": 390,
+    "overflow": false
+  },
+  "dialog": "opens and dismisses with Escape",
+  "story": "destructive and disabled args render",
+  "primary": "oklch(39% .11 142)",
+  "pageErrors": [],
+  "inspection": "Desktop contact form, 390px mobile form, navigation dialog and disabled destructive Button story screenshots inspected; layout and theme match the prior migration checks."
+}
