@@ -2,12 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Switch } from './switch'
 
-// Contract net for the radix-ui -> Base UI (@base-ui/react/switch) migration.
-// Preserved: role="switch", data-slot="switch" (root) + data-slot="switch-thumb"
-//   (thumb), aria-checked reflecting state, className merge, the `peer` base class.
-// Changed (drives the migration): Base UI emits data-checked / data-unchecked
-//   attributes instead of Radix's data-state="checked|unchecked" (the styling
-//   selectors are remapped to match).
 describe('Switch (Radix -> Base UI migration contract)', () => {
   it('renders with role="switch" and data-slot="switch"', () => {
     render(<Switch />)

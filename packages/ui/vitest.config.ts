@@ -2,9 +2,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    // NOT the environment: 'node' of the other leaf packages (utils/logger/
-    // valkey). Every primitive here renders, so this project needs a DOM and
-    // the three jsdom polyfills Base UI's overlays and Select depend on.
+    // Base UI components need a DOM and the shared browser API polyfills.
     environment: 'jsdom',
     setupFiles: ['@bcordes/test-utils/setup'],
     include: ['*.test.ts', 'src/**/*.test.{ts,tsx}'],

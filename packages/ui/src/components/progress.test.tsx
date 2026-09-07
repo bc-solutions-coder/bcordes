@@ -2,13 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Progress } from './progress'
 
-// Contract net for the Radix -> Base UI (@base-ui/react/progress) migration.
-// Preserved: data-slot="progress" root, data-slot="progress-indicator",
-//   progressbar semantics reflecting value (0-100), indicator accent class.
-// Changed: Base UI uses a Root>Track>Indicator structure, so a new
-//   data-slot="progress-track" wrapper appears, and the manual
-//   `style={{ transform: translateX(...) }}` is dropped -- Base UI drives the
-//   indicator width itself (inline `width: N%`).
 describe('Progress (Radix -> Base UI migration contract)', () => {
   it('renders root with data-slot="progress"', () => {
     const { container } = render(<Progress value={40} />)

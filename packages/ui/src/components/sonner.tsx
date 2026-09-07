@@ -10,7 +10,7 @@ import { Toaster as Sonner } from 'sonner'
 import type { ToasterProps } from 'sonner'
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  // This is a dark-theme-only site, so we hardcode the theme
+  // Caller props can override the default dark theme.
   return (
     <Sonner
       theme="dark"

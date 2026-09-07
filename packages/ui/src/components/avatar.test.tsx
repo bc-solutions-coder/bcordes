@@ -2,12 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 
-// Contract net for the Radix -> Base UI (@base-ui/react/avatar) migration.
-// Preserved (three-part structure is identical in Base UI):
-//   data-slot="avatar" / "avatar-image" / "avatar-fallback",
-//   base classes on the root, className merge, stable exports,
-//   fallback shows its children when the image is absent/unavailable
-//   (Base UI manages show/hide internally; the Radix delayMs prop is dropped).
 describe('Avatar (Radix -> Base UI migration contract)', () => {
   it('renders root with data-slot="avatar" and base classes', () => {
     const { container } = render(

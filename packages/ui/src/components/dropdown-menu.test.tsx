@@ -12,16 +12,6 @@ import {
   DropdownMenuTrigger,
 } from './dropdown-menu'
 
-// Contract net for the @radix-ui/react-dropdown-menu -> Base UI
-// (@base-ui/react/menu, Menu.*) migration.
-// Preserved: the public DropdownMenu* export names, every part's
-//   data-slot="dropdown-menu-*", trigger opens the menu, items are menuitems,
-//   label + separator render.
-// Changed (drives the migration): Content becomes Portal > Positioner > Popup;
-//   checkbox/radio checked state moves from data-[state=checked] to the Base UI
-//   data-checked attribute; the checkbox/radio indicators gain their own
-//   data-slot spans (dropdown-menu-checkbox-item-indicator /
-//   dropdown-menu-radio-item-indicator) and the radio indicator uses CheckIcon.
 describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
   it('opens the menu from the trigger', async () => {
     render(

@@ -2,13 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Checkbox } from './checkbox'
 
-// Contract net for the @radix-ui/react-checkbox -> Base UI
-// (@base-ui/react/checkbox) migration.
-// Preserved: role="checkbox", data-slot="checkbox" (root) +
-//   data-slot="checkbox-indicator" (indicator), the lucide CheckIcon inside the
-//   indicator when checked, className merge, the `peer` base class.
-// Changed (drives the migration): Base UI emits data-checked / data-unchecked /
-//   data-indeterminate attributes instead of Radix's data-state values.
 describe('Checkbox (Radix -> Base UI migration contract)', () => {
   it('renders with role="checkbox" and data-slot="checkbox"', () => {
     render(<Checkbox />)

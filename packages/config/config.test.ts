@@ -5,12 +5,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// These specs verify that @bcordes/config is a real, wired-up workspace
-// package: pnpm links it, Node resolves its export subpaths, tsc inherits its
-// compiler options through the exports map, and eslint serves the shared
-// module-boundary rules from it. They are the template for the 11 package
-// extractions that follow, so they assert wiring, not file contents.
-
 const packageDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(packageDir, '../..')
 const webDir = join(repoRoot, 'apps/web')
@@ -100,7 +94,7 @@ describe('tsconfig base', () => {
       moduleResolution: 'bundler',
       noEmit: true,
     })
-    // baseUrl/paths are app-specific and stay in apps/web/tsconfig.json.
+
     expect(base.compilerOptions.paths).toBeUndefined()
     expect(base.compilerOptions.baseUrl).toBeUndefined()
   })
@@ -123,7 +117,6 @@ describe('tsconfig base', () => {
       ),
     )
 
-    // Inherited from the base...
     expect(resolved.compilerOptions).toMatchObject({
       strict: true,
       noUnusedLocals: true,
@@ -132,7 +125,7 @@ describe('tsconfig base', () => {
       moduleResolution: 'bundler',
       skipLibCheck: true,
     })
-    // ...while the app keeps its own @/ alias.
+
     expect(resolved.compilerOptions.paths['@/*']).toEqual(['./src/*'])
   })
 })
@@ -177,12 +170,9 @@ describe('eslint config', () => {
     'applies package-level boundaries to packages/',
     { timeout: 30_000 },
     () => {
-      // @bcordes/auth must not import @bcordes/ui.
       const auth = restrictedImportGroups('packages/auth/src/session.ts')
       expect(auth.some((group) => group.startsWith('@bcordes/ui'))).toBe(true)
 
-      // Nothing, in any workspace package or app, may reach into another
-      // package's internals: only declared export subpaths are importable.
       const deepImport = (groups: Array<string>) =>
         groups.some(
           (group) => group.startsWith('@bcordes/') && group.includes('/src'),

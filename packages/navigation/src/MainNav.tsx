@@ -14,22 +14,15 @@ import type { ReactElement, ReactNode } from 'react'
 import type { NavItem } from './types'
 
 export interface MainNavProps {
-  /** Injected navigation entries — the shell hard-codes none of its own. */
   readonly items: ReadonlyArray<NavItem>
-  /** App-supplied branding/logo slot rendered at the start of the bar. */
+  /** Rendered before the navigation links. */
   readonly logo?: ReactNode
-  /** App-supplied trailing slot (CTA, notification bell, user menu, etc.). */
+  /** Rendered after the navigation links. */
   readonly actions?: ReactNode
   readonly className?: string
 }
 
-/**
- * Parameterized desktop navigation bar. It renders the row chrome (logo slot,
- * horizontal nav, actions slot) but hard-codes no routes, no branding, and has
- * no product/auth coupling — the consuming app injects everything through
- * props. Active-item highlighting is delegated to TanStack Router's built-in
- * `<Link activeProps>` / `activeOptions`, keyed off each item's `exact` flag.
- */
+/** Uses each item's exact flag for TanStack Router active-link matching. */
 export function MainNav({
   items,
   logo,

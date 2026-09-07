@@ -2,14 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 
-// Contract net for the @radix-ui/react-tabs -> Base UI
-// (@base-ui/react/tabs, Tabs.*) migration.
-// Preserved: the public Tabs/TabsList/TabsTrigger/TabsContent export names,
-//   data-slot="tabs"/"tabs-list"/"tabs-trigger"/"tabs-content", tab switching,
-//   only the active panel's content is shown.
-// Changed (drives the migration): TabsPrimitive.Trigger -> Tab and
-//   TabsPrimitive.Content -> Panel (renamed parts), and the active state moves
-//   from data-[state=active] to the Base UI data-active attribute.
 function renderTabs(defaultValue = 'account') {
   return render(
     <Tabs defaultValue={defaultValue}>

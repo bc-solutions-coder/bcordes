@@ -5,20 +5,7 @@ import { MainNav } from './MainNav'
 import { MainNav as MainNavFromBarrel } from './index'
 import type { NavItem } from './types'
 
-// ---------------------------------------------------------------------------
-// Router Link stub.
-//
-// The shells detect the active item purely through TanStack Router's <Link
-// activeProps> / activeOptions props (the app never uses a custom useMatch
-// hook). We treat @tanstack/react-router as a peer dep and mock Link exactly
-// the way apps/web's Header.test.tsx does, but we additionally *simulate*
-// active-state resolution against a test-controlled current path so the shell's
-// active-highlighting wiring is observable:
-//   - activeOptions.exact  -> active when to === currentPath
-//   - otherwise            -> active when currentPath starts with `to`
-// When active, the stub applies activeProps.className, mirroring the router.
-// ---------------------------------------------------------------------------
-
+// The Link stub applies activeProps using a test-controlled path.
 let currentPath = '/'
 
 vi.mock('@tanstack/react-router', () => ({
@@ -84,7 +71,7 @@ describe('MainNav', () => {
 
     expect(screen.getByText('Docs')).toBeDefined()
     expect(screen.getByText('Pricing')).toBeDefined()
-    // Nothing bcordes-specific leaks in from the shell itself.
+
     expect(screen.queryByText('Projects')).toBeNull()
     expect(screen.queryByText('Resume')).toBeNull()
   })
@@ -104,10 +91,9 @@ describe('MainNav', () => {
     currentPath = '/projects/alpha'
     render(<MainNav items={ITEMS} />)
 
-    // Home is exact -> not active on a non-root path.
     const home = screen.getByText('Home').closest('a')
     expect(home!.getAttribute('data-active')).toBe('false')
-    // Projects is non-exact -> active on its child route.
+
     const projects = screen.getByText('Projects').closest('a')
     expect(projects!.getAttribute('data-active')).toBe('true')
     currentPath = '/'

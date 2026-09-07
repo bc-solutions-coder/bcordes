@@ -27,10 +27,9 @@ export interface SelectFormFieldProps<TFieldValues extends FieldValues> {
   placeholder: string
   options: ReadonlyArray<SelectOption>
   required?: boolean
-  // Generalization surface (T10.2, the only behavior change): the bcordes theme
-  // classes are no longer hardcoded — an app can restyle the trigger/content
-  // without forking. Both default to the current bcordes values.
+  /** Merged with the default trigger classes. */
   triggerClassName?: string
+  /** Merged with the default content classes. */
   contentClassName?: string
 }
 

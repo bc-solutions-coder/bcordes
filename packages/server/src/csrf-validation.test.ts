@@ -1,12 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Import after mocks are registered
 import { validateCsrfToken } from './csrf-validation'
 import type { H3Event } from 'h3'
-
-// ---------------------------------------------------------------------------
-// Hoisted mocks
-// ---------------------------------------------------------------------------
 
 const { mockGetSession, mockGetRequestHeader, mockCreateError } = vi.hoisted(
   () => ({
@@ -36,27 +31,15 @@ vi.mock('h3', () => ({
   createError: mockCreateError,
 }))
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 // h3 is mocked above, so the handler only ever reads `method` off the event.
 function makeEvent(method: string): H3Event {
   return { method } as unknown as H3Event
 }
 
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
 describe('CSRF validation middleware', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
-
-  // -------------------------------------------------------------------------
-  // Safe methods bypass CSRF check
-  // -------------------------------------------------------------------------
 
   describe('safe methods pass without CSRF check', () => {
     it.each(['GET', 'HEAD', 'OPTIONS'])(
@@ -70,10 +53,6 @@ describe('CSRF validation middleware', () => {
       },
     )
   })
-
-  // -------------------------------------------------------------------------
-  // Anonymous (no session) POST passes
-  // -------------------------------------------------------------------------
 
   describe('unauthenticated requests', () => {
     it('POST with no session passes (anonymous requests allowed)', async () => {
@@ -97,10 +76,6 @@ describe('CSRF validation middleware', () => {
     })
   })
 
-  // -------------------------------------------------------------------------
-  // Authenticated POST with valid token
-  // -------------------------------------------------------------------------
-
   describe('valid CSRF token', () => {
     it('POST with session + matching x-csrf-token header passes', async () => {
       const token = 'valid-csrf-token-abc123'
@@ -117,10 +92,6 @@ describe('CSRF validation middleware', () => {
       )
     })
   })
-
-  // -------------------------------------------------------------------------
-  // Authenticated POST with invalid / missing token
-  // -------------------------------------------------------------------------
 
   describe('invalid CSRF token', () => {
     it('POST with session + mismatched token returns 403', async () => {

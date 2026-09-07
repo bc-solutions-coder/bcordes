@@ -1,13 +1,6 @@
 import { vi } from 'vitest'
 
-// ---------------------------------------------------------------------------
-// Mock WallowClient
-// ---------------------------------------------------------------------------
-
-/**
- * Shape matching the WallowClient interface from `@bcordes/wallow/client.ts`,
- * extended with `head` for convenience, where every method is a Vitest mock.
- */
+/** Legacy HTTP-method fixtures returning Response objects. */
 export interface MockWallowClient {
   get: ReturnType<typeof vi.fn<(path: string) => Promise<Response>>>
   post: ReturnType<
@@ -23,12 +16,7 @@ export interface MockWallowClient {
   head: ReturnType<typeof vi.fn<(path: string) => Promise<Response>>>
 }
 
-/**
- * Create a mock Wallow client whose methods are all `vi.fn()` stubs.
- *
- * By default every method resolves with a 200 JSON response (`{}`).
- * Override individual methods via `mockResolvedValue` / `mockImplementation`.
- */
+/** Each method defaults to a 200 JSON response containing an empty object. */
 export function createMockWallowClient(): MockWallowClient {
   const defaultResponse = () => Promise.resolve(jsonResponse({}))
 
@@ -54,17 +42,6 @@ export function createMockWallowClient(): MockWallowClient {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Response factories
-// ---------------------------------------------------------------------------
-
-/**
- * Build a `Response` containing a JSON body — the same shape the real Wallow
- * client returns on success.
- *
- * @param data  - Serialisable value that will become the response body.
- * @param status - HTTP status code (defaults to `200`).
- */
 export function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -72,12 +49,6 @@ export function jsonResponse(data: unknown, status = 200): Response {
   })
 }
 
-/**
- * Build a `Response` containing a plain-text body.
- *
- * @param body   - String body.
- * @param status - HTTP status code (defaults to `200`).
- */
 export function textResponse(body: string, status = 200): Response {
   return new Response(body, {
     status,

@@ -5,29 +5,13 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// These specs verify that @bcordes/utils is a real, wired-up workspace package
-// rather than a directory that happens to hold some files: pnpm links it, Node
-// resolves its '.' export from apps/web, every former `@/lib/utils` and
-// `@/lib/format` importer now goes through the package, and the package's own
-// tests run in the root vitest. The behaviour of cn/formatRelativeTime/
-// formatDateTime is specified by src/utils.test.ts and src/format.test.ts,
-// which moved here with the code.
-
 const packageDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(packageDir, '../..')
 const webDir = join(repoRoot, 'apps/web')
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, 'utf8'))
 
-/**
- * Tracked + untracked (but not gitignored) files under apps/ and packages/
- * matching `pattern`. git grep exits 1 when nothing matches, which is a valid
- * answer here, not an error.
- *
- * This file is excluded from its own search: it quotes the very import paths it
- * forbids, so without the exclusion it would always report itself as the sole
- * violator. Every other file under apps/ and packages/ is still searched.
- */
+/** Exclude this file because its assertions contain the forbidden paths. */
 const filesMatching = (pattern: string): Array<string> => {
   try {
     return execFileSync(
@@ -53,12 +37,7 @@ const filesMatching = (pattern: string): Array<string> => {
   }
 }
 
-/**
- * The 28 files that imported `@/lib/utils` (cn — almost every ui primitive)
- * plus the 4 non-test files that imported `@/lib/format`. Every one of them
- * must now import the package. Asserted as a floor so that later extractions
- * (which move some of these files into packages/ui) do not have to revisit it.
- */
+/** Preserve at least the original 32 importers while allowing new callers. */
 const FORMER_IMPORTER_COUNT = 32
 
 describe('@bcordes/utils package manifest', () => {
@@ -81,8 +60,6 @@ describe('@bcordes/utils package manifest', () => {
   it('declares the runtime dependencies it actually imports', () => {
     const manifest = readJson(join(packageDir, 'package.json'))
 
-    // cn() needs clsx + tailwind-merge; the format helpers need date-fns. A
-    // package declares what it imports rather than leaning on root hoisting.
     expect(manifest.dependencies).toMatchObject({
       clsx: expect.any(String),
       'tailwind-merge': expect.any(String),
@@ -98,8 +75,6 @@ describe('the source really moved out of apps/web', () => {
   })
 
   it('leaves nothing behind at apps/web/src/lib', () => {
-    // A copy left behind would let the app keep resolving @/lib/utils and hide
-    // a half-finished extraction.
     expect(existsSync(join(webDir, 'src/lib/utils.ts'))).toBe(false)
     expect(existsSync(join(webDir, 'src/lib/format.ts'))).toBe(false)
   })
@@ -127,9 +102,6 @@ describe('workspace wiring', () => {
       ...web.devDependencies,
     }
 
-    // utils.ts/format.ts were their only importers in the whole app; they are
-    // the package's dependencies now, and leaving them declared here would let
-    // apps/web import them again without anyone noticing.
     expect(declared).not.toHaveProperty('clsx')
     expect(declared).not.toHaveProperty('tailwind-merge')
     expect(declared).not.toHaveProperty('date-fns')
@@ -153,8 +125,6 @@ describe('workspace wiring', () => {
 
 describe('every importer was rewritten', () => {
   it('leaves no @/lib/utils or @/lib/format import anywhere', () => {
-    // The acceptance criterion, executed. Covers components.json too, whose
-    // shadcn `utils` alias decides where newly added primitives import cn from.
     expect(filesMatching('@/lib/utils')).toEqual([])
     expect(filesMatching('@/lib/format')).toEqual([])
   })
@@ -166,16 +136,11 @@ describe('every importer was rewritten', () => {
   })
 
   it('redirects every former importer to @bcordes/utils', () => {
-    // A floor, not an exact count: this proves the imports were REDIRECTED, not
-    // quietly dropped. 28 files imported cn, 4 more imported the format helpers.
     const importers = filesMatching("from '@bcordes/utils'")
 
     expect(importers.length).toBeGreaterThanOrEqual(FORMER_IMPORTER_COUNT)
     expect(importers).toEqual(
       expect.arrayContaining([
-        // button.tsx is a named witness on the far side of a later extraction:
-        // F4 moved the primitives to packages/ui, and cn had to follow them
-        // across the package boundary rather than being re-created there.
         'packages/ui/src/components/button.tsx',
         'apps/web/src/features/projects/components/ProjectCard.tsx',
         'apps/web/src/routes/dashboard/inquiries.$id.tsx',
@@ -189,8 +154,6 @@ describe('the package runs in the root vitest', () => {
     "collects the package's own tests as its own project",
     { timeout: 120_000 },
     () => {
-      // packages/* in the root vitest projects glob is only worth anything if a
-      // new package is picked up with no root-side edit at all.
       const collected: Array<{ file: string; projectName: string }> =
         JSON.parse(
           execFileSync(

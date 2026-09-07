@@ -8,15 +8,6 @@ import {
   SelectValue,
 } from './select'
 
-// Contract net for the @radix-ui/react-select -> Base UI
-// (@base-ui/react/select, Select.*) migration.
-// Preserved: the public Select* export names, data-slot="select-trigger" /
-//   "select-content" / "select-item", the placeholder shown by SelectValue,
-//   options selectable, the trigger reflects the chosen value.
-// Changed (drives the migration): Content becomes Portal > Positioner > Popup
-//   with a Select.List wrapping the items; the selected item's state moves from
-//   data-[state=checked] to the Base UI data-selected attribute; ScrollUpButton/
-//   ScrollDownButton become ScrollUpArrow/ScrollDownArrow.
 function renderSelect(props?: {
   defaultOpen?: boolean
   defaultValue?: string

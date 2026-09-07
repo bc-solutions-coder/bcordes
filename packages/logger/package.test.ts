@@ -5,28 +5,13 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 
-// These specs verify that @bcordes/logger is a real, wired-up workspace package
-// rather than a directory that happens to hold a file: pnpm links it, Node
-// resolves its '.' export from apps/web, pino and its pretty transport belong to
-// the package rather than to the app, every former importer (source and the test
-// files that mock it) now goes through the package, and the package's own tests
-// run in the root vitest.
-
 const packageDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(packageDir, '../..')
 const webDir = join(repoRoot, 'apps/web')
 
 const readJson = (path: string) => JSON.parse(readFileSync(path, 'utf8'))
 
-/**
- * Tracked + untracked (but not gitignored) files under apps/ and packages/
- * matching `pattern`. git grep exits 1 when nothing matches, which is a valid
- * answer here, not an error.
- *
- * This file is excluded from its own search: it quotes the very import path it
- * forbids, so without the exclusion it would always report itself as the sole
- * violator. Every other file under apps/ and packages/ is still searched.
- */
+/** Exclude this file because its assertions contain the forbidden paths. */
 const filesMatching = (
   pattern: string,
   scope: Array<string> = ['apps', 'packages'],
@@ -54,12 +39,6 @@ const filesMatching = (
   }
 }
 
-/**
- * The 10 non-test files that did `import logger from '@/lib/logger'`. A floor,
- * not an exact count, so that later extractions (which move some of these files
- * into other packages) do not have to revisit this spec.
- */
-
 describe('@bcordes/logger package manifest', () => {
   it('declares the workspace package conventions', () => {
     const manifest = readJson(join(packageDir, 'package.json'))
@@ -80,10 +59,7 @@ describe('@bcordes/logger package manifest', () => {
   it('declares pino as a runtime dep and pino-pretty as a dev dep', () => {
     const manifest = readJson(join(packageDir, 'package.json'))
 
-    // pino is imported by the module itself. pino-pretty is only ever loaded as
-    // a transport target in development, so it stays a devDependency exactly as
-    // it was on apps/web. A package declares what it uses rather than leaning on
-    // root hoisting.
+    // pino-pretty is loaded whenever NODE_ENV is not production.
     expect(manifest.dependencies).toMatchObject({ pino: expect.any(String) })
     expect(manifest.devDependencies).toMatchObject({
       'pino-pretty': expect.any(String),
@@ -93,15 +69,11 @@ describe('@bcordes/logger package manifest', () => {
 
 describe('the source really moved out of apps/web', () => {
   it('leaves nothing behind at apps/web/src/lib/logger.ts', () => {
-    // A copy left behind would let the app keep resolving @/lib/logger and hide
-    // a half-finished extraction.
     expect(existsSync(join(webDir, 'src/lib/logger.ts'))).toBe(false)
   })
 
   it('default-exports a working pino logger', async () => {
-    // Pinned to production so importing the module does not spin up the
-    // pino-pretty transport worker thread; the dev branch is the same pino
-    // logger with a prettifying transport bolted on.
+    // Production mode avoids starting the pino-pretty worker thread.
     vi.stubEnv('NODE_ENV', 'production')
     try {
       const logger = (await import('./src/index')).default
@@ -110,7 +82,7 @@ describe('the source really moved out of apps/web', () => {
       for (const method of ['info', 'error', 'warn', 'debug'] as const) {
         expect(typeof logger[method]).toBe('function')
       }
-      // Callers lean on child loggers (sse-stream, request, session all do).
+
       expect(typeof logger.child({ scope: 'test' }).info).toBe('function')
     } finally {
       vi.unstubAllEnvs()
@@ -129,8 +101,6 @@ describe('workspace wiring', () => {
     const web = readJson(join(webDir, 'package.json'))
     const declared = { ...web.dependencies, ...web.devDependencies }
 
-    // logger.ts was their only importer in the whole app; leaving them declared
-    // here would let apps/web reach for pino directly without anyone noticing.
     expect(declared).not.toHaveProperty('pino')
     expect(declared).not.toHaveProperty('pino-pretty')
   })
@@ -153,24 +123,17 @@ describe('workspace wiring', () => {
 
 describe('every importer was rewritten', () => {
   it('leaves no @/lib/logger import anywhere', () => {
-    // The acceptance criterion, executed. Covers the nine test files that mock
-    // the logger as well as the ten that import it.
     expect(filesMatching('@/lib/logger')).toEqual([])
   })
 
   it('redirects every former importer to @bcordes/logger', () => {
-    // A floor, not an exact count: this proves the imports were REDIRECTED, not
-    // quietly dropped.
     const importers = filesMatching("from '@bcordes/logger'")
 
     expect(importers).toEqual(expect.arrayContaining(['apps/web/src/start.ts']))
   })
 
   it('leaves no direct pino import in apps/web', () => {
-    // The whole point of the package: pino is an implementation detail of
-    // @bcordes/logger now, and the app talks to the logger, not to pino. Scoped
-    // to apps/ on purpose — packages/logger/src/index.ts is the one file in the
-    // repo that is *supposed* to import pino.
+    // Scope this check to the app; the package owns the pino dependency.
     expect(filesMatching("from 'pino'", ['apps'])).toEqual([])
   })
 })
@@ -180,8 +143,6 @@ describe('the package runs in the root vitest', () => {
     "collects the package's own tests as its own project",
     { timeout: 120_000 },
     () => {
-      // packages/* in the root vitest projects glob is only worth anything if a
-      // new package is picked up with no root-side edit at all.
       const collected: Array<{ file: string; projectName: string }> =
         JSON.parse(
           execFileSync(

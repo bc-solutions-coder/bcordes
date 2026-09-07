@@ -1,9 +1,4 @@
-/* The design tokens every primitive in this package resolves its Tailwind
-   classes against (bg-primary, border-border, rounded-lg…). They ship with the
-   components rather than with the app: a consumer that installs @bcordes/ui but
-   not these tokens gets unstyled components.
-
-   Unified theme — shadcn/ui naming convention. */
+/* Shared design tokens. Import setup: ../../../../docs/ui.md */
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

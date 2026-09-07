@@ -2,7 +2,7 @@ import { format, formatDistanceToNowStrict } from 'date-fns'
 
 /**
  * Format a date string as a compact relative time (e.g. "5m ago", "2d ago").
- * Falls back to "Jan 5" for dates older than 6 days.
+ * Falls back to "Jan 5" for dates at least seven days old.
  */
 export function formatRelativeTime(dateStr: string): string {
   const date = new Date(dateStr)
@@ -17,8 +17,6 @@ export function formatRelativeTime(dateStr: string): string {
   }
 
   const distance = formatDistanceToNowStrict(date, { addSuffix: false })
-  // formatDistanceToNowStrict returns "5 minutes", "2 hours", "3 days" etc.
-  // Convert to compact: "5m ago", "2h ago", "3d ago"
   const compact = distance
     .replace(/ seconds?/, 's')
     .replace(/ minutes?/, 'm')

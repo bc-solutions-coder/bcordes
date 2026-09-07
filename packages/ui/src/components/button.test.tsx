@@ -2,13 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Button, buttonVariants } from './button'
 
-// Contract net for the Radix Slot -> Base UI (@base-ui/react/button) migration.
-// Preserved: native <button> by default, data-slot="button", data-variant,
-//   data-size, the exported buttonVariants CVA (consumed externally), and all
-//   variant/size class strings (this is a primitive swap, not a restyle).
-// Changed (drives the migration): polymorphism moves from `asChild` + Slot to
-//   Base UI's `render` prop -- <Button render={<a />} nativeButton={false}>
-//   composes the button classes onto the anchor.
 describe('Button (Radix Slot -> Base UI render migration contract)', () => {
   it('renders a native <button> by default', () => {
     render(<Button>Click</Button>)
@@ -60,7 +53,6 @@ describe('Button (Radix Slot -> Base UI render migration contract)', () => {
     expect(screen.getByRole('button', { name: 'Go' })).toHaveClass('bg-primary')
   })
 
-  // POLYMORPHISM: the NEW Base UI contract (render prop) replaces asChild/Slot.
   it('composes onto an anchor via the render prop (asChild -> render)', () => {
     render(
       <Button
@@ -74,7 +66,6 @@ describe('Button (Radix Slot -> Base UI render migration contract)', () => {
     const link = screen.getByRole('link', { name: 'Projects' })
     expect(link.tagName).toBe('A')
     expect(link).toHaveAttribute('href', '/projects')
-    // button chrome rides along on the anchor
     expect(link).toHaveAttribute('data-slot', 'button')
     expect(link).toHaveClass('bg-primary')
   })

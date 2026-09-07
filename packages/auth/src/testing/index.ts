@@ -1,9 +1,5 @@
 import type { SessionData, User } from '../types'
 
-// ---------------------------------------------------------------------------
-// User factories
-// ---------------------------------------------------------------------------
-
 export function createMockUser(overrides: Partial<User> = {}): User {
   return {
     id: 'test-user-123',
@@ -27,10 +23,6 @@ export function createMockAdminUser(overrides: Partial<User> = {}): User {
     ...overrides,
   })
 }
-
-// ---------------------------------------------------------------------------
-// Session factories
-// ---------------------------------------------------------------------------
 
 export function createMockSession(
   overrides: Partial<SessionData> = {},

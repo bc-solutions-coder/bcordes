@@ -8,16 +8,6 @@ import {
   SheetTrigger,
 } from './sheet'
 
-// Contract net for the @radix-ui/react-dialog -> Base UI
-// (@base-ui/react/dialog) migration of the sheet wrapper.
-// Preserved: data-slot="sheet-content"/"sheet-title"/"sheet-description" on
-//   each part, role="dialog", trigger opens the sheet, an accessible close
-//   button named "Close" dismisses it, Escape closes.
-// Changed (drives the migration): SheetPrimitive.Overlay -> Backdrop and
-//   SheetPrimitive.Content -> Popup, and the `side` variant is now reflected
-//   as a stable data-side attribute on the content element (Radix expressed it
-//   only via slide-in-from-* animation classes tied to data-[state=*]). We
-//   assert the NEW, stable contract: data-side="top|right|bottom|left".
 type Side = 'top' | 'right' | 'bottom' | 'left'
 
 function renderSheet(props?: { open?: boolean; side?: Side }) {

@@ -2,11 +2,6 @@ import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { Label } from './label'
 
-// Contract net for the Radix -> native <label> migration (Base UI has no
-// standalone Label primitive). The public API/DOM must stay identical so
-// form.tsx can keep importing `Label` from this file:
-//   renders a <label>, data-slot="label", htmlFor wiring focuses the control,
-//   peer-disabled styling classes preserved, className merged.
 describe('Label (Radix -> native migration contract)', () => {
   it('renders a <label> element with data-slot="label"', () => {
     render(<Label>Email</Label>)
@@ -26,9 +21,7 @@ describe('Label (Radix -> native migration contract)', () => {
   })
 
   it('activates its associated control when clicked (label -> control wiring)', () => {
-    // jsdom does not implement browser focus-on-label-click, but it does
-    // forward the label activation click to the associated control. That
-    // forwarding is the preservable contract of the htmlFor wiring.
+    // jsdom forwards label clicks to the control but does not focus it.
     const onClick = vi.fn()
     render(
       <>

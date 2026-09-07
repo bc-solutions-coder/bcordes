@@ -10,9 +10,7 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 /**
- * CSRF validation middleware.
- * Validates x-csrf-token header on state-changing requests (POST/PUT/PATCH/DELETE).
- * Skips validation for safe methods and unauthenticated requests.
+ * Validate x-csrf-token except for GET, HEAD, OPTIONS or sessions without csrfToken.
  */
 export function validateCsrfToken() {
   return defineEventHandler(async (event) => {
@@ -20,7 +18,6 @@ export function validateCsrfToken() {
     if (SAFE_METHODS.has(method)) return
 
     const session = await getSession()
-    // Skip CSRF check for unauthenticated requests (e.g. anonymous inquiry submission)
     if (!session?.csrfToken) return
 
     const headerToken = getRequestHeader(event, 'x-csrf-token')

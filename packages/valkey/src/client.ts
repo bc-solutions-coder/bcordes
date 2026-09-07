@@ -13,7 +13,7 @@ export function getValkey(): Redis {
     instance = new Redis(url, {
       maxRetriesPerRequest: 3,
       retryStrategy(times) {
-        if (times > 10) return null // stop retrying after 10 attempts
+        if (times > 10) return null
         return Math.min(times * 500, 5000)
       },
       lazyConnect: true,

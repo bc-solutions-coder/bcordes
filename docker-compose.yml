@@ -1,4 +1,4 @@
-# Local dev infrastructure — run alongside `pnpm dev` and local Wallow
+# Local session store. See docs/setup.md for startup commands.
 services:
   valkey:
     image: valkey/valkey:8-alpine

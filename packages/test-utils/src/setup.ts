@@ -23,11 +23,7 @@ if (
   Element.prototype.scrollIntoView = function scrollIntoView() {}
 }
 
-// jsdom's MouseEvent has no `pointerType` property. Base UI treats a click that
-// carries no pointer data as a "cannot activate an unhighlighted item" guard,
-// so a bare fireEvent.click never commits a Select item. Real browsers surface
-// an empty-string pointerType for programmatic/assistive activation, which Base
-// UI honours; expose the same so test clicks behave like real activations.
+// An empty pointerType lets Base UI accept unhighlighted items in simulated clicks.
 if (
   typeof MouseEvent !== 'undefined' &&
   !Object.getOwnPropertyDescriptor(MouseEvent.prototype, 'pointerType')

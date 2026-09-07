@@ -18,10 +18,10 @@ todos.json
 # Git worktrees
 .worktrees/
 
-# Scratch / reference-only (Base UI migration diff refs, not part of build)
+# Local scratch files
 .scratch/
 
-# AI tooling config (local-only)
+# Local agent configuration and working notes
 .claude
 .serena
 .superpowers

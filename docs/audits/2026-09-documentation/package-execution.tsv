@@ -1,0 +1,183 @@
+path	baseline_blob	outcome	reason
+.dockerignore	68a0f8831ac8737c92094529e33a30b1c3a07cda	retained	Ignore patterns contain no explanatory comments; preserve build-context exclusions.
+.env.example	cf15151238cea448ae2a4d141909b88ff37a7884	retained	Short comments distinguish runtime secrets, issuer verification and SDK environment names.
+.github/workflows/ci.yml	a16ebcede3a133212b29c32d69a3b6e78472587d	retained	Workflow steps state the checks they run; no prose comments needing edits.
+.github/workflows/deploy-gate.yml	a26ea85cc9fb7fd7d44b0e9bfd2a0e1f62a69183	retained	No explanatory comments; workflow behavior is evidence for release documentation.
+.github/workflows/deploy.yml	f6ebb0f2293fe550645b88f73bf83d66f88c91a9	retained	No explanatory comments; publication steps are evidence for docs and do not prove a live deployment.
+.github/workflows/docker-publish.yml	cedffad0a892f5a5821c073ad6d23679067475b8	retained	Workflow step names describe image validation and runtime checks; no comment edits needed.
+.github/workflows/release-please.yml	eefe41c66d756addf13c754c149d775e6009895d	retained	Version-tag and immutable-image comments explain assumptions rather than repeat shell syntax.
+.gitignore	a7e6327b60eea8b3cfa46c5483b8448ed804da98	changed	Removed migration-specific ignore headings; patterns unchanged.
+.husky/pre-commit	cb2c84d5c3c6cf8a76a3f007b875398b854369ca	retained	One command, no editorial material.
+.npmrc	78cb106ff8364155cf9a9cce2cbfa5d68e69f245	retained	Registry mapping only; it has no token interpolation despite Dockerfile commentary.
+.prettierignore	5322d7feeaeae76b7cb1abac69cfbb2992b11e76	retained	Lockfile patterns only; no editorial material.
+.release-please-manifest.json	275a79aabcb150d20642daafea989a84d1f80f65	excluded	Tool-maintained release version manifest; preserve generated release metadata.
+.vscode/settings.json	00b5278e580c31563782a9c795dd37053c9fe045	retained	Editor settings only; mark routeTree.gen.ts as generated in coverage.
+Dockerfile	ab3db2ca22be2f243c9cc6f16659c0b7d136a735	changed	Corrected registry secret handling and removed stage and command narration.
+docker-compose.prod.yml	be2450d24a1e7efa596909200b59331b4119d5b0	retained	Single Dockhand comment is concise; environment interpolation is implementation evidence for deployment docs.
+docker-compose.yml	1703d508fd3f6feb703c5765d79a6cc68045eb91	changed	Linked local startup guidance.
+eslint.config.js	ec6118be0e780da7ba324c3670366225c5df24b2	changed	Replaced repeated configuration explanation with its owning package.
+package.json	b1401b8fa0ac6fa97b309e9a65c96d814e2b14f8	retained	No comments; authoritative root command and package-manager inventory.
+packages/.keep/.gitkeep	e69de29bb2d1d6434b8b29ae775ad8c2e48c5391	excluded	Empty directory placeholder, no editorial content.
+packages/auth/package.json	9d81c3c72ecdbf5f79bf6052664701df812208a0	retained	No editorial comments or standalone documentation.
+packages/auth/package.test.ts	6cec54003350e81ff1f35ce9f37b732afad4e51d	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/auth/src/bff.ts	4fb60b85c7385c226d466af8184bf322a5606c44	retained	No editorial comments or standalone documentation.
+packages/auth/src/index.ts	178c43cf4e9ceee6545fbda9153ac7504e52f50b	retained	No editorial comments or standalone documentation.
+packages/auth/src/middleware.test.ts	f68f4b9ec4765d63f3f2e5081e6072f1633e45a3	retained	No editorial comments or standalone documentation.
+packages/auth/src/middleware.ts	3bc12d3f2a41bdd7980737a12292e95b9e5ee0d1	retained	No editorial comments or standalone documentation.
+packages/auth/src/redact.test.ts	7e244d782b56aeb740a9539e7ec9dfe969e5a092	retained	No editorial comments or standalone documentation.
+packages/auth/src/redact.ts	9e3202a791ae79c764606a1c4f724acb51c990a8	retained	No editorial comments or standalone documentation.
+packages/auth/src/sdk.ts	9127bc047e1ca121ecf1836c3617f163e589112c	retained	L6 describes per-request SDK/cookie ownership and matches implementation.
+packages/auth/src/session.ts	4e49368f0cf3c44a4600f95ab53607e4bf0e1b4b	retained	No editorial comments or standalone documentation.
+packages/auth/src/testing/index.ts	7b459d9cdf73d314fe204456428ae20de8a48a17	changed	Removed decorative section headings and redundant setup narration.
+packages/auth/src/types.ts	27f6970723ddbc3eac27b10a9c35ce2ee3943a57	changed	Corrected identity sources and name fallback to match middleware; preserved expanded permission semantics.
+packages/auth/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/auth/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/authz/package.json	278ad5deeac478b0c04399ed81c5f142c5cf2dff	retained	No editorial comments or standalone documentation.
+packages/authz/src/index.ts	239bd6ccd09b96d04e969c3efa3b3d12cba73be5	retained	Short public predicate comments document null handling and role-or-permission contract.
+packages/authz/src/predicates.test.ts	cec18e3b7c5ce590a9cb7fdaf6ce1ce710d05811	retained	No editorial comments or standalone documentation.
+packages/authz/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/authz/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/config/config.test.ts	c1d27e487655dad7ded9d0e40664529a7701f590	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/config/eslint.js	8713eff3675934fb501acc8498612b2e5180f82e	changed	Explained rule-option replacement once and removed retired migration instructions; preserved type directives.
+packages/config/package.json	27d59637d43c723b5ff10c08425a567bf8ecc7d4	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/config/tsconfig.base.json	9c001c25eedfb15fa9c433a0a858bf1c84a69a01	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/config/tsconfig.json	b503f3f1c28a0ab922059d743fbeca1919419107	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/config/typecheck-coverage.test.ts	a1065444336947e8e16de1b171a8d77f899729e5	changed	Replaced migration history and changing counts with recursive typecheck omission constraint.
+packages/config/vitest.config.ts	b459f89f4e74c31093600b6e9947f3bc8f6d9f93	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/forms/package.json	233ab1ceaa28be33669e226b2a4569435c4915fb	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/forms/package.test.ts	4f1e27a7acdee1fa7babcbcf7a7c51e8a6d9ea41	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/forms/src/SelectFormField.test.tsx	b9f475b997eb381e8b9caf65c5f9af996126f789	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/forms/src/SelectFormField.tsx	ac1fcee0ec4516cfe2f0273f39274ce12f522ffd	changed	Documented class merging instead of migration phases.
+packages/forms/src/form.test.tsx	9cf81e493a4ac525ed482a6ce1564a9093ab3246	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/forms/src/form.tsx	1da9fb01de5e0dcf6af938b220f50a2ebcc95c80	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/forms/src/index.ts	9a244e90b1242abf77c73862dcb060dd41138c7f	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/forms/tsconfig.json	58ee83b42d7d1996b5330511c78f00d021134bbe	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/forms/vitest.config.ts	c1176800096db77f04ab7a413f1ae1b54d0d2e5b	changed	Removed redundant DOM environment narration; retained local setup resolution rationale where applicable.
+packages/logger/package.json	29dd98646865353d7572a84a4495b9e58e182bf9	retained	No editorial comments or standalone documentation.
+packages/logger/package.test.ts	185f7f61501764dad4016ee270a450c28184960a	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/logger/src/index.ts	e143d0c0aff6eea88d278176840556f5ee5fc451	retained	No editorial comments or standalone documentation.
+packages/logger/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/logger/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/navigation/package.json	cd6925022af904cd7735b40fb720f33de363dd5c	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/navigation/src/MainNav.test.tsx	c5e96963b0f7f893f9be0b150f6d7b0c4630b222	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/navigation/src/MainNav.tsx	4054f6688b84d0101f3a82dcb8883c7c170e4b28	changed	Kept slot placement and router matching contract without repeating injection claims.
+packages/navigation/src/MobileNav.test.tsx	06875a53e4b835dfe64e20b40beb7a389076c0b3	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/navigation/src/MobileNav.tsx	9e8aec29da1096487f8c59e97c64c0208e834cca	changed	Kept slot placement, controlled state and caller-owned closing behavior.
+packages/navigation/src/index.ts	e7bba81e99c73de40c9f4ce8917ca0c5217cacc9	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/navigation/src/types.ts	c322349515252999eadd3352843228b5f156f0bd	changed	Documented destination and exact matching on their fields.
+packages/navigation/tsconfig.json	a203d7202110ffbb7b33ae6916a423b4f374d6db	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/navigation/vitest.config.ts	bb9ab8b791c7522650f1cb25bda45b0dff260387	changed	Removed redundant DOM environment narration; retained local setup resolution rationale where applicable.
+packages/query/package.json	bed8a892a0eb7763d217f43b9946113558fe38ee	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/src/devtools.test.tsx	a16bfe170c5e9131bc5a7080c3b73eb471b3c598	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/src/devtools.tsx	94c68c9391c6b16067401c5912d82b58f9a6cfec	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/src/index.test.ts	6e71fdbca3404280e1e9bfe104aff7492a2b000c	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/src/index.ts	b92a7a4772b9d11dfbbcadf59b2896242e6cd158	changed	Kept devtools import isolation in one sentence.
+packages/query/src/root-provider.test.tsx	03c401303e6f51c1d31ff4a7a429e4e2ede63be4	changed	Described synthetic hydration fixture without claiming streaming integration coverage.
+packages/query/src/root-provider.tsx	4fb69612af8c9c7522976c98231d4151265d521d	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/tsconfig.json	d973d18b0ccf9e1fc31929cc6c2305d40d154391	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/query/vitest.config.ts	b91c21f2f098fe8a910c5abede0a5865b6d86f03	changed	Removed redundant DOM environment narration; retained local setup resolution rationale where applicable.
+packages/server/package.json	bcdf945ee57b8c3b64b158267b36c744363bb52a	retained	No editorial comments or standalone documentation.
+packages/server/package.test.ts	c3708731fe649a3fb7fc813de9531e709fd84eca	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/server/src/csrf-token.test.ts	48464faf2c54dde04ee0f0948faa219778755770	retained	No editorial comments or standalone documentation.
+packages/server/src/csrf-validation.test.ts	70e4f5382016c7a0e84ab4d5e4d9194eb156b82f	changed	Removed decorative section headings and redundant setup narration.
+packages/server/src/csrf-validation.ts	52608bec62d4b3a7dcb5bae3acd66831557a8091	changed	Documented exact safe-method and missing-token bypass conditions.
+packages/server/src/csrf.test.ts	c5f8324b8ae10c791ba9e6292dda6cb7efffc6d7	changed	Removed redundant mock label; retained server-function transform rationale.
+packages/server/src/csrf.ts	bf531fa1c5f8ea7c2e3a13f70762f998ab8f6c8b	retained	No editorial comments or standalone documentation.
+packages/server/src/index.ts	8a364ef59466a00e6b3233fe372d6aae41a91a12	retained	No editorial comments or standalone documentation.
+packages/server/src/security-headers.test.ts	1daf15f002cdeb6ca0a7c61cdb26da35b1fe2fd5	retained	No editorial comments or standalone documentation.
+packages/server/src/security-headers.ts	19358e0e460293752d947114200074465dbe666c	retained	L1 states streamed-response compatibility; response body/status are forwarded.
+packages/server/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/server/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/test-utils/package.json	a32d690e2af6ec6cdb521df839fae7f56c23f9fb	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/test-utils/package.test.ts	c7ddae802567a1dad2155dda4051a5b7573dfa91	changed	Removed completed migration narrative and comments repeated by assertions.
+packages/test-utils/src/index.ts	0dab198bf05dc47f9494a3f05bd7e50885871b65	changed	Shortened fixture ownership guidance without matching import scans.
+packages/test-utils/src/render.tsx	04e65428e4d1f078ed9babd95de782ac9964ef96	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/test-utils/src/setup.ts	7ea2b2a03ea10a8d04102048f6e8b68b306d36d2	changed	Condensed pointerType workaround to its activation purpose.
+packages/test-utils/tsconfig.json	ac3d3156cd8b5b65cd18b911bb6020cad06015fa	retained	Reviewed; no editorial comments or documentation needing changes.
+packages/test-utils/vitest.config.ts	575413e3fe9f27b2e53bdc942b2c31ed262afb57	changed	Removed redundant DOM environment narration; retained local setup resolution rationale where applicable.
+packages/ui/components.json	39cfda6d9b7e7c5162af3e67a90c01156f70a986	retained	No editorial comments or standalone documentation.
+packages/ui/package.json	7bd229dc6a26ed1d680b2c456586a56b7757731f	retained	No editorial comments or standalone documentation.
+packages/ui/package.test.ts	e5b2ccebd070a8fa9b3c9ab7cc5dc215fc57dc72	changed	Removed extraction history, stale counts, assertion narration and unsupported bundling claims; retained source-scan exclusion and esbuild isolation rationale.
+packages/ui/src/components/avatar.test.tsx	1a9bf9181bcc7e7600599fb9a2f8fa3815ae122c	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/avatar.tsx	e9d6f8d39078bebd5b21a9f07c86db7a813ffd5c	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/badge.test.tsx	271515a4098180e0e8e7963c4cf56240ed5863b1	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/badge.tsx	7d6cada04243c62924cbaee5d4e6908bc556b59b	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/button.stories.tsx	85456de3f36e5924e9806dff2e511fd4090b8aba	changed	Replaced story discovery narrative with current UI guide reference.
+packages/ui/src/components/button.test.tsx	e8e70525b7a5564c67e481485c6b3dd6e0ebb484	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/button.tsx	cbfc26c051c93d10813798933be36af7c1234bfd	changed	Corrected nativeButton contract to match ignored compatibility prop.
+packages/ui/src/components/card.tsx	72e189f29a28f1f43ead51dd4577ba46ff0d9468	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/checkbox.test.tsx	4063c13bbfd3142c8478ded398d17387b4dd1eb0	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/checkbox.tsx	f5b6f754705887877ae9c959937d6d06cf8aa6bc	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/dialog.test.tsx	00ccfd9b9aac7124d5fd294e689ef519c38e3073	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/dialog.tsx	8c87ac21ea1a1b06372651b61c11d393c2311c47	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/dropdown-menu.test.tsx	e0fc94ce885dab920c806f35a7ca19acb21b9d47	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/dropdown-menu.tsx	becfec973582de994a9be915db4ce5b995a450be	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/input.tsx	1ffc027914fd7941b62c054d88c2e8366c047ad1	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/label.test.tsx	fe7df5c5b85d6ed7fe383c1600d20697ebe1eed9	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/label.tsx	e6f2a5bc43a47e7f284f80f1e8adc123e3d5870d	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/navigation-menu.test.tsx	fc72248421a0182982dd01bb179d92c1bc1c0884	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/navigation-menu.tsx	11ab9e2114d394b6e60fe919a1d4b7852edd139c	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/popover.test.tsx	64cc3e149b05ebb28a62eefd14191f95b7a695a6	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/popover.tsx	37e66e93f7882d187ad0c71ead693f20073de7ed	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/progress.test.tsx	7a317f422505dd276a704909eda58a8139782af5	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/progress.tsx	9b1b18eecca2d86c15d1316d6f415ebb393f7c40	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/select.test.tsx	44cdaf02a3e5b3dfa71e23e76e92681344239097	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/select.tsx	519fe30909d5a202c6b3189b884fb21929061a38	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/separator.test.tsx	36c55e4d6542f3d4d727ccc403eb1751986d9ff5	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/separator.tsx	0d8f70dfc1c371defd00ff6a38fe4d32b915debf	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/sheet.test.tsx	b545308e33e1ce93dc55392b02d64e056067d743	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/sheet.tsx	b53c9ab92ab9d3b5de878fe4c25915112e353711	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/skeleton.tsx	49edc36cd4eeae651b18f163f00e42383e5bdc14	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/sonner.tsx	7a5ff871ffadd0ac8edb9a2f53b774f3c0f4d6cb	changed	Corrected theme override behavior.
+packages/ui/src/components/spinner.tsx	926ddcafc73d238b55a654b46a2832bda4bc38a3	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/switch.test.tsx	3994346c2921a5a8ea08cfbc879b4b5645efee8b	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/switch.tsx	0a0a67bd115f7fe091f0b46b1e4dfe633b50f063	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/table.tsx	d4db3a42824624783cb27704312724e7ba470da3	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/tabs.test.tsx	fd5ef7417c6dc4344ce2727a7de35c7753dcd1fe	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/tabs.tsx	3c0f16b420356e2ababa642c6a94b49f9f8818f2	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/textarea.tsx	271ad2f2ccbeb7bdf74fbd82240d7c0f1a6c96e9	retained	No editorial comments or standalone documentation.
+packages/ui/src/components/tooltip.test.tsx	0ca74d257bb50d2878324ea94b77a5c0b5967665	changed	Removed migration checklist and assertion narration; retained jsdom query or activation constraints where relevant.
+packages/ui/src/components/tooltip.tsx	954ec7f9f52c7c070d2a7ca4dce5b4829e6f40c1	retained	No editorial comments or standalone documentation.
+packages/ui/src/styles/theme.css	d698cbf9e6ff65d592cbcc457798f6f73193abfe	changed	Replaced ownership narrative with token purpose and import guide reference.
+packages/ui/tsconfig.json	58ee83b42d7d1996b5330511c78f00d021134bbe	retained	No editorial comments or standalone documentation.
+packages/ui/vitest.config.ts	e010fd09199c615d3da7a0af447e9c135a92b4ac	changed	Retained DOM/polyfill reason without package comparisons or stale counts.
+packages/utils/package.json	3dc833532e378fa9dc6866a7e287c332430228b2	retained	No editorial comments or standalone documentation.
+packages/utils/package.test.ts	41ac91b08948cb7b37936c17db72db9624917c79	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/utils/src/format.test.ts	4e980586a193682d9e8bc15ce48523fe160e1e8c	retained	No editorial comments or standalone documentation.
+packages/utils/src/format.ts	8d8e52f21b75b738e716aeaa673bf0616cb5e442	changed	Corrected seven-day threshold and removed conversion narration.
+packages/utils/src/index.ts	cfceaa4604ce3a3e531e3232d3ab0a0024dc407d	retained	No editorial comments or standalone documentation.
+packages/utils/src/utils.test.ts	d20273244663c047b531e661a8f0c873f19a6131	changed	Removed assertion narration.
+packages/utils/src/utils.ts	914ec868afb3e9b89144f5cf86f375b4963ba9ce	retained	No editorial comments or standalone documentation.
+packages/utils/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/utils/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/valkey/package.json	b5b4621c31de12ff3ff2def208da9509e90d8a9b	retained	No editorial comments or standalone documentation.
+packages/valkey/package.test.ts	2ba30932f93c2777eb91940f64f3ba995424c85e	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/valkey/src/client.test.ts	be1802516b6df5e6f008ff23a0723e5cb3ec7bde	retained	Only comment is the operative @vitest-environment directive; preserve it.
+packages/valkey/src/client.ts	65762bbef553f8ed6d9cb1086ac0b4ca72448016	changed	Removed condition paraphrase; retained error-listener ownership rationale.
+packages/valkey/src/index.ts	4c5f35bf3453b69d75f4f1ddf36b35ec3b3a2770	retained	No editorial comments or standalone documentation.
+packages/valkey/src/keys.ts	d888a2cf9286a25a44ed2383db094ac199d79ba5	retained	No editorial comments or standalone documentation.
+packages/valkey/src/sdk.ts	55c5649784ae3f59ddcc8005ead867ebef54e538	retained	L4 explains adapter ownership concisely.
+packages/valkey/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/valkey/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+packages/wallow/README.md	568071f25f39eca1ce7d993a49b57ff94fa24d6a	retained	Concise SDK adapter overview agrees with client/service source and links central SDK/deployment docs; retain as package entry point.
+packages/wallow/package.json	3fbd270fd36aa7e19cd8e4eff523a988cd30d4e4	retained	No editorial comments or standalone documentation.
+packages/wallow/package.test.ts	1e86f508ce4fdb762e5d59c2e3c820285b10f3bb	changed	Removed extraction history and repeated assertion narration; retained current import boundaries and test isolation rationale.
+packages/wallow/src/client.ts	be2fa4f98351c70c597728f089e440b002ae12a4	retained	No editorial comments or standalone documentation.
+packages/wallow/src/index.ts	edb89a136f36d95d9ebd1cdd9b59830e1b95b4cf	retained	No editorial comments or standalone documentation.
+packages/wallow/src/service-client.ts	8fce49e10c637f648ae83b47ff01ce90a79a456e	retained	No editorial comments or standalone documentation.
+packages/wallow/src/testing/index.ts	acdcb1449dd66b58a35c4a52a17cbf3e07a8cd66	changed	Identified legacy HTTP-response fixtures accurately; kept default response contract and removed redundant factory narration.
+packages/wallow/src/types.ts	037d3e96172c3f18b486955b5961b70b08799384	retained	Short public payload comments identify SSE/domain contracts without redundant prose.
+packages/wallow/tsconfig.json	367096ff0969cd4008e38aa6247ee2edf6dc378d	retained	No editorial comments or standalone documentation.
+packages/wallow/vitest.config.ts	d58136c4b35b50825fe47e6fbfec1a21dcee5f2a	retained	No editorial comments or standalone documentation.
+pnpm-lock.yaml	6e63f237d53822823ae6a647ece99424a0f29afb	excluded	Generated dependency lockfile; no editorial changes.
+pnpm-workspace.yaml	e9b0dad63bacd2aa6865fcb9b7e86ad630964730	retained	Workspace globs only; no editorial material.
+prettier.config.js	f7279f7ba510e483ba2d2d337ead8c1f82d2e0a5	retained	Only @ts-check and executable JSDoc typing; preserve both.
+release-please-config.json	8a5f3791461b85d3fa6b16f781ce08faf2bc3358	retained	Release configuration only; no editorial material.
+scripts/verify-docker.sh	f5d41df28c2b7a512dc1b2bf0fe18c5daed76ee6	retained	Executable shell with shebang and no narrative comments; evidence for Docker smoke documentation.
+scripts/verify-production.mjs	0d4529a8f09e20a746d5655378d9b7a2ab071cbd	retained	No comments; behavior supports public-page/asset checks, not live identity integration claims.
+scripts/verify-production.sh	545efc3b85f60fbb28e70417b3fd61faa5478e30	retained	Shell entry point only; preserve shebang.
+skills-lock.json	61aa6a4acf63114062f8e488159e4075497bccc7	excluded	Skill installation metadata excluded with skills at user request.
+vitest.config.ts	9933fb94953123fdc45185ae7459f9d5fbb039d1	retained	No comments; test configuration is evidence, not a runtime-cleanup target.
+apps/web/src/__tests__/architecture-cleanup.test.ts	c914c2dc805885d11994e6a372f90b51f9278047	changed	Removed one obsolete assertion requiring ESLint migration history and its unused source read.
+scripts/check-comment-edits.mjs	a7ccbbae3448dc8046a807c346f9b8852aa74468	retained	Added in application cleanup; reviewed and reused unchanged.
+scripts/check-docs.py	b4a3cd650e11c03fe4329de51b31e63ffb6af04d	retained	Added in documentation cleanup; reviewed and reused unchanged.

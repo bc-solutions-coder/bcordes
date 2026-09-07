@@ -1,11 +1,7 @@
 import { Button } from './button'
 import type { ComponentProps } from 'react'
 
-// CSF3 story for the @bcordes/ui Button. Storybook's toolchain (and its
-// `Meta`/`StoryObj` types) lives in apps/web, not in this leaf package, so the
-// meta/story objects are authored untyped here — Storybook infers the CSF3
-// shape at build time. apps/web/.storybook/main.ts globs
-// `../../../packages/*/src/**/*.stories.*`, which is what makes this render.
+// Storybook types and tooling live in apps/web. See [UI guide](../../../../docs/ui.md).
 const meta = {
   title: 'UI/Button',
   component: Button,

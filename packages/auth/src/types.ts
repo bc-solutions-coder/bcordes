@@ -1,18 +1,16 @@
-/** Authenticated user identity resolved from an OIDC JWT */
+/** API profile matched to the session subject, with session organization fields. */
 export interface User {
-  /** OIDC JWT sub claim */
+  /** API profile ID, verified against the session subject. */
   id: string
-  /** Profile display name claim */
+  /** Profile name, falling back to session name, email, then "User". */
   name: string
-  /** Email claim */
   email: string
-  /** Roles assigned to the user (e.g. admin, manager, user) */
   roles: Array<string>
   /** Permissions expanded from roles by Wallow */
   permissions: Array<string>
-  /** Tenant identifier from the organization claim */
+  /** Session organization ID, or an empty string. */
   tenantId: string
-  /** Tenant display name from the organization claim */
+  /** Session organization name, or an empty string. */
   tenantName: string
 }
 

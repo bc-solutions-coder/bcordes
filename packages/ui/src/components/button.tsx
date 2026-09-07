@@ -37,12 +37,7 @@ const buttonVariants = cva(
 
 type ButtonProps = useRender.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    /**
-     * When `render` composes onto a non-<button> element (e.g. an <a> or a
-     * TanStack <Link>), set this to `false`. Kept for API parity with Base UI's
-     * button; polymorphism here is handled by `useRender`, which preserves the
-     * rendered element's native semantics (an anchor stays a link).
-     */
+    /** Accepted for compatibility but ignored. `render` sets the element semantics. */
     nativeButton?: boolean
   }
 

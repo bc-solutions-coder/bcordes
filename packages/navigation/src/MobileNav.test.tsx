@@ -5,9 +5,7 @@ import { MobileNav } from './MobileNav'
 import { MobileNav as MobileNavFromBarrel } from './index'
 import type { NavItem } from './types'
 
-// Same peer-dep Link stub strategy as MainNav.test.tsx: simulate active-state
-// resolution against a test-controlled current path so the shell's active
-// wiring is observable through the mock.
+// The Link stub simulates exact or prefix matching against a controlled path.
 let currentPath = '/'
 
 vi.mock('@tanstack/react-router', () => ({
@@ -121,7 +119,7 @@ describe('MobileNav', () => {
 
   it('renders no nav links for an empty items array when open', () => {
     render(<MobileNav items={[]} defaultOpen />)
-    // No injected item labels should appear.
+
     expect(screen.queryByText('Home')).toBeNull()
     expect(screen.queryByText('Projects')).toBeNull()
   })

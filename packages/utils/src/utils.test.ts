@@ -13,7 +13,6 @@ describe('cn', () => {
   })
 
   it('handles conditional class names with falsy values', () => {
-    // Pass undefined, null, and empty string to verify they are ignored
     expect(cn('base', undefined, null, '', 'extra')).toBe('base extra')
   })
 

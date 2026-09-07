@@ -16,11 +16,10 @@ import type { ReactElement, ReactNode } from 'react'
 import type { NavItem } from './types'
 
 export interface MobileNavProps {
-  /** Injected navigation entries — the shell hard-codes none of its own. */
   readonly items: ReadonlyArray<NavItem>
-  /** App-supplied branding/logo slot. */
+  /** Rendered between the sheet heading and links. */
   readonly logo?: ReactNode
-  /** App-supplied slot inside the sheet (auth-branch links, CTA, etc.). */
+  /** Rendered after the links inside the sheet. */
   readonly actions?: ReactNode
   /** Sheet heading text; defaults to "Navigation". */
   readonly title?: ReactNode
@@ -28,19 +27,13 @@ export interface MobileNavProps {
   readonly triggerLabel?: string
   /** Controlled open state of the sheet. */
   readonly open?: boolean
-  /** Uncontrolled initial open state (used by tests to render the sheet open). */
+  /** Initial open state when uncontrolled. */
   readonly defaultOpen?: boolean
   readonly onOpenChange?: (open: boolean) => void
-  /** Called when any nav link is activated (app closes the sheet). */
+  /** Called when a nav link is activated; the caller handles closing the sheet. */
   readonly onNavigate?: () => void
 }
 
-/**
- * Parameterized mobile navigation. It owns the hamburger trigger + Sheet chrome
- * and renders the injected items, plus optional `logo`/`actions` slots — but
- * hard-codes no routes, no branding, and has no product/auth coupling. Any
- * auth-branching (sign in/out, dashboard) is supplied by the app via `actions`.
- */
 export function MobileNav({
   items,
   logo,

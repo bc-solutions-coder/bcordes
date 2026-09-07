@@ -10,11 +10,7 @@ import { Provider, getContext } from './root-provider'
 
 const SSR_KEY = ['root-provider-ssr-probe']
 
-/**
- * The shape @tanstack/query-core's `dehydrate` emits on the server and
- * `hydrate` consumes on the client — the payload TanStack Start ships in the
- * SSR stream.
- */
+/** Fixture for a populated dehydrated query cache. */
 function dehydratedServerState(data: string) {
   return {
     mutations: [],
@@ -136,9 +132,6 @@ describe('root-provider', () => {
     })
 
     it('serves server-hydrated query data to children without refetching', async () => {
-      // What the app relies on for SSR: state dehydrated on the server is
-      // hydrated into the client the Provider hands down, and a consumer reads
-      // it straight out of the cache instead of going back to the network.
       const queryClient = new QueryClient()
       hydrate(queryClient, dehydratedServerState('from-server'))
 

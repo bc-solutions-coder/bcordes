@@ -9,15 +9,6 @@ import {
   NavigationMenuTrigger,
 } from './navigation-menu'
 
-// Contract net for the @radix-ui/react-navigation-menu -> Base UI
-// (@base-ui/react/navigation-menu, NavigationMenu.*) migration.
-// Preserved: the public NavigationMenu* export names, data-slot="navigation-menu
-//   -list"/"-item"/"-link"/"-content", the trigger reveals its content, links
-//   render as anchors and expose data-active when active.
-// Changed (drives the migration): the Radix Viewport is eliminated and replaced
-//   by an internal Portal > Positioner > Popup > Viewport; NavigationMenuViewport
-//   is no longer exported (so it is not imported here). Content reveal is driven
-//   by the Root `value` (the open item's value) rather than Radix internals.
 describe('NavigationMenu (Radix -> Base UI migration contract)', () => {
   it('renders list, item and link with their data-slots', () => {
     render(

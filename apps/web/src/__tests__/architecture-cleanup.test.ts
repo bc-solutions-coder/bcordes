@@ -194,10 +194,6 @@ const eslintModule = (await import(eslintSpecifier)) as {
   config: Array<Block>
 }
 const eslintBlocks = eslintModule.config
-const eslintSource = readFileSync(
-  join(repoRoot, 'packages/config/eslint.js'),
-  'utf8',
-)
 
 const blocksFor = (glob: string): Array<Block> =>
   eslintBlocks.filter((b) => Array.isArray(b.files) && b.files.includes(glob))
@@ -235,13 +231,6 @@ describe('dead ESLint module-boundary blocks are pruned', () => {
       offenders,
       `these ESLint files globs target removed dirs: ${offenders.join(', ')}`,
     ).toEqual([])
-  })
-
-  it('records why the layer blocks were retired', () => {
-    expect(
-      eslintSource,
-      'the module-boundary section must note that the components/hooks/lib blocks were retired with the dirs they governed',
-    ).toMatch(/retir/i)
   })
 })
 

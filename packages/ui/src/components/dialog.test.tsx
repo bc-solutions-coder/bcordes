@@ -8,16 +8,6 @@ import {
   DialogTrigger,
 } from './dialog'
 
-// Contract net for the @radix-ui/react-dialog -> Base UI
-// (@base-ui/react/dialog) migration.
-// Preserved: data-slot="dialog-content"/"dialog-title"/"dialog-description"/
-//   "dialog-close" on each part, role="dialog", trigger opens the dialog, the
-//   bespoke `showCloseButton` prop toggling the close button, Escape closes.
-// Changed (drives the migration): DialogPrimitive.Overlay -> Backdrop
-//   (data-slot="dialog-overlay" kept), DialogPrimitive.Content -> Popup
-//   (data-slot="dialog-content" kept), and the close button moves from a
-//   className-styled Close to the Button `render` prop -- but it stays an
-//   accessible button named "Close" with data-slot="dialog-close".
 function renderDialog(props?: { showCloseButton?: boolean; open?: boolean }) {
   return render(
     <Dialog defaultOpen={props?.open ?? true}>

@@ -2,12 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Separator } from './separator'
 
-// Contract net for the Radix -> Base UI (@base-ui/react/separator) migration.
-// Preserved: data-slot="separator", base-token classes, className merge,
-//   orientation reflected via a `data-orientation` attribute (drives the
-//   Tailwind `data-[orientation=...]` styling selectors).
-// Changed: the `decorative` prop is dropped -- Base UI always exposes an
-//   accessible separator role with aria-orientation.
 describe('Separator (Radix -> Base UI migration contract)', () => {
   it('renders without crashing and exposes data-slot="separator"', () => {
     const { container } = render(<Separator />)

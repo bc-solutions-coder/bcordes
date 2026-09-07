@@ -2,14 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
-// Contract net for the @radix-ui/react-popover -> Base UI
-// (@base-ui/react/popover) migration.
-// Preserved: data-slot="popover-trigger" (trigger) + data-slot="popover-content"
-//   (popup), click-to-open / Escape-to-close behavior, the content renders its
-//   children and merges a caller className.
-// Changed (drives the migration): Portal+Content becomes
-//   Portal+Positioner+Popup; PopoverContent is now the Popup part. PopoverAnchor
-//   is dropped (no Base UI equivalent, no consumers) so it is not imported here.
 describe('Popover (Radix -> Base UI migration contract)', () => {
   it('renders the trigger with data-slot="popover-trigger" and stays closed initially', () => {
     render(

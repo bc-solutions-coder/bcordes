@@ -21,7 +21,6 @@ vi.mock('@tanstack/react-start', () => {
   return { createServerFn }
 })
 
-// Mock session
 vi.mock('@bcordes/auth/session', () => ({
   getSession: vi.fn(),
 }))
