@@ -1444,5 +1444,5 @@ packages/wallow/package.test.ts	suite	308	the mock client factory never reaches 
 packages/wallow/package.test.ts	test	309	keeps the testing helpers out of the '.' barrel	309	keeps the testing helpers out of the '.' barrel	matched	package-infrastructure
 packages/wallow/package.test.ts	test	321	is imported only from test files, never from shipped source	321	is imported only from test files, never from shipped source	matched	package-infrastructure
 packages/wallow/package.test.ts	test	329	retires the old @/test/mocks/wallow module entirely	329	retires the old @/test/mocks/wallow module entirely	matched	package-infrastructure
-packages/config/oxlint-plugin.test.ts	test			17	checks type parameter names through the real Oxlint parser	new	package-infrastructure (handoff supplement proposed)
-packages/config/oxlint-plugin.test.ts	test			104	preserves workspace boundaries, typed guard exceptions and JS style rules	new	package-infrastructure (handoff supplement proposed)
+packages/config/oxlint-plugin.test.ts	test			17	checks type parameter names through the real Oxlint parser	new	package-infrastructure (handoff supplement accepted)
+packages/config/oxlint-plugin.test.ts	test			104	preserves workspace boundaries, typed guard exceptions and JS style rules	new	package-infrastructure (handoff supplement accepted)

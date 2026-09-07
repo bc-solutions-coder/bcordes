@@ -1,6 +1,6 @@
 # Current-source reconciliation supplement
 
-Status: proposed with the handoff. Source: `a5f10c3211a1fb25671410b49752307cfe2a5b54`. This supplements accepted decisions without rewriting historical ledgers or claiming cleanup was performed here.
+Status: accepted with the handoff. User accepted: “yes”. Source: `a5f10c3211a1fb25671410b49752307cfe2a5b54`. This supplements accepted decisions without rewriting historical ledgers or claiming cleanup was performed here.
 
 ## Changed tests
 
@@ -23,7 +23,7 @@ These changes cover all 24 changed test paths relative to the baseline (includin
 
 ## New Oxlint tests
 
-Both declarations in `packages/config/oxlint-plugin.test.ts` belong to package infrastructure, with proposed supplemental dispositions below. Their source strings are inputs to the actual linter, and assertions inspect process exits and diagnostic output. Reading configuration to execute it does not make these source assertions.
+Both declarations in `packages/config/oxlint-plugin.test.ts` belong to package infrastructure, with accepted supplemental dispositions below. Their source strings are inputs to the actual linter, and assertions inspect process exits and diagnostic output. Reading configuration to execute it does not make these source assertions.
 
 | Current title                                                             | Disposition and resulting title                                                                                 | Evidence and required outcome                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -32,4 +32,4 @@ Both declarations in `packages/config/oxlint-plugin.test.ts` belong to package i
 
 Retain tool exits and useful exact diagnostic expectations; do not replace them with configuration-field comparisons. For the first rewrite, disable one declaration-form diagnostic and require the corresponding assertion to fail, then restore and pass. For boundary/fix scenarios, prove a disabled relevant rule or ineffective fix is detected when those scenarios are substantially changed. Use isolated input fixtures, not shared workspace mutation.
 
-Including this supplement, the current 1,118 test declarations have proposed dispositions: **228 keep, 70 rename, 318 rewrite, 502 delete**. These differ from baseline totals because 11 baseline tests are absent (nine deletions and two relocated rewrites), and the two new declarations are counted once. The counts neither promise a final runtime test total nor claim the 502 removals have been implemented.
+Including this supplement, the current 1,118 test declarations have accepted dispositions: **228 keep, 70 rename, 318 rewrite, 502 delete**. These differ from baseline totals because 11 baseline tests are absent (nine deletions and two relocated rewrites), and the two new declarations are counted once. The counts neither promise a final runtime test total nor claim the 502 removals have been implemented.

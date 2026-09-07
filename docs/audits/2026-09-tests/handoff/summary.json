@@ -1,5 +1,5 @@
 {
-  "status": "proposed; implementation pending",
+  "status": "accepted plan; implementation pending",
   "source_commit": "a5f10c3211a1fb25671410b49752307cfe2a5b54",
   "baseline": {
     "files": 124,
@@ -16,7 +16,7 @@
     "files": 124,
     "tests": 1118,
     "suites": 316,
-    "proposed_test_dispositions": {
+    "accepted_test_dispositions": {
       "keep": 228,
       "rename": 70,
       "rewrite": 318,
@@ -54,5 +54,6 @@
     "skipped": 0
   },
   "fresh_global_coverage_measured": false,
-  "cleanup_implemented": false
+  "cleanup_implemented": false,
+  "acceptance": "User accepted the complete handoff and two-case drift supplement: yes."
 }

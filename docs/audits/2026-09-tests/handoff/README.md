@@ -1,6 +1,6 @@
-# Behavior-only test cleanup handoff proposal
+# Behavior-only test cleanup accepted handoff
 
-Decision: [Agree on the implementation handoff and completion evidence](https://github.com/bc-solutions-coder/bcordes/issues/51). Status: proposed; implementation pending. Reconciled source: `a5f10c3211a1fb25671410b49752307cfe2a5b54`.
+Decision: [Agree on the implementation handoff and completion evidence](https://github.com/bc-solutions-coder/bcordes/issues/51). Status: accepted plan; implementation pending. User accepted the handoff and two-case drift supplement: “yes”. Reconciled source: `a5f10c3211a1fb25671410b49752307cfe2a5b54`.
 
 ## Reconciled scope
 
