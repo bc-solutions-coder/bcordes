@@ -1,6 +1,6 @@
-# Shell error recovery and auth validation proposal
+# Shell error recovery and auth validation accepted plan
 
-Proposal for [Decide coverage for shell error recovery and auth input validation](https://github.com/bc-solutions-coder/bcordes/issues/78). **Awaiting human acceptance; no tests or product behavior have been changed.**
+Accepted plan for [Decide coverage for shell error recovery and auth input validation](https://github.com/bc-solutions-coder/bcordes/issues/78). The user accepted the proposal with "cool that works for me" after confirming the execution boundary. **Implementation remains pending; no tests or product behavior have been changed.**
 
 Recommend including both gaps in the required implementation plan. They protect existing supported behavior and complement the accepted review of current cases. They are not optional coverage padding and do not reopen already-accepted dispositions.
 
@@ -42,6 +42,10 @@ The validator harness must execute the actual validator supplied to the framewor
 Include a separate real-transport scenario in new `apps/web/e2e/tests/auth-input-validation.spec.ts`, owned by this decision. Discover the actual generated request through a legitimate browser interaction and the current framework transport/serializer; do not hard-code function hashes, parse generated source, or call an invented endpoint. Use isolated authenticated fixture observation as planned in the accepted browser review. Replay a valid control, then a malformed numeric return destination and assert validation rejection with no additional auth-backend request. Do not freeze framework error wording/status unless it is a supported public contract; distinguish validation failure from redirect, unrelated routing failure or generic server failure.
 
 The current schema imposes no local-path, nonempty, trimming, maximum-length or strict-unknown-property policy. Do not add those constraints or claim their protection here. In particular, this decision is not certification of redirect-destination safety throughout the authentication system. Existing browser logout/origin checks and package middleware cases retain their owners.
+
+## Local and CI execution
+
+Run the required auth validation checks both locally and in CI, using controlled test sessions, synthetic credentials and a local fixture backend. Do not contact the live identity provider or use production credentials. The production-transport scenario means the locally built production application artifact, not the deployed production service.
 
 ## Ownership and verification
 

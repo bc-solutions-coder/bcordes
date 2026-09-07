@@ -1,6 +1,6 @@
 {
   "source_commit": "52b7c6473e89a3a35968101039f468f7225d4ef1",
-  "status": "proposed; awaiting human acceptance; implementation pending",
+  "status": "accepted plan; implementation pending",
   "include_root_error_gap": true,
   "include_auth_validation_gap": true,
   "new_owned_files": [
@@ -24,5 +24,7 @@
     "failed": 0,
     "skipped": 0
   },
-  "new_tests_implemented": 0
+  "new_tests_implemented": 0,
+  "acceptance": "User accepted: cool that works for me, after clarification that auth checks run locally and in CI against controlled fixtures.",
+  "execution_boundary": "Local and CI; controlled sessions, synthetic credentials, local fixture backend; no live identity provider or production credentials."
 }
