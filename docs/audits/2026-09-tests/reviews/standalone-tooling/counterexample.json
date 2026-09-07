@@ -1,0 +1,6 @@
+{
+  "scenario": "All public routes return the same wrong generic HTML; both asset URLs redirect to placeholder resources",
+  "exit_code": 0,
+  "stdout": "GET /: 200 HTML\nGET /about: 200 HTML\nGET /projects: 200 HTML\nGET /contact: 200 HTML\nGET css asset: 200\nGET js asset: 200\n",
+  "stderr": ""
+}

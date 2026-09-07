@@ -1,0 +1,66 @@
+{
+  "source_commit": "7760e6442e493f3903f47a871302221a288bde40",
+  "status": "proposed; awaiting human review; implementation pending",
+  "review_rows": 48,
+  "additional_behavioral_test_cases": 0,
+  "proposed_check_dispositions": {
+    "keep": 41,
+    "rename": 3,
+    "rewrite": 4
+  },
+  "scope_counts": {
+    "excluded-agent-resource": 3,
+    "verification-contract": 22,
+    "publication-context-not-test-runner": 2,
+    "audit-tool-not-standing-gate": 17,
+    "documentation-quality": 4
+  },
+  "observed_validation": [
+    {
+      "name": "build",
+      "command": ["pnpm", "build"],
+      "exit": 0
+    },
+    {
+      "name": "production-smoke",
+      "command": ["bash", "scripts/verify-production.sh"],
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "command": ["pnpm", "typecheck"],
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "command": ["pnpm", "lint"],
+      "exit": 0
+    }
+  ],
+  "owned_file_hashes": {
+    ".agents/skills/diagnosing-bugs/scripts/hitl-loop.template.sh": "35103539fc36873eea36074769ad454f9379d6fc8b2dc0e26ce987fd3bfe5503",
+    ".agents/skills/git-guardrails-claude-code/scripts/block-dangerous-git.sh": "234922b83c0a1737ee7300806c21ac0f389b07aaeb65c2d71ccedafbc5e1ea4b",
+    ".agents/skills/wizard/template.sh": "33cbe9dfb1d0e9185b60248a52aabed14bc64785a00cac695e302e739dd6c153",
+    ".github/workflows/ci.yml": "2f20920ce01833c8aaa23dea88600efdd49ef940834082da5ca5b87eca838007",
+    ".github/workflows/deploy-gate.yml": "2dcb48fc21df82d2aa6af492e1304b126d42fea09c1ef57104fad14c40e2af4c",
+    ".github/workflows/deploy.yml": "28457070295538989344b2a3a5b84d2391f7fc9364855153588afa81159a38ed",
+    ".github/workflows/docker-publish.yml": "b2b870bcbf0a86598ac82cbee78ae78e0dcd99cd8c708d31b9236ea93ce1ee84",
+    ".husky/pre-commit": "41ceea3ad087b3b455e142a82d5a2cfa9ef3a8f5d42ab4d4cb648c176b080c69",
+    "apps/web/package.json": "b1e5104c0f91190a3ccb734ad84e27adf004c95492f3d30e01ee1d73b824f487",
+    "docs/audits/2026-09-documentation/verify-completion.py": "424750ef1424bc0bcb6def9f37e23ec54d6a39fad5041b813cfbde6b244af679",
+    "docs/audits/2026-09-documentation/verify-coverage.py": "1fcdfde1dea9648eee80e59452dcbc22fffafd7c49855fba085dceed697fff16",
+    "docs/audits/2026-09-tests/inventory.mjs": "91fd1a64b330f7baf1d344d1518f31da08d44e372c1e95bc9c14324aa95f44a7",
+    "docs/audits/2026-09-toolchain/collect-attempts.py": "cd63df1013e2a78c1584f85dfcab4d0677b1e5a7d51c17cc66126af3e3356225",
+    "docs/audits/2026-09-toolchain/collect-ci.py": "35b0181720d64c26da3f71600190a4ebb2fd511c952818c7e804143fabdc7ac9",
+    "package.json": "41cbfb654c6a48bb55a960b340d1b5753512cb2de359e09e9b10470741dc8f45",
+    "scripts/check-comment-edits.mjs": "adfb85b46fc1b19f47308ae1c21f4333bde4430f6146741961f5541b677c072c",
+    "scripts/check-docs.py": "334b7126bac6e0918f860c4d3d542474b34a01ae46a2c4ba692f0d21641c2f49",
+    "scripts/verify-docker.sh": "67fe57fa683afbb06a5496e2293f22975fd6506619708e863cc8a5548a3457aa",
+    "scripts/verify-production.mjs": "4bb3e77138630e9053ac79dd7b9812618b43ede175223e0f8a69003f631130eb",
+    "scripts/verify-production.sh": "d1d16a87eb416546e2629831e595b5e1f4debbaaada670aab3607ba7ac502fa1",
+    "vitest.config.ts": "7dcc461ec09dd5ec4407f9ec31b33f43e79e158784319f2de9186170a6defbfb"
+  },
+  "new_replacement_ownership": {
+    "scripts/verify-production.test.mjs": "Proposed CLI/HTTP fixture regression scenarios owned by this review; not implemented or counted as current cases."
+  }
+}
