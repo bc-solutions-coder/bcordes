@@ -8,6 +8,7 @@
   "sortPackageJson": false,
   "sortTailwindcss": false,
   "ignorePatterns": [
+    "apps/web/CHANGELOG.md",
     "**/storybook-static/**",
     "package-lock.json",
     "pnpm-lock.yaml",

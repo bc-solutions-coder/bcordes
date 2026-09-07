@@ -22,5 +22,11 @@
     "status": "Published SHA source verified; not confirmed as the deployed production image. Semver tag 0.1.8 absent because pre-existing promotion output wiring skipped that job."
   },
   "deployed_production_image": null,
-  "actual_semver_promotion": "Not run; verification required on the next approved release."
+  "actual_semver_promotion": {
+    "release": "v0.1.9",
+    "revision": "e947728c584e04671e7ed2e8d0cc4a83348dbf00",
+    "workflow_run": 34150504412,
+    "ci_run": 34150504364,
+    "status": "Promotion job started, but source publication is blocked by the generated changelog formatting failure in CI. Tracked in #87; no promotion success recorded."
+  }
 }

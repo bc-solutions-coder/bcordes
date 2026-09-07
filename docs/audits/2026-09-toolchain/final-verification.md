@@ -85,8 +85,14 @@ The final audit corrected the pre-existing Release Please path-output mismatch
 in #86. The workflow now receives the released apps/web tag, checks out that tag,
 resolves its full SHA image to a digest and promotes that immutable source. There
 is no nightly fallback. Syntax/expression checks and the existing semver behavior
-tests pass; actual semver-tag promotion is still pending an approved release.
-Release PR #84 has not been merged by this migration.
+tests pass. The user merged release PR #84 as `e947728` (v0.1.9).
+[Release workflow 34150504412](https://github.com/bc-solutions-coder/bcordes/actions/runs/34150504412)
+started its promotion job, confirming the output wiring works. However,
+[CI 34150504364](https://github.com/bc-solutions-coder/bcordes/actions/runs/34150504364)
+failed formatting on the Release Please generated changelog, blocking source-image
+publication. #87 excludes that specific generated file from Oxfmt for future
+commits. The existing release commit retains its failed check; its tag was not
+moved and no CI gate was bypassed. Actual promotion remains unverified.
 
 ## Performance and cache decision
 
