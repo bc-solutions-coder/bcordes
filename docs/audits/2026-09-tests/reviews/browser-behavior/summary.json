@@ -1,18 +1,11 @@
 {
   "source_commit": "7d68a6378629b8c6b8e6d7057c2344e7a7481af5",
-  "status": "proposed; awaiting human review; implementation pending",
+  "status": "accepted plan; implementation pending",
   "files": 4,
   "declarations": 30,
   "test_declarations": 24,
   "suite_declarations": 6,
   "runtime_cases": 24,
-  "proposed_test_dispositions": {
-    "rewrite": 12,
-    "keep": 7,
-    "delete": 3,
-    "rename": 2
-  },
-  "proposed_whole_file_deletions": [],
   "baseline_drift": {
     "apps/web/e2e/tests/public-pages.spec.ts": "Line32 now expects exact 7+ instead of6+, fixed by25e5bc1 and closed statistic issue53. All declaration keys/titles unchanged."
   },
@@ -46,5 +39,13 @@
     "notification-appearance.spec.ts": "Accepted notification review65",
     "ui-component-behavior.spec.ts": "Accepted UI/forms/navigation review67, including test-only harness"
   },
-  "future_browser_files_present": false
+  "future_browser_files_present": false,
+  "acceptance": "User accepted the complete proposal: looks good lets continue.",
+  "accepted_test_dispositions": {
+    "rewrite": 12,
+    "keep": 7,
+    "delete": 3,
+    "rename": 2
+  },
+  "accepted_whole_file_deletions": []
 }
