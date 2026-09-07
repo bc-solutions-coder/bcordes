@@ -1,0 +1,58 @@
+{
+  "status": "proposed; implementation pending",
+  "source_commit": "a5f10c3211a1fb25671410b49752307cfe2a5b54",
+  "baseline": {
+    "files": 124,
+    "tests": 1127,
+    "suites": 318,
+    "test_dispositions": {
+      "keep": 228,
+      "rename": 70,
+      "rewrite": 318,
+      "delete": 511
+    }
+  },
+  "current": {
+    "files": 124,
+    "tests": 1118,
+    "suites": 316,
+    "proposed_test_dispositions": {
+      "keep": 228,
+      "rename": 70,
+      "rewrite": 318,
+      "delete": 502
+    }
+  },
+  "title_mapping": {
+    "matched": 1423,
+    "renamed": 9,
+    "removed": 13,
+    "new": 2
+  },
+  "standalone_review_rows": 48,
+  "planned_named_files": [
+    "apps/web/e2e/tests/shell-motion.spec.ts",
+    "apps/web/e2e/tests/project-filter-appearance.spec.ts",
+    "apps/web/src/features/notifications/server-fns/validation.test.ts",
+    "apps/web/e2e/tests/notification-appearance.spec.ts",
+    "packages/auth/src/testing/index.test.ts",
+    "packages/config/runner-behavior.test.ts",
+    "apps/web/e2e/tests/ui-component-behavior.spec.ts",
+    "scripts/verify-production.test.mjs",
+    "scripts/verify-storybook.mjs",
+    "scripts/release-tag-outputs.sh",
+    "scripts/release-tag-outputs.test.mjs",
+    "packages/config/coverage-behavior.test.ts",
+    "apps/web/src/routes/__root.error.test.tsx",
+    "apps/web/e2e/tests/shell-error-recovery.spec.ts",
+    "apps/web/e2e/tests/auth-input-validation.spec.ts"
+  ],
+  "observed_validation": {
+    "command": "pnpm exec vitest run packages/config/oxlint-plugin.test.ts apps/web/src/router.ssr-query.test.tsx packages/config/config.test.ts packages/query/src/root-provider.test.tsx packages/valkey/src/client.test.ts apps/web/src/features/notifications/hooks/useEventStream.test.ts apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts --reporter=json --outputFile=/tmp/bcordes-handoff-drift-run.json",
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fresh_global_coverage_measured": false,
+  "cleanup_implemented": false
+}
