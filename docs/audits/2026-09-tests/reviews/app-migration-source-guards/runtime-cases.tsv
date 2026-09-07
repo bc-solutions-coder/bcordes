@@ -1,0 +1,328 @@
+file	title	status
+apps/web/src/__tests__/about-feature-module.test.ts	features/about module exists with a public index has an apps/web/src/features/about/ directory	passed
+apps/web/src/__tests__/about-feature-module.test.ts	features/about module exists with a public index exposes a public API at apps/web/src/features/about/index.ts	passed
+apps/web/src/__tests__/about-feature-module.test.ts	features/about module exists with a public index index.ts re-exports AboutHero from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	features/about module exists with a public index index.ts re-exports Timeline from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	features/about module exists with a public index index.ts re-exports ValueIcon from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	the horizontal components/about directory is gone apps/web/src/components/about/ no longer exists	passed
+apps/web/src/__tests__/about-feature-module.test.ts	no source imports the old @/components/about path no .ts/.tsx under apps/web/src references @/components/about	passed
+apps/web/src/__tests__/about-feature-module.test.ts	the public API resolves the three named exports @/features/about exports AboutHero, Timeline, ValueIcon	passed
+apps/web/src/__tests__/app-shell-module.test.ts	app/ shell module exists with a public index has an apps/web/src/app/ directory	passed
+apps/web/src/__tests__/app-shell-module.test.ts	app/ shell module exists with a public index exposes a public API at apps/web/src/app/index.ts	passed
+apps/web/src/__tests__/app-shell-module.test.ts	app/ shell module exists with a public index index.ts re-exports Header from ./components/layout/Header	passed
+apps/web/src/__tests__/app-shell-module.test.ts	app/ shell module exists with a public index index.ts re-exports Footer from ./components/layout/Footer	passed
+apps/web/src/__tests__/app-shell-module.test.ts	app/ shell module exists with a public index index.ts re-exports reportWebVitals from ./lib/web-vitals	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/index.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Header.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Header.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Footer.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Footer.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/MobileNav.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/MobileNav.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/UserMenu.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/UserMenu.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/config/navigation.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/config/navigation.test.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/lib/web-vitals.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/styles.css exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the app-shell files live at their new app/ locations apps/web/src/app/styles/showcase.css exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/components/layout/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/components/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/config/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/lib/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/styles/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the old horizontal app-shell locations are gone apps/web/src/styles.css (root asset) no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old layout components specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old navigation config specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old web-vitals lib specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old root styles asset specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	every app-shell consumer resolves via the new @/app path routes/__root.tsx references @/app	passed
+apps/web/src/__tests__/app-shell-module.test.ts	every app-shell consumer resolves via the new @/app path routes/__root.test.tsx references @/app	passed
+apps/web/src/__tests__/app-shell-module.test.ts	every app-shell consumer resolves via the new @/app path routes/__root.tsx imports the styles asset via @/app/styles.css	passed
+apps/web/src/__tests__/app-shell-module.test.ts	the public API resolves the expected named exports @/app exports Header, Footer, reportWebVitals	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/home no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/about no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/projects no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/contact no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/dashboard no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/server-fns no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/content no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/hooks no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components/shared no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/components no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/config no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/lib no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed apps/web/src/styles no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed config/inquiries.ts is gone (moved into features/inquiries)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dissolved horizontal directories are removed the top-level styles.css is gone (moved to app/styles.css)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/app/index.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/app/components/layout exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/app/config/navigation.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/app/lib/web-vitals.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/app/styles.css exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	relocated app/ and shared/motion surface exists apps/web/src/shared/motion/index.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	no stale deep-import specifiers remain no source imports/mocks a migrated-away path	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	no stale deep-import specifiers remain no source reaches deep into a feature/shared/app module	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dead Oxlint module-boundary blocks are pruned no block is scoped to apps/web/src/components/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dead Oxlint module-boundary blocks are pruned no block is scoped to apps/web/src/hooks/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dead Oxlint module-boundary blocks are pruned no block is scoped to apps/web/src/lib/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	dead Oxlint module-boundary blocks are pruned no block scopes any removed horizontal dir under apps/web/src	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	surviving Oxlint blocks subsume the pruned layer blocks the app-wide block still denies deep module imports	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	surviving Oxlint blocks subsume the pruned layer blocks one block scopes features/, shared/ and app/ together	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	surviving Oxlint blocks subsume the pruned layer blocks that block carries the no-importing-routes rule the layer blocks used to	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout has a Key Directories section	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout lists apps/web/src/features/ and apps/web/src/shared/	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout names both cross-cutting shared modules (auth and motion)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the dissolved components/ and hooks/ buckets	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the removed apps/web/src/server-fns/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the removed apps/web/src/content/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer enumerates the per-feature components/{home,about,...} dirs	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	CLAUDE.md Key Directories describe the features/ + shared/ layout preserves the packages/valkey/src/index.ts sanctioned-barrel reference	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout has a Project Structure section	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout discovers the tree entries (floor guard)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout shows the features/, shared/ and app/ module roots in the tree	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout names both shared modules (auth and motion) on the shared/ entry	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout no longer shows the dissolved components/ and hooks/ tree entries	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout no longer shows the removed server-fns/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	README Project Structure describes the features/ + shared/ layout no longer shows the removed content/ dir	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index has an apps/web/src/features/contact/ directory	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index co-locates a lib/ subdirectory (the moved schema module)	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index exposes a public API at apps/web/src/features/contact/index.ts	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index index.ts re-exports ContactForm from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index index.ts re-exports ContactFormFields from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index index.ts re-exports ContactFormSuccess from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	features/contact module exists with a public index keeps the contact-form schema internal (index.ts does not re-export it)	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	the horizontal components/contact directory is gone apps/web/src/components/contact/ no longer exists	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	no source imports the old contact / inquiries deep paths no .ts/.tsx under apps/web/src references @/components/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	no source imports the old contact / inquiries deep paths no .ts/.tsx under apps/web/src references @/server-fns/inquiries	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	ContactForm consumes the inquiries feature via its public barrel features/contact/components/ContactForm.tsx imports submitInquiry from @/features/inquiries	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	every contact consumer resolves via the new @/features/contact path routes/contact.tsx imports from @/features/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	every contact consumer resolves via the new @/features/contact path routes/contact.test.tsx imports from @/features/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	the public API resolves the three named exports @/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	AnimatedText dead-code removal apps/web/src/components/shared/AnimatedText.tsx no longer exists	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	AnimatedText dead-code removal apps/web/src/components/shared/AnimatedText.test.tsx no longer exists	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	AnimatedText dead-code removal sibling FadeInView survives at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	no source imports the deleted AnimatedText module nothing under apps/web/src or packages/* imports/mocks AnimatedText	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	use-mobile dead-code removal apps/web/src/hooks/use-mobile.ts no longer exists	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	use-mobile dead-code removal apps/web/src/hooks/use-mobile.test.ts no longer exists	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	use-mobile dead-code removal sibling motion hooks survive at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	no source imports the deleted use-mobile module nothing under apps/web/src or packages/* imports/mocks use-mobile	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	doc coverage sanity discovers the extracted packages/* set (13: auth..wallow)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	CLAUDE.md reflects the pnpm workspace layout documents the apps/web + packages/* monorepo layout, not a single-app src/ tree	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	CLAUDE.md reflects the pnpm workspace layout lists every extracted internal package (package list / dependency graph)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	CLAUDE.md reflects the pnpm workspace layout carries no stale pre-migration src/lib/* or SignalR references	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	CLAUDE.md reflects the pnpm workspace layout describes the real-time mechanism as SSE, not SignalR	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	"CLAUDE.md reflects the pnpm workspace layout points the session-store note at sealed cookies, not the stale ""in memory Map"" phrasing"	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	CLAUDE.md reflects the pnpm workspace layout updates the no-barrel rule: package src/index.ts is the sanctioned public API	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	README.md reflects the pnpm workspace layout has a Project Structure section documenting apps/web + packages/*	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	README.md reflects the pnpm workspace layout names every extracted internal package	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	README.md reflects the pnpm workspace layout no longer shows the old single-app src/lib subtree (lib/auth, lib/wallow)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	README.md reflects the pnpm workspace layout carries no stale SignalR references	passed
+apps/web/src/__tests__/feature-architecture.test.ts	features/ and shared/ module roots exist has an apps/web/src/features/ root (tracked via .gitkeep)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	features/ and shared/ module roots exist has an apps/web/src/shared/ root (tracked via .gitkeep)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	Oxlint forbids deep imports into feature/shared module internals defines a noDeepModuleImports group targeting @/features/*/** and @/shared/*/**	passed
+apps/web/src/__tests__/feature-architecture.test.ts	Oxlint forbids deep imports into feature/shared module internals carries the deep-module deny group in the apps/web/src/**/*.{ts,tsx} block	passed
+apps/web/src/__tests__/feature-architecture.test.ts	Oxlint features/shared boundary block exists, scoping both apps/web/src/features and apps/web/src/shared	passed
+apps/web/src/__tests__/feature-architecture.test.ts	Oxlint features/shared boundary block forbids features/shared from importing routes (@/routes/**)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	Oxlint features/shared boundary block also carries the deep-module deny group	passed
+apps/web/src/__tests__/feature-architecture.test.ts	CLAUDE.md documents the new module roots and convention lists apps/web/src/features/ under Key Directories	passed
+apps/web/src/__tests__/feature-architecture.test.ts	CLAUDE.md documents the new module roots and convention lists apps/web/src/shared/ under Key Directories	passed
+apps/web/src/__tests__/feature-architecture.test.ts	CLAUDE.md documents the new module roots and convention documents the bare-module import convention with examples	passed
+apps/web/src/__tests__/feature-architecture.test.ts	CLAUDE.md documents the new module roots and convention preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index has an apps/web/src/features/home/ directory	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index exposes a public API at apps/web/src/features/home/index.ts	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index index.ts re-exports Hero from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index index.ts re-exports FeaturedWork from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index index.ts re-exports ServicesGrid from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	features/home module exists with a public index index.ts re-exports SkillsShowcase from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	the horizontal components/home directory is gone apps/web/src/components/home/ no longer exists	passed
+apps/web/src/__tests__/home-feature-module.test.ts	no source imports the old @/components/home path no .ts/.tsx under apps/web/src references @/components/home	passed
+apps/web/src/__tests__/home-feature-module.test.ts	the public API resolves the four named exports @/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index has an apps/web/src/features/inquiries/ directory	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index co-locates a server-fns/ subdirectory	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index co-locates a lib/ subdirectory (the moved config module)	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index exposes a public API at apps/web/src/features/inquiries/index.ts	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports submitInquiry from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports fetchInquiries from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports fetchMyInquiries from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports fetchInquiry from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports updateInquiryStatus from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports fetchInquiryComments from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports submitInquiryComment from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports STATUS_TO_FRONTEND from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports STATUS_TO_API from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports STATUS_COLORS from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	features/inquiries module exists with a public index index.ts re-exports STATUS_LABELS from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	the horizontal inquiries source files are gone apps/web/src/server-fns/inquiries.ts no longer exists	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	the horizontal inquiries source files are gone apps/web/src/config/inquiries.ts no longer exists	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	no source imports the old inquiries paths no .ts/.tsx under apps/web/src references the old server-fns/inquiries path	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	no source imports the old inquiries paths no .ts/.tsx under apps/web/src references @/config/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.index.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.index.test.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.$id.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.$id.test.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	the public API resolves the expected exports @/features/inquiries exports the seven server fns and four status maps	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	MarkdownContent component is deleted components/shared/MarkdownContent.tsx no longer exists	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	MarkdownContent component is deleted components/shared/MarkdownContent.test.tsx no longer exists	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	MarkdownContent component is deleted sibling FadeInView survives at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	no source imports MarkdownContent no source in apps/web/src or packages/* imports/mocks the deleted component	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	apps/web no longer depends on marked is not listed in dependencies	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	apps/web no longer depends on marked is not listed in devDependencies	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index has an apps/web/src/features/notifications/ directory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index co-locates a hooks/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index co-locates a lib/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index co-locates a server-fns/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index exposes a public API at apps/web/src/features/notifications/index.ts	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports NotificationBell from its local ./components/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports NotificationRow from its local ./components/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports EventStreamProvider from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports useEventStream from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports useEventStreamEvents from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports useNotificationFilters from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports notificationTypes from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports useNotificationSelection from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports usePushNotifications from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports invalidateNotifications from its local ./lib/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports getNotificationRoute from its local ./lib/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports fetchNotifications from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports fetchUnreadCount from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports markAllNotificationsRead from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports markNotificationRead from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports deregisterPushDevice from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports fetchVapidPublicKey from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports listPushDevices from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports registerPushDevice from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports sendTestPush from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports the EventStreamContextValue type from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	features/notifications module exists with a public index index.ts re-exports the NotificationType type from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/components/layout/NotificationBell.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/components/layout/NotificationBell.test.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/components/dashboard/NotificationRow.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/components/dashboard/NotificationRow.test.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/EventStreamProvider.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/useEventStream.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/useEventStreamEvents.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/useNotificationFilters.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/useNotificationSelection.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/hooks/usePushNotifications.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/server-fns/notifications.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/components/dashboard/ no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the horizontal notification source files are gone apps/web/src/lib/notifications/ no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old EventStreamProvider hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useEventStream hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useNotificationFilters hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useNotificationSelection hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old usePushNotifications hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old lib/notifications path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old server-fns/notifications path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old layout/NotificationBell path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old dashboard/NotificationRow path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/__root.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path app/components/layout/Header.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path app/components/layout/Header.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/notifications.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/notifications.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/settings.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/settings.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.$id.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.$id.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	every notifications consumer resolves via the new @/features/notifications path __tests__/notification-routing.test.ts imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	the public API resolves the expected value exports @/features/notifications exports the components, hooks, lib helpers, and server fns	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index has an apps/web/src/features/projects/ directory	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index co-locates a content/ subdirectory (the moved data module)	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index exposes a public API at apps/web/src/features/projects/index.ts	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index index.ts re-exports ProjectCard from its local components/	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index index.ts re-exports ProjectFilter from its local components/	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	features/projects module exists with a public index index.ts re-exports the whole content barrel (incl. ShowcaseMeta type)	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	both horizontal projects directories are gone apps/web/src/components/projects/ no longer exists	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	both horizontal projects directories are gone apps/web/src/content/projects/ no longer exists	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	no source imports the old horizontal projects paths no .ts/.tsx under apps/web/src references @/components/projects or @/content/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path features/home/components/FeaturedWork.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path features/home/components/FeaturedWork.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/index.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/index.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/index.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/index.test.ts imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/index.component.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/$slug.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/$slug.test.ts imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	every consumer resolves via the new @/features/projects path routes/projects/$slug.component.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	the public API resolves the merged value exports @/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	apps/web components.json points the ui and utils aliases at the workspace packages	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	apps/web components.json leaves the app-local aliases alone	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	apps/web components.json scaffolds Base UI primitives, not Radix	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	apps/web components.json names a stylesheet that exists	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	packages/ui components.json exists, or the CLI refuses to write into the package at all	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	packages/ui components.json resolves its own components and utils to the packages	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	packages/ui components.json declares no alias the package does not export	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	packages/ui components.json names the theme stylesheet that ships with the primitives	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	packages/ui components.json scaffolds Base UI primitives, not Radix	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	the Base UI migration stays undone apps/web depends on no Radix package	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	the Base UI migration stays undone packages/ui depends on no Radix package	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index has an apps/web/src/shared/auth/ directory	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index exposes a public API at apps/web/src/shared/auth/index.ts	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index index.ts re-exports useUser from its local ./hooks/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index index.ts re-exports useRequireUser from its local ./hooks/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index index.ts re-exports serverRequireAuth from its local ./server-fns/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	shared/auth module exists with a public index index.ts re-exports fetchCurrentUserRoles from its local ./server-fns/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	the horizontal auth source files are gone apps/web/src/hooks/useUser.ts no longer exists	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	the horizontal auth source files are gone apps/web/src/server-fns/auth.ts no longer exists	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	no source imports the old auth paths no .ts/.tsx under apps/web/src references @/hooks/useUser	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	no source imports the old auth paths no .ts/.tsx under apps/web/src references @/server-fns/auth	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	the public API resolves the expected named exports @/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	shared/motion module exists with a public index has an apps/web/src/shared/motion/ directory	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	shared/motion module exists with a public index exposes a public API at apps/web/src/shared/motion/index.ts	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	shared/motion module exists with a public index index.ts re-exports useReducedMotion from its local ./hooks/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	shared/motion module exists with a public index index.ts re-exports useScrollAnimation from its local ./hooks/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	shared/motion module exists with a public index index.ts re-exports FadeInView from its local ./components/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	the horizontal motion source files are gone apps/web/src/hooks/useReducedMotion.ts no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	the horizontal motion source files are gone apps/web/src/hooks/useScrollAnimation.ts no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	the horizontal motion source files are gone apps/web/src/components/shared/FadeInView.tsx no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old useReducedMotion hook path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old useScrollAnimation hook path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old FadeInView component path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	the public API resolves the expected named exports @/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	Storybook scans package sources points the stories glob at packages/*/src	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	Storybook scans package sources has at least one discoverable package story file on disk	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	Storybook scans package sources discovers a packages/ui story specifically	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	tailwind @source scanning of @bcordes/ui sentinels reach the build only through packages/ui	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	tailwind @source scanning of @bcordes/ui emits the utilities that only @bcordes/ui uses	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	tailwind @source scanning of @bcordes/ui declares @source for the packages/ui sources	passed
+apps/web/src/__tests__/workspace-infra.test.ts	Dockerfile (pnpm workspace aware) copies pnpm-workspace.yaml into the dependency layer	passed
+apps/web/src/__tests__/workspace-infra.test.ts	Dockerfile (pnpm workspace aware) copies apps/web/package.json before installing	passed
+apps/web/src/__tests__/workspace-infra.test.ts	Dockerfile (pnpm workspace aware) builds only the bcordes package, not the workspace root	passed
+apps/web/src/__tests__/workspace-infra.test.ts	Dockerfile (pnpm workspace aware) runtime stage copies the build output from apps/web/.output	passed
+apps/web/src/__tests__/workspace-infra.test.ts	pnpm --filter bcordes resolves to exactly one package: apps/web	passed
+apps/web/src/__tests__/workspace-infra.test.ts	CI workflow build job builds the bcordes package via the workspace filter	passed
+apps/web/src/__tests__/workspace-infra.test.ts	CI workflow test job still runs the root vitest projects config with coverage	passed
+apps/web/src/__tests__/workspace-infra.test.ts	CI workflow lint job still runs the root lint script	passed
+apps/web/src/__tests__/workspace-infra.test.ts	CI workflow all jobs install with a frozen lockfile	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please config keys on apps/web instead of the repo root	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please config keeps the plain v<version> tag lineage (include-component-in-tag: false)	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please config preserves the existing release-type and bump strategy	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please config manifest tracks apps/web at the current released version	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please config CHANGELOG.md lives next to the package it describes	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please.yml semver parsing parses a plain v<version> tag (the format include-component-in-tag: false cuts)	passed
+apps/web/src/__tests__/workspace-infra.test.ts	release-please.yml semver parsing parses a multi-digit plain tag	passed
+apps/web/src/__tests__/workspace-infra.test.ts	"release-please.yml semver parsing does not strip on a ""-v"" component separator"	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) exists at the repo root	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) declares the workspace projects (apps/* and packages/*)	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) delegates app-scoped options to the project, keeping none itself	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) owns the single merged coverage report	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) scopes coverage sources to workspace packages, not a root src/	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	root vitest.config.ts (workspace projects + merged coverage) keeps tests, stories, generated routes and ui primitives out of coverage	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	apps/web/vitest.config.ts (the app project) exists in the app package	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	apps/web/vitest.config.ts (the app project) keeps the app jsdom environment	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	apps/web/vitest.config.ts (the app project) points setupFiles at a resolvable setup module	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	apps/web/vitest.config.ts (the app project) has app-relative include globs covering both .ts and .tsx tests	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	apps/web/vitest.config.ts (the app project) resolves the @/ alias through the app test configuration	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	the root run collects the whole workspace discovers every app test file from the repo root with no extra flags	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	the root run collects the whole workspace collects each workspace package as a project of its own	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	the root run collects the whole workspace collects at least the pre-migration test baseline	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	merged coverage output writes one lcov.info covering apps/web sources	passed

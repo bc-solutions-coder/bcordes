@@ -1,0 +1,207 @@
+file	baseline_line	kind	baseline_title	current_line	current_title	presence
+apps/web/src/__tests__/about-feature-module.test.ts	36	suite	features/about module exists with a public index	37	features/about module exists with a public index	current
+apps/web/src/__tests__/about-feature-module.test.ts	37	test	has an apps/web/src/features/about/ directory	38	has an apps/web/src/features/about/ directory	current
+apps/web/src/__tests__/about-feature-module.test.ts	41	test	exposes a public API at apps/web/src/features/about/index.ts	42	exposes a public API at apps/web/src/features/about/index.ts	current
+apps/web/src/__tests__/about-feature-module.test.ts	45	test	index.ts re-exports %s from its local components/	46	index.ts re-exports %s from its local components/	current
+apps/web/src/__tests__/about-feature-module.test.ts	61	suite	the horizontal components/about directory is gone	62	the horizontal components/about directory is gone	current
+apps/web/src/__tests__/about-feature-module.test.ts	62	test	apps/web/src/components/about/ no longer exists	63	apps/web/src/components/about/ no longer exists	current
+apps/web/src/__tests__/about-feature-module.test.ts	67	suite	no source imports the old @/components/about path	68	no source imports the old @/components/about path	current
+apps/web/src/__tests__/about-feature-module.test.ts	68	test	no .ts/.tsx under apps/web/src references @/components/about	69	no .ts/.tsx under apps/web/src references @/components/about	current
+apps/web/src/__tests__/about-feature-module.test.ts	80	suite	the public API resolves the three named exports	81	the public API resolves the three named exports	current
+apps/web/src/__tests__/about-feature-module.test.ts	81	test	@/features/about exports AboutHero, Timeline, ValueIcon	82	@/features/about exports AboutHero, Timeline, ValueIcon	current
+apps/web/src/__tests__/contact-feature-module.test.ts	94	suite	features/contact module exists with a public index	95	features/contact module exists with a public index	current
+apps/web/src/__tests__/contact-feature-module.test.ts	95	test	has an apps/web/src/features/contact/ directory	96	has an apps/web/src/features/contact/ directory	current
+apps/web/src/__tests__/contact-feature-module.test.ts	99	test	co-locates a components/ subdirectory	100	co-locates a components/ subdirectory	current
+apps/web/src/__tests__/contact-feature-module.test.ts	103	test	co-locates a lib/ subdirectory (the moved schema module)	104	co-locates a lib/ subdirectory (the moved schema module)	current
+apps/web/src/__tests__/contact-feature-module.test.ts	107	test	exposes a public API at apps/web/src/features/contact/index.ts	108	exposes a public API at apps/web/src/features/contact/index.ts	current
+apps/web/src/__tests__/contact-feature-module.test.ts	111	test	index.ts re-exports %s from its local components/	112	index.ts re-exports %s from its local components/	current
+apps/web/src/__tests__/contact-feature-module.test.ts	126	test	keeps the contact-form schema internal (index.ts does not re-export it)	127	keeps the contact-form schema internal (index.ts does not re-export it)	current
+apps/web/src/__tests__/contact-feature-module.test.ts	135	suite	the horizontal components/contact directory is gone	136	the horizontal components/contact directory is gone	current
+apps/web/src/__tests__/contact-feature-module.test.ts	136	test	apps/web/src/components/contact/ no longer exists	137	apps/web/src/components/contact/ no longer exists	current
+apps/web/src/__tests__/contact-feature-module.test.ts	141	suite	no source imports the old contact / inquiries deep paths	142	no source imports the old contact / inquiries deep paths	current
+apps/web/src/__tests__/contact-feature-module.test.ts	148	test	no .ts/.tsx under apps/web/src references @/components/contact	149	no .ts/.tsx under apps/web/src references @/components/contact	current
+apps/web/src/__tests__/contact-feature-module.test.ts	156	test	no .ts/.tsx under apps/web/src references @/server-fns/inquiries	157	no .ts/.tsx under apps/web/src references @/server-fns/inquiries	current
+apps/web/src/__tests__/contact-feature-module.test.ts	165	suite	ContactForm consumes the inquiries feature via its public barrel	166	ContactForm consumes the inquiries feature via its public barrel	current
+apps/web/src/__tests__/contact-feature-module.test.ts	166	test	features/contact/components/ContactForm.tsx imports submitInquiry from @/features/inquiries	167	features/contact/components/ContactForm.tsx imports submitInquiry from @/features/inquiries	current
+apps/web/src/__tests__/contact-feature-module.test.ts	181	suite	every contact consumer resolves via the new @/features/contact path	182	every contact consumer resolves via the new @/features/contact path	current
+apps/web/src/__tests__/contact-feature-module.test.ts	182	test	%s imports from @/features/contact	183	%s imports from @/features/contact	current
+apps/web/src/__tests__/contact-feature-module.test.ts	196	suite	the public API resolves the three named exports	197	the public API resolves the three named exports	current
+apps/web/src/__tests__/contact-feature-module.test.ts	197	test	@/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess	198	@/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess	current
+apps/web/src/__tests__/home-feature-module.test.ts	40	suite	features/home module exists with a public index	41	features/home module exists with a public index	current
+apps/web/src/__tests__/home-feature-module.test.ts	41	test	has an apps/web/src/features/home/ directory	42	has an apps/web/src/features/home/ directory	current
+apps/web/src/__tests__/home-feature-module.test.ts	45	test	exposes a public API at apps/web/src/features/home/index.ts	46	exposes a public API at apps/web/src/features/home/index.ts	current
+apps/web/src/__tests__/home-feature-module.test.ts	49	test	index.ts re-exports %s from its local components/	50	index.ts re-exports %s from its local components/	current
+apps/web/src/__tests__/home-feature-module.test.ts	65	suite	the horizontal components/home directory is gone	66	the horizontal components/home directory is gone	current
+apps/web/src/__tests__/home-feature-module.test.ts	66	test	apps/web/src/components/home/ no longer exists	67	apps/web/src/components/home/ no longer exists	current
+apps/web/src/__tests__/home-feature-module.test.ts	71	suite	no source imports the old @/components/home path	72	no source imports the old @/components/home path	current
+apps/web/src/__tests__/home-feature-module.test.ts	72	test	no .ts/.tsx under apps/web/src references @/components/home	73	no .ts/.tsx under apps/web/src references @/components/home	current
+apps/web/src/__tests__/home-feature-module.test.ts	84	suite	the public API resolves the four named exports	85	the public API resolves the four named exports	current
+apps/web/src/__tests__/home-feature-module.test.ts	85	test	@/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase	86	@/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	114	suite	features/inquiries module exists with a public index	115	features/inquiries module exists with a public index	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	115	test	has an apps/web/src/features/inquiries/ directory	116	has an apps/web/src/features/inquiries/ directory	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	119	test	co-locates a server-fns/ subdirectory	120	co-locates a server-fns/ subdirectory	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	123	test	co-locates a lib/ subdirectory (the moved config module)	124	co-locates a lib/ subdirectory (the moved config module)	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	127	test	exposes a public API at apps/web/src/features/inquiries/index.ts	128	exposes a public API at apps/web/src/features/inquiries/index.ts	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	131	test	index.ts re-exports %s from its local ./%s/	132	index.ts re-exports %s from its local ./%s/	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	147	suite	the horizontal inquiries source files are gone	148	the horizontal inquiries source files are gone	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	148	test	apps/web/src/server-fns/inquiries.ts no longer exists	149	apps/web/src/server-fns/inquiries.ts no longer exists	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	152	test	apps/web/src/config/inquiries.ts no longer exists	153	apps/web/src/config/inquiries.ts no longer exists	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	157	suite	no source imports the old inquiries paths	158	no source imports the old inquiries paths	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	165	test	no .ts/.tsx under apps/web/src references the old server-fns/inquiries path	166	no .ts/.tsx under apps/web/src references the old server-fns/inquiries path	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	173	test	no .ts/.tsx under apps/web/src references @/config/inquiries	174	no .ts/.tsx under apps/web/src references @/config/inquiries	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	182	suite	every dashboard consumer resolves via the new @/features/inquiries path	183	every dashboard consumer resolves via the new @/features/inquiries path	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	183	test	%s imports from @/features/inquiries	184	%s imports from @/features/inquiries	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	197	suite	the public API resolves the expected exports	198	the public API resolves the expected exports	current
+apps/web/src/__tests__/inquiries-feature-module.test.ts	198	test	@/features/inquiries exports the seven server fns and four status maps	199	@/features/inquiries exports the seven server fns and four status maps	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	160	suite	features/notifications module exists with a public index	161	features/notifications module exists with a public index	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	161	test	has an apps/web/src/features/notifications/ directory	162	has an apps/web/src/features/notifications/ directory	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	165	test	co-locates a components/ subdirectory	166	co-locates a components/ subdirectory	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	169	test	co-locates a hooks/ subdirectory	170	co-locates a hooks/ subdirectory	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	173	test	co-locates a lib/ subdirectory	174	co-locates a lib/ subdirectory	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	177	test	co-locates a server-fns/ subdirectory	178	co-locates a server-fns/ subdirectory	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	181	test	exposes a public API at apps/web/src/features/notifications/index.ts	182	exposes a public API at apps/web/src/features/notifications/index.ts	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	185	test	index.ts re-exports %s from its local ./%s/	186	index.ts re-exports %s from its local ./%s/	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	200	test	index.ts re-exports the %s type from its local ./%s/	201	index.ts re-exports the %s type from its local ./%s/	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	216	suite	the horizontal notification source files are gone	217	the horizontal notification source files are gone	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	217	test	apps/web/src/%s no longer exists	218	apps/web/src/%s no longer exists	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	221	test	apps/web/src/%s/ no longer exists	222	apps/web/src/%s/ no longer exists	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	226	suite	no source imports the old horizontal notification paths	227	no source imports the old horizontal notification paths	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	233	test	no .ts/.tsx under apps/web/src references the old %s path	234	no .ts/.tsx under apps/web/src references the old %s path	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	246	suite	every notifications consumer resolves via the new @/features/notifications path	247	every notifications consumer resolves via the new @/features/notifications path	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	247	test	%s imports from @/features/notifications	248	%s imports from @/features/notifications	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	258	suite	the public API resolves the expected value exports	259	the public API resolves the expected value exports	current
+apps/web/src/__tests__/notifications-feature-module.test.ts	259	test	@/features/notifications exports the components, hooks, lib helpers, and server fns	260	@/features/notifications exports the components, hooks, lib helpers, and server fns	current
+apps/web/src/__tests__/projects-feature-module.test.ts	67	suite	features/projects module exists with a public index	68	features/projects module exists with a public index	current
+apps/web/src/__tests__/projects-feature-module.test.ts	68	test	has an apps/web/src/features/projects/ directory	69	has an apps/web/src/features/projects/ directory	current
+apps/web/src/__tests__/projects-feature-module.test.ts	72	test	co-locates a components/ subdirectory	73	co-locates a components/ subdirectory	current
+apps/web/src/__tests__/projects-feature-module.test.ts	76	test	co-locates a content/ subdirectory (the moved data module)	77	co-locates a content/ subdirectory (the moved data module)	current
+apps/web/src/__tests__/projects-feature-module.test.ts	80	test	exposes a public API at apps/web/src/features/projects/index.ts	81	exposes a public API at apps/web/src/features/projects/index.ts	current
+apps/web/src/__tests__/projects-feature-module.test.ts	84	test	index.ts re-exports %s from its local components/	85	index.ts re-exports %s from its local components/	current
+apps/web/src/__tests__/projects-feature-module.test.ts	99	test	index.ts re-exports the whole content barrel (incl. ShowcaseMeta type)	100	index.ts re-exports the whole content barrel (incl. ShowcaseMeta type)	current
+apps/web/src/__tests__/projects-feature-module.test.ts	110	suite	both horizontal projects directories are gone	111	both horizontal projects directories are gone	current
+apps/web/src/__tests__/projects-feature-module.test.ts	111	test	apps/web/src/components/projects/ no longer exists	112	apps/web/src/components/projects/ no longer exists	current
+apps/web/src/__tests__/projects-feature-module.test.ts	115	test	apps/web/src/content/projects/ no longer exists	116	apps/web/src/content/projects/ no longer exists	current
+apps/web/src/__tests__/projects-feature-module.test.ts	120	suite	no source imports the old horizontal projects paths	121	no source imports the old horizontal projects paths	current
+apps/web/src/__tests__/projects-feature-module.test.ts	121	test	no .ts/.tsx under apps/web/src references @/components/projects or @/content/projects	122	no .ts/.tsx under apps/web/src references @/components/projects or @/content/projects	current
+apps/web/src/__tests__/projects-feature-module.test.ts	139	suite	every consumer resolves via the new @/features/projects path	140	every consumer resolves via the new @/features/projects path	current
+apps/web/src/__tests__/projects-feature-module.test.ts	140	test	%s imports from @/features/projects	141	%s imports from @/features/projects	current
+apps/web/src/__tests__/projects-feature-module.test.ts	154	suite	the public API resolves the merged value exports	155	the public API resolves the merged value exports	current
+apps/web/src/__tests__/projects-feature-module.test.ts	155	test	@/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers	156	@/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers	current
+apps/web/src/__tests__/app-shell-module.test.ts	124	suite	app/ shell module exists with a public index	125	app/ shell module exists with a public index	current
+apps/web/src/__tests__/app-shell-module.test.ts	125	test	has an apps/web/src/app/ directory	126	has an apps/web/src/app/ directory	current
+apps/web/src/__tests__/app-shell-module.test.ts	129	test	exposes a public API at apps/web/src/app/index.ts	130	exposes a public API at apps/web/src/app/index.ts	current
+apps/web/src/__tests__/app-shell-module.test.ts	133	test	index.ts re-exports %s from ./%s	134	index.ts re-exports %s from ./%s	current
+apps/web/src/__tests__/app-shell-module.test.ts	146	suite	the app-shell files live at their new app/ locations	147	the app-shell files live at their new app/ locations	current
+apps/web/src/__tests__/app-shell-module.test.ts	147	test	apps/web/src/%s exists	148	apps/web/src/%s exists	current
+apps/web/src/__tests__/app-shell-module.test.ts	152	suite	the old horizontal app-shell locations are gone	153	the old horizontal app-shell locations are gone	current
+apps/web/src/__tests__/app-shell-module.test.ts	153	test	apps/web/src/%s/ no longer exists	154	apps/web/src/%s/ no longer exists	current
+apps/web/src/__tests__/app-shell-module.test.ts	157	test	apps/web/src/styles.css (root asset) no longer exists	158	apps/web/src/styles.css (root asset) no longer exists	current
+apps/web/src/__tests__/app-shell-module.test.ts	162	suite	no source imports the old app-shell specifiers	163	no source imports the old app-shell specifiers	current
+apps/web/src/__tests__/app-shell-module.test.ts	163	test	no .ts/.tsx under apps/web/src references the old %s specifier	164	no .ts/.tsx under apps/web/src references the old %s specifier	current
+apps/web/src/__tests__/app-shell-module.test.ts	177	suite	every app-shell consumer resolves via the new @/app path	178	every app-shell consumer resolves via the new @/app path	current
+apps/web/src/__tests__/app-shell-module.test.ts	178	test	%s references @/app	179	%s references @/app	current
+apps/web/src/__tests__/app-shell-module.test.ts	188	test	routes/__root.tsx imports the styles asset via @/app/styles.css	189	routes/__root.tsx imports the styles asset via @/app/styles.css	current
+apps/web/src/__tests__/app-shell-module.test.ts	198	suite	the public API resolves the expected named exports	199	the public API resolves the expected named exports	current
+apps/web/src/__tests__/app-shell-module.test.ts	199	test	@/app exports Header, Footer, reportWebVitals	200	@/app exports Header, Footer, reportWebVitals	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	216	suite	dead ESLint module-boundary blocks are pruned	213	dead Oxlint module-boundary blocks are pruned	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	217	test	no block is scoped to %s	214	no block is scoped to %s	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	224	test	no block scopes any removed horizontal dir under apps/web/src	221	no block scopes any removed horizontal dir under apps/web/src	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	237	suite	surviving ESLint blocks subsume the pruned layer blocks	234	surviving Oxlint blocks subsume the pruned layer blocks	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	238	test	the app-wide block still denies deep module imports	235	the app-wide block still denies deep module imports	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	252	test	one block scopes features/, shared/ and app/ together	249	one block scopes features/, shared/ and app/ together	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	264	test	that block carries the no-importing-routes rule the layer blocks used to	261	that block carries the no-importing-routes rule the layer blocks used to	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	277	suite	CLAUDE.md Key Directories describe the features/ + shared/ layout	274	CLAUDE.md Key Directories describe the features/ + shared/ layout	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	280	test	has a Key Directories section	277	has a Key Directories section	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	286	test	lists apps/web/src/features/ and apps/web/src/shared/	283	lists apps/web/src/features/ and apps/web/src/shared/	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	295	test	documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css	292	documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	302	test	names both cross-cutting shared modules (auth and motion)	299	names both cross-cutting shared modules (auth and motion)	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	317	test	no longer advertises the dissolved components/ and hooks/ buckets	314	no longer advertises the dissolved components/ and hooks/ buckets	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	332	test	no longer advertises the removed apps/web/src/server-fns/ dir	329	no longer advertises the removed apps/web/src/server-fns/ dir	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	339	test	no longer advertises the removed apps/web/src/content/ dir	336	no longer advertises the removed apps/web/src/content/ dir	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	346	test	no longer enumerates the per-feature components/{home,about,...} dirs	343	no longer enumerates the per-feature components/{home,about,...} dirs	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	353	test	preserves the packages/valkey/src/index.ts sanctioned-barrel reference	350	preserves the packages/valkey/src/index.ts sanctioned-barrel reference	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	359	suite	README Project Structure describes the features/ + shared/ layout	356	README Project Structure describes the features/ + shared/ layout	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	360	test	has a Project Structure section	357	has a Project Structure section	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	373	test	discovers the tree entries (floor guard)	370	discovers the tree entries (floor guard)	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	379	test	shows the features/, shared/ and app/ module roots in the tree	376	shows the features/, shared/ and app/ module roots in the tree	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	394	test	names both shared modules (auth and motion) on the shared/ entry	391	names both shared modules (auth and motion) on the shared/ entry	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	405	test	no longer shows the dissolved components/ and hooks/ tree entries	402	no longer shows the dissolved components/ and hooks/ tree entries	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	416	test	no longer shows the removed server-fns/ dir	413	no longer shows the removed server-fns/ dir	current
+apps/web/src/__tests__/architecture-cleanup.test.ts	423	test	no longer shows the removed content/ dir	420	no longer shows the removed content/ dir	current
+apps/web/src/__tests__/feature-architecture.test.ts	49	suite	features/ and shared/ module roots exist	46	features/ and shared/ module roots exist	current
+apps/web/src/__tests__/feature-architecture.test.ts	50	test	has an apps/web/src/features/ root (tracked via .gitkeep)	47	has an apps/web/src/features/ root (tracked via .gitkeep)	current
+apps/web/src/__tests__/feature-architecture.test.ts	55	test	has an apps/web/src/shared/ root (tracked via .gitkeep)	52	has an apps/web/src/shared/ root (tracked via .gitkeep)	current
+apps/web/src/__tests__/feature-architecture.test.ts	61	suite	ESLint forbids deep imports into feature/shared module internals	58	Oxlint forbids deep imports into feature/shared module internals	current
+apps/web/src/__tests__/feature-architecture.test.ts	62	test	defines a noDeepModuleImports group targeting @/features/*/* and @/shared/*/*	59	defines a noDeepModuleImports group targeting @/features/*/** and @/shared/*/**	current
+apps/web/src/__tests__/feature-architecture.test.ts	72	test	carries the deep-module deny group in the %s block	69	carries the deep-module deny group in the %s block	current
+apps/web/src/__tests__/feature-architecture.test.ts	88	suite	ESLint features/shared boundary block	85	Oxlint features/shared boundary block	current
+apps/web/src/__tests__/feature-architecture.test.ts	96	test	exists, scoping both apps/web/src/features and apps/web/src/shared	93	exists, scoping both apps/web/src/features and apps/web/src/shared	current
+apps/web/src/__tests__/feature-architecture.test.ts	103	test	forbids features/shared from importing routes (@/routes/*)	100	forbids features/shared from importing routes (@/routes/**)	current
+apps/web/src/__tests__/feature-architecture.test.ts	110	test	also carries the deep-module deny group	107	also carries the deep-module deny group	current
+apps/web/src/__tests__/feature-architecture.test.ts	118	suite	CLAUDE.md documents the new module roots and convention	119	CLAUDE.md documents the new module roots and convention	current
+apps/web/src/__tests__/feature-architecture.test.ts	121	test	lists apps/web/src/features/ under Key Directories	122	lists apps/web/src/features/ under Key Directories	current
+apps/web/src/__tests__/feature-architecture.test.ts	127	test	lists apps/web/src/shared/ under Key Directories	128	lists apps/web/src/shared/ under Key Directories	current
+apps/web/src/__tests__/feature-architecture.test.ts	133	test	documents the bare-module import convention with examples	134	documents the bare-module import convention with examples	current
+apps/web/src/__tests__/feature-architecture.test.ts	144	test	preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)	145	preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)	current
+apps/web/src/__tests__/shared-auth-module.test.ts	71	suite	shared/auth module exists with a public index	72	shared/auth module exists with a public index	current
+apps/web/src/__tests__/shared-auth-module.test.ts	72	test	has an apps/web/src/shared/auth/ directory	73	has an apps/web/src/shared/auth/ directory	current
+apps/web/src/__tests__/shared-auth-module.test.ts	76	test	exposes a public API at apps/web/src/shared/auth/index.ts	77	exposes a public API at apps/web/src/shared/auth/index.ts	current
+apps/web/src/__tests__/shared-auth-module.test.ts	80	test	index.ts re-exports %s from its local ./%s/	81	index.ts re-exports %s from its local ./%s/	current
+apps/web/src/__tests__/shared-auth-module.test.ts	96	suite	the horizontal auth source files are gone	97	the horizontal auth source files are gone	current
+apps/web/src/__tests__/shared-auth-module.test.ts	97	test	apps/web/src/hooks/useUser.ts no longer exists	98	apps/web/src/hooks/useUser.ts no longer exists	current
+apps/web/src/__tests__/shared-auth-module.test.ts	101	test	apps/web/src/server-fns/auth.ts no longer exists	102	apps/web/src/server-fns/auth.ts no longer exists	current
+apps/web/src/__tests__/shared-auth-module.test.ts	106	suite	no source imports the old auth paths	107	no source imports the old auth paths	current
+apps/web/src/__tests__/shared-auth-module.test.ts	107	test	no .ts/.tsx under apps/web/src references @/hooks/useUser	108	no .ts/.tsx under apps/web/src references @/hooks/useUser	current
+apps/web/src/__tests__/shared-auth-module.test.ts	118	test	no .ts/.tsx under apps/web/src references @/server-fns/auth	119	no .ts/.tsx under apps/web/src references @/server-fns/auth	current
+apps/web/src/__tests__/shared-auth-module.test.ts	130	suite	the public API resolves the expected named exports	131	the public API resolves the expected named exports	current
+apps/web/src/__tests__/shared-auth-module.test.ts	131	test	@/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles	132	@/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles	current
+apps/web/src/__tests__/shared-motion-module.test.ts	54	suite	shared/motion module exists with a public index	55	shared/motion module exists with a public index	current
+apps/web/src/__tests__/shared-motion-module.test.ts	55	test	has an apps/web/src/shared/motion/ directory	56	has an apps/web/src/shared/motion/ directory	current
+apps/web/src/__tests__/shared-motion-module.test.ts	59	test	exposes a public API at apps/web/src/shared/motion/index.ts	60	exposes a public API at apps/web/src/shared/motion/index.ts	current
+apps/web/src/__tests__/shared-motion-module.test.ts	63	test	index.ts re-exports %s from its local ./%s/	64	index.ts re-exports %s from its local ./%s/	current
+apps/web/src/__tests__/shared-motion-module.test.ts	79	suite	the horizontal motion source files are gone	80	the horizontal motion source files are gone	current
+apps/web/src/__tests__/shared-motion-module.test.ts	80	test	apps/web/src/hooks/useReducedMotion.ts no longer exists	81	apps/web/src/hooks/useReducedMotion.ts no longer exists	current
+apps/web/src/__tests__/shared-motion-module.test.ts	84	test	apps/web/src/hooks/useScrollAnimation.ts no longer exists	85	apps/web/src/hooks/useScrollAnimation.ts no longer exists	current
+apps/web/src/__tests__/shared-motion-module.test.ts	88	test	apps/web/src/components/shared/FadeInView.tsx no longer exists	89	apps/web/src/components/shared/FadeInView.tsx no longer exists	current
+apps/web/src/__tests__/shared-motion-module.test.ts	93	suite	no source imports the old motion paths	94	no source imports the old motion paths	current
+apps/web/src/__tests__/shared-motion-module.test.ts	94	test	no .ts/.tsx under apps/web/src references the old %s path	95	no .ts/.tsx under apps/web/src references the old %s path	current
+apps/web/src/__tests__/shared-motion-module.test.ts	109	suite	the public API resolves the expected named exports	110	the public API resolves the expected named exports	current
+apps/web/src/__tests__/shared-motion-module.test.ts	110	test	@/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView	111	@/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView	current
+apps/web/src/__tests__/h3-resolution.test.ts	44	suite	h3 resolution			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	45	test	has vitest configs to check			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	49	test	%s hardcodes no pnpm store path			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	53	test	declares h3 as a dependency of apps/web			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	64	test	installs h3 into apps/web/node_modules			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	68	test	resolves h3 from apps/web without a vite alias or NODE_PATH fallback			removed-before-review
+apps/web/src/__tests__/h3-resolution.test.ts	72	test	resolves h3 to the v2 API the server middleware imports			removed-before-review
+apps/web/src/__tests__/shadcn-cli-config.test.ts	28	test	scaffolds Base UI primitives, not Radix	81	scaffolds Base UI primitives, not Radix	current
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	110	test	sentinels reach the build only through packages/ui	114	sentinels reach the build only through packages/ui	current
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	131	test	emits the utilities that only @bcordes/ui uses	135	emits the utilities that only @bcordes/ui uses	current
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	142	test	declares @source for the packages/ui sources	146	declares @source for the packages/ui sources	current
+apps/web/src/__tests__/workspace-infra.test.ts	80	test	copies packages/ before installing (forward-compat with future internal packages)			removed-before-review
+apps/web/src/__tests__/workspace-infra.test.ts	84	test	builds only the bcordes package, not the workspace root	80	builds only the bcordes package, not the workspace root	current
+apps/web/src/__tests__/workspace-infra.test.ts	88	test	runtime stage copies the build output from apps/web/.output	84	runtime stage copies the build output from apps/web/.output	current
+apps/web/src/__tests__/workspace-infra.test.ts	96	suite	pnpm --filter bcordes	92	pnpm --filter bcordes	current
+apps/web/src/__tests__/workspace-infra.test.ts	97	test	resolves to exactly one package: apps/web	93	resolves to exactly one package: apps/web	current
+apps/web/src/__tests__/workspace-infra.test.ts	110	suite	CI workflow	106	CI workflow	current
+apps/web/src/__tests__/workspace-infra.test.ts	113	test	build job builds the bcordes package via the workspace filter	109	build job builds the bcordes package via the workspace filter	current
+apps/web/src/__tests__/workspace-infra.test.ts	117	test	test job still runs the root vitest projects config with coverage	113	test job still runs the root vitest projects config with coverage	current
+apps/web/src/__tests__/workspace-infra.test.ts	121	test	lint job still runs the root lint script	117	lint job still runs the root lint script	current
+apps/web/src/__tests__/workspace-infra.test.ts	125	test	all jobs install with a frozen lockfile	121	all jobs install with a frozen lockfile	current
+apps/web/src/__tests__/workspace-infra.test.ts	130	suite	release-please config	126	release-please config	current
+apps/web/src/__tests__/workspace-infra.test.ts	134	test	keys on apps/web instead of the repo root	130	keys on apps/web instead of the repo root	current
+apps/web/src/__tests__/workspace-infra.test.ts	138	test	keeps the plain v<version> tag lineage (include-component-in-tag: false)	134	keeps the plain v<version> tag lineage (include-component-in-tag: false)	current
+apps/web/src/__tests__/workspace-infra.test.ts	142	test	preserves the existing release-type and bump strategy	138	preserves the existing release-type and bump strategy	current
+apps/web/src/__tests__/workspace-infra.test.ts	150	test	manifest tracks apps/web at the current released version	146	manifest tracks apps/web at the current released version	current
+apps/web/src/__tests__/workspace-infra.test.ts	156	test	CHANGELOG.md lives next to the package it describes	152	CHANGELOG.md lives next to the package it describes	current
+apps/web/src/__tests__/workspace-infra.test.ts	162	suite	release-please.yml semver parsing	158	release-please.yml semver parsing	current
+apps/web/src/__tests__/workspace-infra.test.ts	163	test	parses a plain v<version> tag (the format include-component-in-tag: false cuts)	159	parses a plain v<version> tag (the format include-component-in-tag: false cuts)	current
+apps/web/src/__tests__/workspace-infra.test.ts	171	test	parses a multi-digit plain tag	167	parses a multi-digit plain tag	current
+apps/web/src/__tests__/workspace-infra.test.ts	179	test	"does not strip on a ""-v"" component separator"	175	"does not strip on a ""-v"" component separator"	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	223	test	keeps the tsconfig-paths plugin that resolves the @/ alias	223	resolves the @/ alias through the app test configuration	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	230	suite	the root run collects the whole workspace	255	the root run collects the whole workspace	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	231	test	discovers every app test file from the repo root with no extra flags	256	discovers every app test file from the repo root with no extra flags	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	247	test	collects each workspace package as a project of its own	272	collects each workspace package as a project of its own	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	262	test	collects at least the pre-migration test baseline	287	collects at least the pre-migration test baseline	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	273	suite	merged coverage output	298	merged coverage output	current
+apps/web/src/__tests__/workspace-vitest-config.test.ts	282	test	writes one lcov.info covering apps/web sources	307	writes one lcov.info covering apps/web sources	current
