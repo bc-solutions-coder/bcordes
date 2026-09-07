@@ -34,6 +34,7 @@ const responseControl = z.object({
   path: z.string(),
   status: z.number().int().optional(),
   pending: z.boolean().optional(),
+  body: z.unknown().optional(),
 })
 interface SessionState {
   token: string
@@ -163,7 +164,11 @@ export async function startBackend(port = 0, serviceOwner = 'service') {
           state.releases.add(resolve)
         })
       if (selected.status) {
-        send(res, selected.status, { message: 'Controlled backend response' })
+        send(
+          res,
+          selected.status,
+          selected.body ?? { message: 'Controlled backend response' },
+        )
         return
       }
     }

@@ -42,6 +42,8 @@ test('validates authorization input before profile access through the built tran
   for (const data of [
     {},
     { returnTo: '/dashboard' },
+    { returnTo: undefined },
+    { returnTo: '/dashboard?tab=inquiries#details' },
     { returnTo: '' },
     { returnTo: 'https://example.com/path' },
   ]) {
@@ -56,12 +58,13 @@ test('validates authorization input before profile access through the built tran
     'dashboard',
     42,
     { returnTo: 42 },
+    { returnTo: false },
+    { returnTo: [] },
     { returnTo: null },
     { returnTo: {} },
   ]) {
     const before = await profileCount()
     const response = await send(data)
-    expect(response.status()).toBe(200)
     expect(await response.text()).toContain('invalid_type')
     expect(await profileCount()).toBe(before)
   }

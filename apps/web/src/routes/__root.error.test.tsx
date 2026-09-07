@@ -54,8 +54,12 @@ it('recovers a transient render failure when the customer tries again', async ()
 })
 
 it('offers home navigation when the thrown value is not an Error', async () => {
-  await failingRoute('failed render')
+  vi.stubEnv('DEV', true)
+  await failingRoute('Non-Error diagnostic fixture')
   expect(await screen.findByText('Something Went Wrong')).toBeVisible()
+  expect(
+    screen.queryByText('Non-Error diagnostic fixture'),
+  ).not.toBeInTheDocument()
   fireEvent.click(screen.getByRole('link', { name: 'Go Home' }))
   expect(
     await screen.findByRole('heading', { name: 'Home destination' }),
@@ -83,4 +87,12 @@ it('keeps production errors generic and allows home navigation', async () => {
   expect(
     await screen.findByRole('heading', { name: 'Home destination' }),
   ).toBeVisible()
+})
+
+it('keeps recovery controls usable when the render failure persists after reset', async () => {
+  await failingRoute(new Error('Persistent render failure'))
+  fireEvent.click(await screen.findByRole('button', { name: 'Try Again' }))
+  expect(await screen.findByText('Something Went Wrong')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Try Again' })).toBeVisible()
+  expect(screen.getByRole('link', { name: 'Go Home' })).toBeVisible()
 })

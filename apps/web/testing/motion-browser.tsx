@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import { FadeInView } from '../src/shared/motion/components/FadeInView'
+import { FadeInView } from '../src/shared/motion'
 import '../src/app/styles.css'
 
 const root = document.getElementById('root')

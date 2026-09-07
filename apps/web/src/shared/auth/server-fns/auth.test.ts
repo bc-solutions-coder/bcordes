@@ -1,3 +1,4 @@
+import { ZodError } from 'zod'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createWallowSdk } from '@bc-solutions-coder/sdk'
 import { createMockSession } from '@bcordes/auth/testing'
@@ -63,6 +64,11 @@ describe('Server authorization', () => {
   it.each([
     [{ returnTo: '/dashboard' }, '/bff/login?returnTo=%2Fdashboard'],
     [{}, '/bff/login'],
+    [{ returnTo: undefined }, '/bff/login'],
+    [
+      { returnTo: '/dashboard?tab=inquiries#details' },
+      '/bff/login?returnTo=%2Fdashboard%3Ftab%3Dinquiries%23details',
+    ],
     [{ returnTo: '' }, '/bff/login'],
     [
       { returnTo: 'https://example.com/path' },
@@ -80,12 +86,14 @@ describe('Server authorization', () => {
     'dashboard',
     42,
     { returnTo: 42 },
+    { returnTo: false },
+    { returnTo: [] },
     { returnTo: null },
     { returnTo: {} },
   ])('rejects malformed input %j before checking the session', async (data) => {
     await expect(
       Reflect.apply(serverRequireAuth, undefined, [{ data }]),
-    ).rejects.toThrow()
+    ).rejects.toBeInstanceOf(ZodError)
     expect(getSession).not.toHaveBeenCalled()
     expect(createRequestSdk).not.toHaveBeenCalled()
   })
