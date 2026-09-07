@@ -303,3 +303,33 @@ Validation on local macOS arm64, Node 24.11.1 and pnpm 11.26.0:
 ESLint remains a transitive peer of the two upstream JS plugins, not a lint pass.
 No complete-PR performance claim is made; matched CI evidence remains #61 and
 final migration review remains #77.
+
+## Performance decision, #61
+
+The [performance report](performance.md) records three upgraded PR attempts and
+three CI/publication pairs, with exact attempts, cache evidence and limitations.
+Recent observed PR median falls from 405 seconds (two historical pairs) to
+110 seconds (three repeats); CI-to-publication median falls from 579 to
+174 seconds. The original 919-second upgraded publication pair remains included.
+The 25% target is exceeded in this observational sample; a controlled five-run
+before/after comparison and cold full-PR comparison remain unavailable.
+
+No additional task cache is justified by the measured short build/type/lint steps
+and unestablished cross-PR test-cache hit rate. Existing Docker invalidation and
+archive-reuse evidence remain applicable. No gates or coverage policies changed.
+
+## Release manifest output correction, #86
+
+The final audit found a pre-existing release wiring error: the configured
+`apps/web` package exposes path-prefixed Release Please outputs, while the job
+read root-only outputs. Run 34072713922 created v0.1.8 but skipped image promotion.
+The workflow now selects apps/web--release_created and apps/web--tag_name and
+requires the literal true output before promotion. Exact-SHA digest selection,
+release approval and tag-copy behavior are preserved.
+
+The 17 existing infrastructure tests pass. Actionlint's workflow/expression
+validation passes with shellcheck disabled; full actionlint reports the same two
+pre-existing shellcheck suggestions (SC2129 and SC2034) before and after this
+three-expression change. No new source-text assertions were added. The next
+approved release must still verify actual semver promotion; no release was
+created/merged and no semver/latest tags were backfilled by this correction.

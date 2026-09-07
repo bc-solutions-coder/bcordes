@@ -1,0 +1,86 @@
+{
+  "before_recent_pr": [
+    {
+      "runs": ["34072010469:2", "34072010505:2"],
+      "sha": "198ad187990b571ed0b4d96c9330b5614533be4c",
+      "seconds": 499.0,
+      "initial_delay_seconds": 4.0,
+      "execution_span_seconds": 495.0,
+      "conclusions": ["success", "success"]
+    },
+    {
+      "runs": ["34066007369:1", "34066007351:1"],
+      "sha": "9926e4c3a0fff180cb1370152cd711afb4a435cb",
+      "seconds": 311.0,
+      "initial_delay_seconds": 3.0,
+      "execution_span_seconds": 308.0,
+      "conclusions": ["success", "success"]
+    }
+  ],
+  "after_pr": [
+    {
+      "runs": ["34147876972:1", "34147876945:1", "34147876948:1"],
+      "sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "seconds": 110.0,
+      "initial_delay_seconds": 3.0,
+      "execution_span_seconds": 107.0,
+      "conclusions": ["success", "success", "success"]
+    },
+    {
+      "runs": ["34147876972:2", "34147876945:2", "34147876948:2"],
+      "sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "seconds": 107.0,
+      "initial_delay_seconds": 4.0,
+      "execution_span_seconds": 103.0,
+      "conclusions": ["success", "success", "success"]
+    },
+    {
+      "runs": ["34147876972:3", "34147876945:3", "34147876948:3"],
+      "sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "seconds": 137.0,
+      "initial_delay_seconds": 4.0,
+      "execution_span_seconds": 133.0,
+      "conclusions": ["success", "success", "success"]
+    }
+  ],
+  "after_ci_to_publication": [
+    {
+      "runs": ["34145664547:1", "34146403246:1"],
+      "sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "seconds": 919.0,
+      "initial_delay_seconds": 3.0,
+      "execution_span_seconds": 916.0,
+      "conclusions": ["success", "success"]
+    },
+    {
+      "runs": ["34145664547:2", "34147881541:1"],
+      "sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "seconds": 174.0,
+      "initial_delay_seconds": 6.0,
+      "execution_span_seconds": 168.0,
+      "conclusions": ["success", "success"]
+    },
+    {
+      "runs": ["34145664547:3", "34148146048:1"],
+      "sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "seconds": 158.0,
+      "initial_delay_seconds": 4.0,
+      "execution_span_seconds": 154.0,
+      "conclusions": ["success", "success"]
+    }
+  ],
+  "before_pr_median_seconds": 405.0,
+  "after_pr_median_seconds": 110.0,
+  "observed_pr_improvement_percent": 72.8395061728395,
+  "before_publication_samples_seconds": [641.0, 468.0, 692.0, 569.0, 579.0],
+  "before_publication_median_seconds": 579.0,
+  "after_publication_median_seconds": 174.0,
+  "observed_publication_improvement_percent": 69.94818652849742,
+  "limitations": [
+    "Two recent baseline PR pairs versus three repeated upgraded PR attempts; source revisions and workflow scope differ.",
+    "After PR includes deploy-gate; before only CI and Docker were captured. The deploy-gate does not extend the measured after critical path.",
+    "Publication pairing uses identical SHA and sequential timing, not a verified trigger run ID.",
+    "Before publication uses original creation-to-update timestamps; after uses attempt-start to last-job completion.",
+    "All after PR samples show cache reuse; no controlled cold full-PR or cold publication comparison."
+  ]
+}

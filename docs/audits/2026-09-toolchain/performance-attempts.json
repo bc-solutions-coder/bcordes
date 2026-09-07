@@ -1,0 +1,3588 @@
+{
+  "captured_at": "2026-09-07T17:38:10.820858+00:00",
+  "selection": [
+    "34072010469:2",
+    "34072010505:2",
+    "34066007369:1",
+    "34066007351:1",
+    "34145664547:1",
+    "34146403246:1",
+    "34145664547:2",
+    "34147881541:1",
+    "34145664547:3",
+    "34148146048:1",
+    "34147876972:1",
+    "34147876945:1",
+    "34147876948:1",
+    "34147876972:2",
+    "34147876945:2",
+    "34147876948:2",
+    "34147876972:3",
+    "34147876945:3",
+    "34147876948:3"
+  ],
+  "notes": "Explicit attempts, not success-filtered samples. Elapsed ends at last job completion; initial delay is not pure runner queue time. Execution span includes inter-job gaps. Missing cache-hit markers do not prove a cold cache. API timestamps have second precision.",
+  "runs": [
+    {
+      "id": 34072010469,
+      "run_attempt": 2,
+      "head_sha": "198ad187990b571ed0b4d96c9330b5614533be4c",
+      "event": "pull_request",
+      "path": ".github/workflows/docker-publish.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T01:10:11Z",
+      "created_at": "2026-09-07T01:10:12Z",
+      "updated_at": "2026-09-07T01:18:30Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34072010469",
+      "jobs": [
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:16Z",
+          "completed_at": "2026-09-07T01:11:27Z",
+          "seconds": 71.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 64.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:16Z",
+          "completed_at": "2026-09-07T01:18:29Z",
+          "seconds": 493.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 463.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 9.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 5.0,
+      "execution_span_seconds": 493.0,
+      "attempt_elapsed_seconds": 498.0,
+      "last_job_completed_at": "2026-09-07T01:18:29Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34072010505,
+      "run_attempt": 2,
+      "head_sha": "198ad187990b571ed0b4d96c9330b5614533be4c",
+      "event": "pull_request",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T01:10:10Z",
+      "created_at": "2026-09-07T01:10:11Z",
+      "updated_at": "2026-09-07T01:14:07Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34072010505",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:15Z",
+          "completed_at": "2026-09-07T01:11:45Z",
+          "seconds": 90.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 11.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 24.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 21.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 18.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:14Z",
+          "completed_at": "2026-09-07T01:10:46Z",
+          "seconds": 32.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 15.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:15Z",
+          "completed_at": "2026-09-07T01:14:06Z",
+          "seconds": 231.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 213.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T01:10:14Z",
+          "completed_at": "2026-09-07T01:10:50Z",
+          "seconds": 36.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 24.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 232.0,
+      "attempt_elapsed_seconds": 236.0,
+      "last_job_completed_at": "2026-09-07T01:14:06Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34066007369,
+      "run_attempt": 1,
+      "head_sha": "9926e4c3a0fff180cb1370152cd711afb4a435cb",
+      "event": "pull_request",
+      "path": ".github/workflows/docker-publish.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-06T23:07:58Z",
+      "created_at": "2026-09-06T23:07:58Z",
+      "updated_at": "2026-09-06T23:13:10Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34066007369",
+      "jobs": [
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:01Z",
+          "completed_at": "2026-09-06T23:08:55Z",
+          "seconds": 54.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 49.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:01Z",
+          "completed_at": "2026-09-06T23:13:09Z",
+          "seconds": 308.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 289.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 308.0,
+      "attempt_elapsed_seconds": 311.0,
+      "last_job_completed_at": "2026-09-06T23:13:09Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 16,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34066007351,
+      "run_attempt": 1,
+      "head_sha": "9926e4c3a0fff180cb1370152cd711afb4a435cb",
+      "event": "pull_request",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-06T23:07:58Z",
+      "created_at": "2026-09-06T23:07:58Z",
+      "updated_at": "2026-09-06T23:11:10Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34066007351",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:01Z",
+          "completed_at": "2026-09-06T23:09:23Z",
+          "seconds": 82.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 10.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 21.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 21.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 17.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:02Z",
+          "completed_at": "2026-09-06T23:08:46Z",
+          "seconds": 44.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 28.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:01Z",
+          "completed_at": "2026-09-06T23:11:09Z",
+          "seconds": 188.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 172.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-06T23:08:01Z",
+          "completed_at": "2026-09-06T23:08:31Z",
+          "seconds": 30.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 17.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 188.0,
+      "attempt_elapsed_seconds": 191.0,
+      "last_job_completed_at": "2026-09-06T23:11:09Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34145664547,
+      "run_attempt": 1,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "push",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T16:59:03Z",
+      "created_at": "2026-09-07T16:59:03Z",
+      "updated_at": "2026-09-07T17:09:16Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34145664547",
+      "jobs": [
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T16:59:07Z",
+          "completed_at": "2026-09-07T17:01:19Z",
+          "seconds": 132.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 111.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T16:59:07Z",
+          "completed_at": "2026-09-07T16:59:33Z",
+          "seconds": 26.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T16:59:07Z",
+          "completed_at": "2026-09-07T16:59:32Z",
+          "seconds": 25.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T16:59:06Z",
+          "completed_at": "2026-09-07T17:09:16Z",
+          "seconds": 610.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 559.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 15.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 610.0,
+      "attempt_elapsed_seconds": 613.0,
+      "last_job_completed_at": "2026-09-07T17:09:16Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 4,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34146403246,
+      "run_attempt": 1,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "workflow_run",
+      "path": ".github/workflows/deploy.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:09:18Z",
+      "created_at": "2026-09-07T17:09:19Z",
+      "updated_at": "2026-09-07T17:14:23Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34146403246",
+      "jobs": [
+        {
+          "name": "deploy",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:09:40Z",
+          "completed_at": "2026-09-07T17:14:22Z",
+          "seconds": 282.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Extract metadata (tags, labels)",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 261.0
+            },
+            {
+              "name": "Post deploy-ready status to release-please PR",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 22.0,
+      "execution_span_seconds": 282.0,
+      "attempt_elapsed_seconds": 304.0,
+      "last_job_completed_at": "2026-09-07T17:14:22Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 4,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34145664547,
+      "run_attempt": 2,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "push",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:28:09Z",
+      "created_at": "2026-09-07T17:28:11Z",
+      "updated_at": "2026-09-07T17:30:21Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34145664547",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:28:15Z",
+          "completed_at": "2026-09-07T17:29:39Z",
+          "seconds": 84.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 14.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 20.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 17.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:28:15Z",
+          "completed_at": "2026-09-07T17:28:39Z",
+          "seconds": 24.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:28:16Z",
+          "completed_at": "2026-09-07T17:28:41Z",
+          "seconds": 25.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:28:15Z",
+          "completed_at": "2026-09-07T17:30:20Z",
+          "seconds": 125.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 108.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 6.0,
+      "execution_span_seconds": 125.0,
+      "attempt_elapsed_seconds": 131.0,
+      "last_job_completed_at": "2026-09-07T17:30:20Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147881541,
+      "run_attempt": 1,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "workflow_run",
+      "path": ".github/workflows/deploy.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:30:23Z",
+      "created_at": "2026-09-07T17:30:23Z",
+      "updated_at": "2026-09-07T17:31:04Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147881541",
+      "jobs": [
+        {
+          "name": "deploy",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:27Z",
+          "completed_at": "2026-09-07T17:31:03Z",
+          "seconds": 36.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Extract metadata (tags, labels)",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 9.0
+            },
+            {
+              "name": "Post deploy-ready status to release-please PR",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 36.0,
+      "attempt_elapsed_seconds": 40.0,
+      "last_job_completed_at": "2026-09-07T17:31:03Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 46,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34145664547,
+      "run_attempt": 3,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "push",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:31:57Z",
+      "created_at": "2026-09-07T17:31:58Z",
+      "updated_at": "2026-09-07T17:34:09Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34145664547",
+      "jobs": [
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:32:01Z",
+          "completed_at": "2026-09-07T17:34:08Z",
+          "seconds": 127.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 107.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:32:02Z",
+          "completed_at": "2026-09-07T17:33:19Z",
+          "seconds": 77.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 11.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 19.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 16.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:32:01Z",
+          "completed_at": "2026-09-07T17:32:24Z",
+          "seconds": 23.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 1.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:32:01Z",
+          "completed_at": "2026-09-07T17:32:19Z",
+          "seconds": 18.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 127.0,
+      "attempt_elapsed_seconds": 131.0,
+      "last_job_completed_at": "2026-09-07T17:34:08Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34148146048,
+      "run_attempt": 1,
+      "head_sha": "366b5edc6ddbb0d0216a41633416e45a4a2a7a71",
+      "event": "workflow_run",
+      "path": ".github/workflows/deploy.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:34:11Z",
+      "created_at": "2026-09-07T17:34:11Z",
+      "updated_at": "2026-09-07T17:34:36Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34148146048",
+      "jobs": [
+        {
+          "name": "deploy",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:34:14Z",
+          "completed_at": "2026-09-07T17:34:35Z",
+          "seconds": 21.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Extract metadata (tags, labels)",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Post deploy-ready status to release-please PR",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Build and push Docker image",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Log in to Container Registry",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 21.0,
+      "attempt_elapsed_seconds": 24.0,
+      "last_job_completed_at": "2026-09-07T17:34:35Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 46,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34147876972,
+      "run_attempt": 1,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:30:20Z",
+      "created_at": "2026-09-07T17:30:20Z",
+      "updated_at": "2026-09-07T17:32:12Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876972",
+      "jobs": [
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:23Z",
+          "completed_at": "2026-09-07T17:32:10Z",
+          "seconds": 107.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 87.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:23Z",
+          "completed_at": "2026-09-07T17:31:45Z",
+          "seconds": 82.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 10.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 9.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 23.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 18.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:25Z",
+          "completed_at": "2026-09-07T17:30:49Z",
+          "seconds": 24.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:23Z",
+          "completed_at": "2026-09-07T17:30:46Z",
+          "seconds": 23.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 107.0,
+      "attempt_elapsed_seconds": 110.0,
+      "last_job_completed_at": "2026-09-07T17:32:10Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147876945,
+      "run_attempt": 1,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/docker-publish.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:30:20Z",
+      "created_at": "2026-09-07T17:30:20Z",
+      "updated_at": "2026-09-07T17:32:09Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876945",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:25Z",
+          "completed_at": "2026-09-07T17:31:27Z",
+          "seconds": 62.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 44.0
+            },
+            {
+              "name": "Upload the built image",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:31:30Z",
+          "completed_at": "2026-09-07T17:32:08Z",
+          "seconds": 38.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Download the built image",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Load the built image",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 26.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 5.0,
+      "execution_span_seconds": 103.0,
+      "attempt_elapsed_seconds": 108.0,
+      "last_job_completed_at": "2026-09-07T17:32:08Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 20,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34147876948,
+      "run_attempt": 1,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/deploy-gate.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:30:20Z",
+      "created_at": "2026-09-07T17:30:20Z",
+      "updated_at": "2026-09-07T17:30:29Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876948",
+      "jobs": [
+        {
+          "name": "auto-approve",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:30:23Z",
+          "completed_at": "2026-09-07T17:30:29Z",
+          "seconds": 6.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Auto-approve deploy gate for non-release PRs",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 3.0,
+      "execution_span_seconds": 6.0,
+      "attempt_elapsed_seconds": 9.0,
+      "last_job_completed_at": "2026-09-07T17:30:29Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147876972,
+      "run_attempt": 2,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:32:57Z",
+      "created_at": "2026-09-07T17:32:58Z",
+      "updated_at": "2026-09-07T17:34:45Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876972",
+      "jobs": [
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:02Z",
+          "completed_at": "2026-09-07T17:33:27Z",
+          "seconds": 25.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:02Z",
+          "completed_at": "2026-09-07T17:34:13Z",
+          "seconds": 71.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 9.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 19.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 16.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:01Z",
+          "completed_at": "2026-09-07T17:33:20Z",
+          "seconds": 19.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:02Z",
+          "completed_at": "2026-09-07T17:34:44Z",
+          "seconds": 102.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 84.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 103.0,
+      "attempt_elapsed_seconds": 107.0,
+      "last_job_completed_at": "2026-09-07T17:34:44Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147876945,
+      "run_attempt": 2,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/docker-publish.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:32:58Z",
+      "created_at": "2026-09-07T17:32:59Z",
+      "updated_at": "2026-09-07T17:34:15Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876945",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:04Z",
+          "completed_at": "2026-09-07T17:33:29Z",
+          "seconds": 25.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Upload the built image",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:34Z",
+          "completed_at": "2026-09-07T17:34:14Z",
+          "seconds": 40.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Download the built image",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Load the built image",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 26.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 6.0,
+      "execution_span_seconds": 70.0,
+      "attempt_elapsed_seconds": 76.0,
+      "last_job_completed_at": "2026-09-07T17:34:14Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 23,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34147876948,
+      "run_attempt": 2,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/deploy-gate.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:32:59Z",
+      "created_at": "2026-09-07T17:33:00Z",
+      "updated_at": "2026-09-07T17:33:08Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876948",
+      "jobs": [
+        {
+          "name": "auto-approve",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:33:04Z",
+          "completed_at": "2026-09-07T17:33:07Z",
+          "seconds": 3.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Auto-approve deploy gate for non-release PRs",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 5.0,
+      "execution_span_seconds": 3.0,
+      "attempt_elapsed_seconds": 8.0,
+      "last_job_completed_at": "2026-09-07T17:33:07Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147876972,
+      "run_attempt": 3,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/ci.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:35:19Z",
+      "created_at": "2026-09-07T17:35:20Z",
+      "updated_at": "2026-09-07T17:37:37Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876972",
+      "jobs": [
+        {
+          "name": "lint",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:23Z",
+          "completed_at": "2026-09-07T17:35:44Z",
+          "seconds": 21.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Check formatting",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "typecheck",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:23Z",
+          "completed_at": "2026-09-07T17:35:45Z",
+          "seconds": 22.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Typecheck every workspace package",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:23Z",
+          "completed_at": "2026-09-07T17:36:36Z",
+          "seconds": 73.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "seconds": 10.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Build",
+              "conclusion": "success",
+              "seconds": 7.0
+            },
+            {
+              "name": "Verify production server and assets",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Install Chromium",
+              "conclusion": "success",
+              "seconds": 19.0
+            },
+            {
+              "name": "Verify production browser flows",
+              "conclusion": "success",
+              "seconds": 16.0
+            },
+            {
+              "name": "Upload browser failures",
+              "conclusion": "skipped",
+              "seconds": 0.0
+            },
+            {
+              "name": "Build Storybook",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:24Z",
+          "completed_at": "2026-09-07T17:37:36Z",
+          "seconds": 132.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Run tests",
+              "conclusion": "success",
+              "seconds": 112.0
+            },
+            {
+              "name": "Upload coverage report",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Install pnpm",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 133.0,
+      "attempt_elapsed_seconds": 137.0,
+      "last_job_completed_at": "2026-09-07T17:37:36Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 4,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    },
+    {
+      "id": 34147876945,
+      "run_attempt": 3,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/docker-publish.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:35:20Z",
+      "created_at": "2026-09-07T17:35:21Z",
+      "updated_at": "2026-09-07T17:36:34Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876945",
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:24Z",
+          "completed_at": "2026-09-07T17:35:47Z",
+          "seconds": 23.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 8.0
+            },
+            {
+              "name": "Upload the built image",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:51Z",
+          "completed_at": "2026-09-07T17:36:33Z",
+          "seconds": 42.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Download the built image",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Load the built image",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 26.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 69.0,
+      "attempt_elapsed_seconds": 73.0,
+      "last_job_completed_at": "2026-09-07T17:36:33Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 23,
+        "buildkit_import_mentions": 1
+      }
+    },
+    {
+      "id": 34147876948,
+      "run_attempt": 3,
+      "head_sha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "event": "pull_request",
+      "path": ".github/workflows/deploy-gate.yml",
+      "conclusion": "success",
+      "run_started_at": "2026-09-07T17:35:21Z",
+      "created_at": "2026-09-07T17:35:22Z",
+      "updated_at": "2026-09-07T17:35:29Z",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876948",
+      "jobs": [
+        {
+          "name": "auto-approve",
+          "conclusion": "success",
+          "started_at": "2026-09-07T17:35:25Z",
+          "completed_at": "2026-09-07T17:35:28Z",
+          "seconds": 3.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Auto-approve deploy gate for non-release PRs",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "initial_start_delay_seconds": 4.0,
+      "execution_span_seconds": 3.0,
+      "attempt_elapsed_seconds": 7.0,
+      "last_job_completed_at": "2026-09-07T17:35:28Z",
+      "runner_images": ["ubuntu-24.04"],
+      "cache_evidence": {
+        "log_available": true,
+        "pnpm_restore_hits": 0,
+        "pnpm_restore_misses": 0,
+        "buildkit_cached_steps": 0,
+        "buildkit_import_mentions": 0
+      }
+    }
+  ]
+}
