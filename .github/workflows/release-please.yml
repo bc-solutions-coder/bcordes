@@ -28,11 +28,17 @@ jobs:
     if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       packages: write
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
     steps:
+      - name: Checkout the released revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
       - name: Install crane
         uses: imjasonh/setup-crane@v0.4
 
@@ -52,12 +58,19 @@ jobs:
           echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
           echo "minor=$MAJOR.$MINOR" >> "$GITHUB_OUTPUT"
 
-      - name: Retag nightly as latest + semver
+      - name: Promote the released revision by digest
         run: |
-          SRC="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly"
+          SOURCE_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-$(git rev-parse HEAD)"
+          # CI publishes this exact revision. A mutable nightly is never a fallback.
+          for attempt in $(seq 1 30); do
+            DIGEST="$(crane digest "$SOURCE_IMAGE" 2>/dev/null)" && break
+            sleep 30
+          done
+          test -n "$DIGEST"
+          SRC="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@$DIGEST"
           DST="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
           crane copy "$SRC" "$DST:latest"
           crane copy "$SRC" "$DST:${{ steps.semver.outputs.version }}"
           crane copy "$SRC" "$DST:${{ steps.semver.outputs.minor }}"
           crane copy "$SRC" "$DST:${{ steps.semver.outputs.major }}"
-          echo "Retagged nightly → latest, ${{ steps.semver.outputs.version }}, ${{ steps.semver.outputs.minor }}, ${{ steps.semver.outputs.major }}"
+          echo "Promoted $SRC to latest, ${{ steps.semver.outputs.version }}, ${{ steps.semver.outputs.minor }}, ${{ steps.semver.outputs.major }}"

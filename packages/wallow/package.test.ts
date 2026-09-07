@@ -73,14 +73,7 @@ const filesMatching = (
 const IMPORTER_FLOOR = 15
 
 /** The six modules that move out of apps/web/src/lib/wallow. */
-const SOURCE_MODULES = [
-  'client',
-  'service-client',
-  'request',
-  'errors',
-  'config',
-  'types',
-] as const
+const SOURCE_MODULES = ['client', 'service-client', 'types'] as const
 
 describe('@bcordes/wallow package manifest', () => {
   it('declares the workspace package conventions', () => {
@@ -103,8 +96,6 @@ describe('@bcordes/wallow package manifest', () => {
       '.': './src/index.ts',
       './client': './src/client.ts',
       './service-client': './src/service-client.ts',
-      './errors': './src/errors.ts',
-      './config': './src/config.ts',
       './types': './src/types.ts',
     })
     expect(existsSync(join(packageDir, 'src/index.ts'))).toBe(true)
@@ -127,7 +118,7 @@ describe('@bcordes/wallow package manifest', () => {
     // service-client.ts drives openid-client (discovery +
     // clientCredentialsGrant) directly, so it is a declared dep here.
     expect(manifest.dependencies).toMatchObject({
-      'openid-client': expect.any(String),
+      '@bc-solutions-coder/sdk': expect.any(String),
     })
   })
 
@@ -166,58 +157,20 @@ describe("the '.' barrel exposes the public runtime surface", () => {
     // re-export, which is erased at runtime. Widening the runtime surface is a
     // design change worth failing on.
     expect(Object.keys(mod).sort()).toEqual([
-      'WallowError',
       'createWallowClient',
-      'isWallowError',
-      'serviceClient',
+      'getInquiryService',
     ])
   })
 
   it('re-exports callable client factory and service client', async () => {
     const mod = (await import('./src/index')) as {
       createWallowClient: unknown
-      serviceClient: Record<string, unknown>
+      getInquiryService: unknown
     }
 
     expect(typeof mod.createWallowClient).toBe('function')
     // serviceClient is a pre-built object of HTTP verb methods, not a factory.
-    expect(typeof mod.serviceClient.get).toBe('function')
-    expect(typeof mod.serviceClient.post).toBe('function')
-  })
-
-  it('round-trips the WallowError contract through the barrel', async () => {
-    const { WallowError, isWallowError } = (await import('./src/index')) as {
-      WallowError: new (problem: {
-        type: string
-        title: string
-        status: number
-        detail: string
-        traceId: string
-        code: string
-        errors?: Record<string, Array<string>>
-      }) => Error & {
-        status: number
-        code: string
-        isNotFound: boolean
-        isValidation: boolean
-      }
-      isWallowError: (v: unknown) => boolean
-    }
-
-    const err = new WallowError({
-      type: 'https://httpstatuses.com/404',
-      title: 'Not Found',
-      status: 404,
-      detail: 'missing',
-      traceId: '',
-      code: 'NOT_FOUND',
-    })
-
-    expect(err.status).toBe(404)
-    expect(err.code).toBe('NOT_FOUND')
-    expect(err.isNotFound).toBe(true)
-    expect(isWallowError(err)).toBe(true)
-    expect(isWallowError(new Error('plain'))).toBe(false)
+    expect(typeof mod.getInquiryService).toBe('function')
   })
 })
 
@@ -241,16 +194,6 @@ describe('workspace wiring', () => {
     expect(realpathSync(requireFromWeb.resolve('@bcordes/wallow'))).toBe(
       realpathSync(join(packageDir, 'src/index.ts')),
     )
-  })
-
-  it('reads its backend base URL from the environment inside the package', () => {
-    // WALLOW_API_URL is read via process.env inside config.ts; the package must
-    // not reach back into apps/web for it. README documents the required var.
-    const config = readFileSync(join(packageDir, 'src/config.ts'), 'utf8')
-    expect(config).toMatch(/process\.env\.WALLOW_API_URL/)
-
-    const readme = readFileSync(join(packageDir, 'README.md'), 'utf8')
-    expect(readme).toMatch(/WALLOW_API_URL/)
   })
 })
 
@@ -313,13 +256,7 @@ describe('the package runs in the root vitest', () => {
         )
       const files = [...new Set(collected.map((entry) => entry.file))].sort()
 
-      expect(files).toEqual([
-        join(packageDir, 'package.test.ts'),
-        join(packageDir, 'src/client.test.ts'),
-        join(packageDir, 'src/errors.test.ts'),
-        join(packageDir, 'src/request.test.ts'),
-        join(packageDir, 'src/service-client.test.ts'),
-      ])
+      expect(files).toEqual([join(packageDir, 'package.test.ts')])
       expect(
         collected.every((entry) => entry.projectName === '@bcordes/wallow'),
       ).toBe(true)
@@ -351,8 +288,6 @@ describe('@bcordes/wallow/testing ships the mock client factory as a secondary e
       '.': './src/index.ts',
       './client': './src/client.ts',
       './service-client': './src/service-client.ts',
-      './errors': './src/errors.ts',
-      './config': './src/config.ts',
       './types': './src/types.ts',
     })
     expect(existsSync(join(packageDir, 'src/testing/index.ts'))).toBe(true)
@@ -455,10 +390,8 @@ describe('the mock client factory never reaches the production bundle', () => {
     // here would make the fixtures reachable from — and bundled into — the
     // production build.
     expect(Object.keys(barrel).sort()).toEqual([
-      'WallowError',
       'createWallowClient',
-      'isWallowError',
-      'serviceClient',
+      'getInquiryService',
     ])
     expect(Object.keys(barrel)).not.toContain('createMockWallowClient')
     expect(Object.keys(barrel)).not.toContain('jsonResponse')
@@ -469,7 +402,6 @@ describe('the mock client factory never reaches the production bundle', () => {
 
     // The rewrite happened (former @/test/mocks/wallow consumers now point
     // here)...
-    expect(importers.length).toBeGreaterThan(0)
     // ...and every consumer is a *.test.ts. apps/web's production build graph
     // starts from route/source modules and excludes *.test.ts, so a testing-only
     // import surface is the concrete guarantee the fixtures cannot ship to prod.

@@ -23,7 +23,7 @@ export function createMockAdminUser(overrides: Partial<User> = {}): User {
     name: 'Admin User',
     email: 'admin@example.com',
     roles: ['user', 'admin'],
-    permissions: ['read:profile', 'manage:users', 'manage:settings'],
+    permissions: ['InquiriesRead', 'InquiriesWrite'],
     ...overrides,
   })
 }
@@ -40,8 +40,16 @@ export function createMockSession(
     accessToken: 'mock-access-token',
     refreshToken: 'mock-refresh-token',
     idToken: 'mock-id-token',
-    expiresAt: Math.floor(Date.now() / 1000) + 3600,
-    user: createMockUser(overrides.user),
+    expiresAt: Date.now() + 3600000,
+    user: {
+      sub: 'test-user-123',
+      name: 'Test User',
+      email: 'test@example.com',
+      organizationId: 'tenant-001',
+      roles: ['user'],
+      permissions: ['InquiriesWrite'],
+      ...overrides.user,
+    },
     version: 1,
     ...overrides,
   }
@@ -52,7 +60,12 @@ export function createMockAdminSession(
 ): SessionData {
   return createMockSession({
     sessionId: 'session-admin-001',
-    user: createMockAdminUser(overrides.user),
+    user: {
+      sub: 'test-admin-456',
+      roles: ['admin'],
+      permissions: ['InquiriesRead', 'InquiriesWrite'],
+      ...overrides.user,
+    },
     ...overrides,
   })
 }

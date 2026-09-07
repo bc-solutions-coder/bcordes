@@ -106,7 +106,6 @@ function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
     timeline: '1-3 months',
     message: 'I need a website built for my business.',
     status: 'new',
-    submitterIpAddress: '127.0.0.1',
     submitterId: 'user-1',
     createdAt: '2026-01-15T10:30:00Z',
     updatedAt: '2026-01-15T10:30:00Z',
@@ -139,7 +138,10 @@ describe('inquiries.$id loader', () => {
   it('calls fetchInquiry, fetchInquiryComments, and fetchCurrentUserRoles in parallel', async () => {
     mockFetchInquiry.mockResolvedValue(makeInquiry())
     mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user'],
+      permissions: ['InquiriesWrite'],
+    })
 
     await routeConfig.loader({ params: { id: TEST_ID } })
 
@@ -153,7 +155,10 @@ describe('inquiries.$id loader', () => {
   it('returns isAdmin=true when user has admin role', async () => {
     mockFetchInquiry.mockResolvedValue(makeInquiry())
     mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user', 'admin'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user', 'admin'],
+      permissions: ['InquiriesRead'],
+    })
 
     const result = await routeConfig.loader({ params: { id: TEST_ID } })
 
@@ -163,7 +168,10 @@ describe('inquiries.$id loader', () => {
   it('returns isAdmin=false when user lacks admin role', async () => {
     mockFetchInquiry.mockResolvedValue(makeInquiry())
     mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user'],
+      permissions: ['InquiriesWrite'],
+    })
 
     const result = await routeConfig.loader({ params: { id: TEST_ID } })
 
@@ -175,7 +183,7 @@ describe('inquiries.$id loader', () => {
     const comments = [makeComment(), makeComment({ id: 'comment-2' })]
     mockFetchInquiry.mockResolvedValue(inquiry)
     mockFetchInquiryComments.mockResolvedValue(comments)
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [] })
+    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [], permissions: [] })
 
     const result = await routeConfig.loader({ params: { id: TEST_ID } })
 

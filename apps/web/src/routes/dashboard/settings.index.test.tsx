@@ -66,10 +66,10 @@ const SettingsPage = routeConfig.component
 // ---------------------------------------------------------------------------
 
 const defaultSettings: Array<NotificationSettings> = [
-  { channelType: 'email', isEnabled: true },
-  { channelType: 'sms', isEnabled: false },
-  { channelType: 'push', isEnabled: false },
-  { channelType: 'in_app', isEnabled: true },
+  { channelType: 0, isEnabled: true },
+  { channelType: 1, isEnabled: false },
+  { channelType: 3, isEnabled: false },
+  { channelType: 2, isEnabled: true },
 ]
 
 // ---------------------------------------------------------------------------
@@ -213,7 +213,7 @@ describe('settings.index', () => {
       // Wait for the async handleToggle to resolve
       await vi.waitFor(() => {
         expect(mockUpdateChannelSetting).toHaveBeenCalledWith({
-          data: { channelType: 'sms', isEnabled: true },
+          data: { channelType: 1, isEnabled: true },
         })
       })
     })
@@ -335,7 +335,7 @@ describe('settings.index', () => {
 
       await vi.waitFor(() => {
         expect(mockUpdateChannelSetting).toHaveBeenCalledWith({
-          data: { channelType: 'email', isEnabled: true },
+          data: { channelType: 0, isEnabled: true },
         })
       })
     })
@@ -354,7 +354,9 @@ describe('settings.index', () => {
       fireEvent.click(smsSwitch)
 
       await vi.waitFor(() => {
-        expect(mockToast.error).toHaveBeenCalledWith('Network error')
+        expect(mockToast.error).toHaveBeenCalledWith(
+          'Unable to reach the server. Check your connection and try again.',
+        )
       })
 
       // After revert, the SMS switch should be back to unchecked
@@ -374,7 +376,9 @@ describe('settings.index', () => {
       fireEvent.click(smsSwitch)
 
       await vi.waitFor(() => {
-        expect(mockToast.error).toHaveBeenCalledWith('Failed to update setting')
+        expect(mockToast.error).toHaveBeenCalledWith(
+          'Something went wrong on our side. Please try again later.',
+        )
       })
     })
   })

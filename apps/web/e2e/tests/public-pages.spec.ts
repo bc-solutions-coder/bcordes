@@ -212,6 +212,6 @@ test('unauthenticated dashboard access redirects to login', async ({
   })
   expect(response.status()).toBe(307)
   expect(response.headers().location).toBe(
-    '/auth/login?returnTo=%2Fdashboard%2Finquiries',
+    '/bff/login?returnTo=%2Fdashboard%2Finquiries',
   )
 })

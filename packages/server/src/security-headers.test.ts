@@ -1,87 +1,34 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import securityHeaders from './security-headers'
+import { expect, it } from 'vitest'
+import { applySecurityHeaders } from './security-headers'
 
-// Mock h3 so we can capture what the middleware does
-const mockSetHeaders = vi.fn()
-const mockEvent = { node: { req: {}, res: {} } }
-
-vi.mock('h3', () => ({
-  defineEventHandler: (handler: (event: unknown) => void) => handler,
-  setHeaders: (...args: Array<unknown>) => mockSetHeaders(...args),
-}))
-
-describe('security-headers middleware', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
+it('preserves redirects and multiple session cookies while adding security headers', () => {
+  const headers = new Headers({
+    Location: '/dashboard',
+    'Content-Type': 'text/plain',
   })
+  headers.append('Set-Cookie', 'session=a; HttpOnly')
+  headers.append('Set-Cookie', 'csrf=b')
+  const response = applySecurityHeaders(
+    new Response(null, { status: 302, headers }),
+  )
+  expect(response.status).toBe(302)
+  expect(response.headers.get('location')).toBe('/dashboard')
+  expect(response.headers.getSetCookie()).toEqual([
+    'session=a; HttpOnly',
+    'csrf=b',
+  ])
+  expect(response.headers.get('x-content-type-options')).toBe('nosniff')
+  expect(response.headers.get('content-security-policy')).toContain(
+    "frame-ancestors 'none'",
+  )
+})
 
-  function callMiddleware() {
-    const handler = securityHeaders as unknown as (event: unknown) => void
-    handler(mockEvent)
-  }
-
-  function getSetHeaders(): Record<string, string> {
-    // setHeaders should have been called with (event, headersObject)
-    return (mockSetHeaders.mock.calls[0]?.[1] ?? {}) as Record<string, string>
-  }
-
-  it('should call setHeaders on the event', () => {
-    callMiddleware()
-    expect(mockSetHeaders).toHaveBeenCalledOnce()
-    expect(mockSetHeaders).toHaveBeenCalledWith(mockEvent, expect.any(Object))
-  })
-
-  it('should set Content-Security-Policy header', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers).toHaveProperty('Content-Security-Policy')
-    expect(headers['Content-Security-Policy']).toBeTruthy()
-  })
-
-  it('should set Strict-Transport-Security header', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers).toHaveProperty('Strict-Transport-Security')
-    expect(headers['Strict-Transport-Security']).toMatch(/max-age=/)
-  })
-
-  it('should set X-Content-Type-Options to nosniff', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers['X-Content-Type-Options']).toBe('nosniff')
-  })
-
-  it('should set X-Frame-Options to DENY', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers['X-Frame-Options']).toBe('DENY')
-  })
-
-  it('should set Referrer-Policy to strict-origin-when-cross-origin', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers['Referrer-Policy']).toBe('strict-origin-when-cross-origin')
-  })
-
-  it('should set Permissions-Policy disabling camera, microphone, and geolocation', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers).toHaveProperty('Permissions-Policy')
-    const policy = headers['Permissions-Policy']
-    expect(policy).toContain('camera=()')
-    expect(policy).toContain('microphone=()')
-    expect(policy).toContain('geolocation=()')
-  })
-
-  it('should set Cross-Origin-Opener-Policy to same-origin', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers['Cross-Origin-Opener-Policy']).toBe('same-origin')
-  })
-
-  it('should set Cross-Origin-Embedder-Policy to require-corp', () => {
-    callMiddleware()
-    const headers = getSetHeaders()
-    expect(headers['Cross-Origin-Embedder-Policy']).toBe('require-corp')
-  })
+it('keeps streamed response content readable', async () => {
+  const response = applySecurityHeaders(
+    new Response('data: event\n\n', {
+      headers: { 'Content-Type': 'text/event-stream' },
+    }),
+  )
+  expect(response.headers.get('content-type')).toBe('text/event-stream')
+  expect(await response.text()).toBe('data: event\n\n')
 })

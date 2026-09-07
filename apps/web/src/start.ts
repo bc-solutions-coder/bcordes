@@ -1,5 +1,7 @@
 import { createMiddleware, createStart } from '@tanstack/react-start'
 import logger from '@bcordes/logger'
+import { applySecurityHeaders } from '@bcordes/server/security-headers'
+import { getBff } from '@bcordes/auth/bff'
 
 const log = logger.child({ module: 'http' })
 
@@ -55,6 +57,36 @@ const requestLogger = createMiddleware().server(async ({ request, next }) => {
   }
 })
 
+const securityHeaders = createMiddleware().server(async ({ next }) => {
+  const result = await next()
+  return { ...result, response: applySecurityHeaders(result.response) }
+})
+
+const wallow = createMiddleware().server(async ({ request, next }) => {
+  const path = new URL(request.url).pathname
+  const bff = getBff()
+  if (path === '/bff' || path.startsWith('/bff/')) return bff.handleBff(request)
+  if (path === '/api/events' && request.method === 'GET') {
+    const params = new URL(request.url).searchParams
+    if (
+      params.size !== 1 ||
+      params.get('subscribe') !== 'Notifications,Inquiries'
+    )
+      return new Response('Not found', { status: 404 })
+    return bff.handleApi(request)
+  }
+  if (path.startsWith('/api/') && path !== '/api/health')
+    return new Response('Not found', { status: 404 })
+  if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+    if (
+      request.headers.get('origin') !== new URL(bff.config.redirectUri).origin
+    ) {
+      return new Response('Forbidden', { status: 403 })
+    }
+  }
+  return next()
+})
+
 export const startInstance = createStart(() => ({
-  requestMiddleware: [requestLogger],
+  requestMiddleware: [requestLogger, securityHeaders, wallow],
 }))

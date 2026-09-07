@@ -15,7 +15,7 @@ import { describe, expect, it } from 'vitest'
 //
 // The package mirrors the old file layout as subpath exports (./csrf,
 // ./csrf-validation, ./security-headers) so the move is mechanical. The two
-// middleware symbols (validateCsrfToken, securityHeaders) form the '.' barrel;
+// middleware symbols (validateCsrfToken, applySecurityHeaders) form the '.' barrel;
 // the createServerFn getCsrfToken deliberately does NOT — it stays on its own
 // ./csrf subpath so the createServerFn transform surface stays isolated (see
 // the "risk seam" block).
@@ -208,29 +208,29 @@ describe('the middleware really moved out of apps/web', () => {
 })
 
 describe("the '.' barrel exposes the two middleware symbols", () => {
-  it('exports exactly securityHeaders and validateCsrfToken', async () => {
+  it('exports exactly applySecurityHeaders and validateCsrfToken', async () => {
     const mod = await import('./src/index')
 
     // Exact, not a superset. The server-fn getCsrfToken is deliberately absent
     // (it lives on ./csrf only), so the createServerFn transform surface stays
     // isolated to one subpath and never enters the barrel's eval graph.
     expect(Object.keys(mod).sort()).toEqual([
-      'securityHeaders',
+      'applySecurityHeaders',
       'validateCsrfToken',
     ])
     expect(Object.keys(mod)).not.toContain('getCsrfToken')
   })
 
   it('hands back h3 event handlers', async () => {
-    const { validateCsrfToken, securityHeaders } =
+    const { validateCsrfToken, applySecurityHeaders } =
       (await import('./src/index')) as {
         validateCsrfToken: () => unknown
-        securityHeaders: unknown
+        applySecurityHeaders: unknown
       }
 
     expect(typeof validateCsrfToken).toBe('function')
     expect(typeof validateCsrfToken()).toBe('function')
-    expect(typeof securityHeaders).toBe('function')
+    expect(typeof applySecurityHeaders).toBe('function')
   })
 })
 

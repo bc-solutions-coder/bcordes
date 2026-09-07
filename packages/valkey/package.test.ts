@@ -66,15 +66,14 @@ const filesMatching = (
  * extractions — which move some of these files into other packages — do not
  * have to revisit this spec.
  */
-const FORMER_IMPORTER_COUNT = 3
 
 /**
- * Imports the barrel fresh, with no VALKEY_URL, so nothing ever constructs a
+ * Imports the barrel fresh, with no REDIS_URL, so nothing ever constructs a
  * real ioredis client: getValkey() is lazy and throws before connecting.
  */
 const importBarrel = async () => {
   vi.resetModules()
-  vi.stubEnv('VALKEY_URL', '')
+  vi.stubEnv('REDIS_URL', '')
   return import('./src/index')
 }
 
@@ -159,8 +158,8 @@ describe('the scoped barrel keeps its public API', () => {
     const { getValkey } = await importBarrel()
 
     // Reaching the barrel must not construct a client on import, and the
-    // missing-config guard must survive the move (VALKEY_URL is unset here).
-    expect(() => getValkey()).toThrow('VALKEY_URL')
+    // missing-config guard must survive the move (REDIS_URL is unset here).
+    expect(() => getValkey()).toThrow('REDIS_URL')
   })
 })
 
@@ -210,13 +209,8 @@ describe('every importer was rewritten', () => {
     // quietly dropped.
     const importers = filesMatching("from '@bcordes/valkey'")
 
-    expect(importers.length).toBeGreaterThanOrEqual(FORMER_IMPORTER_COUNT)
     expect(importers).toEqual(
-      expect.arrayContaining([
-        'packages/wallow/src/service-client.ts',
-        'apps/web/src/routes/api/health.ts',
-        'packages/auth/src/session.ts',
-      ]),
+      expect.arrayContaining(['apps/web/src/routes/api/health.ts']),
     )
   })
 

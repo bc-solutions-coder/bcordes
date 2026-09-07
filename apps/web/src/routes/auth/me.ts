@@ -10,7 +10,10 @@ export const Route = createFileRoute('/auth/me')({
       GET: async () => {
         const user = await getAuthUser()
         log.debug({ authenticated: !!user }, 'auth check')
-        return Response.json(user ?? null, { status: 200 })
+        return Response.json(user ?? null, {
+          status: 200,
+          headers: { 'Cache-Control': 'no-store' },
+        })
       },
     },
   },

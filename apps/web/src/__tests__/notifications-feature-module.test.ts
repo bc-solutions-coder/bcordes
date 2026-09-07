@@ -28,7 +28,7 @@ import { describe, expect, it, vi } from 'vitest'
 //     references any of the old horizontal deep paths (static imports AND vi.mock
 //     module-path string keys); the public API actually resolves the value exports.
 //
-// The SSE route apps/web/src/routes/api/notifications/stream.ts does NOT move and
+// The SSE route apps/web/src/routes/api/events?subscribe=Notifications,Inquiries.ts does NOT move and
 // needs no repoint — it imports only @tanstack/react-router, @bcordes/logger,
 // @bcordes/auth, and @bcordes/wallow, never any of the moving hook/component/lib/
 // server-fn paths (scout-confirmed via grep). It is untouched by this task.

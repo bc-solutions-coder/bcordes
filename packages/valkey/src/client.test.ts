@@ -19,21 +19,21 @@ describe('valkey client', () => {
 
   describe('getValkey', () => {
     it('returns the same instance when called twice (singleton)', async () => {
-      vi.stubEnv('VALKEY_URL', 'redis://localhost:6379')
+      vi.stubEnv('REDIS_URL', 'redis://localhost:6379')
       const { getValkey } = await import('./client')
       const first = getValkey()
       const second = getValkey()
       expect(first).toBe(second)
     })
 
-    it('throws a descriptive error when VALKEY_URL is not set', async () => {
-      vi.stubEnv('VALKEY_URL', '')
+    it('throws a descriptive error when REDIS_URL is not set', async () => {
+      vi.stubEnv('REDIS_URL', '')
       const { getValkey } = await import('./client')
-      expect(() => getValkey()).toThrow('VALKEY_URL')
+      expect(() => getValkey()).toThrow('REDIS_URL')
     })
 
-    it('passes VALKEY_URL value to Redis constructor', async () => {
-      vi.stubEnv('VALKEY_URL', 'redis://my-valkey:6380')
+    it('passes REDIS_URL value to Redis constructor', async () => {
+      vi.stubEnv('REDIS_URL', 'redis://my-valkey:6380')
       const { getValkey } = await import('./client')
       getValkey()
       expect(MockRedis).toHaveBeenCalledWith(

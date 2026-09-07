@@ -1,3 +1,4 @@
+import { logout } from '@bc-solutions-coder/sdk'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
@@ -33,6 +34,10 @@ afterEach(() => {
   cleanup()
 })
 
+vi.mock('@bc-solutions-coder/sdk', () => ({
+  logout: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe('UserMenu', () => {
   it('returns null when loading', () => {
     mockUseUser.mockReturnValue({ user: null, isLoading: true })
@@ -45,7 +50,7 @@ describe('UserMenu', () => {
     renderWithProviders(<UserMenu />)
     const signIn = screen.getByText('Sign In')
     expect(signIn).toBeInTheDocument()
-    expect(signIn.closest('a')).toHaveAttribute('href', '/auth/login')
+    expect(signIn.closest('a')).toHaveAttribute('href', '/bff/login')
   })
 
   it('shows user name and initials when authenticated', () => {
@@ -94,7 +99,7 @@ describe('UserMenu', () => {
     expect(screen.getByText('User')).toBeInTheDocument()
   })
 
-  it('sign out creates and submits a POST form to /auth/logout', async () => {
+  it('sign out calls SDK logout', async () => {
     mockUseUser.mockReturnValue({
       user: { name: 'Bryan Cordes', email: 'bryan@example.com' },
       isLoading: false,
@@ -109,25 +114,8 @@ describe('UserMenu', () => {
     const signOut = await screen.findByText('Sign Out')
     expect(signOut).toBeInTheDocument()
 
-    // Mock form.submit since jsdom doesn't support navigation
-    const mockSubmit = vi.fn()
-    const originalCreateElement = document.createElement.bind(document)
-    vi.spyOn(document, 'createElement').mockImplementation((tag: string) => {
-      const el = originalCreateElement(tag)
-      if (el instanceof HTMLFormElement) {
-        el.submit = mockSubmit
-      }
-      return el
-    })
-
-    // Click the Sign Out link
     fireEvent.click(signOut)
-
-    // Verify a form was created with POST method and /auth/logout action
-    expect(mockSubmit).toHaveBeenCalledOnce()
-    const form = document.querySelector('form[action="/auth/logout"]')
-    expect(form).toBeTruthy()
-    expect(form?.getAttribute('method')).toBe('POST')
+    expect(logout).toHaveBeenCalledOnce()
 
     vi.restoreAllMocks()
   })

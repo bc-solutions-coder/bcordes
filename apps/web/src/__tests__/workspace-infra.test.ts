@@ -76,7 +76,7 @@ describe('Dockerfile (pnpm workspace aware)', () => {
     const copy = depsStage.match(
       /^COPY apps\/web\/package\.json \.\/apps\/web\/$/m,
     )
-    const install = depsStage.match(/^RUN .*pnpm install --frozen-lockfile$/m)
+    const install = depsStage.match(/^RUN .*pnpm install --frozen-lockfile.*$/m)
     expect(
       copy,
       'apps/web/package.json must be COPYed into the deps stage',

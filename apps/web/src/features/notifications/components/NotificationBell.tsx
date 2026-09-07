@@ -1,5 +1,6 @@
 'use client'
 
+import { resolveFailureMessage } from '@bc-solutions-coder/api-errors'
 import { useCallback, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
@@ -52,7 +53,7 @@ export function NotificationBell() {
       toast.success('All notifications marked as read')
     },
     onError: (error) => {
-      toast.error(`Failed to mark notifications as read: ${error.message}`)
+      toast.error(resolveFailureMessage(error))
     },
   })
 

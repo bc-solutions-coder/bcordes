@@ -1,81 +1,88 @@
-# Production stack — deploy via Portainer
-# Requires .env file with secrets (see .env.example)
-# Wallow API + Postgres are stood up separately
+# Dockhand: supply these variables through the stack's managed environment.
 services:
-  # ============================================
-  # FRONTEND
-  # ============================================
   web:
-    image: ghcr.io/bc-solutions-coder/bcordes:latest
-    container_name: bcordes
+    image: ${BCORDES_IMAGE:?Set BCORDES_IMAGE to the tested image digest or SHA tag}
     restart: unless-stopped
-    ports:
-      - '3000:3000'
     environment:
-      - HOST=0.0.0.0
-      - PORT=3000
-      - NODE_ENV=production
-      - WALLOW_API_URL=${WALLOW_API_URL:-https://api.wallow.dev}
-      - VALKEY_URL=${VALKEY_URL}
-      - OIDC_ISSUER=${OIDC_ISSUER:-https://api.wallow.dev}
-      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
-      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
-      - OIDC_REDIRECT_URI=${OIDC_REDIRECT_URI}
-      - OIDC_SERVICE_CLIENT_ID=${OIDC_SERVICE_CLIENT_ID}
-      - OIDC_SERVICE_CLIENT_SECRET=${OIDC_SERVICE_CLIENT_SECRET}
-      - SESSION_SECRET=${SESSION_SECRET}
+      HOST: 0.0.0.0
+      PORT: '3000'
+      NODE_ENV: production
+      BFF_APP_ID: bcordes
+      BFF_API_BASE_URL: ${BFF_API_BASE_URL:-http://wallow-api:8080}
+      OIDC_ISSUER: ${OIDC_ISSUER:?Set the verified public Wallow issuer}
+      OIDC_METADATA_URL: ${OIDC_METADATA_URL:-http://wallow-api:8080/.well-known/openid-configuration}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:?Set the developer application client ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:?Set the developer application secret}
+      OIDC_SCOPES: ${OIDC_SCOPES:?Set the scopes approved for the developer application}
+      OIDC_REDIRECT_URI: https://${BCORDES_DOMAIN:-bcordes.dev}/bff/callback
+      OIDC_POST_LOGOUT_REDIRECT_URI: https://${BCORDES_DOMAIN:-bcordes.dev}/
+      OIDC_SERVICE_CLIENT_ID: ${OIDC_SERVICE_CLIENT_ID:?Set the inquiry service client ID}
+      OIDC_SERVICE_CLIENT_SECRET: ${OIDC_SERVICE_CLIENT_SECRET:?Set the inquiry service secret}
+      OIDC_SERVICE_SCOPES: ${OIDC_SERVICE_SCOPES:-inquiries.write}
+      COOKIE_PASSWORD: ${COOKIE_PASSWORD:?Set a stable random secret of at least 32 characters}
+      COOKIE_SECURE: 'true'
+      COOKIE_SAMESITE: lax
+      SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-86400}
+      REDIS_URL: ${REDIS_URL:?Set redis://default:URL_ENCODED_PASSWORD@valkey:6379}
+      WALLOW_TRUSTED_PROXIES: ${WALLOW_TRUSTED_PROXIES:-private}
     depends_on:
       valkey:
         condition: service_healthy
+    networks:
+      wallow:
+        aliases: [bcordes-web]
+      sessions:
+    labels:
+      pangolin.public-resources.bcordes.name: bcordes
+      pangolin.public-resources.bcordes.mode: http
+      pangolin.public-resources.bcordes.full-domain: ${BCORDES_DOMAIN:-bcordes.dev}
+      pangolin.public-resources.bcordes.targets[0].hostname: bcordes-web
+      pangolin.public-resources.bcordes.targets[0].port: '3000'
+      pangolin.public-resources.bcordes.targets[0].method: http
     healthcheck:
       test:
-        ['CMD', 'wget', '-q', '--spider', 'http://localhost:3000/api/health']
+        ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:3000/api/health']
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 15s
     deploy:
       resources:
         limits:
           cpus: '1.0'
           memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
-    # Pangolin resource is managed manually in the Pangolin dashboard.
-    # Do NOT add pangolin.proxy-resources.* labels here — Newt's Docker
-    # integration treats them as source of truth and reverts dashboard
-    # edits back to them on every redeploy.
 
-  # ============================================
-  # CACHE (session store)
-  # ============================================
   valkey:
     image: valkey/valkey:8-alpine
-    container_name: bcordes-valkey
     restart: unless-stopped
-    command: valkey-server --appendonly yes --requirepass ${VALKEY_PASSWORD}
+    command:
+      [
+        'sh',
+        '-c',
+        'exec valkey-server --appendonly yes --requirepass "$$REDISCLI_AUTH"',
+      ]
+    environment:
+      REDISCLI_AUTH: ${VALKEY_PASSWORD:?Set the session-store password}
     volumes:
       - valkey_data:/data
-    environment:
-      REDISCLI_AUTH: ${VALKEY_PASSWORD}
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
+    networks: [sessions]
     healthcheck:
       test: ['CMD', 'valkey-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
 networks:
-  default:
-    name: bcordes-network
+  wallow:
+    external: true
+    name: wallow_wallow
+  sessions:
+    internal: true
 
 volumes:
   valkey_data:

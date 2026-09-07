@@ -47,7 +47,9 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=nightly
-            type=sha,prefix=sha-
+            type=raw,value=sha-${{ github.event.workflow_run.head_sha }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.event.workflow_run.head_sha }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -84,7 +86,7 @@ jobs:
               sha: pr.head.sha,
               state: 'success',
               context: 'deploy-ready',
-              description: `Nightly deployed from ${context.sha.substring(0, 7)}`,
+              description: `Nightly deployed from ${context.payload.workflow_run.head_sha.substring(0, 7)}`,
               target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
             console.log(`Posted deploy-ready status to PR #${pr.number} (${pr.head.sha.substring(0, 7)})`);

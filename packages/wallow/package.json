@@ -10,16 +10,15 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./service-client": "./src/service-client.ts",
-    "./errors": "./src/errors.ts",
-    "./config": "./src/config.ts",
     "./types": "./src/types.ts",
     "./testing": "./src/testing/index.ts"
   },
   "dependencies": {
-    "openid-client": "^6.4.3",
     "@bcordes/auth": "workspace:*",
     "@bcordes/logger": "workspace:*",
-    "@bcordes/valkey": "workspace:*"
+    "@bcordes/valkey": "workspace:*",
+    "@bc-solutions-coder/sdk": "2.0.0",
+    "@bc-solutions-coder/api-errors": "1.0.0"
   },
   "peerDependencies": {
     "@tanstack/react-start": "~1.167.5"

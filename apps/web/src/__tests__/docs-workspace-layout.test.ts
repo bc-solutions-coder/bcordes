@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 // Doc-staleness wiring spec (F13 / bcordes-0i2.13.2). The pnpm-workspace
 // migration relocated every extracted library out of the old single-app
 // `src/lib/*` tree into top-level `packages/*`, and the real-time mechanism is
-// Server-Sent Events (apps/web/src/routes/api/notifications/stream.ts +
+// Server-Sent Events (apps/web/src/routes/api/events?subscribe=Notifications,Inquiries.ts +
 // useEventStreamEvents/EventStreamProvider), NOT SignalR — there is no
 // @microsoft/signalr or useSignalR left anywhere in the codebase. CLAUDE.md and
 // README.md still describe the pre-migration layout, so these specs assert the

@@ -16,7 +16,7 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const { showcases } = Route.useLoaderData()
   const { user } = useUser()
-  const isAdmin = user?.roles.includes('admin') ?? false
+  const isAdmin = user?.permissions.includes('InquiriesRead') ?? false
 
   return (
     <main>

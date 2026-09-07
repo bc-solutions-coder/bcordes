@@ -72,14 +72,7 @@ const filesMatching = (
 const IMPORTER_FLOOR = 20
 
 /** The six library modules that move out of apps/web/src/lib/auth. */
-const SOURCE_MODULES = [
-  'claims',
-  'middleware',
-  'oidc',
-  'redact',
-  'session',
-  'types',
-] as const
+const SOURCE_MODULES = ['middleware', 'redact', 'session', 'types'] as const
 
 describe('@bcordes/auth package manifest', () => {
   it('declares the workspace package conventions', () => {
@@ -101,7 +94,6 @@ describe('@bcordes/auth package manifest', () => {
     expect(manifest.exports).toMatchObject({
       '.': './src/index.ts',
       './session': './src/session.ts',
-      './oidc': './src/oidc.ts',
       './middleware': './src/middleware.ts',
       './types': './src/types.ts',
     })
@@ -116,8 +108,7 @@ describe('@bcordes/auth package manifest', () => {
     // service client and e2e fixtures still use them), so this asserts
     // ownership here, not removal there.
     expect(manifest.dependencies).toMatchObject({
-      'openid-client': expect.any(String),
-      'iron-webcrypto': expect.any(String),
+      '@bc-solutions-coder/sdk': expect.any(String),
     })
   })
 
@@ -243,7 +234,6 @@ describe('every importer was rewritten', () => {
       expect.arrayContaining([
         'apps/web/src/shared/auth/hooks/useUser.ts',
         'apps/web/src/routes/auth/me.ts',
-        'apps/web/src/routes/auth/logout.ts',
         'packages/server/src/csrf.ts',
       ]),
     )
@@ -280,9 +270,7 @@ describe('the package runs in the root vitest', () => {
       expect(files).toEqual([
         join(packageDir, 'package.test.ts'),
         join(packageDir, 'src/middleware.test.ts'),
-        join(packageDir, 'src/oidc.test.ts'),
         join(packageDir, 'src/redact.test.ts'),
-        join(packageDir, 'src/session.test.ts'),
       ])
       expect(
         collected.every((entry) => entry.projectName === '@bcordes/auth'),
@@ -313,7 +301,6 @@ describe('@bcordes/auth/testing ships the mock factories as a secondary entry', 
     expect(manifest.exports).toMatchObject({
       '.': './src/index.ts',
       './session': './src/session.ts',
-      './oidc': './src/oidc.ts',
       './middleware': './src/middleware.ts',
       './types': './src/types.ts',
     })
@@ -370,7 +357,7 @@ describe('@bcordes/auth/testing ships the mock factories as a secondary entry', 
       'version',
     ])
     expect(session.user).toMatchObject({
-      id: expect.any(String),
+      sub: expect.any(String),
       roles: expect.any(Array),
     })
   })

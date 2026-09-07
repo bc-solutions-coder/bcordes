@@ -15,7 +15,7 @@ COPY packages/ ./packages/
 # @bc-solutions-coder/* resolves to GitHub Packages, which rejects even reads
 # without a token, so .npmrc's ${NODE_AUTH_TOKEN} must be populated from a
 # BuildKit secret: docker build --secret id=node_auth_token,env=NODE_AUTH_TOKEN
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store --mount=type=secret,id=node_auth_token,target=/tmp/node_auth_token NODE_AUTH_TOKEN="$(cat /tmp/node_auth_token 2>/dev/null)" pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store --mount=type=secret,id=node_auth_token,target=/tmp/node_auth_token sh -eu -c 'test -s /tmp/node_auth_token; printf "//npm.pkg.github.com/:_authToken=%s\n" "$(cat /tmp/node_auth_token)" > /tmp/build.npmrc; NPM_CONFIG_USERCONFIG=/tmp/build.npmrc pnpm install --frozen-lockfile; rm -f /tmp/build.npmrc'
 
 
 # ---------- Builder stage: build the app ----------

@@ -1,3 +1,4 @@
+import { resolveFailureMessage } from '@bc-solutions-coder/api-errors'
 import { useCallback } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -100,7 +101,7 @@ function NotificationsIndexPage() {
       toast.success('All notifications marked as read')
     },
     onError: (error) => {
-      toast.error(`Failed to mark all as read: ${error.message}`)
+      toast.error(resolveFailureMessage(error))
     },
   })
 

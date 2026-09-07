@@ -1,3 +1,4 @@
+import { resolveFailureMessage } from '@bc-solutions-coder/api-errors'
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -33,31 +34,31 @@ export const Route = createFileRoute('/dashboard/settings/')({
 })
 
 const channels: Array<{
-  type: string
+  type: number
   label: string
   description: string
   icon: typeof Mail
 }> = [
   {
-    type: 'email',
+    type: 0,
     label: 'Email',
     description: 'Receive notifications via email',
     icon: Mail,
   },
   {
-    type: 'sms',
+    type: 1,
     label: 'SMS',
     description: 'Receive notifications via text message',
     icon: MessageSquare,
   },
   {
-    type: 'push',
+    type: 3,
     label: 'Push',
     description: 'Receive push notifications in your browser',
     icon: Bell,
   },
   {
-    type: 'in_app',
+    type: 2,
     label: 'In-App',
     description: 'Receive notifications within the application',
     icon: Smartphone,
@@ -77,12 +78,12 @@ function SettingsPage() {
   const [localSettings, setLocalSettings] =
     useState<Array<NotificationSettings>>(settings)
 
-  function isChannelEnabled(channelType: string): boolean {
+  function isChannelEnabled(channelType: number): boolean {
     const setting = localSettings.find((s) => s.channelType === channelType)
     return setting?.isEnabled ?? false
   }
 
-  async function handleToggle(channelType: string, isEnabled: boolean) {
+  async function handleToggle(channelType: number, isEnabled: boolean) {
     const previous = [...localSettings]
 
     // Optimistic update
@@ -100,8 +101,7 @@ function SettingsPage() {
     } catch (error) {
       // Revert on failure
       setLocalSettings(previous)
-      const message =
-        error instanceof Error ? error.message : 'Failed to update setting'
+      const message = resolveFailureMessage(error)
       toast.error(message)
     }
   }
@@ -191,7 +191,7 @@ function SettingsPage() {
           <CardContent className="space-y-4">
             {channels.map((channel) => {
               const Icon = channel.icon
-              const isPush = channel.type === 'push'
+              const isPush = channel.type === 3
               return (
                 <div
                   key={channel.type}

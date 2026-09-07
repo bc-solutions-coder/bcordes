@@ -100,6 +100,7 @@ function makeNotification(
     message: 'Test message body',
     isRead: false,
     readAt: null,
+    actionUrl: null,
     createdAt: '2026-01-01T00:00:00Z',
     updatedAt: '2026-01-01T00:00:00Z',
     ...overrides,
@@ -417,7 +418,7 @@ describe('notifications.index', () => {
 
       await vi.waitFor(() => {
         expect(mockToast.error).toHaveBeenCalledWith(
-          'Failed to mark all as read: Network failure',
+          'Unable to reach the server. Check your connection and try again.',
         )
       })
     })

@@ -1,225 +1,74 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createWallowSdk } from '@bc-solutions-coder/sdk'
+import { createMockSession } from './testing'
 import { getAuthUser, requireAdmin, requireAuth } from './middleware'
+import { getSession } from './session'
+import { createRequestSdk } from './sdk'
 
-import { clearSession, getSession, setSession } from './session'
-import { fetchUserProfile, refreshToken } from './oidc'
-// Session/user fixtures come from the package's own /testing entry, shipped by
-// T6.2. Sibling-relative here (leaf vitest has no '@/' alias); apps/web
-// consumers reach the same factories via the '@bcordes/auth/testing' subpath.
-import { createMockSession, createMockUser } from './testing'
+vi.mock('./session', () => ({ getSession: vi.fn() }))
+vi.mock('./sdk', () => ({ createRequestSdk: vi.fn() }))
 
-// ---------------------------------------------------------------------------
-// Mocks
-// ---------------------------------------------------------------------------
+beforeEach(() => vi.resetAllMocks())
 
-vi.mock('@bcordes/logger', () => {
-  const child = () => mockLogger
-  const mockLogger = {
-    info: vi.fn(),
-    error: vi.fn(),
-    warn: vi.fn(),
-    debug: vi.fn(),
-    child,
-  }
-  return { default: mockLogger }
-})
+function profile(body: unknown, status = 200) {
+  vi.mocked(createRequestSdk).mockResolvedValue(
+    createWallowSdk({
+      baseUrl: 'https://app.example/api',
+      fetch: () => Promise.resolve(Response.json(body, { status })),
+    }),
+  )
+}
 
-vi.mock('./session', () => ({
-  getSession: vi.fn(),
-  setSession: vi.fn(),
-  clearSession: vi.fn(),
-}))
-
-vi.mock('./oidc', () => ({
-  refreshToken: vi.fn(),
-  fetchUserProfile: vi.fn(),
-}))
-
-const mockGetSession = vi.mocked(getSession)
-const mockSetSession = vi.mocked(setSession)
-const mockClearSession = vi.mocked(clearSession)
-const mockRefreshToken = vi.mocked(refreshToken)
-const mockFetchUserProfile = vi.mocked(fetchUserProfile)
-
-beforeEach(() => {
-  vi.clearAllMocks()
-})
-
-// ---------------------------------------------------------------------------
-// getAuthUser
-// ---------------------------------------------------------------------------
-
-describe('getAuthUser', () => {
-  it('returns null when no session exists', async () => {
-    mockGetSession.mockResolvedValue(null)
-
-    const result = await getAuthUser()
-
-    expect(result).toBeNull()
+describe('SDK identity adapter', () => {
+  it('returns null without a session', async () => {
+    vi.mocked(getSession).mockResolvedValue(null)
+    expect(await getAuthUser()).toBeNull()
+    expect(createRequestSdk).not.toHaveBeenCalled()
   })
-
-  it('returns session.user when token is not expired', async () => {
-    const session = createMockSession({
-      expiresAt: Math.floor(Date.now() / 1000) + 3600,
-    })
-    mockGetSession.mockResolvedValue(session)
-
-    const result = await getAuthUser()
-
-    expect(result).toEqual(session.user)
-    expect(mockRefreshToken).not.toHaveBeenCalled()
-  })
-
-  it('returns session.user when refreshToken is absent even if expired', async () => {
-    const session = createMockSession({
-      expiresAt: Math.floor(Date.now() / 1000) - 60,
-      refreshToken: undefined,
-    })
-    mockGetSession.mockResolvedValue(session)
-
-    const result = await getAuthUser()
-
-    expect(result).toEqual(session.user)
-    expect(mockRefreshToken).not.toHaveBeenCalled()
-  })
-
-  it('successfully refreshes when expired with refreshToken present', async () => {
-    const oldUser = createMockUser({ name: 'Old User' })
-    const session = createMockSession({
-      expiresAt: Math.floor(Date.now() / 1000) - 60,
-      refreshToken: 'old-refresh-token',
-      user: oldUser,
-    })
-    mockGetSession.mockResolvedValue(session)
-
-    const newUser = createMockUser({ name: 'Refreshed User' })
-    mockRefreshToken.mockResolvedValue({
-      accessToken: 'new-access-token',
-      idToken: 'new-id-token',
-      refreshToken: 'new-refresh-token',
-      expiresIn: 3600,
-      subject: 'test-user-123',
-    })
-    mockFetchUserProfile.mockResolvedValue(newUser)
-
-    const result = await getAuthUser()
-
-    expect(result).toEqual(newUser)
-    expect(mockRefreshToken).toHaveBeenCalledWith('old-refresh-token')
-    expect(mockFetchUserProfile).toHaveBeenCalledWith(
-      'new-access-token',
-      'test-user-123',
-    )
-    expect(mockSetSession).toHaveBeenCalledWith(
-      expect.objectContaining({
-        accessToken: 'new-access-token',
-        refreshToken: 'new-refresh-token',
-        user: newUser,
-        version: session.version + 1,
+  it('uses API-expanded permissions instead of session scopes', async () => {
+    vi.mocked(getSession).mockResolvedValue(
+      createMockSession({
+        user: {
+          sub: 'test-user-123',
+          organizationId: 'org',
+          permissions: ['inquiries.read'],
+        },
       }),
     )
-  })
-
-  it('calls clearSession and returns null when refreshToken rejects', async () => {
-    const session = createMockSession({
-      expiresAt: Math.floor(Date.now() / 1000) - 60,
-      refreshToken: 'bad-refresh-token',
+    profile({
+      id: 'test-user-123',
+      firstName: 'Test',
+      permissions: ['InquiriesRead'],
     })
-    mockGetSession.mockResolvedValue(session)
-    mockRefreshToken.mockRejectedValue(new Error('token revoked'))
-
-    const result = await getAuthUser()
-
-    expect(result).toBeNull()
-    expect(mockClearSession).toHaveBeenCalled()
+    expect(await getAuthUser()).toMatchObject({
+      id: 'test-user-123',
+      tenantId: 'org',
+      permissions: ['InquiriesRead'],
+    })
   })
-})
-
-// ---------------------------------------------------------------------------
-// requireAuth
-// ---------------------------------------------------------------------------
-
-describe('requireAuth', () => {
-  it('returns user when authenticated', async () => {
-    const session = createMockSession()
-    mockGetSession.mockResolvedValue(session)
-
-    const result = await requireAuth()
-
-    expect(result).toEqual(session.user)
+  it('rejects a profile belonging to another session user', async () => {
+    vi.mocked(getSession).mockResolvedValue(createMockSession())
+    profile({ id: 'another-user' })
+    expect(await getAuthUser()).toBeNull()
   })
-
-  it('throws redirect to /auth/login when getAuthUser returns null', async () => {
-    mockGetSession.mockResolvedValue(null)
-
-    try {
-      await requireAuth()
-      expect.fail('should have thrown')
-    } catch (err: unknown) {
-      // TanStack redirect wraps options in an { options } envelope
-      const error = err as {
-        options: { to: string; search?: Record<string, string> }
-      }
-      expect(error.options.to).toBe('/auth/login')
-    }
+  it('treats an expired SDK session as signed out', async () => {
+    vi.mocked(getSession).mockResolvedValue(createMockSession())
+    profile({ code: 'unauthorized' }, 401)
+    expect(await getAuthUser()).toBeNull()
   })
-
-  it('includes returnTo in redirect params', async () => {
-    mockGetSession.mockResolvedValue(null)
-
-    try {
-      await requireAuth('/dashboard')
-      expect.fail('should have thrown')
-    } catch (err: unknown) {
-      const error = err as {
-        options: { to: string; search?: Record<string, string> }
-      }
-      expect(error.options.to).toBe('/auth/login')
-      expect(error.options.search).toEqual({ returnTo: '/dashboard' })
-    }
+  it('redirects unauthenticated navigation to SDK login', async () => {
+    vi.mocked(getSession).mockResolvedValue(null)
+    await expect(requireAuth('/dashboard/inquiries')).rejects.toMatchObject({
+      options: { href: '/bff/login?returnTo=%2Fdashboard%2Finquiries' },
+    })
   })
-})
-
-// ---------------------------------------------------------------------------
-// requireAdmin
-// ---------------------------------------------------------------------------
-
-describe('requireAdmin', () => {
-  it('returns user when session has admin role', async () => {
-    const adminUser = createMockUser({ roles: ['user', 'admin'] })
-    const session = createMockSession({ user: adminUser })
-    mockGetSession.mockResolvedValue(session)
-
-    const result = await requireAdmin()
-
-    expect(result).toEqual(adminUser)
-  })
-
-  it('throws 403 when no session exists', async () => {
-    mockGetSession.mockResolvedValue(null)
-
-    try {
-      await requireAdmin()
-      expect.fail('should have thrown')
-    } catch (err: unknown) {
-      const error = err as Error & { status: number }
-      expect(error.message).toBe('Authentication required')
-      expect(error.status).toBe(403)
-    }
-  })
-
-  it('throws 403 when user lacks admin role', async () => {
-    const regularUser = createMockUser({ roles: ['user'] })
-    const session = createMockSession({ user: regularUser })
-    mockGetSession.mockResolvedValue(session)
-
-    try {
-      await requireAdmin()
-      expect.fail('should have thrown')
-    } catch (err: unknown) {
-      const error = err as Error & { status: number }
-      expect(error.message).toBe('Forbidden: admin role required')
-      expect(error.status).toBe(403)
-    }
+  it('denies staff access when an admin role lacks the API capability', async () => {
+    vi.mocked(getSession).mockResolvedValue(createMockSession())
+    profile({
+      id: 'test-user-123',
+      roles: ['admin'],
+      permissions: ['InquiriesWrite'],
+    })
+    await expect(requireAdmin()).rejects.toMatchObject({ status: 403 })
   })
 })

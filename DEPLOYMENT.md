@@ -1,235 +1,72 @@
-# Deployment Guide
+# Deploying bcordes with Wallow
 
-This guide covers deploying your personal site to your server using Docker, GitHub Container Registry, and Portainer.
+The migration is not production-ready until the [Wallow release gates](https://github.com/bc-solutions-coder/bcordes/issues/31) pass. Browser push remains blocked on its corrected delivery and authorization contract. Notification preferences, inquiry live updates and verified-email historical linking also require platform verification.
 
-## Architecture Overview
+## Register the application
 
-1. **Local Development**: Work on features locally using `pnpm dev`
-2. **Push to GitHub**: Push changes to `main` branch
-3. **GitHub Actions**: Automatically builds Docker image and pushes to GitHub Container Registry (GHCR)
-4. **Portainer**: Pulls the latest image from GHCR and deploys to your server
+Use the existing Wallow deployment. Create one bcordes organization and a confidential developer application bound to it. Register these exact URLs for the default hostname:
 
-## Setup Steps
+- Callback: `https://bcordes.dev/bff/callback`
+- Post-logout redirect: `https://bcordes.dev/`
+- Back-channel logout: `https://bcordes.dev/bff/backchannel-logout`
 
-### 1. Enable GitHub Container Registry
+Approve the application scopes for profile, inquiries and notifications. A requested scope is not itself staff authorization. Customers must have the ordinary customer membership; staff must have the platform permissions needed for organization inquiries. bcordes checks the API-expanded `InquiriesRead` capability for staff access. It never grants staff privileges from self-service signup.
 
-GitHub Container Registry (GHCR) is enabled by default. Your images will be pushed to:
+Create a separate service account for anonymous contact submissions with only the available inquiry-submission grant. Signed-in submissions use the user's SDK session. Expired authenticated submissions must sign in again instead of falling back to service credentials.
 
-```
-ghcr.io/susp3nse/bcordes:latest
-```
+Read the deployed discovery document to determine `OIDC_ISSUER`. The generic Wallow path configuration and its Pangolin subdomain configuration differ. Public discovery returned 403 from the research environment, so neither has been certified here. Verify that the discovery issuer matches the configured issuer and that the server can reach its advertised token, JWKS and userinfo endpoints.
 
-### 2. Configure GitHub Repository
+## Load the stack in Dockhand
 
-No additional configuration needed! The workflow uses the built-in `GITHUB_TOKEN` which has permission to write to GHCR.
+Import `docker-compose.prod.yml` and supply variables from `.env.example` through Dockhand's managed stack environment. The Compose file explicitly interpolates those values into the containers. Configure GHCR pull credentials in Dockhand if the image is private.
 
-**Optional**: Make the package public (by default it's private)
+Set `BCORDES_IMAGE` to a tested image digest, preferably `ghcr.io/bc-solutions-coder/bcordes@sha256:...`, or its full `sha-<commit>` tag. Do not use mutable nightly tags for production rollback references.
 
-1. Go to your repository on GitHub
-2. Click on "Packages" in the right sidebar
-3. Click on the `bcordes` package
-4. Go to "Package settings"
-5. Under "Danger Zone", change visibility to Public (optional)
+Supply the developer client ID/secret, issuer, approved scopes, and separate inquiry service ID/secret. Keep the stable random `COOKIE_PASSWORD` at least 32 characters long. Set `VALKEY_PASSWORD` and a matching `REDIS_URL`, URL-encoding the password in the URL. Keep the named Valkey volume across updates. Set `SESSION_TTL_SECONDS` no longer than the Wallow refresh-token policy permits.
 
-### 3. Deploy to Your Server via Portainer
+The web container joins external `wallow_wallow` under alias `bcordes-web`. Its default internal API and metadata addresses use `wallow-api:8080`; confirm that alias against the deployed stack. Valkey is reachable only on the app's private session network. Neither container publishes host ports.
 
-#### Option A: Using Portainer Stacks (Recommended)
+Existing Newt discovers the `pangolin.public-resources.bcordes.*` labels and targets `bcordes-web:3000`. Confirm that Newt watches this stack and that the `bcordes.dev` resource/DNS entry is available. No extra tunnel, Docker socket, IP registration or second authentication gate is required. A staging deployment needs distinct Pangolin resource labels, network alias and BFF app ID.
 
-1. **Login to Portainer** on your server
-2. **Navigate to Stacks** → Add Stack
-3. **Name your stack**: `bcordes`
-4. **Build method**: Choose "Repository" or "Web editor"
+`WALLOW_TRUSTED_PROXIES=private` matches the shared-network deployment but trusts private peer addresses on that network. Set a narrower peer/CIDR list when managed addresses are available. Only the original transport peer may establish forwarded-header trust.
 
-   **If using Repository:**
-   - Repository URL: `https://github.com/Susp3nse/bcordes`
-   - Repository reference: `refs/heads/main`
-   - Compose path: `docker-compose.prod.yml`
+## Migrate existing environment values
 
-   **If using Web editor:**
-   - Copy the contents of `docker-compose.prod.yml`
-   - Paste into the editor
+Use only one `OIDC_REDIRECT_URI`, ending in `/bff/callback`, and register the same URL in Wallow. Remove the old `/auth/callback` entry. Set `OIDC_POST_LOGOUT_REDIRECT_URI=https://bcordes.dev/`. Compose derives both URLs from `BCORDES_DOMAIN`.
 
-5. **Environment variables** (if using database):
+| Old variable                  | SDK variable                 |
+| ----------------------------- | ---------------------------- |
+| `SESSION_SECRET`              | `COOKIE_PASSWORD`            |
+| `VALKEY_URL`                  | `REDIS_URL`                  |
+| `WALLOW_API_URL`              | `BFF_API_BASE_URL`           |
+| `OIDC_SERVICE_ACCOUNT_ID`     | `OIDC_SERVICE_CLIENT_ID`     |
+| `OIDC_SERVICE_ACCOUNT_SECRET` | `OIDC_SERVICE_CLIENT_SECRET` |
 
-   ```
-   DATABASE_URL=postgresql://user:password@host:5432/dbname
-   ```
+Keep `VALKEY_PASSWORD` for the Valkey container. `OIDC_CLIENT_ID` and `OIDC_CLIENT_SECRET` retain their names. The service client's ID and secret are the credentials issued for the separate Wallow service account.
 
-6. **Enable auto-update** (optional):
-   - Enable "Auto-update" in stack settings
-   - Set check interval (e.g., every 5 minutes)
-   - Portainer will automatically pull new images
+`BFF_API_BASE_URL=https://api.wallow.dev` is also supported when reachable from the container. Set `OIDC_METADATA_URL` separately to the reachable discovery document; changing the API URL does not change Compose's internal discovery default. Set `OIDC_ISSUER=https://auth.wallow.dev` only when that exactly matches discovery's issuer.
 
-7. Click **Deploy the stack**
+Avoid copying platform-wide management scopes into either client. Start with the application scopes in `.env.example` and `OIDC_SERVICE_SCOPES=inquiries.write` for anonymous submissions, subject to Wallow's approved grants. Rotate credentials exposed outside the deployment secret store before deploying.
 
-#### Option B: Manual Webhook Setup for Auto-Deploy
+## Validate and update
 
-1. **Create a Portainer webhook**:
-   - Go to your stack → click on the stack name
-   - Scroll to "Webhooks" section
-   - Create a new webhook
-   - Copy the webhook URL
+A healthy `/api/health` response includes a successful Valkey ping. SDK configuration is checked when the application handles requests. A healthcheck is not proof of discovery, login or feature authorization.
 
-2. **Add webhook to GitHub repository**:
-   - Go to your GitHub repository
-   - Settings → Webhooks → Add webhook
-   - Payload URL: Your Portainer webhook URL
-   - Content type: `application/json`
-   - Trigger: Select "Packages" events
-   - Active: ✓
-   - Save
+Before production release, exercise customer enrollment, callback, current user, own-inquiry access and comments, denied cross-customer/internal/status operations, staff access, anonymous submission, preferences, actual browser push delivery, SSE recovery, refresh, logout and back-channel revocation. Verify organization-scoped historical linking with the corrected Wallow release.
 
-Now whenever a new image is pushed, Portainer will automatically redeploy!
+Check Pangolin discovery, TLS, HTML/assets and server readiness. Test an app restart with a valid SDK session and persistent Valkey. Record the tested image digest, configuration names, SDK/platform versions and results. Keep a known-good image digest and compatible configuration for rollback.
 
-### 4. Pulling Images from GHCR
+This migration requires everyone to sign in again once. There is no legacy-session bridge. Ordinary subsequent updates preserve SDK sessions through stable cookie keys and persistent storage; rolling back across incompatible auth formats may require another sign-in.
 
-If your image is private, you'll need to authenticate:
+## Build credentials
 
-1. **Create a GitHub Personal Access Token**:
-   - GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
-   - Generate new token
-   - Scopes: `read:packages`
-   - Copy the token
+`NODE_AUTH_TOKEN` is used only for dependency installation and Docker builds. Do not supply it to the runtime container. Use a GitHub token with read access to both private packages. A trusted user npm configuration can reference `${NODE_AUTH_TOKEN}`; package installation does not load `.env` automatically, and worktrees do not inherit ignored environment files.
 
-2. **Add registry credentials in Portainer**:
-   - Portainer → Registries → Add registry
-   - Name: `GitHub Container Registry`
-   - Registry URL: `ghcr.io`
-   - Authentication: ✓
-   - Username: Your GitHub username
-   - Password: Your Personal Access Token
-   - Save
+For Docker, export the token into the build environment and run:
 
-## Release Workflow
-
-### For Development (Continuous Deployment)
-
-Push to main branch:
-
-```bash
-git add .
-git commit -m "feat: add new feature"
-git push origin main
+```sh
+docker build --secret id=node_auth_token,env=NODE_AUTH_TOKEN -t bcordes:verify .
+bash scripts/verify-docker.sh
 ```
 
-This will trigger a build and push an image tagged with:
-
-- `latest`
-- `main-<git-sha>`
-
-### For Production Releases (Versioned Deployment)
-
-Create a version tag:
-
-```bash
-# Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-This will create images tagged with:
-
-- `v1.0.0` (full version)
-- `v1.0` (minor version)
-- `v1` (major version)
-- `latest`
-
-You can then update your `docker-compose.prod.yml` to pin to a specific version:
-
-```yaml
-services:
-  web:
-    image: ghcr.io/susp3nse/bcordes:v1.0.0 # Pin to specific version
-```
-
-## Portainer Stack Management
-
-### Update to Latest Version
-
-```bash
-# In Portainer, click "Pull and redeploy"
-# Or via CLI on your server:
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### View Logs
-
-In Portainer:
-
-- Stacks → bcordes → Click on container → Logs
-
-Or via CLI:
-
-```bash
-docker logs -f bcordes
-```
-
-### Rollback to Previous Version
-
-```yaml
-# Edit stack and change image tag to previous version
-image: ghcr.io/susp3nse/bcordes:v0.9.0
-```
-
-## Environment Variables
-
-Add these to your stack in Portainer:
-
-| Variable       | Description                    | Required               |
-| -------------- | ------------------------------ | ---------------------- |
-| `NODE_ENV`     | Set to `production`            | Yes                    |
-| `DATABASE_URL` | PostgreSQL connection string   | Only if using database |
-| `PORT`         | Port to run on (default: 3000) | No                     |
-
-## Database Setup (Optional)
-
-If you need a database, uncomment the `db` service in `docker-compose.prod.yml`:
-
-1. Set a secure `DB_PASSWORD` environment variable
-2. Update `DATABASE_URL` in the web service:
-   ```
-   DATABASE_URL=postgresql://personalsite:yourpassword@db:5432/personalsite
-   ```
-3. Run migrations (one-time):
-   ```bash
-   # SSH into your server
-   docker exec -it bcordes pnpm db:migrate
-   ```
-
-## Troubleshooting
-
-### Container fails to start
-
-- Check logs: `docker logs bcordes`
-- Verify environment variables are set
-- Ensure port 3000 is not already in use
-
-### Image not found
-
-- Check if GitHub Actions workflow completed successfully
-- Verify registry authentication in Portainer
-- Ensure package is public or credentials are configured
-
-### Database connection errors
-
-- Verify `DATABASE_URL` is correct
-- Check if database container is running
-- Ensure network connectivity between containers
-
-## Local Testing of Production Build
-
-Test the production Docker image locally before deploying:
-
-```bash
-# Build production image
-docker build -t bcordes:local .
-
-# Run it
-docker run -p 3000:3000 -e NODE_ENV=production bcordes:local
-
-# Or use docker-compose
-docker-compose up
-```
-
-Visit http://localhost:3000 to verify.
+The token is mounted as a BuildKit secret. The runtime stage copies only Nitro's output. The verifier uses a disposable Valkey and tests the same image with two different runtime origins.

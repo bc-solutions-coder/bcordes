@@ -141,6 +141,7 @@ describe('NotificationBell', () => {
         message: 'Someone sent you a message',
         isRead: false,
         readAt: null,
+        actionUrl: null,
         createdAt: '2026-03-25T10:00:00Z',
         updatedAt: '2026-03-25T10:00:00Z',
       },
@@ -152,6 +153,7 @@ describe('NotificationBell', () => {
         message: 'An older message',
         isRead: true,
         readAt: '2026-03-24T10:00:00Z',
+        actionUrl: null,
         createdAt: '2026-03-24T10:00:00Z',
         updatedAt: '2026-03-24T10:00:00Z',
       },
@@ -187,6 +189,7 @@ describe('NotificationBell', () => {
         message: 'Please read me',
         isRead: false,
         readAt: null,
+        actionUrl: null,
         createdAt: '2026-03-25T10:00:00Z',
         updatedAt: '2026-03-25T10:00:00Z',
       },
@@ -226,6 +229,7 @@ describe('NotificationBell', () => {
         message: 'Clickable notification',
         isRead: false,
         readAt: null,
+        actionUrl: null,
         createdAt: '2026-03-25T10:00:00Z',
         updatedAt: '2026-03-25T10:00:00Z',
       },
@@ -269,6 +273,7 @@ describe('NotificationBell', () => {
         message: 'msg',
         isRead: false,
         readAt: null,
+        actionUrl: null,
         createdAt: '2026-03-25T10:00:00Z',
         updatedAt: '2026-03-25T10:00:00Z',
       },
@@ -288,7 +293,7 @@ describe('NotificationBell', () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
-        'Failed to mark notifications as read: Network failure',
+        'Unable to reach the server. Check your connection and try again.',
       )
     })
   })

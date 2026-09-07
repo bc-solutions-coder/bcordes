@@ -1,13 +1,7 @@
-/** RFC 7807 Problem Details error response from the Wallow backend */
-export interface ProblemDetails {
-  type: string
-  title: string
-  status: number
-  detail: string
-  traceId: string
-  code: string
-  errors?: Record<string, Array<string>>
-}
+import type {
+  NotificationResponse,
+  SetChannelEnabledRequest,
+} from '@bc-solutions-coder/sdk'
 
 /** Envelope for real-time SSE messages from the Wallow backend */
 export interface RealtimeEnvelope {
@@ -18,34 +12,10 @@ export interface RealtimeEnvelope {
   correlationId?: string
 }
 
-/** Contact inquiry submitted through the Wallow backend */
-export interface Inquiry {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  company?: string
-  projectType?: string
-  budgetRange?: string
-  timeline?: string
-  message: string
-  status: string
-  submitterIpAddress?: string
-  submitterId: string | null
-  createdAt: string
-  updatedAt: string
-}
-
-/** Comment attached to an inquiry in the Wallow backend */
-export interface InquiryComment {
-  id: string
-  inquiryId: string
-  authorId: string
-  authorName: string
-  content: string
-  isInternal: boolean
-  createdAt: string
-}
+export type {
+  InquiryResponse as Inquiry,
+  InquiryCommentResponse as InquiryComment,
+} from '@bc-solutions-coder/sdk'
 
 /** Real-time payload emitted when a new inquiry is submitted */
 export interface InquirySubmittedPayload {
@@ -67,35 +37,8 @@ export interface InquiryCommentAddedPayload {
   isInternal: boolean
 }
 
-/** Generic paginated response from the Wallow backend */
-export interface PaginatedResponse<T> {
-  items: Array<T>
-  pageNumber: number
-  pageSize: number
-  totalCount: number
-}
-
-/** Notification delivered to a user via the Wallow backend */
-export interface Notification {
-  id: string
-  userId: string
-  type: string
-  title: string
-  message: string
-  isRead: boolean
-  readAt: string | null
-  createdAt: string
-  updatedAt: string
-  /** Server-provided deep link (available on SSE payloads, pending on REST DTO) */
-  actionUrl?: string
-  entityId?: string
-}
-
-/** Per-channel notification preference */
-export interface NotificationSettings {
-  channelType: string
-  isEnabled: boolean
-}
+export type Notification = NotificationResponse & { entityId?: string }
+export type NotificationSettings = SetChannelEnabledRequest
 
 /** Registered push notification device */
 export interface PushDevice {

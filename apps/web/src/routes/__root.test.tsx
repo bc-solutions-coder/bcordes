@@ -40,6 +40,11 @@ vi.mock('@tanstack/react-router', () => ({
   ScrollRestoration: () => null,
 }))
 
+vi.mock('@/features/notifications', () => ({
+  EventStreamProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+}))
+
 vi.mock('@/app', () => ({
   Header: () => <div data-testid="header">Header</div>,
   Footer: () => <div data-testid="footer">Footer</div>,

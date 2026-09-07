@@ -1,5 +1,7 @@
 'use client'
 
+import { logout } from '@bc-solutions-coder/sdk'
+import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut } from 'lucide-react'
 
@@ -32,7 +34,7 @@ export function UserMenu() {
   if (!user) {
     return (
       <Button
-        render={<a href="/auth/login" />}
+        render={<a href="/bff/login" />}
         nativeButton={false}
         variant="ghost"
         className="hidden md:inline-flex text-foreground-secondary hover:text-primary"
@@ -73,16 +75,14 @@ export function UserMenu() {
         <DropdownMenuItem
           render={
             <a
-              href="/auth/logout"
+              href="/bff/logout"
               className="cursor-pointer"
               onClick={(e) => {
                 e.preventDefault()
                 // POST to logout endpoint
-                const form = document.createElement('form')
-                form.method = 'POST'
-                form.action = '/auth/logout'
-                document.body.appendChild(form)
-                form.submit()
+                void logout().catch(() =>
+                  toast.error('Unable to sign out. Please try again.'),
+                )
               }}
             />
           }

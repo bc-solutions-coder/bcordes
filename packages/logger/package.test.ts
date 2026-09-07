@@ -59,7 +59,6 @@ const filesMatching = (
  * not an exact count, so that later extractions (which move some of these files
  * into other packages) do not have to revisit this spec.
  */
-const FORMER_IMPORTER_COUNT = 10
 
 describe('@bcordes/logger package manifest', () => {
   it('declares the workspace package conventions', () => {
@@ -164,15 +163,7 @@ describe('every importer was rewritten', () => {
     // quietly dropped.
     const importers = filesMatching("from '@bcordes/logger'")
 
-    expect(importers.length).toBeGreaterThanOrEqual(FORMER_IMPORTER_COUNT)
-    expect(importers).toEqual(
-      expect.arrayContaining([
-        'apps/web/src/start.ts',
-        'packages/wallow/src/request.ts',
-        'packages/auth/src/session.ts',
-        'apps/web/src/routes/api/notifications/stream.ts',
-      ]),
-    )
+    expect(importers).toEqual(expect.arrayContaining(['apps/web/src/start.ts']))
   })
 
   it('leaves no direct pino import in apps/web', () => {

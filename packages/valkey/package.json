@@ -7,10 +7,12 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./sdk": "./src/sdk.ts"
   },
   "dependencies": {
-    "ioredis": "^5.10.1"
+    "ioredis": "^5.10.1",
+    "@bc-solutions-coder/sdk": "2.0.0"
   },
   "devDependencies": {
     "@bcordes/config": "workspace:*",

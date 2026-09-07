@@ -79,7 +79,6 @@ function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
     timeline: '1-3 months',
     message: 'I need a website.',
     status: 'new',
-    submitterIpAddress: '127.0.0.1',
     submitterId: 'user-1',
     createdAt: '2026-01-15T10:30:00Z',
     updatedAt: '2026-01-15T10:30:00Z',
@@ -108,7 +107,10 @@ describe('inquiries.index loader', () => {
 
   it('calls fetchMyInquiries and fetchCurrentUserRoles in parallel', async () => {
     mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user'],
+      permissions: ['InquiriesWrite'],
+    })
 
     await routeConfig.loader()
 
@@ -118,7 +120,10 @@ describe('inquiries.index loader', () => {
 
   it('returns isAdmin=true when user has admin role', async () => {
     mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user', 'admin'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user', 'admin'],
+      permissions: ['InquiriesRead'],
+    })
 
     const result = await routeConfig.loader()
 
@@ -127,7 +132,10 @@ describe('inquiries.index loader', () => {
 
   it('returns isAdmin=false when user has no admin role', async () => {
     mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: ['user'] })
+    mockFetchCurrentUserRoles.mockResolvedValue({
+      roles: ['user'],
+      permissions: ['InquiriesWrite'],
+    })
 
     const result = await routeConfig.loader()
 
@@ -137,7 +145,7 @@ describe('inquiries.index loader', () => {
   it('returns the inquiries array from fetchMyInquiries', async () => {
     const inquiries = [makeInquiry({ id: '1' }), makeInquiry({ id: '2' })]
     mockFetchMyInquiries.mockResolvedValue(inquiries)
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [] })
+    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [], permissions: [] })
 
     const result = await routeConfig.loader()
 

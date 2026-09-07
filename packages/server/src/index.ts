@@ -1,2 +1,2 @@
 export { validateCsrfToken } from './csrf-validation'
-export { default as securityHeaders } from './security-headers'
+export { applySecurityHeaders } from './security-headers'

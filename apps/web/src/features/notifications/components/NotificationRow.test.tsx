@@ -21,6 +21,7 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
     message: 'Someone submitted a contact form',
     isRead: false,
     readAt: null,
+    actionUrl: null,
     createdAt: '2026-03-25T00:00:00Z',
     updatedAt: '2026-03-25T00:00:00Z',
     ...overrides,

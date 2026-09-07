@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import type { RealtimeEnvelope } from '@bcordes/wallow/types'
 import { useUser } from '@/shared/auth'
@@ -28,6 +29,16 @@ const BC_CHANNEL_NAME = 'sse-leader'
 
 export function EventStreamProvider({ children }: { children: ReactNode }) {
   const { user } = useUser()
+  const queryClient = useQueryClient()
+  const previousUser = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    const identity = user ? `${user.tenantId}:${user.id}` : undefined
+    if (previousUser.current !== identity) {
+      queryClient.removeQueries({ queryKey: ['notifications'] })
+      queryClient.removeQueries({ queryKey: ['notification-settings'] })
+    }
+    previousUser.current = identity
+  }, [user?.id, user?.tenantId, queryClient])
   const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const eventSourceRef = useRef<EventSource | null>(null)
   const subscribersRef = useRef<Map<string, Set<Handler>>>(new Map())
@@ -46,7 +57,6 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
 
   const dispatchEnvelope = useCallback((envelope: RealtimeEnvelope) => {
     if (!envelope.type && !envelope.payload) return
-    console.log('[sse] event:', envelope.type, envelope.payload)
     const handlers = subscribersRef.current.get(envelope.type)
     if (handlers) {
       handlers.forEach((handler) => handler(envelope))
@@ -67,13 +77,12 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
 
     setStatus(reconnectAttemptRef.current > 0 ? 'reconnecting' : 'connecting')
 
-    const es = new EventSource('/api/notifications/stream')
+    const es = new EventSource('/api/events?subscribe=Notifications,Inquiries')
     eventSourceRef.current = es
 
     // Connection timeout — if onopen doesn't fire within 10s, treat as error
     connectionTimeoutRef.current = setTimeout(() => {
       if (!mountedRef.current) return
-      console.log('[sse] connection timeout')
       es.close()
       setStatus('disconnected')
       scheduleReconnect()
@@ -92,7 +101,13 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       reconnectAttemptRef.current = 0
       connectedRef.current = true
       setStatus('connected')
-      console.log('[sse] connected')
+      void queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      dispatchEnvelope({
+        type: 'Resync',
+        module: 'Inquiries',
+        payload: null,
+        timestamp: new Date().toISOString(),
+      })
     }
 
     es.onerror = () => {
@@ -101,7 +116,6 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
         clearTimeout(connectionTimeoutRef.current)
         connectionTimeoutRef.current = null
       }
-      console.log('[sse] error/disconnected, will reconnect')
       es.close()
       eventSourceRef.current = null
       connectedRef.current = false
@@ -172,7 +186,7 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
         if (mountedRef.current) connect()
       }, 1000)
     }) as EventListener)
-  }, [dispatchEnvelope])
+  }, [dispatchEnvelope, queryClient])
 
   const scheduleReconnect = useCallback(() => {
     if (!mountedRef.current) return
@@ -253,7 +267,9 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
     }
 
     if (hasBroadcastChannel) {
-      const bc = new BroadcastChannel(BC_CHANNEL_NAME)
+      const bc = new BroadcastChannel(
+        `${BC_CHANNEL_NAME}:${user.tenantId}:${user.id}`,
+      )
       bcRef.current = bc
 
       bc.onmessage = (event: MessageEvent) => {
@@ -298,6 +314,13 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
     // Visibility-aware reconnect
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && mountedRef.current) {
+        void queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        dispatchEnvelope({
+          type: 'Resync',
+          module: 'Inquiries',
+          payload: null,
+          timestamp: new Date().toISOString(),
+        })
         // Only reconnect if leader and disconnected
         if (
           isLeaderRef.current &&
@@ -314,6 +337,14 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       }
     }
     document.addEventListener('visibilitychange', handleVisibilityChange)
+    const resyncTimer = setInterval(() => {
+      dispatchEnvelope({
+        type: 'Resync',
+        module: 'Inquiries',
+        payload: null,
+        timestamp: new Date().toISOString(),
+      })
+    }, 60_000)
 
     return () => {
       mountedRef.current = false
@@ -330,9 +361,10 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
         bcRef.current.postMessage({ type: 'leader-resign' })
         bcRef.current.close()
       }
+      clearInterval(resyncTimer)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [user, connect, dispatchEnvelope, startHeartbeat])
+  }, [user, connect, dispatchEnvelope, startHeartbeat, queryClient])
 
   return (
     <EventStreamContext.Provider value={{ status, subscribe }}>

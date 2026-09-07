@@ -11,6 +11,6 @@ export const serverRequireAuth = createServerFn({ method: 'GET' })
 export const fetchCurrentUserRoles = createServerFn({ method: 'GET' }).handler(
   async () => {
     const user = await getAuthUser()
-    return { roles: user?.roles ?? [] }
+    return { roles: user?.roles ?? [], permissions: user?.permissions ?? [] }
   },
 )

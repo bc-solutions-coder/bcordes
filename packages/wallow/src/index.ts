@@ -1,4 +1,3 @@
 export { createWallowClient } from './client'
-export { serviceClient } from './service-client'
-export { WallowError, isWallowError } from './errors'
+export { getInquiryService } from './service-client'
 export type * from './types'

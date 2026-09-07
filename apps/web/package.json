@@ -15,7 +15,8 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@bc-solutions-coder/sdk": "0.1.0",
+    "@bc-solutions-coder/api-errors": "1.0.0",
+    "@bc-solutions-coder/sdk": "2.0.0",
     "@bcordes/auth": "workspace:*",
     "@bcordes/forms": "workspace:*",
     "@bcordes/logger": "workspace:*",
@@ -43,10 +44,8 @@
     "cmdk": "^1.1.1",
     "h3": "2.0.1-rc.16",
     "input-otp": "^1.4.2",
-    "iron-webcrypto": "^2.0.0",
     "lucide-react": "^0.544.0",
     "nitro": "3.0.1-alpha.0",
-    "openid-client": "^6.4.3",
     "react": "^19.2.4",
     "react-day-picker": "^9.13.0",
     "react-dom": "^19.2.4",

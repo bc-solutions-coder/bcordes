@@ -46,7 +46,7 @@
 - **Modern UI** — Custom green-on-white theme built with Tailwind CSS v4 and shadcn/ui
 - **Database** — PostgreSQL 16
 - **Backend Integration** — Connected to the .NET Wallow API with retry logic
-- **CI/CD** — Docker multi-stage builds published to GHCR, deployed via Portainer
+- **CI/CD** — Docker multi-stage builds published to GHCR, deployed via Dockhand
 
 ## Tech Stack
 
@@ -61,7 +61,7 @@
 | **Forms**     | React Hook Form + Zod                    |
 | **Testing**   | Vitest, Testing Library                  |
 | **Tooling**   | ESLint, Prettier, Storybook 9            |
-| **Infra**     | Docker, GitHub Actions, GHCR, Portainer  |
+| **Infra**     | Docker, GitHub Actions, GHCR, Dockhand   |
 
 ## Getting Started
 

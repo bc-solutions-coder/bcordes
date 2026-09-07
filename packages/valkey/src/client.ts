@@ -6,9 +6,9 @@ let instance: Redis | undefined
 
 export function getValkey(): Redis {
   if (!instance) {
-    const url = process.env.VALKEY_URL
+    const url = process.env.REDIS_URL
     if (!url) {
-      throw new Error('VALKEY_URL environment variable is required but not set')
+      throw new Error('REDIS_URL environment variable is required but not set')
     }
     instance = new Redis(url, {
       maxRetriesPerRequest: 3,

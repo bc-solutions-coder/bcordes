@@ -19,16 +19,12 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settin
 import { Route as DashboardNotificationsRouteImport } from './routes/dashboard/notifications'
 import { Route as DashboardInquiriesRouteImport } from './routes/dashboard/inquiries'
 import { Route as AuthMeRouteImport } from './routes/auth/me'
-import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthErrorRouteImport } from './routes/auth/error'
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings.index'
 import { Route as DashboardNotificationsIndexRouteImport } from './routes/dashboard/notifications.index'
 import { Route as DashboardInquiriesIndexRouteImport } from './routes/dashboard/inquiries.index'
 import { Route as DashboardInquiriesIdRouteImport } from './routes/dashboard/inquiries.$id'
-import { Route as ApiNotificationsStreamRouteImport } from './routes/api/notifications/stream'
 
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
@@ -80,24 +76,9 @@ const AuthMeRoute = AuthMeRouteImport.update({
   path: '/auth/me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthLogoutRoute = AuthLogoutRouteImport.update({
-  id: '/auth/logout',
-  path: '/auth/logout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthErrorRoute = AuthErrorRouteImport.update({
   id: '/auth/error',
   path: '/auth/error',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
@@ -126,11 +107,6 @@ const DashboardInquiriesIdRoute = DashboardInquiriesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DashboardInquiriesRoute,
 } as any)
-const ApiNotificationsStreamRoute = ApiNotificationsStreamRouteImport.update({
-  id: '/api/notifications/stream',
-  path: '/api/notifications/stream',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,17 +114,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
   '/api/health': typeof ApiHealthRoute
-  '/auth/callback': typeof AuthCallbackRoute
   '/auth/error': typeof AuthErrorRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
-  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -160,14 +132,10 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
   '/api/health': typeof ApiHealthRoute
-  '/auth/callback': typeof AuthCallbackRoute
   '/auth/error': typeof AuthErrorRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects': typeof ProjectsIndexRoute
-  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications': typeof DashboardNotificationsIndexRoute
@@ -180,17 +148,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/resume': typeof ResumeRoute
   '/api/health': typeof ApiHealthRoute
-  '/auth/callback': typeof AuthCallbackRoute
   '/auth/error': typeof AuthErrorRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/logout': typeof AuthLogoutRoute
   '/auth/me': typeof AuthMeRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRouteWithChildren
   '/dashboard/notifications': typeof DashboardNotificationsRouteWithChildren
   '/dashboard/settings': typeof DashboardSettingsRouteWithChildren
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects/': typeof ProjectsIndexRoute
-  '/api/notifications/stream': typeof ApiNotificationsStreamRoute
   '/dashboard/inquiries/$id': typeof DashboardInquiriesIdRoute
   '/dashboard/inquiries/': typeof DashboardInquiriesIndexRoute
   '/dashboard/notifications/': typeof DashboardNotificationsIndexRoute
@@ -204,17 +168,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/resume'
     | '/api/health'
-    | '/auth/callback'
     | '/auth/error'
-    | '/auth/login'
-    | '/auth/logout'
     | '/auth/me'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
     | '/dashboard/settings'
     | '/projects/$slug'
     | '/projects/'
-    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
     | '/dashboard/notifications/'
@@ -226,14 +186,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/resume'
     | '/api/health'
-    | '/auth/callback'
     | '/auth/error'
-    | '/auth/login'
-    | '/auth/logout'
     | '/auth/me'
     | '/projects/$slug'
     | '/projects'
-    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
@@ -245,17 +201,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/resume'
     | '/api/health'
-    | '/auth/callback'
     | '/auth/error'
-    | '/auth/login'
-    | '/auth/logout'
     | '/auth/me'
     | '/dashboard/inquiries'
     | '/dashboard/notifications'
     | '/dashboard/settings'
     | '/projects/$slug'
     | '/projects/'
-    | '/api/notifications/stream'
     | '/dashboard/inquiries/$id'
     | '/dashboard/inquiries/'
     | '/dashboard/notifications/'
@@ -268,17 +220,13 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ResumeRoute: typeof ResumeRoute
   ApiHealthRoute: typeof ApiHealthRoute
-  AuthCallbackRoute: typeof AuthCallbackRoute
   AuthErrorRoute: typeof AuthErrorRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthLogoutRoute: typeof AuthLogoutRoute
   AuthMeRoute: typeof AuthMeRoute
   DashboardInquiriesRoute: typeof DashboardInquiriesRouteWithChildren
   DashboardNotificationsRoute: typeof DashboardNotificationsRouteWithChildren
   DashboardSettingsRoute: typeof DashboardSettingsRouteWithChildren
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
-  ApiNotificationsStreamRoute: typeof ApiNotificationsStreamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -353,32 +301,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthMeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/logout': {
-      id: '/auth/logout'
-      path: '/auth/logout'
-      fullPath: '/auth/logout'
-      preLoaderRoute: typeof AuthLogoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth/error': {
       id: '/auth/error'
       path: '/auth/error'
       fullPath: '/auth/error'
       preLoaderRoute: typeof AuthErrorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/health': {
@@ -415,13 +342,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/inquiries/$id'
       preLoaderRoute: typeof DashboardInquiriesIdRouteImport
       parentRoute: typeof DashboardInquiriesRoute
-    }
-    '/api/notifications/stream': {
-      id: '/api/notifications/stream'
-      path: '/api/notifications/stream'
-      fullPath: '/api/notifications/stream'
-      preLoaderRoute: typeof ApiNotificationsStreamRouteImport
-      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -470,17 +390,13 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ResumeRoute: ResumeRoute,
   ApiHealthRoute: ApiHealthRoute,
-  AuthCallbackRoute: AuthCallbackRoute,
   AuthErrorRoute: AuthErrorRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthLogoutRoute: AuthLogoutRoute,
   AuthMeRoute: AuthMeRoute,
   DashboardInquiriesRoute: DashboardInquiriesRouteWithChildren,
   DashboardNotificationsRoute: DashboardNotificationsRouteWithChildren,
   DashboardSettingsRoute: DashboardSettingsRouteWithChildren,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
-  ApiNotificationsStreamRoute: ApiNotificationsStreamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

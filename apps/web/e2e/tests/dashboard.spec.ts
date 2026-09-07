@@ -11,7 +11,7 @@ test('authenticated session reaches inquiries through the real server', async ({
     page.getByText('Inquiries you submit will appear here.'),
   ).toBeVisible()
   const forwarded = await request.get(
-    `${process.env.WALLOW_API_URL}/__requests`,
+    `${process.env.BFF_API_BASE_URL}/__requests`,
   )
   expect(await forwarded.json()).toContainEqual({
     path: '/v1/inquiries/submitted',

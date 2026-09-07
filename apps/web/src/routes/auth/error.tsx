@@ -66,12 +66,12 @@ function AuthErrorPage() {
       </h1>
       <p className="mb-8 max-w-md text-foreground-secondary">{description}</p>
       <div className="flex gap-4">
-        <Link
-          to="/auth/login"
+        <a
+          href="/bff/login"
           className="rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Try Again
-        </Link>
+        </a>
         <Link
           to="/"
           className="rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted"

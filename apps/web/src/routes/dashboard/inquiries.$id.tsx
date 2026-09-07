@@ -23,7 +23,7 @@ export const Route = createFileRoute('/dashboard/inquiries/$id')({
       fetchInquiryComments({ data: { id: params.id } }),
       fetchCurrentUserRoles(),
     ])
-    const isAdmin = currentUser.roles.includes('admin')
+    const isAdmin = currentUser.permissions.includes('InquiriesRead')
     return { inquiry, comments, isAdmin }
   },
   component: InquiryDetailPage,
@@ -62,6 +62,7 @@ function InquiryDetailPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEventStreamEvents({
+    Resync: () => router.invalidate(),
     InquiryStatusUpdated: () => router.invalidate(),
     InquiryCommentAdded: () => router.invalidate(),
   })

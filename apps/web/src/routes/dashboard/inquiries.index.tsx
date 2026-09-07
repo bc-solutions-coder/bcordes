@@ -1,3 +1,4 @@
+import { resolveFailureMessage } from '@bc-solutions-coder/api-errors'
 import { useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Mail, RefreshCw } from 'lucide-react'
@@ -37,7 +38,7 @@ export const Route = createFileRoute('/dashboard/inquiries/')({
       fetchMyInquiries(),
       fetchCurrentUserRoles(),
     ])
-    const isAdmin = currentUser.roles.includes('admin')
+    const isAdmin = currentUser.permissions.includes('InquiriesRead')
     return { inquiries, isAdmin }
   },
   component: DashboardInquiriesPage,
@@ -55,6 +56,7 @@ function DashboardInquiriesPage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEventStreamEvents({
+    Resync: () => router.invalidate(),
     InquirySubmitted: () => router.invalidate(),
     InquiryStatusUpdated: () => router.invalidate(),
   })
@@ -69,13 +71,20 @@ function DashboardInquiriesPage() {
   }
 
   async function handleStatusChange(id: string, status: string) {
+    if (
+      status !== 'new' &&
+      status !== 'reviewed' &&
+      status !== 'contacted' &&
+      status !== 'closed'
+    )
+      return
     try {
       await updateInquiryStatus({ data: { id, status } })
       router.invalidate()
     } catch (error) {
       console.error('Failed to update status:', error)
       toast.error('Failed to update status', {
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: resolveFailureMessage(error),
       })
     }
   }

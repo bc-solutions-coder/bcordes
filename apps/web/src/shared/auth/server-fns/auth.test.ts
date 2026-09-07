@@ -51,7 +51,7 @@ describe('fetchCurrentUserRoles', () => {
     mockedGetAuthUser.mockResolvedValue(user)
 
     const result = await fetchCurrentUserRoles()
-    expect(result).toEqual({ roles: ['admin', 'user'] })
+    expect(result).toEqual({ roles: ['admin', 'user'], permissions: [] })
     expect(mockedGetAuthUser).toHaveBeenCalledOnce()
   })
 
@@ -59,7 +59,7 @@ describe('fetchCurrentUserRoles', () => {
     mockedGetAuthUser.mockResolvedValue(null)
 
     const result = await fetchCurrentUserRoles()
-    expect(result).toEqual({ roles: [] })
+    expect(result).toEqual({ roles: [], permissions: [] })
   })
 })
 

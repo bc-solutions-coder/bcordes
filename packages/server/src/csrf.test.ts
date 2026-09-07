@@ -42,7 +42,7 @@ describe('getCsrfToken', () => {
       refreshToken: 'rt',
       expiresAt: Math.floor(Date.now() / 1000) + 3600,
       user: {
-        id: 'u-1',
+        sub: 'u-1',
         name: 'Alice',
         email: 'alice@example.com',
         roles: ['user'],
@@ -72,7 +72,7 @@ describe('getCsrfToken', () => {
       refreshToken: 'rt',
       expiresAt: Math.floor(Date.now() / 1000) + 3600,
       user: {
-        id: 'u-1',
+        sub: 'u-1',
         name: 'Alice',
         email: 'alice@example.com',
         roles: ['user'],

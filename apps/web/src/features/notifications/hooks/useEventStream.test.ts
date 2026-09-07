@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import React from 'react'
@@ -116,12 +117,19 @@ let Wrapper: React.FC<{ children: React.ReactNode }>
 
 async function setupWrapper() {
   const EventStreamProvider = await importProvider()
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  })
   Wrapper = function WrapperComponent({
     children,
   }: {
     children: React.ReactNode
   }) {
-    return React.createElement(EventStreamProvider, null, children)
+    return React.createElement(
+      QueryClientProvider,
+      { client },
+      React.createElement(EventStreamProvider, null, children),
+    )
   }
 }
 
@@ -142,7 +150,7 @@ describe('useEventStream', () => {
     // Should be connecting initially
     expect(result.current.status).toBe('connecting')
     expect(mockEventSources).toHaveLength(1)
-    expect(latestES().url).toBe('/api/notifications/stream')
+    expect(latestES().url).toBe('/api/events?subscribe=Notifications,Inquiries')
 
     // Simulate server open
     act(() => {
@@ -798,7 +806,9 @@ describe('useEventStream', () => {
 
       // The mounting tab should become leader and create exactly one EventSource
       expect(mockEventSources).toHaveLength(1)
-      expect(latestES().url).toBe('/api/notifications/stream')
+      expect(latestES().url).toBe(
+        '/api/events?subscribe=Notifications,Inquiries',
+      )
     })
 
     it('becomes follower when existing leader responds to claim', async () => {

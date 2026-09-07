@@ -1,17 +1,40 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { getSession } from '@bcordes/auth/session'
-import { requireAdmin } from '@bcordes/auth/middleware'
+import {
+  inquiriesAddComment,
+  inquiriesGetAll,
+  inquiriesGetById,
+  inquiriesGetComments,
+  inquiriesGetSubmitted,
+  inquiriesSubmit,
+  inquiriesUpdateStatus,
+} from '@bc-solutions-coder/sdk'
+import {
+  getAuthUser,
+  requireAdmin,
+  requireAuth,
+} from '@bcordes/auth/middleware'
 import { createWallowClient } from '@bcordes/wallow/client'
-import { serviceClient } from '@bcordes/wallow/service-client'
+import { hasSessionReference } from '@bcordes/auth/session'
+import { getInquiryService } from '@bcordes/wallow/service-client'
 import { STATUS_TO_API, STATUS_TO_FRONTEND } from '../lib/inquiries'
-import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
+import type { InquiryResponse } from '@bc-solutions-coder/sdk'
 
-function normalizeInquiryStatus(inquiry: Inquiry): Inquiry {
+function normalizeInquiryStatus(inquiry: InquiryResponse): InquiryResponse {
   return {
     ...inquiry,
     status: STATUS_TO_FRONTEND[inquiry.status] ?? inquiry.status.toLowerCase(),
   }
+}
+
+async function accessibleInquiry(id: string) {
+  const user = await requireAuth()
+  const sdk = await createWallowClient()
+  const inquiry = await inquiriesGetById({ client: sdk.client, path: { id } })
+  const staff = user.permissions.includes('InquiriesRead')
+  if (!staff && inquiry.submitterId !== user.id)
+    throw new Response('Not found', { status: 404 })
+  return { sdk, inquiry, staff }
 }
 
 const submitInquirySchema = z.object({
@@ -33,24 +56,21 @@ const submitInquirySchema = z.object({
 export const submitInquiry = createServerFn({ method: 'POST' })
   .inputValidator(submitInquirySchema)
   .handler(async ({ data }) => {
-    const session = await getSession()
-
-    if (session) {
-      const client = await createWallowClient()
-      const response = await client.post('/v1/inquiries', data)
-      return normalizeInquiryStatus((await response.json()) as Inquiry)
-    }
-
-    const response = await serviceClient.post('/v1/inquiries', data)
-    return normalizeInquiryStatus((await response.json()) as Inquiry)
+    const user = await getAuthUser()
+    if (!user && hasSessionReference())
+      throw new Response('Sign in again before submitting', { status: 401 })
+    const sdk = user ? await createWallowClient() : getInquiryService()
+    return inquiriesSubmit({
+      client: sdk.client,
+      body: { ...data, company: data.company ?? null },
+    })
   })
 
 export const fetchInquiries = createServerFn({ method: 'GET' }).handler(
   async () => {
     await requireAdmin()
-    const client = await createWallowClient()
-    const response = await client.get('/v1/inquiries')
-    return ((await response.json()) as Array<Inquiry>).map(
+    const sdk = await createWallowClient()
+    return (await inquiriesGetAll({ client: sdk.client })).map(
       normalizeInquiryStatus,
     )
   },
@@ -58,58 +78,64 @@ export const fetchInquiries = createServerFn({ method: 'GET' }).handler(
 
 export const fetchMyInquiries = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const session = await getSession()
-    const isAdmin = session?.user.roles.includes('admin') ?? false
-    const client = await createWallowClient()
-    const path = isAdmin ? '/v1/inquiries' : '/v1/inquiries/submitted'
-    const response = await client.get(path)
-    return ((await response.json()) as Array<Inquiry>).map(
-      normalizeInquiryStatus,
-    )
+    const user = await requireAuth()
+    const sdk = await createWallowClient()
+    const inquiries = user.permissions.includes('InquiriesRead')
+      ? await inquiriesGetAll({ client: sdk.client })
+      : await inquiriesGetSubmitted({ client: sdk.client })
+    return inquiries.map(normalizeInquiryStatus)
   },
 )
 
 export const fetchInquiry = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ id: z.uuid() }))
-  .handler(async ({ data }) => {
-    const client = await createWallowClient()
-    const response = await client.get(`/v1/inquiries/${data.id}`)
-    return normalizeInquiryStatus((await response.json()) as Inquiry)
-  })
+  .handler(async ({ data }) =>
+    normalizeInquiryStatus((await accessibleInquiry(data.id)).inquiry),
+  )
 
 export const updateInquiryStatus = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ id: z.uuid(), status: z.string() }))
+  .inputValidator(
+    z.object({
+      id: z.uuid(),
+      status: z.enum(['new', 'reviewed', 'contacted', 'closed']),
+    }),
+  )
   .handler(async ({ data }) => {
     await requireAdmin()
-    const client = await createWallowClient()
-    const apiStatus = STATUS_TO_API[data.status] ?? data.status
-    const response = await client.patch(`/v1/inquiries/${data.id}/status`, {
-      newStatus: apiStatus,
+    const sdk = await createWallowClient()
+    await inquiriesUpdateStatus({
+      client: sdk.client,
+      path: { id: data.id },
+      body: { newStatus: STATUS_TO_API[data.status] },
     })
-    return normalizeInquiryStatus((await response.json()) as Inquiry)
   })
 
 export const fetchInquiryComments = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ id: z.string().uuid() }))
+  .inputValidator(z.object({ id: z.uuid() }))
   .handler(async ({ data }) => {
-    const client = await createWallowClient()
-    const response = await client.get(`/v1/inquiries/${data.id}/comments`)
-    return (await response.json()) as Array<InquiryComment>
+    const { sdk, staff } = await accessibleInquiry(data.id)
+    const comments = await inquiriesGetComments({
+      client: sdk.client,
+      path: { id: data.id },
+    })
+    return staff ? comments : comments.filter((comment) => !comment.isInternal)
   })
 
-const submitInquiryCommentSchema = z.object({
-  id: z.uuid(),
-  content: z.string().min(1),
-  isInternal: z.boolean().optional().default(false),
-})
-
 export const submitInquiryComment = createServerFn({ method: 'POST' })
-  .inputValidator(submitInquiryCommentSchema)
+  .inputValidator(
+    z.object({
+      id: z.uuid(),
+      content: z.string().min(1).max(5000),
+      isInternal: z.boolean().default(false),
+    }),
+  )
   .handler(async ({ data }) => {
-    const client = await createWallowClient()
-    const response = await client.post(`/v1/inquiries/${data.id}/comments`, {
-      content: data.content,
-      isInternal: data.isInternal,
+    const { sdk, staff } = await accessibleInquiry(data.id)
+    if (data.isInternal && !staff)
+      throw new Response('Forbidden', { status: 403 })
+    return inquiriesAddComment({
+      client: sdk.client,
+      path: { id: data.id },
+      body: { content: data.content, isInternal: data.isInternal },
     })
-    return (await response.json()) as InquiryComment
   })

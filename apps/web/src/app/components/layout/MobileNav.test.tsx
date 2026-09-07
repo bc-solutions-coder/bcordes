@@ -1,3 +1,4 @@
+import { logout } from '@bc-solutions-coder/sdk'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
@@ -36,6 +37,10 @@ afterEach(() => {
   cleanup()
 })
 
+vi.mock('@bc-solutions-coder/sdk', () => ({
+  logout: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe('MobileNav', () => {
   it('renders the hamburger menu button', () => {
     renderWithProviders(<MobileNav />)
@@ -65,7 +70,12 @@ describe('MobileNav', () => {
 
   it('shows Dashboard and Sign Out when user is authenticated', () => {
     mockUseUser.mockReturnValue({
-      user: { name: 'Test User', email: 'test@example.com', roles: ['user'] },
+      user: {
+        name: 'Test User',
+        email: 'test@example.com',
+        roles: ['user'],
+        permissions: ['InquiriesWrite'],
+      },
       isLoading: false,
     })
     renderWithProviders(<MobileNav />)
@@ -76,15 +86,16 @@ describe('MobileNav', () => {
     expect(screen.getByText('Sign Out')).toBeInTheDocument()
   })
 
-  it('creates and submits a logout form when Sign Out is clicked', () => {
+  it('calls SDK logout when Sign Out is clicked', () => {
     mockUseUser.mockReturnValue({
-      user: { name: 'Test User', email: 'test@example.com', roles: ['user'] },
+      user: {
+        name: 'Test User',
+        email: 'test@example.com',
+        roles: ['user'],
+        permissions: ['InquiriesWrite'],
+      },
       isLoading: false,
     })
-
-    const submitSpy = vi.fn()
-    const appendChildSpy = vi.spyOn(document.body, 'appendChild')
-    vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(submitSpy)
 
     renderWithProviders(<MobileNav />)
     fireEvent.click(
@@ -92,16 +103,6 @@ describe('MobileNav', () => {
     )
     fireEvent.click(screen.getByText('Sign Out'))
 
-    const appendedForm = appendChildSpy.mock.calls.find(
-      (call) => call[0] instanceof HTMLFormElement,
-    )
-    expect(appendedForm).toBeDefined()
-
-    const form = appendedForm![0] as HTMLFormElement
-    expect(form.method).toBe('post')
-    expect(form.action).toContain('/auth/logout')
-    expect(submitSpy).toHaveBeenCalled()
-
-    appendChildSpy.mockRestore()
+    expect(logout).toHaveBeenCalledOnce()
   })
 })

@@ -19,7 +19,7 @@ const NAV_ITEMS = NAV_LINKS.map((link) => ({
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const { user } = useUser()
-  const isAdmin = user?.roles.includes('admin') ?? false
+  const isAdmin = user?.permissions.includes('InquiriesRead') ?? false
 
   useEffect(() => {
     const handleScroll = () => {

@@ -16,7 +16,7 @@ const stats: Array<Stat> = [
 
 export function Hero() {
   const { user } = useUser()
-  const isAdmin = user?.roles.includes('admin') ?? false
+  const isAdmin = user?.permissions.includes('InquiriesRead') ?? false
 
   return (
     <section

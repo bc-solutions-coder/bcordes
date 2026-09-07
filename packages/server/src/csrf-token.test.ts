@@ -20,7 +20,7 @@ describe('CSRF token — session storage', () => {
       refreshToken: 'rt',
       expiresAt: Math.floor(Date.now() / 1000) + 3600,
       user: {
-        id: 'u1',
+        sub: 'u1',
         name: 'Test',
         email: 'test@test.com',
         roles: ['user'],

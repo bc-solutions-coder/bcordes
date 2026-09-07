@@ -1,5 +1,8 @@
 'use client'
 
+import { logout } from '@bc-solutions-coder/sdk'
+import { toast } from 'sonner'
+
 import { Link } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut } from 'lucide-react'
 import { useState } from 'react'
@@ -17,7 +20,7 @@ const NAV_ITEMS = NAV_LINKS.map((link) => ({
 export function MobileNav() {
   const [open, setOpen] = useState(false)
   const { user } = useUser()
-  const isAdmin = user?.roles.includes('admin') ?? false
+  const isAdmin = user?.permissions.includes('InquiriesRead') ?? false
 
   const close = () => setOpen(false)
 
@@ -51,11 +54,9 @@ export function MobileNav() {
               <button
                 onClick={() => {
                   close()
-                  const form = document.createElement('form')
-                  form.method = 'POST'
-                  form.action = '/auth/logout'
-                  document.body.appendChild(form)
-                  form.submit()
+                  void logout().catch(() =>
+                    toast.error('Unable to sign out. Please try again.'),
+                  )
                 }}
                 className="flex items-center gap-2 px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-primary hover:bg-secondary rounded-md transition-colors text-left"
               >
@@ -65,7 +66,7 @@ export function MobileNav() {
             </>
           ) : (
             <Button
-              render={<a href="/auth/login" onClick={close} />}
+              render={<a href="/bff/login" onClick={close} />}
               nativeButton={false}
               variant="outline"
               className="w-full border-border text-foreground-secondary hover:text-primary"
