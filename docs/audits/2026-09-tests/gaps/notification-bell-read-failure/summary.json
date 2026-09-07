@@ -1,6 +1,6 @@
 {
   "source_commit": "ddf3c7d2154f18ae2981ca53677bbe99366a8d7c",
-  "status": "proposed; implementation pending",
+  "status": "accepted plan; implementation pending",
   "observed_validation": {
     "command": "pnpm exec vitest run apps/web/src/features/notifications/components/NotificationBell.test.tsx --reporter=json --outputFile=/tmp/bcordes-gap82-run.json",
     "passed": 14,
@@ -9,5 +9,6 @@
   },
   "new_test_files": [],
   "new_scenarios_implemented": 0,
-  "proposed_decision": "Navigate immediately; handle individual-read failure with visible feedback, retain server-authoritative unread state, and allow subsequent interaction to retry."
+  "accepted_decision": "Navigate immediately; handle individual-read failure with visible feedback, retain server-authoritative unread state, and allow subsequent interaction to retry.",
+  "acceptance": "User accepted: yes lets continue."
 }

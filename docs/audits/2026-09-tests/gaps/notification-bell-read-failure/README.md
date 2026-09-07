@@ -1,10 +1,10 @@
-# Notification bell read-failure proposal
+# Notification bell read-failure accepted plan
 
 Decision: [Decide notification bell read-failure behavior and coverage](https://github.com/bc-solutions-coder/bcordes/issues/82).
 
-Status: proposed; implementation pending. Source inspected at `ddf3c7d2154f18ae2981ca53677bbe99366a8d7c`.
+Status: accepted plan; implementation pending. User accepted: “yes lets continue”. Source inspected at `ddf3c7d2154f18ae2981ca53677bbe99366a8d7c`.
 
-## Recommendation
+## Accepted decision
 
 Opening a notification should navigate immediately to its existing destination, even while marking it read is pending or when that request fails. Marking read records state; it should not gate access to the destination. This aligns the bell with the notification page and intentionally changes the bell's current success timing as well as its failure behavior.
 
@@ -36,4 +36,4 @@ The built-browser scenario uses the accepted per-session synthetic authenticatio
 
 Run focused component and browser cases, then the accepted affected-area and final gates. Prove the new assertions fail when navigation waits for the request, failure feedback is removed, a rejected write falsely clears unread state, or success stops reconciling data. Restore the implementation and show passing results. The browser must retain rejection diagnostics throughout this check.
 
-The accepted requirement to reach and enforce 90% for lines, statements, branches and functions still applies. Coverage totals do not replace the observable outcomes above. This proposal changes no product code or tests and supplies no new coverage credit.
+The accepted requirement to reach and enforce 90% for lines, statements, branches and functions still applies. Coverage totals do not replace the observable outcomes above. This plan changes no product code or tests and supplies no new coverage credit.
