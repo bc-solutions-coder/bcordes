@@ -214,6 +214,7 @@ describe('the package runs in the root vitest', () => {
         join(packageDir, 'package.test.ts'),
         join(packageDir, 'src/middleware.test.ts'),
         join(packageDir, 'src/redact.test.ts'),
+        join(packageDir, 'src/session.integration.test.ts'),
       ])
       expect(
         collected.every((entry) => entry.projectName === '@bcordes/auth'),

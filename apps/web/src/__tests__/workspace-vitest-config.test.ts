@@ -305,26 +305,31 @@ describe('merged coverage output', () => {
   })
 
   it(
-    'writes one lcov.info covering apps/web sources',
+    'writes coverage output even when a partial run fails the global thresholds',
     { timeout: 180_000 },
     async () => {
       const reportsDirectory = mkdtempSync(join(tmpdir(), 'bcordes-coverage-'))
       reportsDirectories.push(reportsDirectory)
 
       // Run one unrelated test to avoid recursion; isolate its report from the parent coverage run.
-      await execFileAsync(
-        'pnpm',
-        [
-          'exec',
-          'vitest',
-          'run',
-          '--coverage',
-          '--coverage.reporter=lcov',
-          `--coverage.reportsDirectory=${reportsDirectory}`,
-          'routes/dashboard/settings.test.tsx',
-        ],
-        { cwd: repoRoot, encoding: 'utf8' },
-      )
+      await expect(
+        execFileAsync(
+          'pnpm',
+          [
+            'exec',
+            'vitest',
+            'run',
+            '--coverage',
+            '--coverage.reporter=lcov',
+            `--coverage.reportsDirectory=${reportsDirectory}`,
+            'routes/dashboard/settings.test.tsx',
+          ],
+          { cwd: repoRoot, encoding: 'utf8' },
+        ),
+      ).rejects.toMatchObject({
+        code: 1,
+        stderr: expect.stringContaining('does not meet global threshold'),
+      })
 
       const lcovPath = join(reportsDirectory, 'lcov.info')
 

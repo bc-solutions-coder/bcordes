@@ -220,6 +220,36 @@ describe('usePushNotifications', () => {
     })
   })
 
+  it('does not deregister anything when there are no push devices', async () => {
+    stubBrowserAPIs()
+    const { usePushNotifications } = await import('./usePushNotifications')
+    const { result } = renderHook(() => usePushNotifications(), {
+      wrapper: createWrapper(),
+    })
+    await act(async () => {
+      await result.current.disable()
+    })
+    expect(result.current.isRegistered).toBe(false)
+    expect(mockDeregisterPushDevice).not.toHaveBeenCalled()
+  })
+
+  it('reports default permission when the browser has no Notification API', async () => {
+    stubBrowserAPIs({ omitServiceWorker: true, omitPushManager: true })
+    const descriptor = Object.getOwnPropertyDescriptor(window, 'Notification')
+    Reflect.deleteProperty(window, 'Notification')
+    try {
+      const { usePushNotifications } = await import('./usePushNotifications')
+      const { result } = renderHook(() => usePushNotifications(), {
+        wrapper: createWrapper(),
+      })
+      expect(result.current.permission).toBe('default')
+      expect(result.current.isSupported).toBe(false)
+      expect(mockListPushDevices).not.toHaveBeenCalled()
+    } finally {
+      if (descriptor) Object.defineProperty(window, 'Notification', descriptor)
+    }
+  })
+
   describe('sendTest mutation', () => {
     it('calls sendTestPush', async () => {
       stubBrowserAPIs()

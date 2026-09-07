@@ -1,0 +1,95 @@
+{
+  "baseline_revision": "d0523a0",
+  "status": "implemented; review pending",
+  "passed": 1349,
+  "failed": 0,
+  "skipped": 0,
+  "coverage": {
+    "lines": {
+      "total": 1078,
+      "covered": 1013,
+      "skipped": 0,
+      "pct": 93.97
+    },
+    "statements": {
+      "total": 1158,
+      "covered": 1075,
+      "skipped": 0,
+      "pct": 92.83
+    },
+    "functions": {
+      "total": 386,
+      "covered": 348,
+      "skipped": 0,
+      "pct": 90.15
+    },
+    "branches": {
+      "total": 668,
+      "covered": 602,
+      "skipped": 0,
+      "pct": 90.11
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "enforced_thresholds": {
+    "lines": 90,
+    "statements": 90,
+    "branches": 90,
+    "functions": 90
+  },
+  "threshold_failure_observed": {
+    "branches": 89.67,
+    "exit": 1
+  },
+  "quality_gates": {
+    "typecheck": 0,
+    "lint": 0,
+    "format_check": 0,
+    "documentation_links": 0,
+    "diff_check": 0
+  },
+  "defect_checks": [
+    {
+      "defect": "request-session",
+      "test": "packages/auth/src/session.integration.test.ts",
+      "exit": 1
+    },
+    {
+      "defect": "request-origin",
+      "test": "apps/web/src/start.test.ts",
+      "exit": 1
+    },
+    {
+      "defect": "auth-error-message",
+      "test": "apps/web/src/routes/auth/error.test.tsx",
+      "exit": 1
+    },
+    {
+      "defect": "root-reset",
+      "test": "apps/web/src/routes/__root.error.test.tsx",
+      "exit": 1
+    },
+    {
+      "defect": "stream-relay",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "exit": 1
+    },
+    {
+      "defect": "empty-push-devices",
+      "test": "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "exit": 1
+    },
+    {
+      "defect": "conditional-write-overwrites-existing-value",
+      "test": "packages/valkey/src/sdk.test.ts",
+      "exit": 1
+    }
+  ],
+  "measurement_scope_changed": false,
+  "cleanup_deletions": 0
+}

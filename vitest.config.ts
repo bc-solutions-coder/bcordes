@@ -7,6 +7,7 @@ export default defineConfig({
     projects: ['apps/*', 'packages/*'],
     coverage: {
       provider: 'v8',
+      thresholds: { lines: 90, statements: 90, branches: 90, functions: 90 },
       reporter: ['text', 'lcov', 'json-summary'],
       reportsDirectory: './coverage',
       reportOnFailure: true,

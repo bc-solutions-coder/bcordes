@@ -100,6 +100,14 @@ describe('NotificationBell', () => {
     expect(badge).toBeDefined()
   })
 
+  it('caps the visible unread badge at 99+ for larger counts', async () => {
+    mockUseUser.mockReturnValue({ user: createMockUser(), isLoading: false })
+    mockFetchUnreadCount.mockResolvedValue(120)
+    renderWithProviders(<NotificationBell />)
+    expect(await screen.findByText('99+')).toBeVisible()
+    expect(screen.queryByText('120')).toBeNull()
+  })
+
   it('does not show badge when count is 0', () => {
     mockUseUser.mockReturnValue({
       user: createMockUser({ id: '1', name: 'Test' }),

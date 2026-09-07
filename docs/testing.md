@@ -37,6 +37,8 @@ Use Testing Library for rendered behavior and ordinary Vitest tests for pure log
 
 Test success, failure, and access boundaries that matter for the change. Server-function tests should exercise validation and authorization as well as the backend call. Do not add assertions against raw source text or implementation structure unless explicitly requested. Existing source tests are not the default pattern for new tests.
 
+The workspace integration cases start disposable `valkey/valkey:8-alpine` containers on random loopback ports. Run the Docker engine before the unit/coverage command; each case file owns and removes its server. These tests use synthetic sessions and controlled HTTP responses, with no live identity provider or production credentials.
+
 Coverage excludes stories, tests, generated routes, `types.ts`, and UI primitive source. A coverage report does not establish that every behavior or external integration was tested.
 
 ## Verify the production app

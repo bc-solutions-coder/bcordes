@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import { applySecurityHeaders } from './security-headers'
 
 it('preserves redirects and multiple session cookies while adding security headers', () => {
@@ -31,4 +31,17 @@ it('keeps streamed response content readable', async () => {
   )
   expect(response.headers.get('content-type')).toBe('text/event-stream')
   expect(await response.text()).toBe('data: event\n\n')
+})
+
+it('requires HTTPS for production responses while preserving their contents', async () => {
+  vi.stubEnv('NODE_ENV', 'production')
+  try {
+    const response = applySecurityHeaders(new Response('secure page'))
+    expect(response.headers.get('strict-transport-security')).toBe(
+      'max-age=31536000; includeSubDomains',
+    )
+    expect(await response.text()).toBe('secure page')
+  } finally {
+    vi.unstubAllEnvs()
+  }
 })

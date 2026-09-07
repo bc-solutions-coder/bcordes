@@ -195,6 +195,7 @@ describe('the package runs in the root vitest', () => {
       expect(files).toEqual([
         join(packageDir, 'package.test.ts'),
         join(packageDir, 'src/client.test.ts'),
+        join(packageDir, 'src/sdk.test.ts'),
       ])
       expect(
         collected.every((entry) => entry.projectName === '@bcordes/valkey'),

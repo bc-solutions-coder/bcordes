@@ -66,12 +66,16 @@ function fireNamedEvent(es: MockEventSource, eventType: string, data: unknown) {
   listeners.forEach((l) => l(event))
 }
 
-const mockUser = { id: 'test-user', name: 'Test' }
+let mockUser: { id: string; name: string; tenantId?: string } | null = {
+  id: 'test-user',
+  name: 'Test',
+}
 vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: mockUser, isLoading: false }),
 }))
 
 beforeEach(() => {
+  mockUser = { id: 'test-user', name: 'Test' }
   mockEventSources = []
   vi.stubGlobal(
     'EventSource',
@@ -124,6 +128,38 @@ async function setupWrapper() {
 describe('useEventStream', () => {
   beforeEach(async () => {
     await setupWrapper()
+  })
+
+  it('stays disconnected without a signed-in customer', async () => {
+    mockUser = null
+    const useEventStream = await importHook()
+    const { result } = renderHook(() => useEventStream(), { wrapper: Wrapper })
+    expect(result.current.status).toBe('disconnected')
+    expect(mockEventSources).toHaveLength(0)
+  })
+
+  it('clears private notification data and closes the stream when the customer signs out', async () => {
+    const useEventStream = await importHook()
+    const EventStreamProvider = await importProvider()
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      React.createElement(
+        QueryClientProvider,
+        { client },
+        React.createElement(EventStreamProvider, null, children),
+      )
+    const { result, rerender } = renderHook(() => useEventStream(), { wrapper })
+    const connection = latestES()
+    client.setQueryData(['notifications'], [{ id: 'private-notification' }])
+    client.setQueryData(['notification-settings'], { private: true })
+    mockUser = null
+    rerender()
+    expect(result.current.status).toBe('disconnected')
+    expect(connection.close).toHaveBeenCalledOnce()
+    expect(client.getQueryData(['notifications'])).toBeUndefined()
+    expect(client.getQueryData(['notification-settings'])).toBeUndefined()
   })
 
   it('starts connection on mount and transitions connecting -> connected', async () => {
@@ -723,6 +759,96 @@ describe('useEventStream', () => {
       return mockChannelInstances[mockChannelInstances.length - 1]
     }
 
+    it('relays named and generic events from the leader to other tabs and local subscribers', async () => {
+      const useEventStream = await importHook()
+      const { result } = renderHook(() => useEventStream(), {
+        wrapper: Wrapper,
+      })
+      const handler = vi.fn()
+      act(() => {
+        result.current.subscribe('NotificationCreated', handler)
+        vi.advanceTimersByTime(200)
+      })
+      const envelope = {
+        type: 'NotificationCreated',
+        module: 'Notifications',
+        payload: { id: 'new-notification' },
+        timestamp: '2026-09-07T00:00:00Z',
+      }
+      act(() => {
+        fireOpen(latestES())
+        fireMessage(latestES(), envelope)
+        fireNamedEvent(latestES(), 'NotificationCreated', envelope)
+      })
+      expect(handler).toHaveBeenCalledTimes(2)
+      expect(handler).toHaveBeenLastCalledWith(envelope)
+      expect(
+        latestChannel().postMessage.mock.calls.filter(
+          ([message]) => message.type === 'event',
+        ),
+      ).toEqual([[{ type: 'event', envelope }], [{ type: 'event', envelope }]])
+    })
+
+    it('keeps a follower disconnected while the leader continues sending heartbeats', async () => {
+      const useEventStream = await importHook()
+      renderHook(() => useEventStream(), { wrapper: Wrapper })
+      const channel = latestChannel()
+      act(() => {
+        channel.onmessage?.(
+          new MessageEvent('message', { data: { type: 'already-leader' } }),
+        )
+      })
+      for (let heartbeat = 0; heartbeat < 3; heartbeat++) {
+        act(() => {
+          vi.advanceTimersByTime(5000)
+          channel.onmessage?.(
+            new MessageEvent('message', { data: { type: 'heartbeat' } }),
+          )
+        })
+      }
+      expect(mockEventSources).toHaveLength(0)
+      act(() => vi.advanceTimersByTime(7200))
+      expect(mockEventSources).toHaveLength(1)
+    })
+
+    it('answers competing claims and ignores relayed duplicates while acting as leader', async () => {
+      const useEventStream = await importHook()
+      const { result } = renderHook(() => useEventStream(), {
+        wrapper: Wrapper,
+      })
+      const handler = vi.fn()
+      act(() => {
+        result.current.subscribe('NotificationCreated', handler)
+        vi.advanceTimersByTime(200)
+      })
+      const channel = latestChannel()
+      act(() => {
+        channel.onmessage?.(
+          new MessageEvent('message', { data: { type: 'claim' } }),
+        )
+        channel.onmessage?.(
+          new MessageEvent('message', { data: { type: 'heartbeat' } }),
+        )
+        channel.onmessage?.(
+          new MessageEvent('message', {
+            data: {
+              type: 'event',
+              envelope: {
+                type: 'NotificationCreated',
+                payload: { id: 'duplicate' },
+              },
+            },
+          }),
+        )
+      })
+      expect(channel.postMessage).toHaveBeenCalledWith({
+        type: 'already-leader',
+      })
+      expect(channel.postMessage).toHaveBeenCalledWith({ type: 'heartbeat' })
+      expect(handler).not.toHaveBeenCalled()
+      expect(mockEventSources).toHaveLength(1)
+    })
+
     it('broadcasts claim on mount', async () => {
       const useEventStream = await importHook()
 
@@ -946,6 +1072,32 @@ describe('useEventStream', () => {
 
       expect(mockEventSources.length).toBe(countBefore)
     })
+  })
+
+  it('removes one subscriber without disturbing another and allows repeated unsubscribe', async () => {
+    const useEventStream = await importHook()
+    const { result } = renderHook(() => useEventStream(), { wrapper: Wrapper })
+    const first = vi.fn()
+    const second = vi.fn()
+    const unsubscribeFirst = result.current.subscribe('Announcement', first)
+    const unsubscribeSecond = result.current.subscribe('Announcement', second)
+    unsubscribeFirst()
+    const envelope = {
+      type: 'Announcement',
+      module: 'Notifications',
+      payload: { title: 'news' },
+      timestamp: '2026-09-07T00:00:00Z',
+    }
+    act(() => {
+      fireMessage(latestES(), {})
+      fireMessage(latestES(), envelope)
+    })
+    expect(first).not.toHaveBeenCalled()
+    expect(second).toHaveBeenCalledExactlyOnceWith(envelope)
+    unsubscribeSecond()
+    unsubscribeSecond()
+    act(() => fireMessage(latestES(), envelope))
+    expect(second).toHaveBeenCalledOnce()
   })
 
   it('ignores malformed message data gracefully', async () => {
