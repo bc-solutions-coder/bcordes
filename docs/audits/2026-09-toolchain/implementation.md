@@ -249,3 +249,20 @@ The default build-and-verify path also passes. All 1289 tests, types, lint,
 formatting, actionlint, bash syntax and documentation-link checks pass. Both
 review axes reported no findings. Actual workflow/artifact execution, GitHub
 cache reuse and timing evidence are pending the pushed workflow run.
+
+### GitHub execution and cache evidence
+
+[Workflow samples](docker-ci-results.json) record actual runs. Both jobs passed
+on c5a9e1a in runs 34142867802 and 34143164583. The second run reported 23
+cached steps, including dependency installation, and loaded the same
+revision-tagged image in the runtime job. This verifies the GHA backend and
+artifact path rather than inferring them from local behavior.
+
+Creation-to-last-job completion was 143 seconds for the first new run and
+57 seconds warm, both with four seconds of initial queue time. Build/runtime
+execution was 97/39 seconds first and 18/32 seconds warm. Archive upload,
+download and load totaled 11 seconds first and four seconds warm. The previous
+PR run 34072010469 took 627 seconds, including 134 seconds of initial queue;
+its build/runtime execution was 493/71 seconds. These differ in revision and
+trigger, so they are illustrative Docker-workflow samples, not matched full-PR
+medians or proof of the overall 25% target. #61 remains dependent on #57.

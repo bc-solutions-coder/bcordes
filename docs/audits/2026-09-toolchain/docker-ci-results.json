@@ -1,0 +1,370 @@
+{
+  "scope": "Docker validation workflow only",
+  "limitations": [
+    "One previous PR run and two new manual runs; not matched full-PR medians.",
+    "New runs use the same revision; warm run follows the first run.",
+    "Queue and image-transfer overhead are reported separately.",
+    "TS7/Oxlint and final full-migration timing comparison remain pending."
+  ],
+  "runs": [
+    {
+      "conclusion": "success",
+      "created_at": "2026-09-07T01:08:02Z",
+      "event": "pull_request",
+      "head_sha": "198ad187990b571ed0b4d96c9330b5614533be4c",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34072010469",
+      "id": 34072010469,
+      "run_started_at": "2026-09-07T01:10:11Z",
+      "status": "completed",
+      "updated_at": "2026-09-07T01:18:30Z",
+      "sample": "before",
+      "creationToLastJobSeconds": 627.0,
+      "initialQueueSeconds": 134.0,
+      "jobs": [
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "executionSeconds": 71.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 64.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "conclusion": "success",
+          "executionSeconds": 493.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up QEMU",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 463.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 9.0
+            },
+            {
+              "name": "Post Set up QEMU",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-09-07T16:21:23Z",
+      "event": "workflow_dispatch",
+      "head_sha": "c5a9e1a54609d56e1394b305ffedb688f5c4a376",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34142867802",
+      "id": 34142867802,
+      "run_started_at": "2026-09-07T16:21:23Z",
+      "status": "completed",
+      "updated_at": "2026-09-07T16:23:47Z",
+      "sample": "first",
+      "creationToLastJobSeconds": 143.0,
+      "initialQueueSeconds": 4.0,
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "executionSeconds": 97.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 79.0
+            },
+            {
+              "name": "Upload the built image",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "executionSeconds": 39.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Download the built image",
+              "conclusion": "success",
+              "seconds": 3.0
+            },
+            {
+              "name": "Load the built image",
+              "conclusion": "success",
+              "seconds": 5.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 25.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "cachedStepCount": 0,
+      "dependencyInstallCached": false
+    },
+    {
+      "conclusion": "success",
+      "created_at": "2026-09-07T16:25:06Z",
+      "event": "workflow_dispatch",
+      "head_sha": "c5a9e1a54609d56e1394b305ffedb688f5c4a376",
+      "html_url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34143164583",
+      "id": 34143164583,
+      "run_started_at": "2026-09-07T16:25:06Z",
+      "status": "completed",
+      "updated_at": "2026-09-07T16:26:04Z",
+      "sample": "warm",
+      "creationToLastJobSeconds": 57.0,
+      "initialQueueSeconds": 4.0,
+      "jobs": [
+        {
+          "name": "build",
+          "conclusion": "success",
+          "executionSeconds": 18.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 4.0
+            },
+            {
+              "name": "Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 6.0
+            },
+            {
+              "name": "Upload the built image",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Build Docker image (validation only)",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Post Set up Docker Buildx",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        },
+        {
+          "name": "runtime",
+          "conclusion": "success",
+          "executionSeconds": 32.0,
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Checkout repository",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Download the built image",
+              "conclusion": "success",
+              "seconds": 1.0
+            },
+            {
+              "name": "Load the built image",
+              "conclusion": "success",
+              "seconds": 2.0
+            },
+            {
+              "name": "Verify production container and assets",
+              "conclusion": "success",
+              "seconds": 25.0
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Post Checkout repository",
+              "conclusion": "success",
+              "seconds": 0.0
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "seconds": 0.0
+            }
+          ]
+        }
+      ],
+      "cachedStepCount": 23,
+      "dependencyInstallCached": true
+    }
+  ]
+}

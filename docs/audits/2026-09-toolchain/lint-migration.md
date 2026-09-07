@@ -111,3 +111,27 @@ these three style policies. Neither option has been applied.
 
 References: [migration guide](https://oxc.rs/docs/guide/usage/linter/migrate-from-eslint.html),
 [JS plugin status](https://oxc.rs/docs/guide/usage/linter/js-plugins.html).
+
+## Native behavior probes
+
+Oxlint 1.82.0 with oxlint-tsgolint 7.0.2001 was exercised in an isolated
+temporary project, leaving the repository linter and compiler unchanged.
+Seventeen files produced nine intended failures and eight clean results:
+
+- Reject feature-to-route imports, deep app imports, deep package imports,
+  auth-to-UI imports and the retired tilde alias; accept public module/package
+  imports and UI imports from permitted packages.
+- Reject an always-truthy typed condition in application code; preserve the
+  UI/forms exceptions and an explicit inline typed-rule suppression.
+- Reject bare Node builtins, unsorted named imports and legacy octal syntax;
+  accept sorted named imports and valid optional-value handling.
+
+The automatic migration's import patterns were insufficient: Oxlint's native
+globs require a recursive final ** for nested paths. For example, migrate
+`@bcordes/ui/*` to `@bcordes/ui/**`, `~/*` to `~/**`, and
+`@/features/*/*` to `@/features/*/**`. With those changes, the probes match the
+existing boundary policy. Keep each existing diagnostic message.
+
+These probes establish the listed behavior, not complete equivalence of every
+option. The three style-rule decisions remain pending; no policy has been
+retired and no alpha plugin fallback has been enabled.
