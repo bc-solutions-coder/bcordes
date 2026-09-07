@@ -1,0 +1,5 @@
+file	tests	suites	keep	rename	rewrite	delete	whole_file_deletion
+apps/web/e2e/tests/contact-form.spec.ts	3	1	0	0	3	0	no
+apps/web/e2e/tests/dashboard.spec.ts	2	0	0	0	2	0	no
+apps/web/e2e/tests/public-pages.spec.ts	18	5	7	2	6	3	no
+apps/web/e2e/tests/sdk-boundaries.spec.ts	1	0	0	0	1	0	no

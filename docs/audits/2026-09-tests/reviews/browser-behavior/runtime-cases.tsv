@@ -1,0 +1,25 @@
+file	title	status
+apps/web/e2e/tests/contact-form.spec.ts	tests/contact-form.spec.ts Contact Form submitting with all fields empty shows client-side validation errors without a network request	expected
+apps/web/e2e/tests/contact-form.spec.ts	tests/contact-form.spec.ts Contact Form filling valid fields and submitting shows success confirmation	expected
+apps/web/e2e/tests/contact-form.spec.ts	"tests/contact-form.spec.ts Contact Form ""Send Another Message"" resets the form to its empty initial state"	expected
+apps/web/e2e/tests/dashboard.spec.ts	tests/dashboard.spec.ts authenticated session reaches inquiries through the real server	expected
+apps/web/e2e/tests/dashboard.spec.ts	tests/dashboard.spec.ts notification bell displays backend data and marks it read	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts project navigation opens detail and unknown projects show not found	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts unauthenticated dashboard access redirects to login	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Home page loads with 200 status and displays the hero headline	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Home page displays hero call-to-action buttons	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Home page displays key statistics	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Home page has navigation links pointing to correct hrefs	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages About page loads and contains the about section heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages About page displays the role subtitle	expected
+apps/web/e2e/tests/public-pages.spec.ts	"tests/public-pages.spec.ts Public Pages About page displays the ""My Approach"" values section"	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages About page has navigation links visible	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Projects page loads and displays the page heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Projects page lists at least one project card	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Projects page displays project count text	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Projects page has navigation links visible	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Contact page loads and renders the page heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Contact page renders the contact form with required fields	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Contact page renders contact information section	expected
+apps/web/e2e/tests/public-pages.spec.ts	tests/public-pages.spec.ts Public Pages Contact page has navigation links visible	expected
+apps/web/e2e/tests/sdk-boundaries.spec.ts	tests/sdk-boundaries.spec.ts SDK session survives rejected logout and direct API access is restricted	expected
