@@ -1,3 +1,16 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+overrides:
+  '@tanstack/react-router': 1.168.3
+  '@tanstack/router-core': 1.168.3
+  seroval: '>=1.4.1'
+
+minimumReleaseAgeExclude:
+  - '@bc-solutions-coder/api-errors@1.0.0'
+  - '@bc-solutions-coder/sdk@2.0.0'
+
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

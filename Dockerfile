@@ -1,6 +1,6 @@
 FROM node:24-alpine AS base
 
-RUN npm install -g pnpm@10.28.2
+RUN npm install -g pnpm@11.26.0
 
 WORKDIR /app
 
@@ -11,11 +11,11 @@ COPY packages/ ./packages/
 
 # Pass the registry token as a BuildKit secret named node_auth_token.
 # The install reads it through a temporary npm user config. See docs/deployment.md.
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store --mount=type=secret,id=node_auth_token,target=/tmp/node_auth_token sh -eu -c 'test -s /tmp/node_auth_token; printf "//npm.pkg.github.com/:_authToken=%s\n" "$(cat /tmp/node_auth_token)" > /tmp/build.npmrc; NPM_CONFIG_USERCONFIG=/tmp/build.npmrc pnpm install --frozen-lockfile; rm -f /tmp/build.npmrc'
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store --mount=type=secret,id=node_auth_token,target=/tmp/node_auth_token sh -eu -c 'test -s /tmp/node_auth_token; printf "//npm.pkg.github.com/:_authToken=%s\n" "$(cat /tmp/node_auth_token)" > /tmp/build.npmrc; PNPM_CONFIG_USERCONFIG=/tmp/build.npmrc pnpm install --frozen-lockfile; rm -f /tmp/build.npmrc'
 
 
 FROM node:24-alpine AS builder
-RUN npm install -g pnpm@10.28.2
+RUN npm install -g pnpm@11.26.0
 WORKDIR /app
 
 COPY --from=base /app ./

@@ -91,10 +91,14 @@ describe('tailwind @source scanning of @bcordes/ui', () => {
           )
         }
       }
-      await execFileAsync('pnpm', ['--filter', 'bcordes', 'build'], {
-        cwd: buildRoot,
-        env: { ...process.env, NODE_ENV: 'production' },
-      })
+      await execFileAsync(
+        process.execPath,
+        [join(webDir, 'node_modules/vite/bin/vite.js'), 'build'],
+        {
+          cwd: join(buildRoot, 'apps/web'),
+          env: { ...process.env, NODE_ENV: 'production' },
+        },
+      )
 
       const assets = join(buildRoot, 'apps/web/.output/public/assets')
       const css = readdirSync(assets).filter((f) => f.endsWith('.css'))

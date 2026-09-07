@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@11.26.0",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": ">=11 <12"
+  },
   "scripts": {
     "dev": "pnpm --filter bcordes dev",
     "build": "pnpm --filter bcordes build",
@@ -14,13 +18,6 @@
     "check": "prettier --write . && pnpm lint --fix",
     "storybook": "pnpm --filter bcordes storybook",
     "prepare": "husky"
-  },
-  "pnpm": {
-    "overrides": {
-      "@tanstack/react-router": "1.168.3",
-      "@tanstack/router-core": "1.168.3",
-      "seroval": ">=1.4.1"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

@@ -4,7 +4,7 @@ A portfolio and inquiry app built with TanStack Start and React. Wallow provides
 
 ## Get started
 
-Use Node.js 24 and pnpm 10.28.2. Follow [local setup](docs/setup.md) to configure private package access and the local environment, then run from the repository root:
+Use Node.js 24 and pnpm 11.26.0. Follow [local setup](docs/setup.md) to configure private package access and the local environment, then run from the repository root:
 
 ```sh
 pnpm install --frozen-lockfile

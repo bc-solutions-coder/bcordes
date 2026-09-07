@@ -39,3 +39,52 @@ Function coverage remains below 90%, owned by #46 and its accepted coverage
 plan. No thresholds or exclusions changed. A passing starting matrix does not
 certify that coverage target or live Wallow/OIDC behavior. Baseline timing
 limitations remain relevant to #61; no speedup is claimed here.
+
+## Node and package manager alignment, #56
+
+The user approved pnpm 11 during execution, superseding the original pnpm 10
+restriction. Target versions are Node 24, `@types/node` 24.13.3 and pnpm
+11.26.0. Local execution uses Node 24.11.1. Runtime declarations, Docker and
+developer guidance now agree. CI receives the private-registry configuration
+path created by setup-node through `PNPM_CONFIG_USERCONFIG`.
+
+Following the [pnpm migration guide](https://pnpm.io/migration), overrides moved
+unchanged from package.json into pnpm-workspace.yaml. The clean v11 install
+initially rejected the existing private packages because they were less than
+one day old. Exact exceptions cover API errors 1.0.0 and SDK 2.0.0 only;
+their versions are unchanged. Explicit build permissions cover esbuild and
+unrs-resolver's native installation scripts. Other release-age and build
+defaults remain intact.
+
+pnpm 11 exposed two recursive-task cycles. test-utils had unused dependencies
+on query and ui, while those packages used test-utils for testing. Its actual
+render helper imports TanStack Query directly. Removing those two dependencies
+and the obsolete manifest-only case restores recursive typechecking without
+disabling cycle detection. #60 and #66 record the ownership handoff; the suite
+has one fewer case, with no rendered-behavior assertion removed.
+
+The temporary CSS build test also failed because pnpm 11 refuses to write task
+state into symlinked node_modules. It now invokes the installed Vite CLI with
+Node in the same temporary app directory. Its isolation and all assertions
+remain unchanged, and the focused CSS/workflow run passed all 21 cases. #70
+records this launcher change for the later test review.
+
+The pre-existing eslint-plugin-import-x peer range does not include installed
+ESLint 10.1.0. Its removal/replacement remains owned by #57; this slice does not
+claim a peer-clean lint stack.
+
+Final verification passed frozen installation, every workspace typecheck,
+lint, 1297 tests in 120 files, production build/smoke, all 24 browser cases,
+and native Docker build/runtime verification. The Docker dependency layer
+performed a fresh pnpm 11 install, including authenticated private packages.
+
+### Additional export timeouts, #83
+
+Full verification first exposed a 5000 ms timeout in contact's export check,
+then in about, app-shell and notifications. These tests loaded their dependency
+graphs inside timed assertions, the same mechanism addressed for home in #54.
+The remaining eight module-export tests now use static namespace imports.
+All export lists, runtime assertions, mocks and timeout values are preserved.
+The focused eight-file run passed all 187 cases with a 100 ms test timeout;
+workspace typechecking also passed. The original failed full runs are recorded
+on #83, and #70 still owns the tests' eventual disposition.

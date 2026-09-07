@@ -1,6 +1,6 @@
 # Local setup
 
-Use Node.js 24 and pnpm 10.28.2, matching the [Dockerfile](../Dockerfile) and [workspace manifest](../package.json). Docker is needed for local Valkey and the default browser test setup. Application data lives in Wallow; this repository has no local PostgreSQL setup or database migration commands.
+Use Node.js 24 and pnpm 11.26.0, matching the [Dockerfile](../Dockerfile) and [workspace manifest](../package.json). The [.node-version](../.node-version) file selects Node 24 for compatible version managers; the root manifest declares the supported Node and pnpm major versions. Docker is needed for local Valkey and the default browser test setup. Application data lives in Wallow; this repository has no local PostgreSQL setup or database migration commands.
 
 ## Install dependencies
 
@@ -10,7 +10,9 @@ The SDK and API error packages come from GitHub Packages. Give your GitHub accou
 //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
-Export `NODE_AUTH_TOKEN` through your secret manager or shell environment, then run from the repository root:
+Use `~/.npmrc` for that configuration, or point `PNPM_CONFIG_USERCONFIG` at a
+private npm configuration file. Export `NODE_AUTH_TOKEN` through your secret
+manager or shell environment, then run from the repository root:
 
 ```sh
 pnpm install --frozen-lockfile

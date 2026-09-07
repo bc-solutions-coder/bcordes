@@ -100,13 +100,6 @@ describe('@bcordes/test-utils package manifest', () => {
       jsdom: expect.any(String),
     })
   })
-
-  it('owns the workspace render-provider deps it wraps', () => {
-    const manifest = readJson(join(packageDir, 'package.json'))
-
-    expect(manifest.dependencies['@bcordes/query']).toBe('workspace:*')
-    expect(manifest.dependencies['@bcordes/ui']).toBe('workspace:*')
-  })
 })
 
 describe('no dependency inversion: test-utils never depends on its consumers', () => {
