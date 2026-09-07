@@ -1,0 +1,59 @@
+{
+  "revision": "e872519d71918ec2f9fb1ecf24d865eeea401b09",
+  "node": "24.11.1",
+  "pnpm": "11.26.0",
+  "clean_initial_worktree": true,
+  "drift_since_accepted_handoff": "No app/package/test/tooling/config changes; accepted current-title mapping remains applicable.",
+  "vitest": {
+    "passed": 1288,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "startTime": "2026-09-07T21:16:15.555Z",
+    "duration": 7033.943,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build_exit": 0,
+  "coverage": {
+    "lines": {
+      "total": 1078,
+      "covered": 909,
+      "skipped": 0,
+      "pct": 84.32
+    },
+    "statements": {
+      "total": 1158,
+      "covered": 964,
+      "skipped": 0,
+      "pct": 83.24
+    },
+    "functions": {
+      "total": 386,
+      "covered": 325,
+      "skipped": 0,
+      "pct": 84.19
+    },
+    "branches": {
+      "total": 668,
+      "covered": 506,
+      "skipped": 0,
+      "pct": 75.74
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "commands": [
+    "pnpm test --coverage --reporter=json --outputFile=/tmp/bcordes-implementation-baseline.json",
+    "pnpm build",
+    "E2E_PORT=34100 pnpm --filter bcordes exec playwright test --reporter=json"
+  ],
+  "cleanup_performed": false
+}
