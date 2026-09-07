@@ -118,25 +118,21 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { name: 'description', content: siteDescription },
       { name: 'author', content: 'Bryan Cordes' },
       { name: 'robots', content: 'index, follow' },
-      // Open Graph
       { property: 'og:type', content: 'website' },
       { property: 'og:title', content: siteTitle },
       { property: 'og:description', content: siteDescription },
       { property: 'og:url', content: siteUrl },
       { property: 'og:site_name', content: 'BC Solutions' },
       { property: 'og:locale', content: 'en_US' },
-      // Twitter
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: siteTitle },
       { name: 'twitter:description', content: siteDescription },
-      // Theme
       { name: 'theme-color', content: '#2a6b22' },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
       { rel: 'canonical', href: siteUrl },
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      // Google Fonts
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       {
         rel: 'preconnect',
@@ -147,7 +143,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap',
       },
-      // Performance: DNS prefetch for external links
       { rel: 'dns-prefetch', href: 'https://linkedin.com' },
       { rel: 'dns-prefetch', href: 'https://github.com' },
     ],

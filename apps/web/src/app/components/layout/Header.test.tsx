@@ -3,14 +3,6 @@ import { fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 import { Header } from './Header'
 
-// ---------------------------------------------------------------------------
-// Component under test
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Mocks
-// ---------------------------------------------------------------------------
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -44,10 +36,6 @@ vi.mock('./MobileNav', () => ({
 vi.mock('@/shared/auth', () => ({
   useUser: () => ({ user: null, isLoading: false }),
 }))
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('Header', () => {
   beforeEach(() => {
@@ -93,7 +81,6 @@ describe('Header', () => {
     const header = container.querySelector('header')!
     expect(header.className).not.toContain('shadow-md')
 
-    // Simulate scroll down
     Object.defineProperty(window, 'scrollY', {
       value: 100,
       writable: true,
@@ -105,7 +92,6 @@ describe('Header', () => {
   })
 
   it('removes shadow class when scrolled back to top', () => {
-    // Start scrolled down
     Object.defineProperty(window, 'scrollY', {
       value: 100,
       writable: true,
@@ -117,7 +103,6 @@ describe('Header', () => {
     const header = container.querySelector('header')!
     expect(header.className).toContain('shadow-md')
 
-    // Scroll back to top
     Object.defineProperty(window, 'scrollY', {
       value: 0,
       writable: true,

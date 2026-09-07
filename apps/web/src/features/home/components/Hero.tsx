@@ -24,7 +24,6 @@ export function Hero() {
       aria-label="Introduction"
     >
       <div className="max-w-[1200px] mx-auto px-8 pt-20 pb-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Text Column */}
         <div className="max-w-[560px]">
           <FadeInView delay={0}>
             <div
@@ -99,36 +98,27 @@ export function Hero() {
           </FadeInView>
         </div>
 
-        {/* Graphic Column */}
         <div
           className="hidden lg:flex justify-center items-center"
           aria-hidden="true"
         >
           <div className="w-[400px] h-[400px] rounded-3xl bg-secondary relative overflow-hidden">
-            {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-secondary to-decorative-muted" />
 
-            {/* Outer rotating ring with orbiting dots */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-[300px] h-[300px] rounded-full border-2 border-primary/25 animate-orbit relative">
-                {/* Dot at top of outer ring */}
                 <div className="absolute top-[-5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-decorative rounded-full animate-counter-orbit" />
-                {/* Dot at bottom of outer ring */}
                 <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-primary rounded-full animate-counter-orbit" />
               </div>
             </div>
 
-            {/* Inner counter-rotating ring with orbiting dots */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-[200px] h-[200px] rounded-full border-2 border-primary/25 animate-counter-orbit relative">
-                {/* Dot at right of inner ring */}
                 <div className="absolute top-1/2 right-[-5px] -translate-y-1/2 w-2.5 h-2.5 bg-decorative rounded-full animate-orbit" />
-                {/* Dot at left of inner ring */}
                 <div className="absolute top-1/2 left-[-5px] -translate-y-1/2 w-2.5 h-2.5 bg-primary/70 rounded-full animate-orbit" />
               </div>
             </div>
 
-            {/* Center circle with logo */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-[100px] h-[100px] rounded-full bg-primary/12 flex items-center justify-center">
                 <img

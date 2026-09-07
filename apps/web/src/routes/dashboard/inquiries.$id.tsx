@@ -95,7 +95,6 @@ function InquiryDetailPage() {
       </section>
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        {/* Inquiry details */}
         <div className="rounded-lg border border-border bg-secondary p-6">
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
@@ -162,7 +161,6 @@ function InquiryDetailPage() {
           </div>
         </div>
 
-        {/* Comments */}
         <div className="mt-8">
           <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
             <MessageSquare className="h-5 w-5" />
@@ -204,7 +202,6 @@ function InquiryDetailPage() {
             </div>
           )}
 
-          {/* Comment Form */}
           <form
             className="mt-6"
             onSubmit={async (e) => {

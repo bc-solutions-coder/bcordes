@@ -48,13 +48,10 @@ function AboutPage() {
 
   return (
     <>
-      {/* Hero Section */}
       <AboutHero />
 
-      {/* Timeline Section */}
       <Timeline />
 
-      {/* Values Section */}
       <section className="py-20 px-6 bg-secondary">
         <div className="max-w-5xl mx-auto">
           <FadeInView delay={0}>
@@ -71,17 +68,14 @@ function AboutPage() {
             {values.map((value, index) => (
               <FadeInView key={value.title} delay={100 + index * 100}>
                 <div className="bg-background border border-border rounded-lg p-6 h-full hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
-                  {/* Icon */}
                   <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     {value.icon}
                   </div>
 
-                  {/* Title */}
                   <h3 className="text-xl font-semibold text-foreground mb-2">
                     {value.title}
                   </h3>
 
-                  {/* Description */}
                   <p className="text-foreground-secondary text-sm leading-relaxed">
                     {value.description}
                   </p>
@@ -92,7 +86,6 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       {!isAdmin && (
         <section className="py-20 px-6">
           <div className="max-w-3xl mx-auto text-center">

@@ -8,7 +8,6 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 const config = defineConfig({
   plugins: [
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
@@ -34,7 +33,7 @@ const config = defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       onwarn(warning, defaultHandler) {
-        // Suppress unused import warnings from TanStack's published packages
+        // Suppress unused-import warnings from dependencies.
         if (
           warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
           warning.exporter?.includes('node_modules')

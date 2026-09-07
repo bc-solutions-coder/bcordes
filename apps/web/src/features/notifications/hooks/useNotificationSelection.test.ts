@@ -83,12 +83,10 @@ describe('useNotificationSelection', () => {
   it('allSelected is true only when all filtered items are selected', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
-    // Select 2 of 3 — not all
     act(() => result.current.selectOne('a', true))
     act(() => result.current.selectOne('b', true))
     expect(result.current.allSelected).toBe(false)
 
-    // Select the last one
     act(() => result.current.selectOne('c', true))
     expect(result.current.allSelected).toBe(true)
   })

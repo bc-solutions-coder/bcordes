@@ -5,7 +5,6 @@ import { createElement } from 'react'
 import { createMockUser } from '@bcordes/auth/testing'
 import type { ReactNode } from 'react'
 
-// Mock global fetch
 const mockFetch = vi.fn()
 vi.stubGlobal('fetch', mockFetch)
 

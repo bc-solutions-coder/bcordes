@@ -29,7 +29,6 @@ describe('getNotificationRoute — URL validation', () => {
       entityId: VALID_UUID,
     })
     const route = getNotificationRoute(notification)
-    // Should NOT return the absolute URL — should fall through to switch
     expect(route).toBe(`/dashboard/inquiries/${VALID_UUID}`)
   })
 

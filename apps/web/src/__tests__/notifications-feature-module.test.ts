@@ -3,42 +3,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 
-// Notifications feature-module migration wiring spec (bcordes-6ow.8 / .8.1).
-//
-// Task 7 of the feature-based-architecture refactor — the largest — consolidates
-// the notification sources scattered across four horizontal buckets into a single
-// self-contained feature module at apps/web/src/features/notifications/, exposing a
-// public API via its own index.ts and repointing every consumer at the bare
-// @/features/notifications entry point. After the move:
-//   * components/layout/NotificationBell.{tsx,test.tsx} and
-//     components/dashboard/NotificationRow.{tsx,test.tsx} move to
-//     features/notifications/components/ (components/dashboard/ is then empty and gone)
-//   * hooks/{EventStreamProvider,useEventStream,useEventStreamEvents,
-//     useNotificationFilters,useNotificationSelection,usePushNotifications} (+ tests)
-//     move to features/notifications/hooks/
-//   * lib/notifications/{routing,query-utils} (+ tests) move to
-//     features/notifications/lib/ (lib/notifications/ is then gone)
-//   * server-fns/notifications.{ts,test.ts} moves to
-//     features/notifications/server-fns/
-//   * features/notifications/index.ts re-exports the feature's public surface —
-//     the two components, the six notification hooks, the two lib helpers, and the
-//     nine server fns actually consumed elsewhere — plus the EventStreamContextValue
-//     and NotificationType type aliases
-//   * every intra-feature import becomes relative and no source under apps/web/src
-//     references any of the old horizontal deep paths (static imports AND vi.mock
-//     module-path string keys); the public API actually resolves the value exports.
-//
-// The SSE route apps/web/src/routes/api/events?subscribe=Notifications,Inquiries.ts does NOT move and
-// needs no repoint — it imports only @tanstack/react-router, @bcordes/logger,
-// @bcordes/auth, and @bcordes/wallow, never any of the moving hook/component/lib/
-// server-fn paths (scout-confirmed via grep). It is untouched by this task.
-//
-// Mirrors the repo's structural wiring-spec convention (home/about/projects/
-// inquiries/contact-feature-module.test.ts): resolve the repo root from this file,
-// inspect the real filesystem / config, and confirm the new reality — never the
-// pre-migration one.
-
-// apps/web/src/__tests__ -> repo root (same convention as inquiries-feature-module.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const featureDir = join(appSrc, 'features/notifications')
@@ -48,12 +12,8 @@ const featureHooks = join(featureDir, 'hooks')
 const featureLib = join(featureDir, 'lib')
 const featureServerFns = join(featureDir, 'server-fns')
 
-// The two components — each a NAMED function-component export.
 const COMPONENT_EXPORTS = ['NotificationBell', 'NotificationRow'] as const
 
-// The six notification hooks + the notificationTypes value const, all re-exported
-// from ./hooks/*. (EventStreamProvider is a provider component that nonetheless
-// lives under hooks/ per the scout's inventory; it re-exports from ./hooks/.)
 const HOOK_EXPORTS = [
   'EventStreamProvider',
   'useEventStream',
@@ -64,12 +24,8 @@ const HOOK_EXPORTS = [
   'usePushNotifications',
 ] as const
 
-// The two lib helpers — invalidateNotifications from ./lib/query-utils,
-// getNotificationRoute from ./lib/routing (both under the ./lib/ subdir).
 const LIB_EXPORTS = ['invalidateNotifications', 'getNotificationRoute'] as const
 
-// The nine server fns re-exported from ./server-fns/notifications. ALL nine are
-// externally consumed per the scout's grep — none may be trimmed.
 const SERVER_FN_EXPORTS = [
   'fetchNotifications',
   'fetchUnreadCount',
@@ -82,13 +38,11 @@ const SERVER_FN_EXPORTS = [
   'sendTestPush',
 ] as const
 
-// The two type aliases re-exported from ./hooks/* via `export type`.
 const TYPE_EXPORTS = [
   ['EventStreamContextValue', 'hooks'],
   ['NotificationType', 'hooks'],
 ] as const
 
-// [exportName, sourceSubdir] — index.ts must re-export each name from that subdir.
 const REEXPORTS = [
   ...COMPONENT_EXPORTS.map((name) => [name, 'components'] as const),
   ...HOOK_EXPORTS.map((name) => [name, 'hooks'] as const),
@@ -96,9 +50,8 @@ const REEXPORTS = [
   ...SERVER_FN_EXPORTS.map((name) => [name, 'server-fns'] as const),
 ]
 
-// The old horizontal deep-import paths this migration must eliminate. Built by
-// joining so this spec file itself is never a false positive when it scans the
-// source tree. '@/hooks/useEventStream' subsumes '@/hooks/useEventStreamEvents'.
+// Keep paths split to avoid matching this test in sibling source scans.
+// The useEventStream prefix also matches useEventStreamEvents.
 const OLD_PATHS: Array<[string, Array<string>]> = [
   ['EventStreamProvider hook', ['@/hooks', 'EventStreamProvider']],
   ['useEventStream hook', ['@/hooks', 'useEventStream']],
@@ -114,7 +67,6 @@ const OLD_PATHS: Array<[string, Array<string>]> = [
   ],
 ].map(([label, parts]) => [label as string, parts as Array<string>])
 
-// Old source files/dirs that must be gone after the move.
 const OLD_FILES = [
   'components/layout/NotificationBell.tsx',
   'components/layout/NotificationBell.test.tsx',
@@ -131,9 +83,6 @@ const OLD_FILES = [
 
 const OLD_DIRS = ['components/dashboard', 'lib/notifications'] as const
 
-// Consumers this task owns and must repoint at @/features/notifications. None of
-// these files move (only their import / vi.mock specifiers change), so their paths
-// are stable and each must reference '@/features/notifications' after the move.
 const CONSUMERS = [
   'routes/__root.tsx',
   'app/components/layout/Header.tsx',
@@ -152,7 +101,6 @@ const CONSUMERS = [
 const readIndex = (): string =>
   existsSync(featureIndex) ? readFileSync(featureIndex, 'utf8') : ''
 
-/** All .ts/.tsx source files under apps/web/src (excludes generated route tree). */
 function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry)
@@ -168,9 +116,7 @@ function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   return acc
 }
 
-// Mock the server-fn machinery + the auth/wallow deps the relocated server-fns and
-// components pull in transitively, so importing features/notifications's index
-// resolves cleanly at runtime — mirrors the existing inquiries/contact specs.
+// Mock server dependencies so the public module can load without a server runtime.
 vi.mock('@tanstack/react-start', () => {
   const createServerFn = () => {
     let handlerFn: (...args: Array<unknown>) => unknown
@@ -240,8 +186,7 @@ describe('features/notifications module exists with a public index', () => {
     'index.ts re-exports %s from its local ./%s/',
     (name, subdir) => {
       const src = readIndex()
-      // Match `export { Name } from './<subdir>/...'` (allowing extra names in
-      // the same brace group and either quote style).
+      // Allow grouped exports and either quote style.
       const pattern = new RegExp(
         `export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*['"]\\./${subdir}/`,
       )
@@ -256,7 +201,7 @@ describe('features/notifications module exists with a public index', () => {
     'index.ts re-exports the %s type from its local ./%s/',
     (name, subdir) => {
       const src = readIndex()
-      // Match `export type { Name } from './<subdir>/...'`.
+
       const pattern = new RegExp(
         `export\\s+type\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*['"]\\./${subdir}/`,
       )
@@ -312,9 +257,7 @@ describe('every notifications consumer resolves via the new @/features/notificat
 
 describe('the public API resolves the expected value exports', () => {
   it('@/features/notifications exports the components, hooks, lib helpers, and server fns', async () => {
-    // Non-literal specifier so vite's import-analysis defers resolution to
-    // runtime (mirrors inquiries-feature-module.test.ts's `inquiriesSpecifier`),
-    // letting this file collect and fail per-assertion rather than at transform.
+    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
     const notificationsSpecifier = '@/features/notifications'
     const mod = (await import(notificationsSpecifier)) as Record<
       string,
@@ -340,7 +283,6 @@ describe('the public API resolves the expected value exports', () => {
       ).toBe('function')
     }
 
-    // notificationTypes is a value array (object at runtime).
     expect(
       Array.isArray(mod['notificationTypes']),
       '@/features/notifications must export the notificationTypes array',

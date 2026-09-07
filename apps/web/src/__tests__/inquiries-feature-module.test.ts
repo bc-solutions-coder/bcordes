@@ -3,36 +3,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 
-// Inquiries feature-module migration wiring spec (bcordes-6ow.6 / .6.1).
-//
-// Task 5 of the feature-based-architecture refactor relocates the two horizontal
-// inquiries sources — apps/web/src/server-fns/inquiries.ts and
-// apps/web/src/config/inquiries.ts — into a self-contained feature module at
-// apps/web/src/features/inquiries/, exposing a public API via its own index.ts and
-// repointing every consumer at the bare @/features/inquiries entry point. After the
-// move:
-//   * server-fns/inquiries.ts moves to features/inquiries/server-fns/inquiries.ts
-//   * config/inquiries.ts     moves to features/inquiries/lib/inquiries.ts (the
-//     feature's local lib; the server-fns file's internal '@/config/inquiries'
-//     import becomes the relative '../lib/inquiries')
-//   * features/inquiries/index.ts re-exports the seven inquiry server fns from
-//     ./server-fns/inquiries AND the four status maps from ./lib/inquiries
-//   * neither the old server-fns/inquiries nor @/config/inquiries deep path is
-//     referenced by any source under apps/web/src (static imports AND vi.mock
-//     module-path string keys), and the public API actually resolves the value
-//     exports.
-//
-// CROSS-FEATURE BOUNDARY: components/contact/ContactForm.tsx (+ its test) also
-// import submitInquiry / vi.mock the old server-fns/inquiries path. Those files belong
-// to the contact feature (bcordes-6ow.7.1, which DEPENDS on this task) and are
-// repointed there, not here — so the stale-path scan below excludes them by name.
-//
-// Mirrors the repo's structural wiring-spec convention (home/about/projects/
-// shared-auth-feature-module.test.ts): resolve the repo root from this file,
-// inspect the real filesystem / config, and confirm the new reality — never the
-// pre-migration one.
-
-// apps/web/src/__tests__ -> repo root (same convention as shared-auth-module.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const inquiriesFeatureDir = join(appSrc, 'features/inquiries')
@@ -42,9 +12,6 @@ const inquiriesFeatureLib = join(inquiriesFeatureDir, 'lib')
 const oldServerFnFile = join(appSrc, 'server-fns/inquiries.ts')
 const oldConfigFile = join(appSrc, 'config/inquiries.ts')
 
-// The public API surface the scout confirmed. The seven server fns re-exported
-// from ./server-fns/inquiries (submitInquiry is cross-feature consumed by contact;
-// fetchInquiries has no external consumer but is exported for API completeness).
 const SERVER_FN_EXPORTS = [
   'submitInquiry',
   'fetchInquiries',
@@ -55,9 +22,6 @@ const SERVER_FN_EXPORTS = [
   'submitInquiryComment',
 ] as const
 
-// The four status-map const exports re-exported from ./lib/inquiries. These are
-// plain object maps (Record<string,string>), so they resolve as 'object' at
-// runtime, not 'function'.
 const LIB_EXPORTS = [
   'STATUS_TO_FRONTEND',
   'STATUS_TO_API',
@@ -65,20 +29,15 @@ const LIB_EXPORTS = [
   'STATUS_LABELS',
 ] as const
 
-// [exportName, sourceSubdir] — index.ts must re-export each name from that subdir.
 const REEXPORTS = [
   ...SERVER_FN_EXPORTS.map((name) => [name, 'server-fns'] as const),
   ...LIB_EXPORTS.map((name) => [name, 'lib'] as const),
 ]
 
-// The two stale import paths this migration must eliminate. Built by joining so
-// this spec file itself is not a false positive when it scans the source tree.
+// Keep paths split to avoid matching this test in sibling source scans.
 const OLD_SERVER_FN_PATH = ['@/server-fns', 'inquiries'].join('/')
 const OLD_CONFIG_PATH = ['@/config', 'inquiries'].join('/')
 
-// Dashboard consumers this task owns and must repoint at @/features/inquiries.
-// These route files do NOT move (only their import specifiers change), so their
-// paths are stable and each must reference '@/features/inquiries' after the move.
 const DASHBOARD_CONSUMERS = [
   'routes/dashboard/inquiries.index.tsx',
   'routes/dashboard/inquiries.index.test.tsx',
@@ -86,10 +45,7 @@ const DASHBOARD_CONSUMERS = [
   'routes/dashboard/inquiries.$id.test.tsx',
 ] as const
 
-// Files owned by the contact feature (bcordes-6ow.7.1). Its ContactForm now
-// consumes inquiries through the public @/features/inquiries barrel, so the only
-// remaining referencer of the old deep path is the contact migration spec (which
-// names the literal in its own guard prose/titles); exclude it from this scan.
+// The contact module test names the old path in test titles, so exclude it from this scan.
 const CONTACT_OWNED_BY_F7 = [
   join(appSrc, '__tests__/contact-feature-module.test.ts'),
 ]
@@ -99,7 +55,6 @@ const readIndex = (): string =>
     ? readFileSync(inquiriesFeatureIndex, 'utf8')
     : ''
 
-/** All .ts/.tsx source files under apps/web/src (excludes generated route tree). */
 function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry)
@@ -115,9 +70,7 @@ function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   return acc
 }
 
-// Mock the server-fn machinery + the auth/wallow deps the relocated server-fns
-// file imports, so importing features/inquiries's index resolves cleanly at
-// runtime — mirrors the existing server-fns/inquiries.test.ts setup.
+// Mock server dependencies so the public module can load without a server runtime.
 vi.mock('@tanstack/react-start', () => {
   const createServerFn = () => {
     let handlerFn: (...args: Array<unknown>) => unknown
@@ -179,8 +132,7 @@ describe('features/inquiries module exists with a public index', () => {
     'index.ts re-exports %s from its local ./%s/',
     (name, subdir) => {
       const src = readIndex()
-      // Match `export { Name } from './<subdir>/...'` (allowing extra names in
-      // the same brace group and either quote style).
+      // Allow grouped exports and either quote style.
       const pattern = new RegExp(
         `export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*['"]\\./${subdir}/`,
       )
@@ -203,7 +155,6 @@ describe('the horizontal inquiries source files are gone', () => {
 })
 
 describe('no source imports the old inquiries paths', () => {
-  // Excludes this spec file and the two contact files owned by bcordes-6ow.7.1.
   const scan = (needle: string): Array<string> =>
     collectSources(appSrc)
       .filter((f) => f !== fileURLToPath(import.meta.url))
@@ -245,9 +196,7 @@ describe('every dashboard consumer resolves via the new @/features/inquiries pat
 
 describe('the public API resolves the expected exports', () => {
   it('@/features/inquiries exports the seven server fns and four status maps', async () => {
-    // Non-literal specifier so vite's import-analysis defers resolution to
-    // runtime (mirrors shared-auth-module.test.ts's `authSpecifier`), letting
-    // this file collect and fail per-assertion rather than at transform.
+    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
     const inquiriesSpecifier = '@/features/inquiries'
     const mod = (await import(inquiriesSpecifier)) as Record<string, unknown>
     for (const name of SERVER_FN_EXPORTS) {

@@ -12,10 +12,6 @@ if (!('ResizeObserver' in globalThis)) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockFetchInquiry = vi.fn()
 const mockFetchInquiryComments = vi.fn()
 const mockFetchCurrentUserRoles = vi.fn()
@@ -73,10 +69,6 @@ vi.mock('@tanstack/react-router', async () => {
   }
 })
 
-// ---------------------------------------------------------------------------
-// Import route module after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./inquiries.$id')
 const routeConfig = routeModule.Route as unknown as {
   loader: (ctx: { params: { id: string } }) => Promise<{
@@ -87,10 +79,6 @@ const routeConfig = routeModule.Route as unknown as {
   beforeLoad: () => Promise<unknown>
   component: React.ComponentType
 }
-
-// ---------------------------------------------------------------------------
-// Factories
-// ---------------------------------------------------------------------------
 
 const TEST_ID = 'inq-abc-123'
 
@@ -125,10 +113,6 @@ function makeComment(overrides: Partial<InquiryComment> = {}): InquiryComment {
     ...overrides,
   }
 }
-
-// ---------------------------------------------------------------------------
-// Tests — Loader
-// ---------------------------------------------------------------------------
 
 describe('inquiries.$id loader', () => {
   beforeEach(() => {
@@ -191,10 +175,6 @@ describe('inquiries.$id loader', () => {
     expect(result.comments).toHaveLength(2)
   })
 })
-
-// ---------------------------------------------------------------------------
-// Tests — Component
-// ---------------------------------------------------------------------------
 
 describe('InquiryDetailPage component', () => {
   const Component = routeConfig.component
@@ -295,9 +275,7 @@ describe('InquiryDetailPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Non-admin should see public comment
     expect(screen.getByText('Public note')).toBeTruthy()
-    // Non-admin should NOT see internal comment
     expect(screen.queryByText('Secret internal note')).toBeNull()
   })
 
@@ -412,7 +390,6 @@ describe('InquiryDetailPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // These labels should NOT be present since conditional rendering hides them
     expect(screen.queryByText('Company')).toBeNull()
     expect(screen.queryByText('Project Type')).toBeNull()
     expect(screen.queryByText('Budget')).toBeNull()
@@ -445,7 +422,6 @@ describe('InquiryDetailPage component', () => {
       })
     })
 
-    // After successful submit, textarea should be cleared
     await waitFor(() => {
       expect(textarea).toHaveValue('')
     })
@@ -461,7 +437,6 @@ describe('InquiryDetailPage component', () => {
     renderWithProviders(<Component />)
 
     const sendButton = screen.getByText('Send')
-    // Button should be disabled when textarea is empty
     expect(sendButton).toBeDisabled()
   })
 
@@ -502,7 +477,6 @@ describe('InquiryDetailPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Click the checkbox to set isInternal=true
     const checkbox = screen.getByRole('checkbox')
     fireEvent.click(checkbox)
 
@@ -523,10 +497,6 @@ describe('InquiryDetailPage component', () => {
     })
   })
 })
-
-// ---------------------------------------------------------------------------
-// Tests — beforeLoad
-// ---------------------------------------------------------------------------
 
 describe('inquiries.$id beforeLoad', () => {
   beforeEach(() => {

@@ -142,10 +142,7 @@ describe('__root route', () => {
 
   describe('DevTools component', () => {
     it('renders devtools panel after dynamic imports resolve', async () => {
-      // Mock the dynamic imports that DevTools loads. The panel renders the
-      // names of the plugins it was handed, so the assertion below can prove
-      // the query plugin came from the mocked module and not from somewhere
-      // else — i.e. that DevTools really loads it from '@bcordes/query/devtools'.
+      // Render plugin names to identify the query plugin loaded from the package subpath.
       const mockTanStackDevtools = ({
         children,
         plugins,
@@ -181,10 +178,8 @@ describe('__root route', () => {
         default: mockQueryPlugin,
       }))
 
-      // Re-import to pick up the mocked dynamic imports
       vi.resetModules()
 
-      // Re-mock the static dependencies after resetModules
       vi.doMock('@tanstack/react-router', () => ({
         Link: ({
           to,
@@ -242,12 +237,9 @@ describe('__root route', () => {
         </RootDocument>,
       )
 
-      // Wait for the dynamic imports to resolve and setPanel to be called
       const devtools = await findByTestId('tanstack-devtools')
       expect(devtools).toBeTruthy()
 
-      // The query devtools plugin must come from the '@bcordes/query/devtools'
-      // subpath — the one mocked above — so it stays lazily loaded.
       expect(await findByTestId('devtools-plugin-names')).toHaveTextContent(
         'Query From Package Subpath',
       )

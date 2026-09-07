@@ -32,7 +32,6 @@ function WorkPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<number | null>(null)
 
-  // Extract unique tags and years from all showcases
   const { tags, years } = useMemo(() => {
     const tagSet = new Set<string>()
     const yearSet = new Set<number>()
@@ -48,7 +47,6 @@ function WorkPage() {
     }
   }, [showcases])
 
-  // Filter showcases based on selected tag and year
   const filteredShowcases = useMemo(() => {
     return showcases.filter((showcase: ShowcaseMeta) => {
       const matchesTag =
@@ -72,7 +70,6 @@ function WorkPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Page Header */}
       <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
           <FadeInView>
@@ -89,9 +86,7 @@ function WorkPage() {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
-        {/* Filters */}
         <FadeInView delay={200}>
           <ProjectFilter
             tags={tags}
@@ -104,7 +99,6 @@ function WorkPage() {
           />
         </FadeInView>
 
-        {/* Results Count */}
         <FadeInView delay={300}>
           <p className="mb-8 text-sm text-muted-foreground">
             Showing {filteredShowcases.length} of {showcases.length} projects
@@ -123,7 +117,6 @@ function WorkPage() {
           </p>
         </FadeInView>
 
-        {/* Projects Grid */}
         {filteredShowcases.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredShowcases.map((showcase: ShowcaseMeta, index: number) => (

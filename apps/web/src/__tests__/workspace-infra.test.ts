@@ -5,20 +5,12 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterAll, describe, expect, it } from 'vitest'
 
-// apps/web/src/__tests__ -> repo root. Repo-level infra assertions live in the
-// app's test dir (same convention as workspace-vitest-config.test.ts) because
-// the workspace root has no tsconfig to type a root-level test against.
-// Resolved from the path string, not `new URL()`: under jsdom the global URL is
-// jsdom's, and fileURLToPath rejects the instance it produces.
+// These tests use the app tsconfig; the workspace root has none.
+// Use a path string because fileURLToPath rejects jsdom's URL instances.
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const read = (rel: string) => readFileSync(join(repoRoot, rel), 'utf8')
 
-/**
- * Runs the `Parse semver from tag` step of release-please.yml for real:
- * pulls the step's `run:` script out of the workflow, substitutes the tag
- * expression with a literal tag, executes it under bash with a temp
- * GITHUB_OUTPUT, and returns the key=value pairs the step wrote.
- */
+// Run the workflow semver script with a supplied tag and temporary GITHUB_OUTPUT.
 function runSemverStep(tag: string): Record<string, string> {
   const workflow = read('.github/workflows/release-please.yml')
   const step = workflow
@@ -32,7 +24,7 @@ function runSemverStep(tag: string): Record<string, string> {
     .split('\n')
     .map((line) => line.replace(/^ {10}/, ''))
     .join('\n')
-    // the only workflow expression in the script is the released tag name
+    // The released tag is the only workflow expression in this script.
     .replace(/\$\{\{[^}]*\}\}/g, tag)
     .split(/\n {6}- name: /)[0]
 

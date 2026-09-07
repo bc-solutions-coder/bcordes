@@ -81,9 +81,7 @@ test.describe('Public Pages', () => {
       })
       await expect(approachHeading).toBeVisible()
 
-      // Assert the value titles via their h3 heading role: some titles (e.g.
-      // "Clear Communication") also appear as substrings in the body copy, so
-      // getByText is ambiguous under strict mode.
+      // Titles also occur in body text; select headings to avoid ambiguity.
       const values = [
         'Quality-Driven Development',
         'Clear Communication',
@@ -117,8 +115,6 @@ test.describe('Public Pages', () => {
     test('lists at least one project card', async ({ page }) => {
       await page.goto('/projects')
 
-      // Project cards are rendered as links with article-like structure
-      // containing an h3 title
       const projectCards = page.locator('h3')
       await expect(projectCards.first()).toBeVisible()
       expect(await projectCards.count()).toBeGreaterThanOrEqual(1)
@@ -155,13 +151,11 @@ test.describe('Public Pages', () => {
     test('renders the contact form with required fields', async ({ page }) => {
       await page.goto('/contact')
 
-      // Form labels (scope Email to the textbox: the footer also has an
-      // aria-label="Email" mailto link, making getByLabel(/Email/) ambiguous).
+      // The footer also labels its email link, so select the textbox by role.
       await expect(page.getByLabel(/Name/)).toBeVisible()
       await expect(page.getByRole('textbox', { name: /Email/ })).toBeVisible()
       await expect(page.getByLabel(/Message/)).toBeVisible()
 
-      // Submit button
       const submitButton = page.getByRole('button', { name: 'Send Message' })
       await expect(submitButton).toBeVisible()
     })

@@ -4,10 +4,6 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import type { ShowcaseMeta } from '@/features/projects'
 import type * as ProjectsModule from '@/features/projects'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const useLoaderDataMock = vi.fn()
 
 vi.mock('@tanstack/react-router', () => ({
@@ -48,19 +44,11 @@ vi.mock('@/features/projects', async (importOriginal) => ({
   getShowcases: vi.fn(),
 }))
 
-// ---------------------------------------------------------------------------
-// Import the route module (must come after mocks)
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./index')
 
 const ProjectsIndex = (
   routeModule.Route as unknown as { component: React.ComponentType }
 ).component
-
-// ---------------------------------------------------------------------------
-// Test data
-// ---------------------------------------------------------------------------
 
 const fakeShowcases: Array<ShowcaseMeta> = [
   {
@@ -91,10 +79,6 @@ const fakeShowcases: Array<ShowcaseMeta> = [
     featured: false,
   },
 ]
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('projects/index component', () => {
   afterEach(() => {
@@ -153,13 +137,11 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Click the "python" tag filter button
     const pythonButtons = screen.getAllByText('python')
-    // The filter button is the one inside a <button> element
+    // The tag appears in both the filter button and project cards.
     const filterButton = pythonButtons.find((el) => el.closest('button'))
     fireEvent.click(filterButton!)
 
-    // Only Project Gamma has the "python" tag
     expect(screen.getByText(/Showing 1 of 3 projects/)).toBeTruthy()
     expect(screen.getByText('Project Gamma')).toBeTruthy()
     expect(screen.queryByText('Project Alpha')).toBeNull()
@@ -170,12 +152,10 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Click the "2023" year filter button
     const yearButtons = screen.getAllByText('2023')
     const filterButton = yearButtons.find((el) => el.closest('button'))
     fireEvent.click(filterButton!)
 
-    // Only Project Beta is from 2023
     expect(screen.getByText(/Showing 1 of 3 projects/)).toBeTruthy()
     expect(screen.getByText('Project Beta')).toBeTruthy()
     expect(screen.queryByText('Project Alpha')).toBeNull()
@@ -185,7 +165,6 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Click a tag filter
     const reactButtons = screen.getAllByText('react')
     const filterButton = reactButtons.find((el) => el.closest('button'))
     fireEvent.click(filterButton!)
@@ -197,17 +176,14 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Apply a tag filter
     const pythonButtons = screen.getAllByText('python')
     const filterButton = pythonButtons.find((el) => el.closest('button'))
     fireEvent.click(filterButton!)
 
     expect(screen.getByText(/Showing 1 of 3 projects/)).toBeTruthy()
 
-    // Click "Clear filters"
     fireEvent.click(screen.getByText('Clear filters'))
 
-    // All projects should be visible again
     expect(screen.getByText(/Showing 3 of 3 projects/)).toBeTruthy()
     expect(screen.queryByText('Clear filters')).toBeNull()
   })
@@ -216,7 +192,6 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Apply tag filter for python, then year filter for 2023 (no project matches both)
     const pythonButtons = screen.getAllByText('python')
     const tagButton = pythonButtons.find((el) => el.closest('button'))
     fireEvent.click(tagButton!)
@@ -235,7 +210,6 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Create a no-match scenario
     const pythonButtons = screen.getAllByText('python')
     const tagButton = pythonButtons.find((el) => el.closest('button'))
     fireEvent.click(tagButton!)
@@ -246,10 +220,8 @@ describe('projects/index component', () => {
 
     expect(screen.getByText('No projects found')).toBeTruthy()
 
-    // Click "Clear all filters" in the empty state
     fireEvent.click(screen.getByText('Clear all filters'))
 
-    // All projects visible again
     expect(screen.getByText(/Showing 3 of 3 projects/)).toBeTruthy()
   })
 
@@ -265,20 +237,16 @@ describe('projects/index component', () => {
     useLoaderDataMock.mockReturnValue({ showcases: fakeShowcases })
     render(<ProjectsIndex />)
 
-    // Filter by typescript tag
     const tsButtons = screen.getAllByText('typescript')
     const tagButton = tsButtons.find((el) => el.closest('button'))
     fireEvent.click(tagButton!)
 
-    // Both Alpha (2024) and Beta (2023) have typescript
     expect(screen.getByText(/Showing 2 of 3 projects/)).toBeTruthy()
 
-    // Now also filter by year 2024
     const yearButtons = screen.getAllByText('2024')
     const yearButton = yearButtons.find((el) => el.closest('button'))
     fireEvent.click(yearButton!)
 
-    // Only Alpha matches both
     expect(screen.getByText(/Showing 1 of 3 projects/)).toBeTruthy()
     expect(screen.getByText('Project Alpha')).toBeTruthy()
     expect(screen.queryByText('Project Beta')).toBeNull()

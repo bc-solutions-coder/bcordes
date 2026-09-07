@@ -3,30 +3,9 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// Final-cleanup wiring spec — originally the closing task of the
-// feature-based-architecture refactor (bcordes-6ow.9), now rewritten for the
-// FULL-FLATTEN end state (bcordes-hcv.4.1). Every horizontal bucket under
-// apps/web/src has been dissolved: the per-feature component dirs, server-fns/
-// and content/ went to features/* (6ow); hooks/ and components/shared/ went to
-// shared/motion (hcv.2); components/layout, config/, lib/ and styles.css went to
-// app/ (hcv.3). What remains under apps/web/src is routes/, features/, shared/,
-// app/, __tests__/ and the router/start entrypoints — no horizontal layer dirs.
-//
-// These specs assert that END STATE: (1) every dissolved horizontal dir is gone
-// and the relocated app/ + shared/motion surface exists in its place; (2) no real
-// import/mock across apps/web/src OR packages/* points at a migrated-away path or
-// reaches deep into a module's internals (features/, shared/, AND app/); (3) the
-// now-dead ESLint module-boundary blocks that scoped components/, hooks/ and lib/
-// are pruned, their intent carried by the surviving app-wide + features/shared/app
-// blocks; and (4) the CLAUDE.md Key Directories block and the README Project
-// Structure tree describe the surviving layout.
-//
-// Mirrors the repo's structural wiring-spec convention (feature-architecture.test.ts,
-// docs-workspace-layout.test.ts): resolve the repo root from this file and inspect
-// the real filesystem / config / docs — asserting the NEW reality, never the
-// pre-migration one.
+// Checks module boundaries, ESLint rules and the documented directory layout.
+// See [Development](../../../../docs/development.md) for module ownership.
 
-// apps/web/src/__tests__ -> repo root (same convention as feature-architecture.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const selfPath = fileURLToPath(import.meta.url)
@@ -37,7 +16,6 @@ const CLAUDE = hasClaude
   : ''
 const README = readFileSync(join(repoRoot, 'README.md'), 'utf8')
 
-/** Slice a markdown doc between a heading and the next heading of the same level. */
 const section = (doc: string, heading: string): string => {
   const start = doc.indexOf(heading)
   if (start === -1) return ''
@@ -50,13 +28,6 @@ const section = (doc: string, heading: string): string => {
 const keyDirs = section(CLAUDE, '### Key Directories')
 const projectStructure = section(README, '## Project structure')
 
-// ---------------------------------------------------------------------------
-// 1. Emptied horizontal directories removed
-// ---------------------------------------------------------------------------
-
-// Every horizontal dir the flatten dissolved. After the full flatten none of
-// these exists under apps/web/src — including the top-level buckets themselves,
-// not just their former per-feature leaves.
 const REMOVED_DIRS = [
   'components/home',
   'components/about',
@@ -65,23 +36,15 @@ const REMOVED_DIRS = [
   'components/dashboard',
   'server-fns',
   'content',
-  // Emptied by the shared/motion extraction (bcordes-hcv.2): useReducedMotion +
-  // useScrollAnimation left hooks/, FadeInView left components/shared/, and both
-  // now live under shared/motion/, so these horizontal buckets are gone too.
   'hooks',
   'components/shared',
-  // Dissolved by the app/ shell extraction (bcordes-hcv.3): layout components,
-  // the navigation config, web-vitals and the global stylesheet all moved under
-  // app/, which empties the last four horizontal buckets outright.
   'components',
   'config',
   'lib',
   'styles',
 ]
 
-// The relocated surface the flatten must LEAVE IN PLACE (over-deletion guard).
-// Each entry is where a dissolved horizontal dir's content actually landed, so a
-// move that deleted without relocating fails here rather than passing REMOVED_DIRS.
+// Check retained code as well as removed paths to catch accidental deletion.
 const EXPECTED_PATHS = [
   'app/index.ts',
   'app/components/layout',
@@ -117,10 +80,6 @@ describe('relocated app/ and shared/motion surface exists', () => {
   })
 })
 
-// ---------------------------------------------------------------------------
-// 2. No stale deep-import specifiers anywhere in apps/web/src or packages/*
-// ---------------------------------------------------------------------------
-
 const SKIP_DIRS = new Set([
   'node_modules',
   '.output',
@@ -129,7 +88,6 @@ const SKIP_DIRS = new Set([
   '.git',
 ])
 
-/** All .ts/.tsx source files under a root (excludes generated route tree + self). */
 function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   if (!existsSync(dir)) return acc
   for (const entry of readdirSync(dir)) {
@@ -153,17 +111,10 @@ const allSources = [
   ...collectSources(join(repoRoot, 'packages')),
 ]
 
-// An import/mock statement leading token — so prose or a guard's own assertion
-// STRING (e.g. `['@/components', 'home'].join('/')`) is not a false positive;
-// only a real module reference (from '…' / import('…') / vi.mock('…') / require('…'))
-// is flagged.
+// Require an import or mock prefix to avoid matching assertion strings.
 const LEAD = String.raw`(?:from|import|vi\.mock|require)\s*\(?\s*['"]`
 
-// Migrated-away specifiers: their code now lives under features/* or shared/*.
-// Built non-literally (mirroring the sibling feature-module guards' `[...].join('/')`
-// convention) so this spec file's own text never contains a stale specifier
-// substring — otherwise those guards' `readFileSync().includes()` scans would
-// false-positive on this file. Runtime values are byte-identical to the literals.
+// Keep paths split to avoid matching this test in sibling source scans.
 const STALE_SPECIFIERS = [
   ['@/components', 'home'].join('/'),
   ['@/components', 'about'].join('/'),
@@ -177,30 +128,23 @@ const STALE_SPECIFIERS = [
   ['@/config', 'inquiries'].join('/'),
   ['@/lib', 'notifications'].join('/'),
   ['@/hooks', 'useUser'].join('/'),
-  // Migrated into app/ by the shell extraction (bcordes-hcv.3) — consumers now
-  // import the three named symbols from the bare @/app barrel.
   ['@/components', 'layout'].join('/'),
   ['@/config', 'navigation'].join('/'),
   ['@/lib', 'web-vitals'].join('/'),
-  // Migrated into shared/motion by the motion extraction (bcordes-hcv.2).
   ['@/hooks', 'useReducedMotion'].join('/'),
   ['@/hooks', 'useScrollAnimation'].join('/'),
   ['@/components', 'shared'].join('/'),
-  // Deleted outright as dead code alongside the motion extraction.
   ['@/hooks', 'use-mobile'].join('/'),
 ]
 
-// A real import/mock of any migrated-away specifier (specifier followed by a
-// quote or a deeper path segment).
+// Match a quoted module path or one of its descendants.
 const staleImportRe = new RegExp(
   `${LEAD}(?:${STALE_SPECIFIERS.map((s) => s.replace(/[/]/g, '\\/')).join(
     '|',
   )})(?:['"]|/)`,
 )
 
-// A real import/mock reaching DEEP into a module's internals
-// (@/features/<name>/…, @/shared/<name>/… or @/app/<name>/…) — the bare module
-// path is fine, as is the raw app stylesheet asset (no second path segment).
+// Match nested module imports; the raw app stylesheet has no nested path segment.
 const deepModuleRe = new RegExp(
   `${LEAD}@\\/(?:features|shared|app)\\/[a-z0-9-]+\\/`,
 )
@@ -227,15 +171,7 @@ describe('no stale deep-import specifiers remain', () => {
   })
 })
 
-// ---------------------------------------------------------------------------
-// 3. Dead ESLint module-boundary blocks are pruned
-// ---------------------------------------------------------------------------
-
-// The three layer blocks whose files globs scoped the now-removed horizontal dirs
-// match zero files after the flatten, so they must be gone from the flat config.
-// Their intents are fully subsumed: "must not import from routes" by the
-// features/shared/app block, and "must not reach into another layer" by the
-// noDeepModuleImports group carried on the app-wide block.
+// These globs target removed directories; current module blocks enforce their boundaries.
 const DEAD_ESLINT_GLOBS = [
   'apps/web/src/components/**/*.{ts,tsx}',
   'apps/web/src/hooks/**/*.{ts,tsx}',
@@ -249,10 +185,7 @@ const MODULE_GLOBS = [
   'apps/web/src/app/**/*.{ts,tsx}',
 ]
 
-// The config module is authored in JS (@ts-check + JSDoc, no .d.ts), so a static
-// import would trip TS7016. A non-literal specifier keeps tsc from resolving it
-// while the runtime import still loads packages/config/eslint.js via its
-// `./eslint` export — same approach as feature-architecture.test.ts.
+// Use a nonliteral import because the JavaScript config has no type declarations.
 type RestrictedPattern = { group?: Array<string>; message?: string }
 type Block = { files?: Array<string>; rules?: Record<string, unknown> }
 
@@ -266,11 +199,9 @@ const eslintSource = readFileSync(
   'utf8',
 )
 
-/** Every block whose `files` array contains the given exact glob entry. */
 const blocksFor = (glob: string): Array<Block> =>
   eslintBlocks.filter((b) => Array.isArray(b.files) && b.files.includes(glob))
 
-/** The no-restricted-imports pattern objects for a block (empty if unset). */
 const patternsOf = (block: Block | undefined): Array<RestrictedPattern> => {
   const rule = block?.rules?.['no-restricted-imports']
   if (!Array.isArray(rule) || rule.length < 2) return []
@@ -278,7 +209,6 @@ const patternsOf = (block: Block | undefined): Array<RestrictedPattern> => {
   return Array.isArray(opts.patterns) ? opts.patterns : []
 }
 
-/** True if some pattern's `group` array includes every one of `members`. */
 const hasGroupWith = (
   patterns: Array<RestrictedPattern>,
   ...members: Array<string>
@@ -355,10 +285,6 @@ describe('surviving ESLint blocks subsume the pruned layer blocks', () => {
   })
 })
 
-// ---------------------------------------------------------------------------
-// 4. Docs describe the feature-based layout (doc-staleness guard)
-// ---------------------------------------------------------------------------
-
 describe.skipIf(!hasClaude)(
   'CLAUDE.md Key Directories describe the features/ + shared/ layout',
   () => {
@@ -429,8 +355,6 @@ describe.skipIf(!hasClaude)(
     })
 
     it('no longer enumerates the per-feature components/{home,about,...} dirs', () => {
-      // Post-cleanup only components/{layout,shared} remain; the stale
-      // components/{home,about,contact,projects,layout,shared} enumeration must go.
       expect(
         keyDirs,
         'Key Directories must not enumerate the migrated-away per-feature component dirs',
@@ -438,7 +362,6 @@ describe.skipIf(!hasClaude)(
     })
 
     it('preserves the packages/valkey/src/index.ts sanctioned-barrel reference', () => {
-      // docs-workspace-layout guard invariant — must survive the docs edit.
       expect(CLAUDE).toMatch(/packages\/valkey\/src\/index\.ts/)
     })
   },
@@ -452,17 +375,14 @@ describe('README Project Structure describes the features/ + shared/ layout', ()
     ).not.toBe('')
   })
 
-  // Directory entries the ascii tree actually names ('features/', 'app/', …),
-  // tree glyphs and indentation stripped. Comparing against this list rather
-  // than grepping the raw section keeps `packages/ui`'s "component library"
-  // prose from masquerading as a components/ tree entry.
+  // Parse tree entries so descriptions such as "component library" cannot match directory names.
   const treeEntries = projectStructure
     .split('\n')
     .map((line) => line.match(/[├└]──\s+([\w.@-]+\/)/)?.[1])
     .filter((entry): entry is string => entry !== undefined)
 
   it('discovers the tree entries (floor guard)', () => {
-    // Without this the not.toContain assertions below could pass vacuously.
+    // Prevent an empty tree from passing the absence checks.
     expect(treeEntries).toContain('apps/')
     expect(treeEntries).toContain('packages/')
   })

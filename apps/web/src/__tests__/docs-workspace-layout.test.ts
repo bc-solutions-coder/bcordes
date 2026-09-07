@@ -3,19 +3,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// Doc-staleness wiring spec (F13 / bcordes-0i2.13.2). The pnpm-workspace
-// migration relocated every extracted library out of the old single-app
-// `src/lib/*` tree into top-level `packages/*`, and the real-time mechanism is
-// Server-Sent Events (apps/web/src/routes/api/events?subscribe=Notifications,Inquiries.ts +
-// useEventStreamEvents/EventStreamProvider), NOT SignalR — there is no
-// @microsoft/signalr or useSignalR left anywhere in the codebase. CLAUDE.md and
-// README.md still describe the pre-migration layout, so these specs assert the
-// docs reflect the NEW monorepo reality. Mirrors the repo's config/doc test
-// convention (workspace-infra.test.ts, packages/config/typecheck-coverage.test.ts):
-// resolve the repo root from this file, read the doc, grep for the new reality
-// and against the stale one.
-//
-// apps/web/src/__tests__ -> repo root (same convention as workspace-infra.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const read = (rel: string) => readFileSync(join(repoRoot, rel), 'utf8')
 
@@ -23,22 +10,13 @@ const hasClaude = existsSync(join(repoRoot, 'CLAUDE.md'))
 const CLAUDE = hasClaude ? read('CLAUDE.md') : ''
 const README = read('README.md')
 
-/**
- * The real internal packages, discovered from the filesystem (mirroring
- * pnpm-workspace.yaml's `packages/*` glob) so a newly-extracted package is
- * covered without editing a hard-coded list. Each is published under the
- * @bcordes/ scope and lives at packages/<name>/.
- */
+// Discover packages from disk so documentation checks include new packages.
 const packageNames = readdirSync(join(repoRoot, 'packages'))
   .filter((entry) =>
     existsSync(join(repoRoot, 'packages', entry, 'package.json')),
   )
   .sort()
 
-// Stale references to the pre-migration single-app layout. Each names code that
-// has physically moved into packages/*, so any surviving occurrence in the docs
-// is wrong. (`@microsoft/signalr` / `useSignalR` / SignalR describe a realtime
-// stack that no longer exists — it is SSE now.)
 const STALE_SUBSTRINGS = [
   'src/lib/wallow',
   'src/lib/auth',
@@ -55,8 +33,7 @@ const grepStale = (doc: string) =>
 
 describe('doc coverage sanity', () => {
   it('discovers the extracted packages/* set (13: auth..wallow)', () => {
-    // Floor guard: if discovery returns nothing the assertions below pass
-    // vacuously. The migration extracted 13 packages.
+    // Prevent empty discovery from passing the documentation checks.
     expect(packageNames).toContain('wallow')
     expect(packageNames).toContain('auth')
     expect(packageNames.length).toBeGreaterThanOrEqual(13)
@@ -111,8 +88,6 @@ describe.skipIf(!hasClaude)(
     })
 
     it('updates the no-barrel rule: package src/index.ts is the sanctioned public API', () => {
-      // The migrated valkey exception now lives at packages/valkey/src/index.ts,
-      // and each package's src/index.ts is its public API (the sanctioned barrel).
       expect(
         CLAUDE,
         'no-barrel rule must reference packages/valkey/src/index.ts',

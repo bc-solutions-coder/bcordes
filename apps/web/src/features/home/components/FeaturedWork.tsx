@@ -17,7 +17,6 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
   return (
     <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section header */}
         <FadeInView delay={0}>
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -42,7 +41,6 @@ export function FeaturedWork({ showcases }: FeaturedWorkProps) {
           </div>
         </FadeInView>
 
-        {/* Card grid */}
         <FadeInView delay={100}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {showcases.map((showcase) => (

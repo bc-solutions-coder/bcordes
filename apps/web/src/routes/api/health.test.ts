@@ -1,9 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockPing = vi.fn()
 const { capturedGet } = vi.hoisted(() => ({
   capturedGet: vi.fn<() => Promise<Response>>(),
@@ -24,18 +20,10 @@ vi.mock('@tanstack/react-router', () => ({
     },
 }))
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 async function callHealthHandler(): Promise<Response> {
   await import('./health')
   return capturedGet()
 }
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('/api/health', () => {
   beforeEach(() => {

@@ -3,12 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { QueryClient, useQuery } from '@tanstack/react-query'
 import * as Query from '@bcordes/query'
 
-// Companion to router.test.tsx, which mocks the whole world to assert wiring.
-// This file mocks nothing except the route tree: a real createRouter, a real
-// setupRouterSsrQueryIntegration and the real @bcordes/query, so it asserts the
-// behaviour the extraction actually puts at risk — that the query client the
-// package hands the router is the one SSR state hydrates into, and that a
-// component under the router's Wrap reads that server state without refetching.
+// Verify the router and its rendered children share the hydrated query client.
 
 vi.mock('@bcordes/query', async (importOriginal) => {
   const actual = await importOriginal<typeof Query>()
@@ -22,11 +17,7 @@ vi.mock('./routeTree.gen', async () => {
 
 const SSR_KEY = ['router-ssr-probe']
 
-/**
- * The payload the server hands the client: TanStack Start's dehydrated router,
- * carrying the dehydrated query cache plus the (here, immediately closed)
- * stream of queries that resolve after the shell is flushed.
- */
+/** A dehydrated query cache with no pending streamed queries. */
 function dehydratedRouterPayload(data: string) {
   return {
     dehydratedQueryClient: {
@@ -88,8 +79,6 @@ describe('router SSR query integration', () => {
 
     await router.options.hydrate?.(dehydratedRouterPayload('from-server'))
 
-    // The client that receives the server's state has to be the one
-    // @bcordes/query minted and handed to the router — not some second client.
     expect(Query.getContext).toHaveBeenCalledOnce()
     expect(queryClient.getQueryData(SSR_KEY)).toBe('from-server')
   })

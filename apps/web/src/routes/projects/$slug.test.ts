@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ShowcaseMeta } from '@/features/projects'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockGetShowcases = vi.fn()
 const mockNotFound = vi.fn()
 
@@ -23,20 +19,12 @@ vi.mock('lucide-react', () => ({
   ArrowLeft: () => null,
 }))
 
-// ---------------------------------------------------------------------------
-// Import route module after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./$slug')
 const loader = (
   routeModule.Route as unknown as {
     loader: (ctx: { params: { slug: string } }) => { showcase: ShowcaseMeta }
   }
 ).loader
-
-// ---------------------------------------------------------------------------
-// Fixtures
-// ---------------------------------------------------------------------------
 
 const fakeShowcases: Array<ShowcaseMeta> = [
   {
@@ -58,14 +46,6 @@ const fakeShowcases: Array<ShowcaseMeta> = [
     featured: false,
   },
 ]
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Head helper
-// ---------------------------------------------------------------------------
 
 const head = (
   routeModule.Route as unknown as {

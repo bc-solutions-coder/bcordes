@@ -37,7 +37,6 @@ describe('STATUS_COLORS', () => {
 
   it('all color strings contain Tailwind class patterns', () => {
     for (const classes of Object.values(STATUS_COLORS)) {
-      // Each should have bg, text, and border classes
       expect(classes).toMatch(/bg-/)
       expect(classes).toMatch(/text-/)
       expect(classes).toMatch(/border-/)

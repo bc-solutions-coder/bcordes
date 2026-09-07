@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ShowcaseMeta } from '@/features/projects'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockGetShowcases = vi.fn()
 
 vi.mock('@/features/projects', () => ({
@@ -15,20 +11,12 @@ vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (routeConfig: unknown) => routeConfig,
 }))
 
-// ---------------------------------------------------------------------------
-// Import route module after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./index')
 const loader = (
   routeModule.Route as unknown as {
     loader: () => { showcases: Array<ShowcaseMeta> }
   }
 ).loader
-
-// ---------------------------------------------------------------------------
-// Fixtures
-// ---------------------------------------------------------------------------
 
 const fakeShowcases: Array<ShowcaseMeta> = [
   {
@@ -50,10 +38,6 @@ const fakeShowcases: Array<ShowcaseMeta> = [
     featured: false,
   },
 ]
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('Route config', () => {
   it('exports a route config with head', () => {

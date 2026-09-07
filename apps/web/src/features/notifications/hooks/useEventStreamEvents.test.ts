@@ -80,7 +80,6 @@ describe('useEventStreamEvents', () => {
 
     expect(mockSubscribe).not.toHaveBeenCalled()
 
-    // Should not throw on unmount with no subscriptions
     unmount()
   })
 })

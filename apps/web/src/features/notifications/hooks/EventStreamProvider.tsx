@@ -80,7 +80,6 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
     const es = new EventSource('/api/events?subscribe=Notifications,Inquiries')
     eventSourceRef.current = es
 
-    // Connection timeout — if onopen doesn't fire within 10s, treat as error
     connectionTimeoutRef.current = setTimeout(() => {
       if (!mountedRef.current) return
       es.close()
@@ -127,27 +126,24 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       try {
         const envelope: RealtimeEnvelope = JSON.parse(event.data)
         dispatchEnvelope(envelope)
-        // Relay to followers via BroadcastChannel
         if (isLeaderRef.current && bcRef.current) {
           bcRef.current.postMessage({ type: 'event', envelope })
         }
       } catch {
-        // Ignore keepalive comments or malformed data
+        // Ignore failures while parsing, dispatching, or relaying this event.
       }
     }
 
-    // For named SSE events
     const addNamedListener = (eventType: string) => {
       es.addEventListener(eventType, ((event: MessageEvent) => {
         try {
           const envelope: RealtimeEnvelope = JSON.parse(event.data)
           dispatchEnvelope(envelope)
-          // Relay to followers
           if (isLeaderRef.current && bcRef.current) {
             bcRef.current.postMessage({ type: 'event', envelope })
           }
         } catch {
-          // Ignore malformed data
+          // Ignore failures while parsing, dispatching, or relaying this event.
         }
       }) as EventListener)
     }
@@ -166,7 +162,6 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
     ]
     knownTypes.forEach(addNamedListener)
 
-    // Named 'reconnect' event from server
     es.addEventListener('reconnect', ((event: MessageEvent) => {
       try {
         JSON.parse(event.data)
@@ -180,7 +175,7 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       }
       es.close()
       reconnectAttemptRef.current = 0
-      // Schedule a fresh connection with base delay (1s) without incrementing attempt
+      // Server-requested reconnects restart at the base delay.
       if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current)
       reconnectTimerRef.current = setTimeout(() => {
         if (mountedRef.current) connect()
@@ -190,7 +185,7 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
 
   const scheduleReconnect = useCallback(() => {
     if (!mountedRef.current) return
-    // Clear leader timeout — reconnect logic takes over
+    // Reconnecting takes over from leader expiry.
     if (leaderTimeoutRef.current) {
       clearTimeout(leaderTimeoutRef.current)
       leaderTimeoutRef.current = null
@@ -224,14 +219,12 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!user) {
-      // Not authenticated — don't connect, reset state
       setStatus('disconnected')
       return
     }
 
     mountedRef.current = true
 
-    // Helper to start a claim round
     const startClaimRound = () => {
       if (!mountedRef.current || !bcRef.current) return
       isLeaderRef.current = false
@@ -239,24 +232,21 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
       if (claimTimerRef.current) clearTimeout(claimTimerRef.current)
       claimTimerRef.current = setTimeout(() => {
         if (!mountedRef.current) return
-        // No one responded — become leader
         isLeaderRef.current = true
         connect()
         startHeartbeat()
       }, CLAIM_WAIT_MS)
     }
 
-    // Helper to reset leader timeout (for followers)
     const resetLeaderTimeout = () => {
       if (leaderTimeoutRef.current) clearTimeout(leaderTimeoutRef.current)
       leaderTimeoutRef.current = setTimeout(() => {
         if (!mountedRef.current) return
-        // Leader timed out — start a new claim round instead of direct promotion
+        // Allow an existing leader to respond before promoting this tab.
         startClaimRound()
       }, LEADER_TIMEOUT_MS)
     }
 
-    // BroadcastChannel leader election
     let hasBroadcastChannel = false
     try {
       if (typeof BroadcastChannel !== 'undefined') {
@@ -279,22 +269,17 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
             resetLeaderTimeout()
           }
         } else if (data.type === 'event') {
-          // Follower receives relayed events
           if (!isLeaderRef.current) {
             dispatchEnvelope(data.envelope)
           }
         } else if (data.type === 'leader-resign') {
-          // Leader resigned — start a new claim round
           startClaimRound()
         } else if (data.type === 'claim') {
-          // Another tab is claiming leadership
           if (isLeaderRef.current) {
-            // We are the leader — respond and send a heartbeat
             bc.postMessage({ type: 'already-leader' })
             bc.postMessage({ type: 'heartbeat' })
           }
         } else if (data.type === 'already-leader') {
-          // Someone else is already leader — cancel our claim
           if (claimTimerRef.current) {
             clearTimeout(claimTimerRef.current)
             claimTimerRef.current = null
@@ -304,14 +289,11 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // Start a claim round on mount
       startClaimRound()
     } else {
-      // No BroadcastChannel — just connect directly
       connect()
     }
 
-    // Visibility-aware reconnect
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && mountedRef.current) {
         void queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -321,12 +303,11 @@ export function EventStreamProvider({ children }: { children: ReactNode }) {
           payload: null,
           timestamp: new Date().toISOString(),
         })
-        // Only reconnect if leader and disconnected
+        // Followers rely on the leader to reconnect.
         if (
           isLeaderRef.current &&
           (eventSourceRef.current === null || !connectedRef.current)
         ) {
-          // Clear any pending reconnect timer
           if (reconnectTimerRef.current) {
             clearTimeout(reconnectTimerRef.current)
             reconnectTimerRef.current = null

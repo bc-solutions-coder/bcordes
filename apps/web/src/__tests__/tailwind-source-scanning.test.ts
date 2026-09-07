@@ -15,37 +15,17 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-// Tailwind v4 has no `content` array: it discovers class names by scanning the
-// sources named by `@source`. Utilities used ONLY inside @bcordes/ui are
-// therefore emitted only if apps/web/src/styles.css points Tailwind at that
-// package. Drop the directive and the app ships unstyled while every other test
-// in this repo still passes — the emitted stylesheet falls from 83,245 bytes to
-// 50,552. No unit test can see that; only a real build plus a grep of the
-// emitted bundle can. That is what this file does.
-//
-// Resolved from the path string, not `new URL()`: under jsdom the global URL is
-// jsdom's, and fileURLToPath rejects the instance it produces.
+// Build the app to check that src/app/styles.css includes utilities from packages/ui.
+// Use a path string because fileURLToPath rejects jsdom's URL instances.
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const webDir = join(repoRoot, 'apps/web')
 const uiSrc = join(repoRoot, 'packages/ui/src')
 
-/**
- * The classes below are assembled from fragments ON PURPOSE — never write one
- * out as a single literal. This file lives under apps/web/src, which Tailwind
- * scans, so a whole class name spelled anywhere in it (code OR comment) becomes
- * a scanned candidate and Tailwind emits the utility no matter where else it is
- * used. That silently defeats the whole file: measured with the directive
- * removed and the names spelled out, the stylesheet lost 32KB of the package's
- * utilities and every assertion below still passed. Split, they generate
- * nothing, and their presence in the bundle can only come from packages/ui.
- */
+// Keep sentinel class names split, including in comments, because Tailwind scans this file.
+// Whole names here would make the build checks pass even without package scanning.
 const cls = (...fragments: Array<string>) => fragments.join('')
 
-/**
- * Utilities used by @bcordes/ui and by nothing in apps/web, so the only route
- * they have into the stylesheet is @source scanning of the package. The first
- * spec keeps that true; without it the rest could pass vacuously.
- */
+// Sentinels must occur only in packages/ui; the first test checks that constraint.
 const SENTINELS = [
   cls('shadow', '-xs'),
   cls('outline', '-hidden'),
@@ -54,7 +34,7 @@ const SENTINELS = [
   cls('aria-invalid', ':ring-destructive', '/20'),
 ]
 
-/** The selector Tailwind emits for a class — non-word characters escaped. */
+// Escape non-word characters to match emitted CSS selectors.
 const selectorFor = (className: string) =>
   '.' + className.replace(/[^\w-]/g, (char) => `\\${char}`)
 

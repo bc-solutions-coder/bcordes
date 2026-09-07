@@ -23,7 +23,6 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
         className,
       )}
     >
-      {/* Image Container */}
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         {image ? (
           <img
@@ -38,28 +37,22 @@ export function ProjectCard({ showcase, className }: ProjectCardProps) {
             </div>
           </div>
         )}
-        {/* Overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
-      {/* Content */}
       <div className="p-5">
-        {/* Year */}
         <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
           <span>{year}</span>
         </div>
 
-        {/* Title */}
         <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
           {title}
         </h3>
 
-        {/* Description */}
         <p className="mb-4 line-clamp-2 text-sm text-foreground-secondary">
           {description}
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-2">
           {tags.slice(0, 3).map((tag) => (
             <Badge

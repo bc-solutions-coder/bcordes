@@ -13,29 +13,8 @@ import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterAll, describe, expect, it } from 'vitest'
 
-/**
- * Guards the root Vitest projects config (bcordes-0i2.1.4).
- *
- * The workspace must run as ONE Vitest 3 run: a root config that owns the
- * project list and the single merged coverage report, plus a per-app config
- * that keeps the app's own environment/setupFiles/include. Before this change the
- * root config still pointed at a root-level `src/` that no longer exists after
- * the move to apps/web, so `pnpm vitest run` at the repo root found NO test
- * files at all and exited 1.
- *
- * Configs are evaluated in a CHILD NODE PROCESS, not imported here: importing a
- * vite/vitest config in-process drags in esbuild, which throws
- * "new TextEncoder().encode('') instanceof Uint8Array is incorrectly false"
- * under the jsdom environment this suite runs in. The child gets a clean Node
- * env (Node 24 strips the TS types natively), so these assertions run against
- * the REAL resolved config objects rather than a regex over the source text.
- *
- * The behavioural checks shell out to `vitest list`, which COLLECTS test files
- * without executing their bodies. That is deliberate: a child `vitest run`
- * would re-enter this very file and recurse forever. The one child that does
- * run with --coverage is pinned to a single unrelated test file and writes to a
- * throwaway reportsDirectory, so it neither recurses nor clobbers ./coverage.
- */
+// Load configs in Node children to avoid esbuild and jsdom TypedArray incompatibility.
+// Use vitest list for discovery; executing this suite in a child would recurse.
 
 const execFileAsync = promisify(execFile)
 
@@ -55,13 +34,7 @@ const repoRoot = findRepoRoot(appDir)
 const rootConfigPath = join(repoRoot, 'vitest.config.ts')
 const appConfigPath = join(appDir, 'vitest.config.ts')
 
-/**
- * The pre-migration baseline recorded in T1.3: 105 test files / 947 tests
- * (941 pre-migration + 6 added by h3-resolution.test.ts). The root run must not
- * silently drop any of them. Tests added after T1.3 (including this file) only
- * push the total up, so the count is asserted as a FLOOR while the file set is
- * asserted EXACTLY against what is on disk.
- */
+// Keep the recorded 947-test baseline as a floor; compare discovered files to disk separately.
 const BASELINE_TEST_COUNT = 947
 
 interface ResolvedTestConfig {
@@ -108,11 +81,7 @@ async function loadConfig(path: string): Promise<{
   return JSON.parse(stdout)
 }
 
-/**
- * Deliberately dependency-free: apps/web has no glob library on its own
- * resolution path, and adding one just to list files would reintroduce the
- * undeclared-dependency trap that T1.3 removed.
- */
+// Use filesystem traversal without adding a glob dependency.
 function testFilesOnDisk(): Array<string> {
   return readdirSync(join(appDir, 'src'), { recursive: true })
     .map(String)
@@ -130,8 +99,7 @@ interface CollectedTest {
 let collected: Promise<Array<CollectedTest>> | undefined
 
 function collectFromRootConfig(): Promise<Array<CollectedTest>> {
-  // Share the collection promise so the worker can process RPC messages while
-  // the child collects the workspace, and every assertion sees the same run.
+  // Share one asynchronous collection run across assertions while the worker remains available for RPC.
   collected ??= execFileAsync('pnpm', ['exec', 'vitest', 'list', '--json'], {
     cwd: repoRoot,
     encoding: 'utf8',
@@ -156,9 +124,6 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
   it('delegates app-scoped options to the project, keeping none itself', async () => {
     const { test } = await loadConfig(rootConfigPath)
 
-    // environment/setupFiles/include belong to apps/web now. Leaving them on the
-    // root config is what pointed the whole run at a root `src/` that no longer
-    // exists.
     expect(test?.environment).toBeUndefined()
     expect(test?.setupFiles).toBeUndefined()
     expect(test?.include).toBeUndefined()
@@ -174,8 +139,7 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     )
     expect(coverage?.reportOnFailure).toBe(true)
 
-    // Must resolve to <repoRoot>/coverage — this is what keeps CI and the
-    // Codecov badge pointing at the same path they used pre-migration.
+    // CI reads the merged report from the root coverage directory.
     const reportsDirectory = coverage?.reportsDirectory ?? ''
     const resolved = isAbsolute(reportsDirectory)
       ? reportsDirectory
@@ -193,8 +157,6 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
       true,
     )
 
-    // The old root-relative glob matches nothing now that the app lives in
-    // apps/web, and would silently report 0% coverage.
     expect(include).not.toContain('src/**/*.{ts,tsx}')
   })
 
@@ -207,8 +169,6 @@ describe('root vitest.config.ts (workspace projects + merged coverage)', () => {
     expect(matches('.test.')).toBe(true)
     expect(matches('.stories.')).toBe(true)
     expect(matches('routeTree.gen.ts')).toBe(true)
-    // shadcn primitives were excluded pre-migration; dropping them would move
-    // the coverage number for reasons unrelated to any real change.
     expect(matches('components')).toBe(true)
   })
 })
@@ -230,10 +190,7 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
 
     expect(setupFiles.length).toBeGreaterThan(0)
 
-    // The shared Vitest harness now lives in @bcordes/test-utils (its ./setup
-    // subpath), so setupFiles is a bare package specifier rather than an
-    // app-local relative path. A relative entry still resolves against appDir;
-    // a package specifier resolves through the app's node_modules.
+    // Resolve relative setup paths from the app and package specifiers through its node_modules.
     const requireFromApp = createRequire(join(appDir, 'package.json'))
     for (const setupFile of setupFiles) {
       const resolved = isAbsolute(setupFile)
@@ -251,8 +208,7 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     const include = test?.include ?? []
 
     expect(include.length).toBeGreaterThan(0)
-    // Paths are relative to apps/web now; an `apps/web/` prefix would only
-    // resolve from the repo root and matches nothing from the project root.
+    // Include globs are relative to apps/web.
     for (const glob of include) {
       expect(glob).not.toContain('apps/web')
       expect(isAbsolute(glob)).toBe(false)
@@ -262,15 +218,11 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
 
     expect(patterns).toMatch(/\.test\./)
     expect(patterns).toMatch(/tsx/)
-
-    // That these globs actually match all 105 files on disk is proven for real
-    // by the root-run collection test below, not re-implemented here.
   })
 
   it('keeps the tsconfig-paths plugin that resolves the @/ alias', async () => {
     const { pluginNames } = await loadConfig(appConfigPath)
 
-    // Without it every `@/…` import in the suite fails to resolve.
     expect(pluginNames).toContain('vite-tsconfig-paths')
   })
 })
@@ -280,8 +232,6 @@ describe('the root run collects the whole workspace', () => {
     'discovers every app test file from the repo root with no extra flags',
     { timeout: 180_000 },
     async () => {
-      // Scoped to the app project: workspace packages under packages/* are
-      // projects of their own and bring their own test files to the same run.
       const files = [
         ...new Set(
           (await collectFromRootConfig())
@@ -298,8 +248,6 @@ describe('the root run collects the whole workspace', () => {
     'collects each workspace package as a project of its own',
     { timeout: 180_000 },
     async () => {
-      // packages/* is not a decorative glob: an extracted package's tests must
-      // run in the same root `pnpm vitest run` as the app's.
       const packageTests = (await collectFromRootConfig()).filter((entry) =>
         entry.file.startsWith(join(repoRoot, 'packages')),
       )
@@ -338,11 +286,7 @@ describe('merged coverage output', () => {
       const reportsDirectory = mkdtempSync(join(tmpdir(), 'bcordes-coverage-'))
       reportsDirectories.push(reportsDirectory)
 
-      // Pinned to one small, unrelated test file: enough to prove the coverage
-      // plumbing resolves workspace sources, without re-running (and re-entering)
-      // the whole suite. reportsDirectory is redirected so ./coverage is untouched.
-      // It must be a file that stays in apps/web for the whole migration — the
-      // lib/ tests it used to point at are being extracted into packages/*.
+      // Run one unrelated test to avoid recursion; isolate its report from the parent coverage run.
       await execFileAsync(
         'pnpm',
         [
@@ -366,8 +310,6 @@ describe('merged coverage output', () => {
         (match) => match[1],
       )
 
-      // Sources must be attributed to the app package. A root-relative include
-      // glob produces an lcov with no records at all.
       expect(sourceFiles.length).toBeGreaterThan(0)
       expect(
         sourceFiles.some((file) => file.includes(join('apps', 'web', 'src'))),

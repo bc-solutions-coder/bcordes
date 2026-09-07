@@ -99,7 +99,6 @@ describe('FeaturedWork', () => {
 
   it('renders at most 3 tags per project', () => {
     render(<FeaturedWork showcases={mockShowcases} />)
-    // Project Alpha has 4 tags but only 3 should render
     expect(screen.getByText('React')).toBeTruthy()
     expect(screen.getByText('TypeScript')).toBeTruthy()
     expect(screen.getByText('D3.js')).toBeTruthy()

@@ -40,7 +40,6 @@ describe('useNotificationFilters', () => {
   it('handleTabChange("unread") filters to unread only and resets page', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
 
-    // Advance page first to verify reset
     act(() => result.current.setPage(3))
     expect(result.current.page).toBe(3)
 
@@ -74,7 +73,6 @@ describe('useNotificationFilters', () => {
     ).toBe(true)
     expect(result.current.page).toBe(1)
 
-    // Toggle off
     act(() => result.current.handleTypeFilter('InquirySubmitted'))
     expect(result.current.activeType).toBeNull()
     expect(result.current.filtered).toHaveLength(4)
@@ -83,10 +81,8 @@ describe('useNotificationFilters', () => {
   it('unreadCount reflects only unread items regardless of filters', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
 
-    // unreadCount should be 2 (id 1 and 3)
     expect(result.current.unreadCount).toBe(2)
 
-    // Even after filtering by type, unreadCount is based on full list
     act(() => result.current.handleTypeFilter('TaskAssigned'))
     expect(result.current.unreadCount).toBe(2)
   })

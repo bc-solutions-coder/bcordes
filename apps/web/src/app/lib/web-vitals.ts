@@ -5,9 +5,6 @@ function sendMetric(metric: Metric) {
     console.debug('[web-vitals]', metric.name, metric.value.toFixed(1), metric)
     return
   }
-
-  // Production: beacon to your analytics endpoint when ready
-  // navigator.sendBeacon('/api/vitals', JSON.stringify(metric))
 }
 
 export function reportWebVitals() {

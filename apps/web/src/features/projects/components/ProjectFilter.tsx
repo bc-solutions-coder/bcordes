@@ -22,7 +22,6 @@ export function ProjectFilter({
 }: ProjectFilterProps) {
   return (
     <div className={cn('space-y-6', className)}>
-      {/* Tags Filter */}
       <div>
         <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
           Filter by Technology
@@ -74,7 +73,6 @@ export function ProjectFilter({
         </div>
       </div>
 
-      {/* Years Filter */}
       <div>
         <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
           Filter by Year

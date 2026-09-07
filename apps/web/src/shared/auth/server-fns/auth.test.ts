@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getAuthUser, requireAuth } from '@bcordes/auth/middleware'
 import type { User } from '@bcordes/auth/types'
 
-// Mock @tanstack/react-start so createServerFn chains resolve to the handler
+// Exercise server handlers directly.
 vi.mock('@tanstack/react-start', () => {
   const createServerFn = () => {
     let handlerFn: (...args: Array<unknown>) => unknown
@@ -21,7 +21,6 @@ vi.mock('@tanstack/react-start', () => {
   return { createServerFn }
 })
 
-// Mock auth middleware
 vi.mock('@bcordes/auth/middleware', () => ({
   getAuthUser: vi.fn(),
   requireAuth: vi.fn(),
@@ -30,7 +29,6 @@ vi.mock('@bcordes/auth/middleware', () => ({
 const mockedGetAuthUser = vi.mocked(getAuthUser)
 const mockedRequireAuth = vi.mocked(requireAuth)
 
-// Import after mocks are set up
 const { fetchCurrentUserRoles, serverRequireAuth } = await import('./auth')
 
 describe('fetchCurrentUserRoles', () => {

@@ -1,13 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 
-// ─── Re-declare schemas as they appear in source (bare z.string()) ───
-// We import nothing from the server-fns because those modules pull in
-// server-only deps.  Instead we duplicate the *current* loose shapes here
-// and write tests against the *tightened* behaviour we expect after the
-// green phase.  When the source schemas are tightened the tests will pass.
+// These tests exercise local schema copies, not the production server functions.
+// Changes to production schemas do not change these tests.
 
-// inquiries.ts – submitInquirySchema
 const submitInquirySchema = z.object({
   name: z.string().min(1).max(200),
   email: z.string().email().max(254),
@@ -24,33 +20,27 @@ const submitInquirySchema = z.object({
   message: z.string().min(1).max(5000),
 })
 
-// inquiries.ts – fetchInquiry / fetchInquiryComments
 const fetchInquirySchema = z.object({ id: z.string().uuid() })
 
-// inquiries.ts – updateInquiryStatus
+// This copy only checks the ID; production restricts status to an enum.
 const updateInquiryStatusSchema = z.object({
   id: z.string().uuid(),
   status: z.string(),
 })
 
-// inquiries.ts – submitInquiryComment
 const submitInquiryCommentSchema = z.object({
   id: z.string().uuid(),
   content: z.string().min(1),
   isInternal: z.boolean().optional().default(false),
 })
 
-// notifications.ts – registerPushDeviceSchema
 const registerPushDeviceSchema = z.object({
   endpoint: z.string().url().max(2048),
   p256dh: z.string().max(256),
   auth: z.string().max(128),
 })
 
-// notifications.ts – markNotificationRead / deregisterPushDevice
 const notificationIdSchema = z.object({ id: z.string().uuid() })
-
-// ─── Helpers ─────────────────────────────────────────────────────────
 
 const VALID_UUID = '550e8400-e29b-41d4-a716-446655440000'
 
@@ -70,8 +60,6 @@ function expectPass(schema: z.ZodSchema, data: unknown) {
   ).toBe(true)
 }
 
-// ─── Tests ───────────────────────────────────────────────────────────
-
 describe('submitInquirySchema – enum fields', () => {
   const base = {
     name: 'Alice',
@@ -79,7 +67,6 @@ describe('submitInquirySchema – enum fields', () => {
     message: 'Hello',
   }
 
-  // --- projectType ---
   describe('projectType', () => {
     it('rejects an arbitrary string', () => {
       expectFail(submitInquirySchema, {
@@ -103,7 +90,6 @@ describe('submitInquirySchema – enum fields', () => {
     )
   })
 
-  // --- budgetRange ---
   describe('budgetRange', () => {
     it('rejects an arbitrary string', () => {
       expectFail(submitInquirySchema, {
@@ -127,7 +113,6 @@ describe('submitInquirySchema – enum fields', () => {
     )
   })
 
-  // --- timeline ---
   describe('timeline', () => {
     it('rejects an arbitrary string', () => {
       expectFail(submitInquirySchema, {

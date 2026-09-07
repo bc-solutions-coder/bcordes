@@ -60,11 +60,9 @@ function ShowcaseDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
       <section className="mx-auto mt-8 max-w-[1440px] px-6">
         <div className="flex flex-col items-center gap-8 rounded-2xl border border-border bg-secondary/50 px-8 py-12 md:flex-row md:px-12">
           <FadeInView className="flex-1">
-            {/* Back Link */}
             <Link
               to="/projects"
               className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
@@ -73,22 +71,18 @@ function ShowcaseDetailPage() {
               Back to Projects
             </Link>
 
-            {/* Year */}
             <div className="mb-4 text-sm text-muted-foreground">
               <span>{showcase.year}</span>
             </div>
 
-            {/* Title */}
             <h1 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
               {showcase.title}
             </h1>
 
-            {/* Description */}
             <p className="mb-6 text-lg text-foreground-secondary">
               {showcase.description}
             </p>
 
-            {/* Tags */}
             <div className="flex flex-wrap gap-2">
               {showcase.tags.map((tag: string) => (
                 <Badge
@@ -116,7 +110,6 @@ function ShowcaseDetailPage() {
         </div>
       </section>
 
-      {/* Content */}
       <section className="mx-auto max-w-4xl px-6 py-12">
         <FadeInView delay={150}>
           <div className="rounded-2xl border border-border bg-secondary/50 p-8">
@@ -125,7 +118,6 @@ function ShowcaseDetailPage() {
         </FadeInView>
       </section>
 
-      {/* Footer Navigation */}
       <section className="mx-auto mb-8 max-w-4xl px-6 py-8">
         <div className="rounded-2xl border border-border bg-secondary/50 px-6 py-8">
           <FadeInView delay={200}>

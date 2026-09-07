@@ -44,7 +44,6 @@ export function ServicesGrid() {
   return (
     <section className="py-24 bg-secondary">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section header */}
         <FadeInView delay={0}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -57,7 +56,6 @@ export function ServicesGrid() {
           </div>
         </FadeInView>
 
-        {/* Services grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <FadeInView key={service.title} delay={100 + index * 100}>

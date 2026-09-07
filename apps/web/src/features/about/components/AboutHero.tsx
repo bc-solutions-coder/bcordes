@@ -4,33 +4,27 @@ import { FadeInView } from '@/shared/motion'
 export function AboutHero() {
   return (
     <section className="relative py-20 overflow-hidden">
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary to-background" />
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center gap-10">
-          {/* Profile Photo Placeholder */}
           <FadeInView delay={0}>
             <div className="relative flex-shrink-0">
-              {/* Outer glow ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-primary blur-md opacity-50" />
 
-              {/* Profile photo */}
               <img
                 src="/profile-picture.png"
                 alt="Bryan Cordes"
                 className="relative w-40 h-40 rounded-full object-cover border-4 border-muted"
               />
 
-              {/* Status indicator */}
               <div className="absolute bottom-2 right-2 w-6 h-6 bg-primary rounded-full border-4 border-background">
                 <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
               </div>
             </div>
           </FadeInView>
 
-          {/* Text Content */}
           <div className="text-center md:text-left">
             <FadeInView delay={100}>
               <Badge

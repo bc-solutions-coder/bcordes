@@ -45,7 +45,6 @@ const contactInfo: Array<ContactInfoItem> = [
 function ContactPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-4xl px-6 py-16">
           <FadeInView>
@@ -60,10 +59,8 @@ function ContactPage() {
         </div>
       </section>
 
-      {/* Content */}
       <div className="mx-auto max-w-4xl px-6 py-12">
         <div className="grid gap-12 lg:grid-cols-3">
-          {/* Contact Info */}
           <FadeInView delay={100}>
             <div className="space-y-6">
               <h2 className="text-xl font-semibold text-foreground">
@@ -102,7 +99,6 @@ function ContactPage() {
                 ))}
               </div>
 
-              {/* Availability */}
               <div className="rounded-lg border border-border bg-secondary p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <span className="relative flex h-3 w-3">
@@ -120,7 +116,6 @@ function ContactPage() {
             </div>
           </FadeInView>
 
-          {/* Contact Form */}
           <FadeInView delay={200} className="lg:col-span-2">
             <div className="rounded-xl border border-border bg-secondary p-6 md:p-8">
               <h2 className="mb-6 text-xl font-semibold text-foreground">

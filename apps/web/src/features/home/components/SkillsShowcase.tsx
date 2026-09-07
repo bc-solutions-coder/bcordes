@@ -35,7 +35,6 @@ export function SkillsShowcase() {
   return (
     <section className="py-24 bg-secondary">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section header */}
         <FadeInView delay={0}>
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -48,7 +47,6 @@ export function SkillsShowcase() {
           </div>
         </FadeInView>
 
-        {/* Skills grid by category */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {skillCategories.map((category, categoryIndex) => (
             <FadeInView key={category.name} delay={100 + categoryIndex * 100}>

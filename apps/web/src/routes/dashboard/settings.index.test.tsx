@@ -3,10 +3,6 @@ import { cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 import type { NotificationSettings } from '@bcordes/wallow/types'
 
-// ---------------------------------------------------------------------------
-// Mocks
-// ---------------------------------------------------------------------------
-
 const mockFetchNotificationSettings = vi.fn()
 const mockUpdateChannelSetting = vi.fn()
 
@@ -48,10 +44,6 @@ vi.mock('@tanstack/react-router', () => ({
   }),
 }))
 
-// ---------------------------------------------------------------------------
-// Import route after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./settings.index')
 const routeConfig = routeModule.Route as unknown as {
   beforeLoad: () => Promise<void>
@@ -61,10 +53,6 @@ const routeConfig = routeModule.Route as unknown as {
 
 const SettingsPage = routeConfig.component
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 const defaultSettings: Array<NotificationSettings> = [
   { channelType: 0, isEnabled: true },
   { channelType: 1, isEnabled: false },
@@ -72,15 +60,10 @@ const defaultSettings: Array<NotificationSettings> = [
   { channelType: 2, isEnabled: true },
 ]
 
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
 describe('settings.index', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockUpdateChannelSetting.mockResolvedValue(undefined)
-    // Reset push state
     mockPushState.isSupported = true
     mockPushState.isRegistered = false
     mockPushState.permission = 'default'
@@ -93,8 +76,6 @@ describe('settings.index', () => {
     cleanup()
   })
 
-  // ---- Loader tests ----
-
   describe('loader', () => {
     it('returns result of fetchNotificationSettings', async () => {
       mockFetchNotificationSettings.mockResolvedValue(defaultSettings)
@@ -105,8 +86,6 @@ describe('settings.index', () => {
       expect(result).toEqual(defaultSettings)
     })
   })
-
-  // ---- Component tests ----
 
   describe('component', () => {
     it('renders channel toggle rows', () => {
@@ -146,7 +125,6 @@ describe('settings.index', () => {
 
       renderWithProviders(<SettingsPage />)
 
-      // Find the Push row
       const pushLabel = screen.getByText('Push')
       const pushRow = pushLabel.closest(
         'div.flex.items-center.justify-between',
@@ -198,8 +176,6 @@ describe('settings.index', () => {
 
       renderWithProviders(<SettingsPage />)
 
-      // The SMS switch is the second non-push switch. Find by associated label text.
-      // Switches are rendered per channel. Find the SMS row switch.
       const smsDescription = screen.getByText(
         'Receive notifications via text message',
       )
@@ -210,7 +186,6 @@ describe('settings.index', () => {
 
       fireEvent.click(smsSwitch)
 
-      // Wait for the async handleToggle to resolve
       await vi.waitFor(() => {
         expect(mockUpdateChannelSetting).toHaveBeenCalledWith({
           data: { channelType: 1, isEnabled: true },
@@ -233,8 +208,6 @@ describe('settings.index', () => {
         expect(mockPushState.sendTest).toHaveBeenCalledOnce()
       })
     })
-
-    // --- Lines 112-123: handlePushToggle success and error paths ---
 
     it('handlePushToggle enables push notifications on checked=true', async () => {
       mockPushState.isRegistered = false
@@ -300,8 +273,6 @@ describe('settings.index', () => {
       })
     })
 
-    // --- Lines 130-131: handleSendTest error path ---
-
     it('handleSendTest shows error toast on failure', async () => {
       mockPushState.isRegistered = true
       mockPushState.sendTest.mockRejectedValue(new Error('test send failed'))
@@ -320,7 +291,6 @@ describe('settings.index', () => {
     })
 
     it('handleToggle appends new entry when channelType is not in localSettings', async () => {
-      // Start with empty settings so no channelType matches
       mockUseLoaderData.mockReturnValue([])
 
       renderWithProviders(<SettingsPage />)
@@ -346,7 +316,6 @@ describe('settings.index', () => {
 
       renderWithProviders(<SettingsPage />)
 
-      // SMS is currently disabled (isEnabled: false). Toggle it on.
       const smsDesc = screen.getByText('Receive notifications via text message')
       const smsRow = smsDesc.closest('div.flex.items-center.justify-between')!
       const smsSwitch = smsRow.querySelector('[role="switch"]') as HTMLElement
@@ -359,7 +328,6 @@ describe('settings.index', () => {
         )
       })
 
-      // After revert, the SMS switch should be back to unchecked
       expect(smsSwitch.hasAttribute('data-unchecked')).toBe(true)
     })
 
@@ -382,8 +350,6 @@ describe('settings.index', () => {
       })
     })
   })
-
-  // ---- beforeLoad tests ----
 
   describe('beforeLoad', () => {
     it('calls serverRequireAuth with returnTo path', async () => {

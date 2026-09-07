@@ -3,10 +3,6 @@ import { cleanup, render, screen } from '@testing-library/react'
 
 import type { ShowcaseMeta } from '@/features/projects'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const useLoaderDataMock = vi.fn()
 const mockGetShowcaseContent = vi.fn()
 
@@ -47,10 +43,6 @@ vi.mock('lucide-react', () => ({
   ArrowLeft: () => <span data-testid="arrow-left-icon" />,
 }))
 
-// ---------------------------------------------------------------------------
-// Import the route module (must come after mocks)
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./$slug')
 
 const routeConfig = routeModule.Route as unknown as {
@@ -60,10 +52,6 @@ const routeConfig = routeModule.Route as unknown as {
 
 const ShowcaseDetailPage = routeConfig.component
 const NotFoundComponent = routeConfig.notFoundComponent
-
-// ---------------------------------------------------------------------------
-// Test data
-// ---------------------------------------------------------------------------
 
 const fakeShowcase: ShowcaseMeta = {
   slug: 'project-alpha',
@@ -81,10 +69,6 @@ const fakeShowcaseWithImage: ShowcaseMeta = {
   title: 'Project With Image',
   image: '/images/project-alpha.png',
 }
-
-// ---------------------------------------------------------------------------
-// Tests — ShowcaseDetailPage component
-// ---------------------------------------------------------------------------
 
 describe('projects/$slug component', () => {
   afterEach(() => {
@@ -144,9 +128,7 @@ describe('projects/$slug component', () => {
     mockGetShowcaseContent.mockReturnValue(undefined)
     render(<ShowcaseDetailPage />)
 
-    // Title should still render
     expect(screen.getByText('Project Alpha')).toBeTruthy()
-    // No content section crash
   })
 
   it('renders a "Back to Projects" link in the header', () => {
@@ -194,10 +176,6 @@ describe('projects/$slug component', () => {
     expect(mockGetShowcaseContent).toHaveBeenCalledWith('project-alpha')
   })
 })
-
-// ---------------------------------------------------------------------------
-// Tests — notFoundComponent
-// ---------------------------------------------------------------------------
 
 describe('projects/$slug notFoundComponent', () => {
   afterEach(() => {

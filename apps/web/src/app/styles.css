@@ -2,19 +2,12 @@
 
 @import 'tw-animate-css';
 
-/* The design tokens live with the primitives that read them (@bcordes/ui). They
-   must land before Tailwind generates utilities from the @theme mapping and
-   before the @layer base rules below reach for var(--border)/var(--background). */
+/* Load theme tokens before the base rules use them. */
 @import '@bcordes/ui/styles.css';
 
-/* Tailwind's automatic source detection roots at this app and skips linked
-   packages, so utilities used only inside @bcordes/ui (size-4, transition-none…)
-   are otherwise never generated and the primitives render unstyled. */
+/* Scan linked packages for utility classes. */
 @source '../../../../packages/ui/src';
 
-/* Same reasoning for the extracted nav shells (@bcordes/navigation): the header
-   chrome and mobile-sheet utilities live in that package's source, outside this
-   app's auto-detected root, so Tailwind must be told to scan it too. */
 @source '../../../../packages/navigation/src';
 
 body {
@@ -59,7 +52,6 @@ code {
   }
 }
 
-/* Animations */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -75,7 +67,6 @@ code {
   animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hero Animation Keyframes */
 @keyframes orbit {
   from {
     transform: rotate(0deg);
@@ -130,10 +121,8 @@ code {
   animation: pulse 2s infinite;
 }
 
-/* Showcase Content Styles */
 @import './styles/showcase.css';
 
-/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

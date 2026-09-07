@@ -4,22 +4,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-/**
- * Guards the h3 resolution fix (bcordes-0i2.1.3).
- *
- * src/server/middleware/{csrf-validation,security-headers}.ts import h3, but h3
- * was never a declared dependency. Vitest only resolved it through a hardcoded
- * alias into a hash-suffixed pnpm store path (which any workspace re-resolve
- * silently invalidates), and TypeScript could not resolve it at all (TS2307).
- * The fix is a real h3 dependency on apps/web, resolvable by the plain Node/TS
- * algorithm with no Vite alias in play.
- *
- * Resolution is probed in a child process with NODE_PATH cleared: the pnpm bin
- * shim sets NODE_PATH to the hidden hoist dir (node_modules/.pnpm/node_modules),
- * which lets an *undeclared* package resolve at runtime under `pnpm vitest`.
- * tsc and Vite ignore NODE_PATH, so an in-process check would pass while the
- * real defect stands.
- */
+// Probe resolution in a child with NODE_PATH cleared so pnpm hoisting cannot hide an undeclared dependency.
 
 const appDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 

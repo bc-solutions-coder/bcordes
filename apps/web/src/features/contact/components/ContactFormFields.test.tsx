@@ -7,7 +7,7 @@ import { contactFormSchema } from '../lib/contact-form.schema'
 import { ContactFormFields } from './ContactFormFields'
 import type { ContactFormValues } from '../lib/contact-form.schema'
 
-// Radix Select polyfills for jsdom
+// Browser APIs missing from jsdom.
 Element.prototype.scrollIntoView = vi.fn()
 Element.prototype.hasPointerCapture = vi.fn()
 Element.prototype.setPointerCapture = vi.fn()

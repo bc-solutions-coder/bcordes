@@ -3,31 +3,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// Projects feature-module migration wiring spec (bcordes-6ow.4 / .4.1).
-//
-// Task 3 of the feature-based-architecture refactor MERGES two horizontal
-// directories — apps/web/src/components/projects/* AND apps/web/src/content/projects/*
-// — into a single self-contained feature module at apps/web/src/features/projects/,
-// exposing a public API via its own index.ts and repointing every consumer at the
-// bare @/features/projects entry point. After the move:
-//   * components/projects/ moves to features/projects/components/
-//   * content/projects/   moves to features/projects/content/ (its index.ts remains
-//     the sanctioned scoped-module barrel per CLAUDE.md's no-barrel exception)
-//   * features/projects/index.ts re-exports the two project components
-//     (ProjectCard, ProjectFilter) from ./components AND re-exports the entire
-//     content barrel surface via `export * from './content'` — that surface
-//     includes the ShowcaseMeta type plus getShowcases / getShowcase /
-//     getShowcaseContent / getFeaturedShowcases.
-//   * neither the old @/components/projects nor @/content/projects path is
-//     referenced by any source under apps/web/src (static imports AND vi.mock
-//     module-path string keys), and the public API actually resolves the merged
-//     value exports.
-//
-// Mirrors the repo's structural wiring-spec convention (home-feature-module.test.ts,
-// about-feature-module.test.ts): resolve the repo root from this file, inspect the
-// real filesystem / config, and confirm the new reality — never the pre-migration one.
-
-// apps/web/src/__tests__ -> repo root (same convention as home/about-feature-module).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const projectsFeatureDir = join(appSrc, 'features/projects')
@@ -37,14 +12,9 @@ const projectsFeatureContent = join(projectsFeatureDir, 'content')
 const oldComponentsProjectsDir = join(appSrc, 'components/projects')
 const oldContentProjectsDir = join(appSrc, 'content/projects')
 
-// The two project components the scout confirmed are each NAMED exports (function
-// declarations) — the component half of the module's public API surface.
 const COMPONENT_EXPORTS = ['ProjectCard', 'ProjectFilter'] as const
 
-// The content barrel's value exports (functions) that `export * from './content'`
-// must surface through the feature index. The ShowcaseMeta / Showcase types are
-// erased at runtime, so they are asserted structurally (the `export *` re-export)
-// rather than via the runtime import below.
+// Types are erased at runtime; the content re-export assertion covers them separately.
 const CONTENT_VALUE_EXPORTS = [
   'getShowcases',
   'getShowcase',
@@ -52,21 +22,15 @@ const CONTENT_VALUE_EXPORTS = [
   'getFeaturedShowcases',
 ] as const
 
-// The full set of runtime function exports the merged public API must resolve.
 const RUNTIME_EXPORTS = [
   ...COMPONENT_EXPORTS,
   ...CONTENT_VALUE_EXPORTS,
 ] as const
 
-// The two stale deep-import paths this migration must eliminate. Built by joining
-// so this spec file itself is not a false positive when it scans the source tree.
+// Keep paths split to avoid matching this test in sibling source scans.
 const OLD_COMPONENTS_PROJECTS_PATH = ['@/components', 'projects'].join('/')
 const OLD_CONTENT_PROJECTS_PATH = ['@/content', 'projects'].join('/')
 
-// Consumers that reference the projects public surface and must be repointed at the
-// bare @/features/projects entry point. These route/feature files do NOT move (only
-// components/projects and content/projects relocate), so their paths are stable and
-// each must reference '@/features/projects' after the migration.
 const EXTERNAL_CONSUMERS = [
   'features/home/components/FeaturedWork.tsx',
   'features/home/components/FeaturedWork.test.tsx',
@@ -85,7 +49,6 @@ const readIndex = (): string =>
     ? readFileSync(projectsFeatureIndex, 'utf8')
     : ''
 
-/** All .ts/.tsx source files under apps/web/src (excludes generated route tree). */
 function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry)
@@ -122,8 +85,7 @@ describe('features/projects module exists with a public index', () => {
     'index.ts re-exports %s from its local components/',
     (name) => {
       const src = readIndex()
-      // Match `export { Name } from './components/Name'` (allowing extra names
-      // in the same brace group and either quote style).
+      // Allow grouped exports and either quote style.
       const pattern = new RegExp(
         `export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*['"]\\./components/`,
       )
@@ -136,10 +98,7 @@ describe('features/projects module exists with a public index', () => {
 
   it('index.ts re-exports the whole content barrel (incl. ShowcaseMeta type)', () => {
     const src = readIndex()
-    // `export * from './content'` surfaces the sanctioned scoped-module barrel
-    // — the ShowcaseMeta / Showcase types plus every getShowcase* helper — in
-    // one line, exactly as the task specifies. Either quote style; optional
-    // trailing /index.
+    // Allow either quote style and an optional /index suffix.
     const pattern = /export\s*\*\s*from\s*['"]\.\/content(?:\/index)?['"]/
     expect(
       pattern.test(src),
@@ -194,9 +153,7 @@ describe('every consumer resolves via the new @/features/projects path', () => {
 
 describe('the public API resolves the merged value exports', () => {
   it('@/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers', async () => {
-    // Non-literal specifier so vite's import-analysis defers resolution to
-    // runtime (mirrors home/about-feature-module.test.ts), letting this file
-    // collect and fail per-assertion rather than at transform.
+    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
     const projectsSpecifier = '@/features/projects'
     const mod = (await import(projectsSpecifier)) as Record<string, unknown>
     for (const name of RUNTIME_EXPORTS) {

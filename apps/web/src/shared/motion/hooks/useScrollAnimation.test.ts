@@ -84,8 +84,6 @@ describe('useScrollAnimation', () => {
       return hookResult
     })
 
-    // The observer is created when the effect runs with a ref element
-    // Options are captured by our mock
     expect(observerOptions).toEqual(
       expect.objectContaining({
         threshold: 0.5,

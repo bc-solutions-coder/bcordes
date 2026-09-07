@@ -2,10 +2,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, screen } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 
-// ---------------------------------------------------------------------------
-// Mocks
-// ---------------------------------------------------------------------------
-
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router')
   return {
@@ -15,18 +11,10 @@ vi.mock('@tanstack/react-router', async () => {
   }
 })
 
-// ---------------------------------------------------------------------------
-// Import route module after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./inquiries')
 const routeConfig = routeModule.Route as unknown as {
   component: React.ComponentType
 }
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('inquiries layout route', () => {
   afterEach(() => {

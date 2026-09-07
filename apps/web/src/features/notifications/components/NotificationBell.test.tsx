@@ -41,8 +41,7 @@ vi.mock('../lib/routing', () => ({
   getNotificationRoute: vi.fn(() => '/dashboard/notifications'),
 }))
 
-// Only the clock is faked. Spreading the original module keeps cn() real —
-// every shadcn primitive this bell renders imports it from the same package.
+// Mock time formatting; keep cn real for the UI primitives.
 vi.mock('@bcordes/utils', async (importOriginal) => ({
   ...(await importOriginal<typeof BcordesUtils>()),
   formatRelativeTime: vi.fn(() => 'just now'),
@@ -173,7 +172,6 @@ describe('NotificationBell', () => {
     expect(screen.getByText('Someone sent you a message')).toBeDefined()
     expect(screen.getByText('Old Inquiry')).toBeDefined()
     expect(screen.getByText('An older message')).toBeDefined()
-    // formatRelativeTime is mocked to return 'just now'
     expect(screen.getAllByText('just now')).toHaveLength(2)
   })
 
@@ -321,10 +319,8 @@ describe('NotificationBell', () => {
 
     renderWithProviders(<NotificationBell />)
 
-    // Wait for initial render with unread count
     await screen.findByText('3')
 
-    // Simulate a NotificationCreated event
     capturedCallback({
       type: 'NotificationCreated',
       module: 'notifications',
@@ -352,7 +348,6 @@ describe('NotificationBell', () => {
       },
     )
 
-    // Stub visibilityState to 'visible'
     const visibilitySpy = vi
       .spyOn(document, 'visibilityState', 'get')
       .mockReturnValue('visible')
@@ -365,7 +360,6 @@ describe('NotificationBell', () => {
 
     renderWithProviders(<NotificationBell />)
 
-    // Wait for component to mount and subscribe
     await waitFor(() => {
       expect(mockSubscribe).toHaveBeenCalledWith(
         'NotificationCreated',
@@ -373,7 +367,6 @@ describe('NotificationBell', () => {
       )
     })
 
-    // Invoke callback with a notification that has a title
     capturedCallback({
       type: 'NotificationCreated',
       module: 'notifications',
@@ -417,7 +410,6 @@ describe('NotificationBell', () => {
       expect(mockSubscribe).toHaveBeenCalled()
     })
 
-    // Invoke callback without a title in payload
     capturedCallback({
       type: 'NotificationCreated',
       module: 'notifications',

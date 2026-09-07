@@ -93,7 +93,6 @@ const education = [
 function ResumePage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <section className="border-b border-border bg-secondary">
         <div className="mx-auto max-w-4xl px-6 py-16">
           <FadeInView>
@@ -119,9 +118,7 @@ function ResumePage() {
         </div>
       </section>
 
-      {/* Content */}
       <div className="mx-auto max-w-4xl px-6 py-12">
-        {/* Experience */}
         <FadeInView delay={100}>
           <section className="mb-12">
             <h2 className="mb-6 text-2xl font-bold text-foreground">
@@ -159,7 +156,6 @@ function ResumePage() {
           </section>
         </FadeInView>
 
-        {/* Skills */}
         <FadeInView delay={200}>
           <section className="mb-12">
             <h2 className="mb-6 text-2xl font-bold text-foreground">Skills</h2>
@@ -186,7 +182,6 @@ function ResumePage() {
           </section>
         </FadeInView>
 
-        {/* Education */}
         <FadeInView delay={300}>
           <section>
             <h2 className="mb-6 text-2xl font-bold text-foreground">

@@ -60,12 +60,11 @@ export function NotificationBell() {
   useEffect(() => {
     if (!user) return
     const unsubscribe = subscribe('NotificationCreated', (envelope) => {
-      // Optimistically bump the unread count immediately
+      // Update the badge immediately, then reconcile with server state.
       queryClient.setQueryData<number>(
         ['notifications', 'unread-count'],
         (old) => (old ?? 0) + 1,
       )
-      // Then refetch both queries for accurate data
       invalidateNotifications(queryClient)
       if (document.visibilityState === 'visible') {
         const payload = envelope.payload as Record<string, unknown> | undefined

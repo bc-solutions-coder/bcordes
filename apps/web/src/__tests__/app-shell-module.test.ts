@@ -3,40 +3,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 
-// app/ shell-layer extraction wiring spec (bcordes-hcv.3 / .3.1).
-//
-// Task F3 of the flatten refactor carves the remaining app-shell / global surface
-// out of the horizontal apps/web/src/components/layout/, apps/web/src/config/,
-// apps/web/src/lib/, and apps/web/src/styles/ buckets into a self-contained
-// app-shell module at apps/web/src/app/ (app/, since it is the leaf shell layer
-// consumed BY routes, mirroring the features/* one-export-per-line index pattern),
-// exposing a public API via its own index.ts and repointing every consumer at the
-// bare @/app entry point (and the raw CSS asset via @/app/styles.css?url). After
-// the move:
-//   * components/layout/{Header,Footer,MobileNav,UserMenu}.tsx(+tests) live under
-//     app/components/layout/
-//   * config/navigation.ts(+test) lives under app/config/
-//   * lib/web-vitals.ts lives under app/lib/
-//   * styles.css lives at app/styles.css and styles/showcase.css at app/styles/
-//   * app/index.ts re-exports exactly Header (./components/layout/Header),
-//     Footer (./components/layout/Footer), reportWebVitals (./lib/web-vitals) —
-//     the only three symbols routes/__root.tsx needs; MobileNav/UserMenu/NAV_LINKS/
-//     SOCIAL_LINKS stay internal (consumed only by siblings inside app/)
-//   * the old horizontal dirs (components/layout, config, lib, styles — and
-//     components/ itself, now empty) and the old apps/web/src/styles.css are gone
-//   * no source under apps/web/src imports the old @/components/layout,
-//     @/config/navigation, @/lib/web-vitals, or @/styles.css specifiers (static
-//     imports AND vi.mock module-path keys); routes/__root.tsx (+ its test) resolve
-//     via @/app and @/app/styles.css; the public API resolves the three exports.
-//
-// Mirrors the repo's structural wiring-spec convention (shared-motion-module.test.ts,
-// notifications-feature-module.test.ts): resolve the repo root from this file,
-// inspect the real filesystem / config, and confirm the NEW reality — never the
-// pre-migration one. Stale specifiers are built non-literally ([...].join(...)) so
-// this spec's own text is never a false positive under its own or a sibling guard's
-// readFileSync().includes() scan.
-
-// apps/web/src/__tests__ -> repo root (same convention as shared-motion-module.test.ts).
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const appSrc = join(repoRoot, 'apps/web/src')
 const selfPath = fileURLToPath(import.meta.url)
@@ -44,16 +10,13 @@ const selfPath = fileURLToPath(import.meta.url)
 const appDir = join(appSrc, 'app')
 const appIndex = join(appDir, 'index.ts')
 
-// The three symbols app/index.ts must re-export, paired with the local source path
-// each is re-exported from. MobileNav/UserMenu/NAV_LINKS/SOCIAL_LINKS are internal
-// only and deliberately absent from the public barrel.
+// MobileNav, UserMenu and navigation constants stay internal to app/.
 const REEXPORTS = [
   ['Header', 'components/layout/Header'],
   ['Footer', 'components/layout/Footer'],
   ['reportWebVitals', 'lib/web-vitals'],
 ] as const
 
-// Every file that must exist at its NEW app/ location after the move.
 const NEW_FILES = [
   'app/index.ts',
   'app/components/layout/Header.tsx',
@@ -71,8 +34,6 @@ const NEW_FILES = [
   'app/styles/showcase.css',
 ] as const
 
-// The horizontal dirs the move empties — components/layout (and, since it was the
-// last subdir, components/ itself), config/, lib/, styles/ — all must be gone.
 const OLD_DIRS = [
   'components/layout',
   'components',
@@ -81,13 +42,9 @@ const OLD_DIRS = [
   'styles',
 ] as const
 
-// The old raw CSS asset at the app-src root must be gone (moved to app/styles.css).
 const OLD_STYLES_FILE = 'styles.css'
 
-// The stale JS import specifiers this migration must eliminate. Built non-literally
-// (mirroring the sibling guards' `[...].join(...)` convention) so this file itself
-// never false-positives when scanned. Runtime values equal the literals
-// '@/components/layout', '@/config/navigation', '@/lib/web-vitals', '@/styles.css'.
+// Keep paths split to avoid matching this test in sibling source scans.
 const OLD_SPECIFIERS = [
   ['layout components', ['@/components', 'layout'].join('/')],
   ['navigation config', ['@/config', 'navigation'].join('/')],
@@ -95,22 +52,16 @@ const OLD_SPECIFIERS = [
   ['root styles asset', ['@/styles', 'css'].join('.')],
 ] as const
 
-// Consumers whose specifiers this task repoints at the new app/ barrel. routes/
-// __root.tsx imports the three named symbols from '@/app'; its test mocks '@/app'
-// (the barrel), not the old deep component paths. Neither file moves.
 const APP_BARREL_CONSUMERS = [
   'routes/__root.tsx',
   'routes/__root.test.tsx',
 ] as const
 
-// The raw CSS asset specifier __root.tsx imports by path (non-literal so it is not
-// a self-match; equals '@/app/styles.css').
 const APP_STYLES_SPECIFIER = ['@/app/styles', 'css'].join('.')
 
 const readIndex = (): string =>
   existsSync(appIndex) ? readFileSync(appIndex, 'utf8') : ''
 
-/** All .ts/.tsx source files under apps/web/src (excludes generated route tree + self). */
 function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry)
@@ -127,10 +78,7 @@ function collectSources(dir: string, acc: Array<string> = []): Array<string> {
   return acc
 }
 
-// Mock the server-fn machinery + auth/wallow deps that app/index.ts pulls in
-// transitively (Header -> @/features/notifications + @/shared/auth, both of which
-// declare createServerFn chains at module scope), so importing @/app resolves
-// cleanly at runtime — mirrors notifications-feature-module.test.ts.
+// Mock server dependencies so the public module can load without a server runtime.
 vi.mock('@tanstack/react-start', () => {
   const createServerFn = () => {
     let handlerFn: (...args: Array<unknown>) => unknown
@@ -184,8 +132,7 @@ describe('app/ shell module exists with a public index', () => {
 
   it.each(REEXPORTS)('index.ts re-exports %s from ./%s', (name, srcPath) => {
     const src = readIndex()
-    // Match `export { Name } from './<srcPath>'` (allowing extra names in the same
-    // brace group and either quote style).
+    // Allow grouped exports and either quote style.
     const pattern = new RegExp(
       `export\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*['"]\\./${srcPath}['"]`,
     )
@@ -250,10 +197,7 @@ describe('every app-shell consumer resolves via the new @/app path', () => {
 
 describe('the public API resolves the expected named exports', () => {
   it('@/app exports Header, Footer, reportWebVitals', async () => {
-    // Non-literal specifier so vite's import-analysis defers resolution to runtime
-    // (mirrors shared-motion-module.test.ts's `motionSpecifier`), letting this file
-    // collect and fail per-assertion rather than at transform. The bare (non-deep)
-    // @/app barrel is the sanctioned entry point.
+    // Keep the specifier nonliteral so missing exports fail at runtime, not during Vite transformation.
     const appSpecifier = '@/app'
     const mod = (await import(appSpecifier)) as Record<string, unknown>
     for (const name of REEXPORTS.map(([n]) => n)) {

@@ -3,10 +3,6 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 
-/* ------------------------------------------------------------------ */
-/*  Mock server functions                                              */
-/* ------------------------------------------------------------------ */
-
 const mockListPushDevices = vi.fn()
 const mockFetchVapidPublicKey = vi.fn()
 const mockRegisterPushDevice = vi.fn()
@@ -23,10 +19,6 @@ vi.mock('../server-fns/notifications', () => ({
     mockDeregisterPushDevice(...args),
   sendTestPush: (...args: Array<unknown>) => mockSendTestPush(...args),
 }))
-
-/* ------------------------------------------------------------------ */
-/*  Browser API stubs                                                  */
-/* ------------------------------------------------------------------ */
 
 const mockSubscription = {
   endpoint: 'https://push.example.com/sub/abc',
@@ -52,7 +44,6 @@ function stubBrowserAPIs(options?: {
   omitPushManager?: boolean
 }) {
   if (options?.omitServiceWorker) {
-    // Create a navigator object without the serviceWorker property
     const { serviceWorker: _, ...rest } = globalThis.navigator
     vi.stubGlobal('navigator', rest)
   } else {
@@ -66,7 +57,6 @@ function stubBrowserAPIs(options?: {
   }
 
   if (options?.omitPushManager) {
-    // Remove PushManager from window by deleting it
     Reflect.deleteProperty(globalThis.window, 'PushManager')
   } else {
     vi.stubGlobal('PushManager', vi.fn())
@@ -74,10 +64,6 @@ function stubBrowserAPIs(options?: {
 
   vi.stubGlobal('Notification', { permission: 'default' })
 }
-
-/* ------------------------------------------------------------------ */
-/*  Wrapper                                                            */
-/* ------------------------------------------------------------------ */
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -92,10 +78,6 @@ function createWrapper() {
     )
   }
 }
-
-/* ------------------------------------------------------------------ */
-/*  Tests                                                              */
-/* ------------------------------------------------------------------ */
 
 describe('usePushNotifications', () => {
   beforeEach(() => {

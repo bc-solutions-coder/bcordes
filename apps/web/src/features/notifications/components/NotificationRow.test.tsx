@@ -5,8 +5,7 @@ import { NotificationRow } from './NotificationRow'
 import type * as BcordesUtils from '@bcordes/utils'
 import type { Notification } from '@bcordes/wallow/types'
 
-// Only the clock is faked. Spreading the original module keeps cn() real —
-// every shadcn primitive this row renders imports it from the same package.
+// Mock time formatting; keep cn real for the UI primitives.
 vi.mock('@bcordes/utils', async (importOriginal) => ({
   ...(await importOriginal<typeof BcordesUtils>()),
   formatRelativeTime: vi.fn(() => '2 hours ago'),

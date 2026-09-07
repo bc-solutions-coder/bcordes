@@ -8,9 +8,7 @@ export function Footer() {
   return (
     <footer className="bg-[#1a1a1a] border-t border-white/10">
       <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        {/* Three-column grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Brand Column */}
           <div className="space-y-4">
             <Link to="/" className="inline-flex items-center gap-3">
               <img
@@ -30,7 +28,6 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Navigation Column */}
           <div>
             <h3 className="text-sm font-semibold text-white mb-4">
               Navigation
@@ -49,7 +46,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Connect Column */}
           <div>
             <h3 className="text-sm font-semibold text-white mb-4">Connect</h3>
             <div className="flex gap-4">
@@ -80,7 +76,6 @@ export function Footer() {
 
         <Separator className="my-8 bg-white/10" />
 
-        {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-white/50">
             &copy; {currentYear} BC Solutions. All rights reserved.

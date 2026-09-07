@@ -79,7 +79,6 @@ export function UserMenu() {
               className="cursor-pointer"
               onClick={(e) => {
                 e.preventDefault()
-                // POST to logout endpoint
                 void logout().catch(() =>
                   toast.error('Unable to sign out. Please try again.'),
                 )

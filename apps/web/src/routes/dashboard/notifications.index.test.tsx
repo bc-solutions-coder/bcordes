@@ -4,10 +4,6 @@ import { renderWithProviders } from '@bcordes/test-utils'
 import type * as BcordesUtils from '@bcordes/utils'
 import type { Notification } from '@bcordes/wallow/types'
 
-// ---------------------------------------------------------------------------
-// Mocks
-// ---------------------------------------------------------------------------
-
 const mockToast = { success: vi.fn(), error: vi.fn() }
 vi.mock('sonner', () => ({
   toast: mockToast,
@@ -20,9 +16,7 @@ const mockMarkAllNotificationsRead = vi.fn()
 const mockUseNotificationFilters = vi.fn()
 const mockUseNotificationSelection = vi.fn()
 
-// The notification sources now live behind the @/features/notifications barrel.
-// Spread the real module so NotificationRow renders for real, then override the
-// server fns, hooks, and lib helpers this page drives.
+// Keep NotificationRow real while mocking page dependencies.
 vi.mock('@/features/notifications', async () => ({
   ...(await vi.importActual('@/features/notifications')),
   fetchNotifications: (...args: Array<unknown>) =>
@@ -53,8 +47,7 @@ vi.mock('@/shared/auth', () => ({
   serverRequireAuth: vi.fn(),
 }))
 
-// Only the clock is faked. Spreading the original module keeps cn() real —
-// every shadcn primitive this page renders imports it from the same package.
+// Keep cn() real for UI components while stubbing relative time.
 vi.mock('@bcordes/utils', async (importOriginal) => ({
   ...(await importOriginal<typeof BcordesUtils>()),
   formatRelativeTime: vi.fn((d: string) => d),
@@ -63,9 +56,6 @@ vi.mock('@bcordes/utils', async (importOriginal) => ({
 const mockNavigate = vi.fn()
 const mockUseLoaderData = vi.fn()
 
-// createFileRoute mock: returns a function that takes config and returns
-// the config merged with a useLoaderData spy — this way the component's
-// `Route.useLoaderData()` call goes through our mock.
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (config: Record<string, unknown>) => ({
     ...config,
@@ -74,10 +64,6 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }))
 
-// ---------------------------------------------------------------------------
-// Import route after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./notifications.index')
 const routeConfig = routeModule.Route as unknown as {
   loader: () => Promise<{ notifications: Array<Notification> }>
@@ -85,10 +71,6 @@ const routeConfig = routeModule.Route as unknown as {
 }
 
 const NotificationsPage = routeConfig.component
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function makeNotification(
   overrides: Partial<Notification> & Pick<Notification, 'id'>,
@@ -137,10 +119,6 @@ function setupSelectionMock(overrides: Record<string, unknown> = {}) {
   })
 }
 
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
-
 describe('notifications.index', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -151,8 +129,6 @@ describe('notifications.index', () => {
   afterEach(() => {
     cleanup()
   })
-
-  // ---- Loader tests ----
 
   describe('loader', () => {
     it('returns notifications from fetchNotifications', async () => {
@@ -165,8 +141,6 @@ describe('notifications.index', () => {
       expect(result).toEqual({ notifications: fakeData })
     })
   })
-
-  // ---- Component tests ----
 
   describe('component', () => {
     it('renders empty state when no notifications', () => {
@@ -303,8 +277,6 @@ describe('notifications.index', () => {
       expect(mockNavigate).toHaveBeenCalled()
     })
 
-    // --- Line 181: selectedIds.size > 0 shows "N selected" text ---
-
     it('shows selected count when items are selected', () => {
       const notifications = [
         makeNotification({ id: '1' }),
@@ -330,15 +302,13 @@ describe('notifications.index', () => {
       expect(screen.getByText('Select all')).toBeTruthy()
     })
 
-    // --- Line 192: Loader2 spinner when markAllReadMutation.isPending ---
-
     it('shows spinner when mark all read mutation is pending', async () => {
       const notifications = [makeNotification({ id: '1', isRead: false })]
       mockUseLoaderData.mockReturnValue({ notifications })
       setupFiltersMock({ unreadCount: 1 }, notifications)
       setupSelectionMock()
 
-      // Make markAllNotificationsRead hang so isPending stays true
+      // Keep the mutation pending to check its loading state.
       mockMarkAllNotificationsRead.mockReturnValue(new Promise(() => {}))
 
       renderWithProviders(<NotificationsPage />)
@@ -346,14 +316,11 @@ describe('notifications.index', () => {
       const btn = screen.getByRole('button', { name: /mark all as read/i })
       fireEvent.click(btn)
 
-      // Wait for React to re-render with isPending=true
       await vi.waitFor(() => {
         const spinner = btn.querySelector('.animate-spin')
         expect(spinner).toBeTruthy()
       })
     })
-
-    // --- Lines 231-239: "Load more" button when filteredNotifications.length >= 20 ---
 
     it('shows "Load more" button when 20 or more notifications', () => {
       const notifications = Array.from({ length: 20 }, (_, i) =>
@@ -394,7 +361,6 @@ describe('notifications.index', () => {
       fireEvent.click(btn)
 
       expect(mockSetPage).toHaveBeenCalledOnce()
-      // Verify setPage receives an updater function that increments page
       const updater = mockSetPage.mock.calls[0][0]
       expect(typeof updater).toBe('function')
       expect(updater(1)).toBe(2)

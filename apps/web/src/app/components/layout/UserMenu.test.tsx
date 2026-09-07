@@ -106,11 +106,9 @@ describe('UserMenu', () => {
     })
     renderWithProviders(<UserMenu />)
 
-    // Open the Base UI menu — Menu.Trigger opens on click
     const trigger = screen.getByText('Bryan Cordes').closest('button')!
     fireEvent.click(trigger)
 
-    // Wait for dropdown content to appear
     const signOut = await screen.findByText('Sign Out')
     expect(signOut).toBeInTheDocument()
 

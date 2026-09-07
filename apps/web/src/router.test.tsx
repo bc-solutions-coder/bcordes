@@ -1,10 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockCreateRouter = vi.fn()
 const mockSetupRouterSsrQueryIntegration = vi.fn()
 
@@ -30,10 +26,6 @@ vi.mock('@bcordes/query', () => ({
 vi.mock('./routeTree.gen', () => ({
   routeTree: { __isRouteTree: true },
 }))
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe('getRouter', () => {
   beforeEach(() => {

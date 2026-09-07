@@ -27,10 +27,9 @@ vi.mock('sonner', () => ({
   },
 }))
 
-// Radix Select uses scrollIntoView which is not available in jsdom
+// Browser APIs missing from jsdom.
 Element.prototype.scrollIntoView = vi.fn()
 
-// Radix Select uses hasPointerCapture/setPointerCapture/releasePointerCapture
 Element.prototype.hasPointerCapture = vi.fn()
 Element.prototype.setPointerCapture = vi.fn()
 Element.prototype.releasePointerCapture = vi.fn()
@@ -52,10 +51,8 @@ describe('ContactForm', () => {
     expect(screen.getByLabelText(/^Phone/)).toBeInTheDocument()
     expect(screen.getByLabelText(/^Company/)).toBeInTheDocument()
     expect(screen.getByLabelText(/^Message/)).toBeInTheDocument()
-    // Select fields render as comboboxes
     const comboboxes = screen.getAllByRole('combobox')
     expect(comboboxes).toHaveLength(3)
-    // Labels for select fields
     expect(screen.getByText(/Project Type/)).toBeInTheDocument()
     expect(screen.getByText(/Budget Range/)).toBeInTheDocument()
     expect(screen.getByText(/Timeline/)).toBeInTheDocument()
@@ -92,7 +89,6 @@ describe('ContactForm', () => {
 
     renderWithProviders(<ContactForm />)
 
-    // Fill in text fields
     fireEvent.change(screen.getByLabelText(/^Name/), {
       target: { value: 'John Doe' },
     })
@@ -103,10 +99,8 @@ describe('ContactForm', () => {
       target: { value: 'This is a test message for the form.' },
     })
 
-    // Select fields via Radix Select comboboxes
     const comboboxes = screen.getAllByRole('combobox')
 
-    // Project Type
     fireEvent.click(comboboxes[0])
     await waitFor(() => {
       expect(
@@ -117,7 +111,6 @@ describe('ContactForm', () => {
       screen.getByRole('option', { name: 'Frontend Development' }),
     )
 
-    // Budget Range
     fireEvent.click(comboboxes[1])
     await waitFor(() => {
       expect(
@@ -126,7 +119,6 @@ describe('ContactForm', () => {
     })
     fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
 
-    // Timeline
     fireEvent.click(comboboxes[2])
     await waitFor(() => {
       expect(
@@ -153,7 +145,6 @@ describe('ContactForm', () => {
 
     renderWithProviders(<ContactForm />)
 
-    // Fill in text fields
     fireEvent.change(screen.getByLabelText(/^Name/), {
       target: { value: 'John Doe' },
     })
@@ -164,10 +155,8 @@ describe('ContactForm', () => {
       target: { value: 'This is a test message for the form.' },
     })
 
-    // Select fields via Radix Select comboboxes
     const comboboxes = screen.getAllByRole('combobox')
 
-    // Project Type
     fireEvent.click(comboboxes[0])
     await waitFor(() => {
       expect(
@@ -178,7 +167,6 @@ describe('ContactForm', () => {
       screen.getByRole('option', { name: 'Frontend Development' }),
     )
 
-    // Budget Range
     fireEvent.click(comboboxes[1])
     await waitFor(() => {
       expect(
@@ -187,7 +175,6 @@ describe('ContactForm', () => {
     })
     fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
 
-    // Timeline
     fireEvent.click(comboboxes[2])
     await waitFor(() => {
       expect(
@@ -209,9 +196,7 @@ describe('ContactForm', () => {
       expect.any(Error),
     )
 
-    // Should NOT show the success view
     expect(screen.queryByText('Message Sent!')).not.toBeInTheDocument()
-    // Should still show the form with Send Message button
     expect(
       screen.getByRole('button', { name: 'Send Message' }),
     ).toBeInTheDocument()
@@ -220,7 +205,7 @@ describe('ContactForm', () => {
   })
 
   it('shows loading spinner while submitting', async () => {
-    // Use a deferred promise so we can assert the loading state
+    // Defer resolution to observe the pending state.
     let resolveSubmit: (value: unknown) => void
     mockSubmitInquiry.mockImplementation(
       () =>
@@ -231,7 +216,6 @@ describe('ContactForm', () => {
 
     renderWithProviders(<ContactForm />)
 
-    // Fill in text fields
     fireEvent.change(screen.getByLabelText(/^Name/), {
       target: { value: 'John Doe' },
     })
@@ -242,10 +226,8 @@ describe('ContactForm', () => {
       target: { value: 'This is a test message for the form.' },
     })
 
-    // Select fields via Radix Select comboboxes
     const comboboxes = screen.getAllByRole('combobox')
 
-    // Project Type
     fireEvent.click(comboboxes[0])
     await waitFor(() => {
       expect(
@@ -256,7 +238,6 @@ describe('ContactForm', () => {
       screen.getByRole('option', { name: 'Frontend Development' }),
     )
 
-    // Budget Range
     fireEvent.click(comboboxes[1])
     await waitFor(() => {
       expect(
@@ -265,7 +246,6 @@ describe('ContactForm', () => {
     })
     fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
 
-    // Timeline
     fireEvent.click(comboboxes[2])
     await waitFor(() => {
       expect(
@@ -276,14 +256,12 @@ describe('ContactForm', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
 
-    // While submitting, should show "Sending..." text and button should be disabled
     await waitFor(() => {
       expect(screen.getByText('Sending...')).toBeInTheDocument()
     })
     const submitButton = screen.getByRole('button', { name: /Sending/ })
     expect(submitButton).toBeDisabled()
 
-    // Resolve the submission to clean up
     resolveSubmit!({ id: '123', status: 'new' })
 
     await waitFor(() => {

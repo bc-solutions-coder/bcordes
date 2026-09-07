@@ -3,10 +3,6 @@ import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 import type { Inquiry } from '@bcordes/wallow/types'
 
-// ---------------------------------------------------------------------------
-// Mocks (hoisted)
-// ---------------------------------------------------------------------------
-
 const mockFetchMyInquiries = vi.fn()
 const mockFetchCurrentUserRoles = vi.fn()
 const mockUpdateInquiryStatus = vi.fn()
@@ -30,13 +26,11 @@ vi.mock('@/features/notifications', () => ({
   useEventStreamEvents: vi.fn(),
 }))
 
-// Mock createFileRoute to extract route config
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router')
   return {
     ...actual,
     createFileRoute: () => (routeConfig: unknown) => {
-      // Make Route.useLoaderData available via a mock
       const route = routeConfig as Record<string, unknown>
       route.useLoaderData = mockUseLoaderData
       return route
@@ -52,20 +46,12 @@ const mockRouterInvalidate = vi.fn().mockResolvedValue(undefined)
 const mockRouterNavigate = vi.fn()
 const mockUseLoaderData = vi.fn()
 
-// ---------------------------------------------------------------------------
-// Import route module after mocks
-// ---------------------------------------------------------------------------
-
 const routeModule = await import('./inquiries.index')
 const routeConfig = routeModule.Route as unknown as {
   loader: () => Promise<{ inquiries: Array<Inquiry>; isAdmin: boolean }>
   beforeLoad: () => Promise<unknown>
   component: React.ComponentType
 }
-
-// ---------------------------------------------------------------------------
-// Factories
-// ---------------------------------------------------------------------------
 
 function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
   return {
@@ -85,10 +71,6 @@ function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
     ...overrides,
   }
 }
-
-// ---------------------------------------------------------------------------
-// Tests — Loader
-// ---------------------------------------------------------------------------
 
 describe('inquiries.index loader', () => {
   beforeEach(() => {
@@ -153,10 +135,6 @@ describe('inquiries.index loader', () => {
     expect(result.inquiries[0].id).toBe('1')
   })
 })
-
-// ---------------------------------------------------------------------------
-// Tests — Component
-// ---------------------------------------------------------------------------
 
 describe('DashboardInquiriesPage component', () => {
   const Component = routeConfig.component
@@ -225,7 +203,6 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Company, projectType, and budgetRange all show '-'
     const dashes = screen.getAllByText('-')
     expect(dashes.length).toBeGreaterThanOrEqual(3)
   })
@@ -245,8 +222,6 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Select trigger renders the current value — admin should NOT see a Badge
-    // but should see a SelectTrigger (button with role combobox)
     const combobox = screen.getByRole('combobox')
     expect(combobox).toBeTruthy()
   })
@@ -257,9 +232,7 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Non-admin should see the status as a Badge text
     expect(screen.getByText('New')).toBeTruthy()
-    // No combobox should be present
     expect(screen.queryByRole('combobox')).toBeNull()
   })
 
@@ -308,7 +281,6 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Click the row (the name cell is part of the row)
     const nameCell = screen.getByText('Jane Doe')
     fireEvent.click(nameCell)
 
@@ -330,7 +302,7 @@ describe('DashboardInquiriesPage component', () => {
   })
 
   it('calls updateInquiryStatus when admin changes status via Select', async () => {
-    // Mock scrollIntoView for Radix Select
+    // Select needs scrollIntoView, which JSDOM does not provide.
     Element.prototype.scrollIntoView = vi.fn()
     mockUpdateInquiryStatus.mockResolvedValue(undefined)
     const inquiries = [makeInquiry({ id: 'inq-status-1', status: 'new' })]
@@ -338,11 +310,9 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // Open the select dropdown
     const combobox = screen.getByRole('combobox')
     fireEvent.click(combobox)
 
-    // Select the 'Reviewed' option
     await waitFor(() => {
       const option = screen.getByText('Reviewed')
       fireEvent.click(option)
@@ -361,8 +331,6 @@ describe('DashboardInquiriesPage component', () => {
 
     renderWithProviders(<Component />)
 
-    // STATUS_LABELS has no 'in_progress' key, so it falls back to
-    // inquiry.status.replace('_', ' ')
     expect(screen.getByText('in progress')).toBeTruthy()
   })
 
@@ -381,10 +349,8 @@ describe('DashboardInquiriesPage component', () => {
     const refreshBtn = screen.getByText('Refresh').closest('button')!
     fireEvent.click(refreshBtn)
 
-    // Button should be disabled while refreshing
     expect(refreshBtn.disabled).toBe(true)
 
-    // Resolve the invalidate promise
     resolveInvalidate!()
 
     await waitFor(() => {
@@ -412,7 +378,6 @@ describe('DashboardInquiriesPage component', () => {
     const refreshBtn = screen.getByText('Refresh').closest('button')!
     fireEvent.click(refreshBtn)
 
-    // After the rejected promise settles, button should be re-enabled
     await waitFor(() => {
       expect(refreshBtn.disabled).toBe(false)
     })
@@ -423,7 +388,7 @@ describe('DashboardInquiriesPage component', () => {
   })
 
   it('handles status change error gracefully', async () => {
-    // Mock scrollIntoView for Radix Select
+    // Select needs scrollIntoView, which JSDOM does not provide.
     Element.prototype.scrollIntoView = vi.fn()
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     mockUpdateInquiryStatus.mockRejectedValue(new Error('API error'))

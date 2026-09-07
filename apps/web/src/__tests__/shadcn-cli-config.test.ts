@@ -3,24 +3,8 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-// `pnpx shadcn@latest add <component>` must scaffold into @bcordes/ui, not back
-// into apps/web/src/components/ui/shadcn (which no longer exists). Every
-// assertion here was established by running the real CLI against this tree:
-//
-//  • aliases.ui = '@bcordes/ui/components' does send the CLI at packages/ui,
-//    but it then refuses to write until that workspace has its OWN
-//    components.json ("Could not load the workspace config in packages/ui").
-//  • that file may only carry aliases whose subpath the package actually
-//    exports — `lib` and `hooks` abort the run ("Could not resolve the
-//    following aliases: lib, hooks") because packages/ui exports neither.
-//  • the primitive layer comes from the `style` of the workspace the CLI is
-//    invoked in — apps/web. With style 'new-york' the scaffold imports
-//    `radix-ui`, which this repo deliberately removed (commit 717a538); a
-//    base-* style scaffolds '@base-ui/react/*' like the primitives already
-//    here. Setting base-nova on packages/ui alone does nothing.
-//
-// Resolved from the path string, not `new URL()`: under jsdom the global URL is
-// jsdom's, and fileURLToPath rejects the instance it produces.
+// See [UI](../../../../docs/ui.md) for shared component setup.
+// Use a path string because fileURLToPath rejects jsdom's URL instances.
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const webDir = join(repoRoot, 'apps/web')
 const uiDir = join(repoRoot, 'packages/ui')

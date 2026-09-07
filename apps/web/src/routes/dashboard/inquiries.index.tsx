@@ -93,7 +93,6 @@ function DashboardInquiriesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-secondary">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
@@ -120,7 +119,6 @@ function DashboardInquiriesPage() {
         </div>
       </header>
 
-      {/* Content */}
       <main className="mx-auto max-w-7xl px-6 py-8">
         {inquiries.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary py-16">
@@ -245,7 +243,6 @@ function DashboardInquiriesPage() {
           </div>
         )}
 
-        {/* Summary */}
         {inquiries.length > 0 && (
           <div className="mt-4 text-sm text-muted-foreground">
             Showing {inquiries.length} message

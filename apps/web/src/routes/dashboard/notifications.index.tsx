@@ -117,7 +117,6 @@ function NotificationsIndexPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-secondary">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
@@ -135,7 +134,6 @@ function NotificationsIndexPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        {/* Tabs */}
         <Tabs
           value={unreadOnly ? 'unread' : 'all'}
           onValueChange={handleTabChange}
@@ -147,7 +145,6 @@ function NotificationsIndexPage() {
           </TabsList>
         </Tabs>
 
-        {/* Filter chips */}
         <div className="mb-4 flex flex-wrap gap-2">
           {notificationTypes.map((type) => (
             <Button
@@ -166,7 +163,6 @@ function NotificationsIndexPage() {
           ))}
         </div>
 
-        {/* Bulk actions toolbar */}
         {filteredNotifications.length > 0 && (
           <div className="mb-4 flex items-center gap-4 rounded-lg border border-border bg-secondary px-4 py-2">
             <Checkbox
@@ -196,7 +192,6 @@ function NotificationsIndexPage() {
           </div>
         )}
 
-        {/* Notification list */}
         {filteredNotifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary py-16">
             <Bell className="mb-4 h-12 w-12 text-muted-foreground" />
@@ -224,7 +219,6 @@ function NotificationsIndexPage() {
           </div>
         )}
 
-        {/* Load more */}
         {filteredNotifications.length >= 20 && (
           <div className="mt-4 flex justify-center">
             <Button
@@ -237,7 +231,6 @@ function NotificationsIndexPage() {
           </div>
         )}
 
-        {/* Summary */}
         {filteredNotifications.length > 0 && (
           <div className="mt-4 text-sm text-muted-foreground">
             Showing {filteredNotifications.length} notification
