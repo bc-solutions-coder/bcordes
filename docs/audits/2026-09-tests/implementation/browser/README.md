@@ -23,3 +23,7 @@ Deliberate wrong contact names, hero destinations, project counts, session corre
 Commands: `pnpm build`, `E2E_PORT=34200 pnpm --filter bcordes exec playwright test --reporter=json`, `pnpm test --coverage --reporter=json`, `pnpm typecheck`, `pnpm lint`, `pnpm format:check`, `python3 scripts/check-docs.py`, and `git diff --check`. The pending/failed-response probe exercised the fixture over actual loopback HTTP and was removed after verification.
 
 Future shell, project-appearance, notification-appearance and UI-harness scenarios retain their accepted owners. They should reuse these fixtures. This does not claim live identity-provider validation, deployment, final parent completion or remote CI success.
+
+## Review
+
+Spec review: no findings. Standards review: no hard violations or actionable Fowler smells. Both lifecycle suggestions are addressed: backend teardown cannot skip Redis/container cleanup, attachment failure cannot skip guest-backend cleanup, and each application readiness request has a timeout bounded by the remaining startup budget.

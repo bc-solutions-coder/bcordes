@@ -29,9 +29,15 @@ export default async function setup() {
     throw error
   }
   return async () => {
-    await backend?.close()
-    await redis.quit()
-    if (container)
-      execFileSync('docker', ['rm', '-f', container], { stdio: 'ignore' })
+    try {
+      await backend?.close()
+    } finally {
+      try {
+        await redis.quit()
+      } finally {
+        if (container)
+          execFileSync('docker', ['rm', '-f', container], { stdio: 'ignore' })
+      }
+    }
   }
 }

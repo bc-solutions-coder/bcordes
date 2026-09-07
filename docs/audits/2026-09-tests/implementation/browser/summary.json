@@ -2,8 +2,8 @@
   "issue": 92,
   "baseRevision": "5559de6",
   "browser": {
-    "startTime": "2026-09-07T22:18:21.417Z",
-    "duration": 8349.724999999999,
+    "startTime": "2026-09-07T22:21:06.631Z",
+    "duration": 8901.732,
     "expected": 25,
     "skipped": 0,
     "unexpected": 0,

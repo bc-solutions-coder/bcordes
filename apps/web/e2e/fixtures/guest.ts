@@ -30,11 +30,14 @@ export const test = base.extend<{
     try {
       await use({ ...backend, owner })
     } finally {
-      await testInfo.attach('backend-observations', {
-        body: JSON.stringify(backend.requests(owner)),
-        contentType: 'application/json',
-      })
-      await backend.close()
+      try {
+        await testInfo.attach('backend-observations', {
+          body: JSON.stringify(backend.requests(owner)),
+          contentType: 'application/json',
+        })
+      } finally {
+        await backend.close()
+      }
     }
   },
   baseURL: async ({ guestBackend }, use) => {
@@ -66,7 +69,16 @@ export const test = base.extend<{
         if (app.exitCode !== null)
           throw new Error(`Application exited: ${output}`)
         try {
-          if ((await fetch(url)).ok) break
+          if (
+            (
+              await fetch(url, {
+                signal: AbortSignal.timeout(
+                  Math.max(1, Math.min(1_000, deadline - Date.now())),
+                ),
+              })
+            ).ok
+          )
+            break
         } catch {
           /* The process has not opened its socket yet. */
         }
