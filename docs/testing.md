@@ -18,7 +18,11 @@ Run commands from the repository root after [setup](setup.md).
 
 `pnpm format` rewrites formatting across the repository. `pnpm check` also runs ESLint with fixes. Use file-specific checks when reviewing a small change. The [pre-commit hook](../.husky/pre-commit) runs `lint-staged`; it does not replace tests or type checking.
 
-If Node exhausts its heap during lint, retry with `NODE_OPTIONS=--max-old-space-size=8192 pnpm lint`.
+The root lint command sets an 8 GiB V8 heap limit for the current typed ESLint
+configuration. CI uses that same command; local machines need enough available
+memory for it. This is a supported resource allowance, not a reduction in lint
+coverage. Generated `apps/web/storybook-static/` output is ignored by lint,
+formatting and Git, so building Storybook does not change source checks.
 
 ## Write behavior tests
 

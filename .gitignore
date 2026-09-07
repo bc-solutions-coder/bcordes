@@ -12,6 +12,7 @@ count.txt
 coverage
 test-results
 playwright-report
+storybook-static
 .vinxi
 todos.json
 

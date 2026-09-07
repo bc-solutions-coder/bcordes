@@ -32,6 +32,7 @@ export const config = [
       '.output/**',
       'coverage/**',
       'apps/web/.storybook/**',
+      'apps/web/storybook-static/**',
       'apps/web/.nitro/**',
       'apps/web/.output/**',
       'apps/web/coverage/**',

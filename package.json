@@ -9,9 +9,9 @@
     "build": "pnpm --filter bcordes build",
     "test": "vitest run",
     "typecheck": "pnpm -r typecheck",
-    "lint": "eslint",
+    "lint": "node --max-old-space-size=8192 ./node_modules/eslint/bin/eslint.js",
     "format": "prettier --write .",
-    "check": "prettier --write . && eslint --fix",
+    "check": "prettier --write . && pnpm lint --fix",
     "storybook": "pnpm --filter bcordes storybook",
     "prepare": "husky"
   },
