@@ -1,18 +1,11 @@
 {
   "source_commit": "204e9c41a7cfe0c010e36f51c56495d84fd8ebb8",
-  "status": "proposed; awaiting human review; implementation pending",
+  "status": "accepted plan; implementation pending",
   "files": 13,
   "declarations": 151,
   "test_declarations": 117,
   "suite_declarations": 34,
   "runtime_cases": 125,
-  "proposed_test_dispositions": {
-    "rename": 22,
-    "delete": 10,
-    "keep": 33,
-    "rewrite": 52
-  },
-  "proposed_whole_file_deletions": [],
   "owned_test_changes_since_baseline": [],
   "observed_validation": {
     "command": [
@@ -39,5 +32,13 @@
     "passed": 125,
     "failed": 0,
     "skipped": 0
-  }
+  },
+  "acceptance": "User accepted the complete proposal: looks good to me.",
+  "accepted_test_dispositions": {
+    "rename": 22,
+    "delete": 10,
+    "keep": 33,
+    "rewrite": 52
+  },
+  "accepted_whole_file_deletions": []
 }

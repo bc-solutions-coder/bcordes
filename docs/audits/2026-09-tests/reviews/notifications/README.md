@@ -1,6 +1,6 @@
-# Notification test review proposal
+# Notification test accepted review
 
-Proposal for [Review notification tests](https://github.com/bc-solutions-coder/bcordes/issues/65). **Awaiting human acceptance; test cleanup is not implemented.**
+Accepted plan for [Review notification tests](https://github.com/bc-solutions-coder/bcordes/issues/65). The user accepted the complete proposal with "looks good to me". **Implementation remains pending; test cleanup is not implemented.**
 
 ## Inventory and observed evidence
 
@@ -39,7 +39,7 @@ The bell's event case currently observes invalidation without proving its promis
 
 Keep public checkbox/click callbacks, content and timestamps, strengthening fixed-clock formatting evidence where required. Replace unread/read font-class checks with a real browser comparison of distinct read states and their transition, with fixed data, theme and viewport. Do not add an assumed accessible unread marker that the product does not currently expose.
 
-Proposed new browser file: `apps/web/e2e/tests/notification-appearance.spec.ts`, owned by this review for these replacement scenarios. On acceptance, notify the browser review and final handoff. Browser evidence does not replace measured Vitest coverage or waive per-area coverage checks.
+Proposed new browser file: `apps/web/e2e/tests/notification-appearance.spec.ts`, owned by this review for these replacement scenarios. The browser review and final handoff must account for this accepted replacement ownership. Browser evidence does not replace measured Vitest coverage or waive per-area coverage checks.
 
 ### Scope push hook tests honestly
 
