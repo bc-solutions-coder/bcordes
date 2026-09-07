@@ -77,10 +77,6 @@ describe('Dockerfile (pnpm workspace aware)', () => {
     expect(copy!.index).toBeLessThan(install!.index!)
   })
 
-  it('copies packages/ before installing (forward-compat with future internal packages)', () => {
-    expect(depsStage).toMatch(/^COPY packages\/ \.\/packages\/$/m)
-  })
-
   it('builds only the bcordes package, not the workspace root', () => {
     expect(dockerfile).toMatch(/^RUN pnpm --filter bcordes build$/m)
   })

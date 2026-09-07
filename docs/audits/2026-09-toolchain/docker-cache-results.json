@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-07",
+  "platform": "linux/arm64",
+  "backend": "local",
+  "target": "base",
+  "coldIncludesBuilderBootstrapAndBaseImagePull": true,
+  "mutations": {
+    "source-only": "Append newline to packages/utils/src/index.ts",
+    "manifest-only": "Add description field to packages/utils/package.json",
+    "lockfile-only": "Prepend YAML comment to pnpm-lock.yaml"
+  },
+  "results": [
+    {
+      "name": "cold-export",
+      "seconds": 107.05,
+      "exitCode": 0,
+      "dependencyLayerCached": false
+    },
+    {
+      "name": "fresh-builder-import",
+      "seconds": 9.09,
+      "exitCode": 0,
+      "dependencyLayerCached": true
+    },
+    {
+      "name": "source-only",
+      "seconds": 0.37,
+      "exitCode": 0,
+      "dependencyLayerCached": true
+    },
+    {
+      "name": "manifest-only",
+      "seconds": 26.2,
+      "exitCode": 0,
+      "dependencyLayerCached": false
+    },
+    {
+      "name": "lockfile-only",
+      "seconds": 14.19,
+      "exitCode": 0,
+      "dependencyLayerCached": false
+    }
+  ]
+}

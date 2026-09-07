@@ -206,3 +206,29 @@ removed those and other older compatible duplicate packages without adding
 any versions. The final graph contains only React/React DOM 19.2.8. Full
 types, lint, 1297 tests, app build/smoke, 24 browser tests, Storybook and Docker
 verification passed again; the reviewer confirmed the finding resolved.
+
+## Docker dependency layers, #75
+
+The base stage now copies only workspace manifests before installation; the
+builder inherits that stage and copies source afterward. All 13 package
+manifests plus the app manifest are present. Added-workspace maintenance is
+documented. The obsolete source assertion requiring blanket package copying
+was removed; 17 focused infrastructure tests pass.
+
+[Cache measurements](docker-cache-results.json) used isolated temporary
+contexts and two new docker-container builders with linux/arm64. Cold dependency
+build/export took 107.05 seconds, including builder bootstrap and base-image
+pull. A fresh builder imported the local-backend cache in 9.09 seconds with
+the install layer cached. A source-only mutation took 0.37 seconds and retained
+the cache hit. Manifest metadata and lockfile comment mutations invalidated
+installation, taking 26.20 and 14.19 seconds. The fresh builder's first reinstall
+had zero pnpm-store reuse, confirming the exported layers did not transfer its
+cache mount. These are local dependency-stage measurements, not matched PR
+completion measurements or a claim of GitHub cache reuse.
+
+Both GitHub workflows now use the bcordes-docker cache scope with mode=max.
+Actual GitHub cross-run reuse remains part of #76/#61 verification.
+
+All 1289 remaining tests, workspace types, lint, formatting and Docker
+production runtime checks pass. Actionlint validates both cache workflow edits.
+Both review axes reported no implementation findings.

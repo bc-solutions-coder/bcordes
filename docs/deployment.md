@@ -62,3 +62,18 @@ Select the tested image in Dockhand and redeploy with the matching configuration
 Record the image digest, configuration names, SDK and platform versions, and verification results in the release issue. Do not record secret values. Keep the Wallow release gate open until its platform-dependent checks pass.
 
 If verification fails, redeploy the known-good image with its compatible configuration and repeat the checks. Rolling back across incompatible authentication formats may require another sign-in.
+
+## Docker dependency caching
+
+The dependency stage copies only root/workspace manifests, the lockfile and
+registry configuration. Add a corresponding manifest COPY when adding a
+workspace package. Source files enter the builder after installation, and
+the builder inherits the dependency stage's Node/pnpm setup.
+
+PR validation and publication share the `bcordes-docker` BuildKit cache scope
+with mode=max exports. A cached dependency layer includes the installed
+node_modules; the pnpm store cache mount only accelerates reinstalls when that
+builder retains it. GitHub's layer cache does not itself persist the cache
+mount onto a fresh runner. Source changes should reuse installation; manifest
+or lockfile changes must invalidate it. Registry credentials remain a BuildKit
+secret read through a temporary config in the install step.

@@ -32,8 +32,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=bcordes-docker
+          cache-to: type=gha,scope=bcordes-docker,mode=max
           platforms: linux/amd64,linux/arm64
           secrets: |
             node_auth_token=${{ secrets.GITHUB_TOKEN }}
