@@ -1,0 +1,28 @@
+{
+  "source_commit": "52b7c6473e89a3a35968101039f468f7225d4ef1",
+  "status": "proposed; awaiting human acceptance; implementation pending",
+  "include_root_error_gap": true,
+  "include_auth_validation_gap": true,
+  "new_owned_files": [
+    "apps/web/src/routes/__root.error.test.tsx",
+    "apps/web/e2e/tests/shell-error-recovery.spec.ts",
+    "apps/web/e2e/tests/auth-input-validation.spec.ts"
+  ],
+  "added_scenarios_in_existing_file": "apps/web/src/shared/auth/server-fns/auth.test.ts; existing-case ownership remains accepted shell review",
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "apps/web/src/routes/__root.test.tsx",
+      "apps/web/src/shared/auth/server-fns/auth.test.ts",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-gap78-run.json"
+    ],
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "new_tests_implemented": 0
+}
