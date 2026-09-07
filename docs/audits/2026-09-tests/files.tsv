@@ -1,0 +1,125 @@
+file	runner	declarations	signals	review
+apps/web/e2e/tests/contact-form.spec.ts	playwright	3		pending
+apps/web/e2e/tests/dashboard.spec.ts	playwright	2		pending
+apps/web/e2e/tests/public-pages.spec.ts	playwright	18		pending
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	1		pending
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	6	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	10	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	27	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	12	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/dead-code-animated-text.test.ts	vitest	3	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	vitest	3	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	11	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	11	filesystem-or-raw	pending
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	6	filesystem-or-raw	pending
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	6	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	11	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	5	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/notification-routing.test.ts	vitest	7		pending
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	13	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	11	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/schema-validation.test.ts	vitest	21		pending
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	10	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	8	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	8	filesystem-or-raw,migration-language	pending
+apps/web/src/__tests__/storybook-packages-scan.test.ts	vitest	3	filesystem-or-raw	pending
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	vitest	3	filesystem-or-raw	pending
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	18	filesystem-or-raw	pending
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	15	filesystem-or-raw,migration-language	pending
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	4		pending
+apps/web/src/app/components/layout/Header.test.tsx	vitest	6		pending
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	5		pending
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	8		pending
+apps/web/src/app/config/navigation.test.ts	vitest	8		pending
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	6		pending
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	6		pending
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	9		pending
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	4		pending
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	3		pending
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	9		pending
+apps/web/src/features/home/components/Hero.test.tsx	vitest	7		pending
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	5		pending
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	7		pending
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	7		pending
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	10		pending
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	14		pending
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	8		pending
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	25		pending
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	4		pending
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	6		pending
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	7		pending
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	11		pending
+apps/web/src/features/notifications/lib/query-utils.test.ts	vitest	3		pending
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	7		pending
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	3		pending
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	8		pending
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	11		pending
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	30		pending
+apps/web/src/features/projects/content/index.test.ts	vitest	17		pending
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	29		pending
+apps/web/src/router.ssr-query.test.tsx	vitest	4		pending
+apps/web/src/router.test.tsx	vitest	8		pending
+apps/web/src/routes/__root.test.tsx	vitest	8		pending
+apps/web/src/routes/about.test.tsx	vitest	6		pending
+apps/web/src/routes/api/health.test.ts	vitest	6		pending
+apps/web/src/routes/auth/me.test.ts	vitest	2		pending
+apps/web/src/routes/contact.test.tsx	vitest	7		pending
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	22		pending
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	23		pending
+apps/web/src/routes/dashboard/inquiries.test.tsx	vitest	1		pending
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	20		pending
+apps/web/src/routes/dashboard/notifications.test.tsx	vitest	2		pending
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	18		pending
+apps/web/src/routes/dashboard/settings.test.tsx	vitest	2		pending
+apps/web/src/routes/index.test.tsx	vitest	6		pending
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	15		pending
+apps/web/src/routes/projects/$slug.test.ts	vitest	10		pending
+apps/web/src/routes/projects/index.component.test.tsx	vitest	14		pending
+apps/web/src/routes/projects/index.test.ts	vitest	5		pending
+apps/web/src/routes/resume.test.tsx	vitest	8		pending
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	5		pending
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	4		pending
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	8		pending
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	4		pending
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	6		pending
+packages/auth/package.test.ts	vitest	26	filesystem-or-raw	pending
+packages/auth/src/middleware.test.ts	vitest	6		pending
+packages/auth/src/redact.test.ts	vitest	10		pending
+packages/authz/src/predicates.test.ts	vitest	11		pending
+packages/config/config.test.ts	vitest	12	filesystem-or-raw	pending
+packages/config/typecheck-coverage.test.ts	vitest	4	filesystem-or-raw	pending
+packages/forms/package.test.ts	vitest	25	filesystem-or-raw	pending
+packages/forms/src/SelectFormField.test.tsx	vitest	6		pending
+packages/forms/src/form.test.tsx	vitest	8	migration-language	pending
+packages/logger/package.test.ts	vitest	13	filesystem-or-raw	pending
+packages/navigation/src/MainNav.test.tsx	vitest	8		pending
+packages/navigation/src/MobileNav.test.tsx	vitest	8		pending
+packages/query/src/devtools.test.tsx	vitest	2		pending
+packages/query/src/index.test.ts	vitest	3		pending
+packages/query/src/root-provider.test.tsx	vitest	8		pending
+packages/server/package.test.ts	vitest	12	filesystem-or-raw	pending
+packages/server/src/security-headers.test.ts	vitest	2		pending
+packages/test-utils/package.test.ts	vitest	20	filesystem-or-raw	pending
+packages/ui/package.test.ts	vitest	20	filesystem-or-raw	pending
+packages/ui/src/components/avatar.test.tsx	vitest	5	migration-language	pending
+packages/ui/src/components/badge.test.tsx	vitest	6	migration-language	pending
+packages/ui/src/components/button.test.tsx	vitest	7	migration-language	pending
+packages/ui/src/components/checkbox.test.tsx	vitest	5	migration-language	pending
+packages/ui/src/components/dialog.test.tsx	vitest	6	migration-language	pending
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	7	migration-language	pending
+packages/ui/src/components/label.test.tsx	vitest	5	migration-language	pending
+packages/ui/src/components/navigation-menu.test.tsx	vitest	4	migration-language	pending
+packages/ui/src/components/popover.test.tsx	vitest	4	migration-language	pending
+packages/ui/src/components/progress.test.tsx	vitest	6	migration-language	pending
+packages/ui/src/components/select.test.tsx	vitest	5	migration-language	pending
+packages/ui/src/components/separator.test.tsx	vitest	6	migration-language	pending
+packages/ui/src/components/sheet.test.tsx	vitest	6	migration-language	pending
+packages/ui/src/components/switch.test.tsx	vitest	5	migration-language	pending
+packages/ui/src/components/tabs.test.tsx	vitest	3	migration-language	pending
+packages/ui/src/components/tooltip.test.tsx	vitest	4	migration-language	pending
+packages/utils/package.test.ts	vitest	14	filesystem-or-raw	pending
+packages/utils/src/format.test.ts	vitest	13		pending
+packages/utils/src/utils.test.ts	vitest	8		pending
+packages/valkey/package.test.ts	vitest	17	filesystem-or-raw	pending
+packages/valkey/src/client.test.ts	vitest	8		pending
+packages/wallow/package.test.ts	vitest	26	filesystem-or-raw,migration-language	pending

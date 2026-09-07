@@ -1,0 +1,1323 @@
+file	runner	title	status
+packages/config/config.test.ts	vitest	@bcordes/config package manifest declares the workspace package conventions	passed
+packages/config/config.test.ts	vitest	@bcordes/config package manifest exports the eslint config and the tsconfig base, and both files exist	passed
+packages/config/config.test.ts	vitest	workspace wiring is a workspace: dependency of the repo root (root eslint.config.js imports it)	passed
+packages/config/config.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web (its tsconfig extends it)	passed
+packages/config/config.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/config/config.test.ts	vitest	workspace wiring resolves its export subpaths from apps/web	passed
+packages/config/config.test.ts	vitest	tsconfig base holds the shared compiler options and not the app-specific alias	passed
+packages/config/config.test.ts	vitest	tsconfig base is what apps/web extends	passed
+packages/config/config.test.ts	vitest	tsconfig base feeds apps/web its compiler options through the exports map (tsc --showConfig)	passed
+packages/config/config.test.ts	vitest	eslint config is sourced from @bcordes/config/eslint by the root eslint.config.js	passed
+packages/config/config.test.ts	vitest	eslint config still applies the app module-boundary rules to the app shell, features and shared	passed
+packages/config/config.test.ts	vitest	eslint config applies package-level boundaries to packages/	passed
+packages/config/typecheck-coverage.test.ts	vitest	workspace typecheck coverage discovers every workspace package (sanity: apps/web + all packages/*)	passed
+packages/config/typecheck-coverage.test.ts	vitest	workspace typecheck coverage root `typecheck` fans out recursively to every workspace package	passed
+packages/config/typecheck-coverage.test.ts	vitest	workspace typecheck coverage every workspace package.json declares a `typecheck` script	passed
+packages/config/typecheck-coverage.test.ts	vitest	workspace typecheck coverage every `typecheck` script follows the established `tsc --noEmit` pattern	passed
+packages/query/src/devtools.test.tsx	vitest	devtools default-exports a TanStack Devtools plugin named "Tanstack Query"	passed
+packages/query/src/devtools.test.tsx	vitest	devtools renders the real ReactQueryDevtoolsPanel	passed
+packages/query/src/index.test.ts	vitest	@bcordes/query entry point exposes getContext, which mints a fresh QueryClient	passed
+packages/query/src/index.test.ts	vitest	@bcordes/query entry point exposes Provider	passed
+packages/query/src/index.test.ts	vitest	@bcordes/query entry point does not re-export the devtools panel, which stays on its own subpath so @tanstack/react-query-devtools is not pulled into the app bundle	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider getContext returns an object with a QueryClient instance	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider getContext returns a new QueryClient on each call	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider renders children	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider makes QueryClient accessible to children via useQueryClient	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider renders multiple children	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider cleans up on unmount without errors	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider uses the provided queryClient, not a default one	passed
+packages/query/src/root-provider.test.tsx	vitest	root-provider Provider serves server-hydrated query data to children without refetching	passed
+packages/authz/src/predicates.test.ts	vitest	hasRole returns true when the user has the role	passed
+packages/authz/src/predicates.test.ts	vitest	hasRole returns false when the user lacks the role	passed
+packages/authz/src/predicates.test.ts	vitest	hasRole returns false for a null user	passed
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns true when the user has at least one	passed
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns false when the user has none	passed
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns false for an empty candidate list	passed
+packages/authz/src/predicates.test.ts	vitest	hasPermission returns true when the permission is present	passed
+packages/authz/src/predicates.test.ts	vitest	hasPermission returns false when permissions are empty	passed
+packages/authz/src/predicates.test.ts	vitest	can grants when a role grants the action	passed
+packages/authz/src/predicates.test.ts	vitest	can denies when no role grants the action	passed
+packages/authz/src/predicates.test.ts	vitest	can denies for a null user	passed
+packages/forms/package.test.ts	vitest	@bcordes/forms package manifest declares the workspace package conventions	passed
+packages/forms/package.test.ts	vitest	@bcordes/forms package manifest exports a single barrel entry point, straight from source	passed
+packages/forms/package.test.ts	vitest	@bcordes/forms package manifest owns the react-hook-form runtime dep that moved off @bcordes/ui	passed
+packages/forms/package.test.ts	vitest	@bcordes/forms package manifest keeps @hookform/resolvers and zod dev-only	passed
+packages/forms/package.test.ts	vitest	@bcordes/forms package manifest takes react as a peer, and owns no theme (no tailwindcss)	passed
+packages/forms/package.test.ts	vitest	the form primitive really moved out of @bcordes/ui holds form.tsx and its test at packages/forms/src	passed
+packages/forms/package.test.ts	vitest	the form primitive really moved out of @bcordes/ui leaves nothing behind under packages/ui/src/components	passed
+packages/forms/package.test.ts	vitest	the form primitive really moved out of @bcordes/ui reaches Label cross-package and keeps cn from @bcordes/utils	passed
+packages/forms/package.test.ts	vitest	the stale @bcordes/ui wiring spec and manifest are corrected drops react-hook-form and its dev tooling from packages/ui/package.json	passed
+packages/forms/package.test.ts	vitest	the stale @bcordes/ui wiring spec and manifest are corrected removes form from the @bcordes/ui package.test.ts component lists	passed
+packages/forms/package.test.ts	vitest	the stale @bcordes/ui wiring spec and manifest are corrected drops the react-hook-form dependency assertion from that spec	passed
+packages/forms/package.test.ts	vitest	the barrel exposes exactly the primitive, no react-hook-form leaks re-exports every form symbol from src/index.ts	passed
+packages/forms/package.test.ts	vitest	the barrel exposes exactly the primitive, no react-hook-form leaks does not re-export react-hook-form internals through the barrel	passed
+packages/forms/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/forms/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/forms/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/forms/package.test.ts	vitest	every form-primitive importer was rewritten leaves no @bcordes/ui/components/form import anywhere	passed
+packages/forms/package.test.ts	vitest	every form-primitive importer was rewritten redirects the former importers to @bcordes/forms	passed
+packages/forms/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms holds SelectFormField.tsx and its test at packages/forms/src	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms leaves nothing behind under apps/web contact	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms re-exports SelectFormField and its public types from the barrel	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms composes the primitive as a sibling and the Select cross-package	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms exposes overridable trigger/content class props (the one behaviour change)	passed
+packages/forms/package.test.ts	vitest	SelectFormField really moved into @bcordes/forms has apps/web consume SelectFormField from the package, not a local file	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) is re-exported from the package barrel entry point	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) renders the label	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) renders the required asterisk when required, and omits it otherwise	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) renders every option when opened	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) propagates the chosen value through the react-hook-form field (onChange)	passed
+packages/forms/src/SelectFormField.test.tsx	vitest	SelectFormField (generalized, @bcordes/forms) applies a custom triggerClassName when supplied	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) exposes all 7 public exports	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) forwards the generated id to the child input and matches label htmlFor	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) renders the input directly with no extra wrapper node (Slot semantics)	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) links aria-describedby to the description when there is no error	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) sets aria-invalid and extends aria-describedby to the message on error	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) renders no FormMessage node until there is an error	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) does not call onSubmit while the field is invalid	passed
+packages/forms/src/form.test.tsx	vitest	form (Radix Slot -> cloneElement migration contract) useFormField throws a clear error outside a FormField provider	passed
+packages/logger/package.test.ts	vitest	@bcordes/logger package manifest declares the workspace package conventions	passed
+packages/logger/package.test.ts	vitest	@bcordes/logger package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/logger/package.test.ts	vitest	@bcordes/logger package manifest declares pino as a runtime dep and pino-pretty as a dev dep	passed
+packages/logger/package.test.ts	vitest	the source really moved out of apps/web leaves nothing behind at apps/web/src/lib/logger.ts	passed
+packages/logger/package.test.ts	vitest	the source really moved out of apps/web default-exports a working pino logger	passed
+packages/logger/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/logger/package.test.ts	vitest	workspace wiring takes pino and pino-pretty off apps/web	passed
+packages/logger/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/logger/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/logger/package.test.ts	vitest	every importer was rewritten leaves no @/lib/logger import anywhere	passed
+packages/logger/package.test.ts	vitest	every importer was rewritten redirects every former importer to @bcordes/logger	passed
+packages/logger/package.test.ts	vitest	every importer was rewritten leaves no direct pino import in apps/web	passed
+packages/logger/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav is importable from the package barrel (@bcordes/navigation)	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav renders one link per injected NavItem, using the injected labels/paths	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav renders the injected items, not any hard-coded bcordes routes	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav marks the active item from the current route	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav honours NavItem.exact for active matching (exact item not active on child route)	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav renders the injected logo slot	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav renders the injected actions slot	passed
+packages/navigation/src/MainNav.test.tsx	vitest	MainNav renders no nav links for an empty items array	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav is importable from the package barrel (@bcordes/navigation)	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders one link per injected NavItem when the sheet is open	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders the injected items, not any hard-coded bcordes routes	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav marks the active item from the current route	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders the injected logo slot when open	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders the injected actions slot when open	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders a hamburger trigger with an accessible label	passed
+packages/navigation/src/MobileNav.test.tsx	vitest	MobileNav renders no nav links for an empty items array when open	passed
+packages/server/package.test.ts	vitest	@bcordes/server package manifest declares the workspace package conventions	passed
+packages/server/package.test.ts	vitest	@bcordes/server package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/server/package.test.ts	vitest	the middleware really moved out of apps/web leaves nothing behind under apps/web/src/server/middleware	passed
+packages/server/package.test.ts	vitest	the middleware really moved out of apps/web carries every source module into packages/server/src	passed
+packages/server/package.test.ts	vitest	the middleware really moved out of apps/web brings the behaviour tests along with their modules	passed
+packages/server/package.test.ts	vitest	the package entry point exports applySecurityHeaders	passed
+packages/server/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/server/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/server/package.test.ts	vitest	workspace wiring resolves its subpath exports from apps/web	passed
+packages/server/package.test.ts	vitest	every former importer was retired leaves no @/server/middleware import anywhere	passed
+packages/server/package.test.ts	vitest	every former importer was retired leaves no @/server-fns/csrf import anywhere	passed
+packages/server/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/server/src/security-headers.test.ts	vitest	preserves redirects and multiple session cookies while adding security headers	passed
+packages/server/src/security-headers.test.ts	vitest	keeps streamed response content readable	passed
+packages/test-utils/package.test.ts	vitest	@bcordes/test-utils package manifest declares the workspace package conventions	passed
+packages/test-utils/package.test.ts	vitest	@bcordes/test-utils package manifest exposes the harness as a barrel plus a ./setup subpath (no build step, no dist/)	passed
+packages/test-utils/package.test.ts	vitest	@bcordes/test-utils package manifest ships the testing-library + jsdom harness as runtime dependencies	passed
+packages/test-utils/package.test.ts	vitest	@bcordes/test-utils package manifest owns the workspace render-provider deps it wraps	passed
+packages/test-utils/package.test.ts	vitest	no dependency inversion: test-utils never depends on its consumers names neither @bcordes/auth nor @bcordes/wallow in its manifest	passed
+packages/test-utils/package.test.ts	vitest	no dependency inversion: test-utils never depends on its consumers imports nothing from @bcordes/auth or @bcordes/wallow in its source	passed
+packages/test-utils/package.test.ts	vitest	the '.' barrel exposes the generic harness surface re-exports renderWithProviders and the testing-library surface	passed
+packages/test-utils/package.test.ts	vitest	the '.' barrel exposes the generic harness surface keeps app-specific mock fixtures OUT of the generic barrel	passed
+packages/test-utils/package.test.ts	vitest	the generic harness really moved out of apps/web leaves no render helper behind under apps/web/src/test	passed
+packages/test-utils/package.test.ts	vitest	the generic harness really moved out of apps/web leaves no setup harness behind under apps/web/src/test	passed
+packages/test-utils/package.test.ts	vitest	the four verbatim setup.ts copies collapse into the package deletes every duplicated per-project setup.ts	passed
+packages/test-utils/package.test.ts	vitest	the four verbatim setup.ts copies collapse into the package keeps the package as the single home of the setup harness	passed
+packages/test-utils/package.test.ts	vitest	every render-helper importer was repointed leaves no @/test/helpers/render import anywhere	passed
+packages/test-utils/package.test.ts	vitest	every render-helper importer was repointed redirects former importers to @bcordes/test-utils	passed
+packages/test-utils/package.test.ts	vitest	every jsdom Vitest project loads setup from the package repoints all five setupFiles at @bcordes/test-utils/setup	passed
+packages/test-utils/package.test.ts	vitest	the harness is a devDependency-only consumer everywhere is added under devDependencies (never dependencies) of each jsdom consumer	passed
+packages/test-utils/package.test.ts	vitest	the harness is a devDependency-only consumer everywhere is not pulled into the node-env leaf packages	passed
+packages/test-utils/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/test-utils/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/test-utils/package.test.ts	vitest	workspace wiring resolves its './setup' subpath from apps/web	passed
+packages/utils/package.test.ts	vitest	@bcordes/utils package manifest declares the workspace package conventions	passed
+packages/utils/package.test.ts	vitest	@bcordes/utils package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/utils/package.test.ts	vitest	@bcordes/utils package manifest declares the runtime dependencies it actually imports	passed
+packages/utils/package.test.ts	vitest	the source really moved out of apps/web holds the sources at packages/utils/src	passed
+packages/utils/package.test.ts	vitest	the source really moved out of apps/web leaves nothing behind at apps/web/src/lib	passed
+packages/utils/package.test.ts	vitest	the source really moved out of apps/web re-exports cn and the format helpers from its index, and they work	passed
+packages/utils/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/utils/package.test.ts	vitest	workspace wiring takes clsx, tailwind-merge and date-fns off apps/web	passed
+packages/utils/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/utils/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/utils/package.test.ts	vitest	every importer was rewritten leaves no @/lib/utils or @/lib/format import anywhere	passed
+packages/utils/package.test.ts	vitest	every importer was rewritten points the shadcn utils alias at the package	passed
+packages/utils/package.test.ts	vitest	every importer was rewritten redirects every former importer to @bcordes/utils	passed
+packages/utils/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns "just now" for less than 60 seconds ago	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns minutes ago for 1-59 minutes	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns "1m ago" at exactly 60 seconds	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns hours ago for 1-23 hours	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns "1h ago" at exactly 60 minutes	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns days ago for 1-6 days	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime falls back to short date for 7+ days	passed
+packages/utils/src/format.test.ts	vitest	formatRelativeTime falls back to short date for much older dates	passed
+packages/utils/src/format.test.ts	vitest	formatDateTime formats a date as "Jan 5, 2025, 02:30 PM"	passed
+packages/utils/src/format.test.ts	vitest	formatDateTime formats midnight as 12:00 AM	passed
+packages/utils/src/format.test.ts	vitest	formatDateTime formats noon as 12:00 PM	passed
+packages/utils/src/format.test.ts	vitest	formatDateTime pads minutes with leading zero	passed
+packages/utils/src/format.test.ts	vitest	formatDateTime handles PM hours correctly	passed
+packages/utils/src/utils.test.ts	vitest	cn merges multiple class names	passed
+packages/utils/src/utils.test.ts	vitest	cn resolves conflicting Tailwind classes (last wins)	passed
+packages/utils/src/utils.test.ts	vitest	cn handles conditional class names with falsy values	passed
+packages/utils/src/utils.test.ts	vitest	cn returns empty string for no input	passed
+packages/utils/src/utils.test.ts	vitest	cn returns empty string for all-falsy input	passed
+packages/utils/src/utils.test.ts	vitest	cn handles array inputs	passed
+packages/utils/src/utils.test.ts	vitest	cn handles object inputs for conditional classes	passed
+packages/utils/src/utils.test.ts	vitest	cn merges conflicting Tailwind modifiers correctly	passed
+packages/valkey/package.test.ts	vitest	@bcordes/valkey package manifest declares the workspace package conventions	passed
+packages/valkey/package.test.ts	vitest	@bcordes/valkey package manifest exports its source entrypoint (no build step, no dist/)	passed
+packages/valkey/package.test.ts	vitest	@bcordes/valkey package manifest owns ioredis as a runtime dep and its types as a dev dep	passed
+packages/valkey/package.test.ts	vitest	the source really moved out of apps/web leaves nothing behind under apps/web/src/lib/valkey	passed
+packages/valkey/package.test.ts	vitest	the source really moved out of apps/web keeps client.ts and keys.ts behind the barrel	passed
+packages/valkey/package.test.ts	vitest	the scoped barrel keeps its public API exports exactly getValkey and keys at runtime	passed
+packages/valkey/package.test.ts	vitest	the scoped barrel keeps its public API re-exports the Redis type from the barrel	passed
+packages/valkey/package.test.ts	vitest	the scoped barrel keeps its public API exposes every key builder through the barrel	passed
+packages/valkey/package.test.ts	vitest	the scoped barrel keeps its public API surfaces getValkey through the barrel, still lazy and still guarded	passed
+packages/valkey/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/valkey/package.test.ts	vitest	workspace wiring takes ioredis and @types/ioredis off apps/web	passed
+packages/valkey/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/valkey/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/valkey/package.test.ts	vitest	every importer was rewritten leaves no @/lib/valkey import anywhere	passed
+packages/valkey/package.test.ts	vitest	every importer was rewritten redirects every former importer to @bcordes/valkey	passed
+packages/valkey/package.test.ts	vitest	every importer was rewritten leaves no direct ioredis import in apps/web	passed
+packages/valkey/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey returns the same instance when called twice (singleton)	passed
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey throws a descriptive error when REDIS_URL is not set	passed
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey passes REDIS_URL value to Redis constructor	passed
+packages/valkey/src/client.test.ts	vitest	valkey client keys session(id) returns bcordes:session:<id>	passed
+packages/valkey/src/client.test.ts	vitest	valkey client keys sessionLock(id) returns bcordes:lock:session:<id>	passed
+packages/valkey/src/client.test.ts	vitest	valkey client keys serviceToken() returns bcordes:service-token	passed
+packages/valkey/src/client.test.ts	vitest	valkey client keys serviceTokenLock() returns bcordes:lock:service-token	passed
+packages/valkey/src/client.test.ts	vitest	valkey client keys oidcConfig() returns bcordes:oidc-config	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth package manifest declares the workspace package conventions	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth package manifest owns its OIDC and sealing runtime deps	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth package manifest depends on the already-extracted logger and valkey packages	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth package manifest keeps the TanStack framework surface as peer deps	passed
+packages/auth/package.test.ts	vitest	the library really moved out of apps/web leaves nothing behind under apps/web/src/lib/auth	passed
+packages/auth/package.test.ts	vitest	the library really moved out of apps/web carries every source module into packages/auth/src	passed
+packages/auth/package.test.ts	vitest	the '.' barrel exposes the redaction helpers exports exactly redact and redactUser at runtime	passed
+packages/auth/package.test.ts	vitest	the '.' barrel exposes the redaction helpers redacts secrets to their last four characters	passed
+packages/auth/package.test.ts	vitest	the '.' barrel exposes the redaction helpers narrows a user to non-sensitive fields	passed
+packages/auth/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/auth/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/auth/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/auth/package.test.ts	vitest	every importer was rewritten leaves no @/lib/auth import anywhere	passed
+packages/auth/package.test.ts	vitest	every importer was rewritten redirects former importers to @bcordes/auth	passed
+packages/auth/package.test.ts	vitest	no cycle: authz never leaks into auth imports nothing from @bcordes/authz inside packages/auth	passed
+packages/auth/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry adds ./testing to the exports map without disturbing the library subpaths	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry resolves the '/testing' subpath from apps/web	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry exports exactly the four session/user mock factories	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry produces User- and SessionData-shaped fixtures	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry honours overrides and builds admin fixtures	passed
+packages/auth/package.test.ts	vitest	@bcordes/auth/testing ships the mock factories as a secondary entry is typed against the auth type surface rather than any	passed
+packages/auth/package.test.ts	vitest	the mock factories never reach the production bundle keeps the testing helpers out of the '.' barrel	passed
+packages/auth/package.test.ts	vitest	the mock factories never reach the production bundle is imported only from tests and E2E fixtures, never from shipped source	passed
+packages/auth/package.test.ts	vitest	the mock factories never reach the production bundle retires the old @/test/mocks/auth module entirely	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter returns null without a session	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter uses API-expanded permissions instead of session scopes	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter rejects a profile belonging to another session user	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter treats an expired SDK session as signed out	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter redirects unauthenticated navigation to SDK login	passed
+packages/auth/src/middleware.test.ts	vitest	SDK identity adapter denies staff access when an admin role lacks the API capability	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[empty]" for undefined	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[empty]" for null	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[empty]" for empty string	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[redacted]" for a 3-char string	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[redacted]" for a 4-char string	passed
+packages/auth/src/redact.test.ts	vitest	redact returns "[redacted:...bcde]" for a 5-char string	passed
+packages/auth/src/redact.test.ts	vitest	redact returns a string starting with "[redacted:..." and ending with last 4 chars for a long token	passed
+packages/auth/src/redact.test.ts	vitest	redactUser includes id, name, roles, and tenantId from the input	passed
+packages/auth/src/redact.test.ts	vitest	redactUser contains exactly the allowed keys	passed
+packages/auth/src/redact.test.ts	vitest	redactUser does not include email, permissions, or tenantName	passed
+packages/ui/package.test.ts	vitest	@bcordes/ui package manifest declares the workspace package conventions	passed
+packages/ui/package.test.ts	vitest	@bcordes/ui package manifest exports every primitive as its own subpath, straight from source	passed
+packages/ui/package.test.ts	vitest	@bcordes/ui package manifest declares the runtime dependencies the primitives actually import	passed
+packages/ui/package.test.ts	vitest	@bcordes/ui package manifest takes react and tailwind as peers, not as its own copies	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds avatar.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds badge.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds button.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds card.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds checkbox.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds dialog.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds dropdown-menu.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds input.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds label.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds navigation-menu.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds popover.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds progress.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds select.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds separator.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds sheet.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds skeleton.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds sonner.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds spinner.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds switch.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds table.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds tabs.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds textarea.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web holds tooltip.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web leaves nothing behind under apps/web/src/components/ui	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings avatar.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings badge.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings button.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings checkbox.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings dialog.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings dropdown-menu.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings label.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings navigation-menu.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings popover.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings progress.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings select.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings separator.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings sheet.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings switch.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings tabs.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web brings tooltip.test.tsx along with it	passed
+packages/ui/package.test.ts	vitest	the primitives really moved out of apps/web keeps cn coming from @bcordes/utils, not a re-created local copy	passed
+packages/ui/package.test.ts	vitest	the theme tokens ship with the primitives that read them defines the :root tokens and the @theme mapping in the package	passed
+packages/ui/package.test.ts	vitest	the theme tokens ship with the primitives that read them leaves the app stylesheet owning tailwind, fonts and its own animations	passed
+packages/ui/package.test.ts	vitest	the theme tokens ship with the primitives that read them leaves showcase.css in the app	passed
+packages/ui/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/ui/package.test.ts	vitest	workspace wiring takes @base-ui/react and class-variance-authority off apps/web	passed
+packages/ui/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/ui/package.test.ts	vitest	workspace wiring resolves './components/button' from apps/web through the exports map	passed
+packages/ui/package.test.ts	vitest	workspace wiring resolves './components/badge' from apps/web through the exports map	passed
+packages/ui/package.test.ts	vitest	workspace wiring resolves './components/label' from apps/web through the exports map	passed
+packages/ui/package.test.ts	vitest	workspace wiring resolves './components/sonner' from apps/web through the exports map	passed
+packages/ui/package.test.ts	vitest	every importer was rewritten leaves no @/components/ui import anywhere	passed
+packages/ui/package.test.ts	vitest	every importer was rewritten points the shadcn ui alias at the package	passed
+packages/ui/package.test.ts	vitest	every importer was rewritten redirects every former importer to @bcordes/ui/components/*	passed
+packages/ui/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/ui/package.test.ts	vitest	the package runs in the root vitest keeps the primitives out of the merged coverage report	passed
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar (Radix -> Base UI migration contract) renders root with data-slot="avatar" and base classes	passed
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar (Radix -> Base UI migration contract) renders the fallback (data-slot="avatar-fallback") with its children when no image	passed
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar (Radix -> Base UI migration contract) keeps showing the fallback when the image source fails to load	passed
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar (Radix -> Base UI migration contract) exports Avatar, AvatarImage, AvatarFallback with a stable API	passed
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar (Radix -> Base UI migration contract) merges caller className on the root	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) renders a native <span> by default	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) preserves data-slot on the root	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) merges caller className with the variant classes	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) keeps badgeVariants exported and producing per-variant classes	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) applies the resolved variant classes onto the rendered badge	passed
+packages/ui/src/components/badge.test.tsx	vitest	Badge (Radix Slot -> Base UI render migration contract) composes onto an anchor via the render prop (asChild -> render)	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) renders a native <button> by default	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) preserves data-slot, data-variant and data-size on the root	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) merges caller className with the variant classes	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) keeps buttonVariants exported and producing per-variant classes	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) produces distinct size classes	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) applies the resolved variant/size classes onto the rendered button	passed
+packages/ui/src/components/button.test.tsx	vitest	Button (Radix Slot -> Base UI render migration contract) composes onto an anchor via the render prop (asChild -> render)	passed
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox (Radix -> Base UI migration contract) renders with role="checkbox" and data-slot="checkbox"	passed
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox (Radix -> Base UI migration contract) reflects the checked state via aria-checked and a data-checked attribute	passed
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox (Radix -> Base UI migration contract) reflects the unchecked state via a data-unchecked attribute	passed
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox (Radix -> Base UI migration contract) renders the indicator with the CheckIcon svg when checked	passed
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox (Radix -> Base UI migration contract) merges caller className and keeps the peer base class	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) opens from the trigger and exposes role="dialog"	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) renders content, title and description with their data-slots	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) renders the close button (data-slot="dialog-close") when showCloseButton is true	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) omits the close button when showCloseButton is false	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog (Radix -> Base UI migration contract) closes when the close button is clicked	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) opens the menu from the trigger	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) renders items with data-slot="dropdown-menu-item" and menuitem role	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) fires onClick when an item is activated	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) reflects checkbox checked state via data-checked plus an indicator slot	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) reflects the selected radio item via data-checked plus an indicator slot	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) renders label and separator with their data-slots	passed
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu (Radix -> Base UI migration contract) closes the menu after an item is selected	passed
+packages/ui/src/components/label.test.tsx	vitest	Label (Radix -> native migration contract) renders a <label> element with data-slot="label"	passed
+packages/ui/src/components/label.test.tsx	vitest	Label (Radix -> native migration contract) wires htmlFor to associate with a control	passed
+packages/ui/src/components/label.test.tsx	vitest	Label (Radix -> native migration contract) activates its associated control when clicked (label -> control wiring)	passed
+packages/ui/src/components/label.test.tsx	vitest	Label (Radix -> native migration contract) preserves peer-disabled styling classes	passed
+packages/ui/src/components/label.test.tsx	vitest	Label (Radix -> native migration contract) merges caller className	passed
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu (Radix -> Base UI migration contract) renders list, item and link with their data-slots	passed
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu (Radix -> Base UI migration contract) exposes data-active on an active link	passed
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu (Radix -> Base UI migration contract) reveals a trigger content panel when its item is open	passed
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu (Radix -> Base UI migration contract) opens a trigger content panel on click	passed
+packages/ui/src/components/popover.test.tsx	vitest	Popover (Radix -> Base UI migration contract) renders the trigger with data-slot="popover-trigger" and stays closed initially	passed
+packages/ui/src/components/popover.test.tsx	vitest	Popover (Radix -> Base UI migration contract) opens on trigger click and renders the popup with data-slot="popover-content"	passed
+packages/ui/src/components/popover.test.tsx	vitest	Popover (Radix -> Base UI migration contract) merges a caller className onto the popup	passed
+packages/ui/src/components/popover.test.tsx	vitest	Popover (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) renders root with data-slot="progress"	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) exposes progressbar semantics reflecting the value (0-100)	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) renders a track wrapper with data-slot="progress-track"	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) renders an indicator with data-slot="progress-indicator"	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) drives indicator width from value via inline width, not a manual translateX transform	passed
+packages/ui/src/components/progress.test.tsx	vitest	Progress (Radix -> Base UI migration contract) preserves the indicator accent class (bg-primary)	passed
+packages/ui/src/components/select.test.tsx	vitest	Select (Radix -> Base UI migration contract) renders the placeholder in the trigger while nothing is selected	passed
+packages/ui/src/components/select.test.tsx	vitest	Select (Radix -> Base UI migration contract) shows options with data-slot="select-item" and option role when open	passed
+packages/ui/src/components/select.test.tsx	vitest	Select (Radix -> Base UI migration contract) marks the selected item with the data-selected attribute	passed
+packages/ui/src/components/select.test.tsx	vitest	Select (Radix -> Base UI migration contract) updates the displayed value when an option is chosen	passed
+packages/ui/src/components/select.test.tsx	vitest	Select (Radix -> Base UI migration contract) renders the popup content with data-slot="select-content"	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) renders without crashing and exposes data-slot="separator"	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) defaults to horizontal orientation reflected via data-orientation	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) forwards orientation="vertical" to data-orientation for styling selectors	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) preserves the base-token classes (bg-border, shrink-0)	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) merges caller className	passed
+packages/ui/src/components/separator.test.tsx	vitest	Separator (Radix -> Base UI migration contract) exposes an accessible separator role with aria-orientation (decorative dropped)	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) opens from the trigger and exposes role="dialog"	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) renders content, title and description with their data-slots	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) defaults to the right side (data-side="right")	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (top)	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (right)	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (bottom)	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (left)	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) closes when the close button is clicked	passed
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/switch.test.tsx	vitest	Switch (Radix -> Base UI migration contract) renders with role="switch" and data-slot="switch"	passed
+packages/ui/src/components/switch.test.tsx	vitest	Switch (Radix -> Base UI migration contract) renders a thumb with data-slot="switch-thumb"	passed
+packages/ui/src/components/switch.test.tsx	vitest	Switch (Radix -> Base UI migration contract) reflects the checked state via aria-checked and a data-checked attribute	passed
+packages/ui/src/components/switch.test.tsx	vitest	Switch (Radix -> Base UI migration contract) reflects the unchecked state via a data-unchecked attribute	passed
+packages/ui/src/components/switch.test.tsx	vitest	Switch (Radix -> Base UI migration contract) merges caller className and keeps the peer base class	passed
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs (Radix -> Base UI migration contract) renders tab triggers and the active panel with their data-slots	passed
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs (Radix -> Base UI migration contract) marks the active tab with the data-active attribute	passed
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs (Radix -> Base UI migration contract) activates a tab and shows its panel when clicked	passed
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip (Radix -> Base UI migration contract) renders the trigger with data-slot="tooltip-trigger"	passed
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip (Radix -> Base UI migration contract) does not render the content while closed	passed
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip (Radix -> Base UI migration contract) shows the content with data-slot="tooltip-content" and its text when open	passed
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip (Radix -> Base UI migration contract) merges a caller className onto the content	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow package manifest declares the workspace package conventions	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow package manifest maps the old file layout to subpath exports (no build step, no dist/)	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow package manifest owns the auth, logger and valkey packages it imports	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow package manifest owns its OAuth client-credentials runtime dep	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow package manifest keeps the TanStack server surface as a peer dep	passed
+packages/wallow/package.test.ts	vitest	the client really moved out of apps/web leaves nothing behind under apps/web/src/lib/wallow	passed
+packages/wallow/package.test.ts	vitest	the client really moved out of apps/web carries every source module into packages/wallow/src	passed
+packages/wallow/package.test.ts	vitest	the '.' barrel exposes the public runtime surface exports exactly the client factory, service client and error helpers	passed
+packages/wallow/package.test.ts	vitest	the '.' barrel exposes the public runtime surface re-exports callable client factory and service client	passed
+packages/wallow/package.test.ts	vitest	workspace wiring is a workspace: dependency of apps/web	passed
+packages/wallow/package.test.ts	vitest	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/wallow/package.test.ts	vitest	workspace wiring resolves its '.' export from apps/web	passed
+packages/wallow/package.test.ts	vitest	every importer was rewritten leaves no @/lib/wallow import anywhere	passed
+packages/wallow/package.test.ts	vitest	every importer was rewritten redirects former importers to @bcordes/wallow	passed
+packages/wallow/package.test.ts	vitest	no cycle: wallow never leaks back into auth imports nothing from @bcordes/wallow inside packages/auth	passed
+packages/wallow/package.test.ts	vitest	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry adds ./testing to the exports map without disturbing the library subpaths	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry resolves the '/testing' subpath from apps/web	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry exports exactly the mock client factory and the two response builders	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry builds a MockWallowClient whose verb methods are vitest mocks	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry defaults every mock verb to a 200 JSON response	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry builds JSON and text Responses from the helper factories	passed
+packages/wallow/package.test.ts	vitest	@bcordes/wallow/testing ships the mock client factory as a secondary entry is typed against the wallow client surface rather than any	passed
+packages/wallow/package.test.ts	vitest	the mock client factory never reaches the production bundle keeps the testing helpers out of the '.' barrel	passed
+packages/wallow/package.test.ts	vitest	the mock client factory never reaches the production bundle is imported only from test files, never from shipped source	passed
+packages/wallow/package.test.ts	vitest	the mock client factory never reaches the production bundle retires the old @/test/mocks/wallow module entirely	passed
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration sources the router query client from @bcordes/query	passed
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration installs the SSR hydration hook on the router	passed
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration hydrates server-dehydrated state into the query client the package created	passed
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration serves the hydrated data to components under the router's Wrap without refetching	passed
+apps/web/src/router.test.tsx	vitest	getRouter creates a router with the route tree and context from TanStack Query	passed
+apps/web/src/router.test.tsx	vitest	getRouter sets defaultPreload to intent	passed
+apps/web/src/router.test.tsx	vitest	getRouter provides a Wrap component that renders TanstackQuery.Provider	passed
+apps/web/src/router.test.tsx	vitest	getRouter sets up SSR query integration with the router and queryClient	passed
+apps/web/src/router.test.tsx	vitest	getRouter returns the created router instance	passed
+apps/web/src/router.test.tsx	vitest	getRouter creates a fresh context on each invocation	passed
+apps/web/src/router.test.tsx	vitest	getRouter Wrap component renders TanstackQuery.Provider with children	passed
+apps/web/src/router.test.tsx	vitest	getRouter spreads the rqContext into the router context	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	features/about module exists with a public index has an apps/web/src/features/about/ directory	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	features/about module exists with a public index exposes a public API at apps/web/src/features/about/index.ts	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	features/about module exists with a public index index.ts re-exports AboutHero from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	features/about module exists with a public index index.ts re-exports Timeline from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	features/about module exists with a public index index.ts re-exports ValueIcon from its local components/	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	the horizontal components/about directory is gone apps/web/src/components/about/ no longer exists	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	no source imports the old @/components/about path no .ts/.tsx under apps/web/src references @/components/about	passed
+apps/web/src/__tests__/about-feature-module.test.ts	vitest	the public API resolves the three named exports @/features/about exports AboutHero, Timeline, ValueIcon	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	app/ shell module exists with a public index has an apps/web/src/app/ directory	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	app/ shell module exists with a public index exposes a public API at apps/web/src/app/index.ts	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	app/ shell module exists with a public index index.ts re-exports Header from ./components/layout/Header	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	app/ shell module exists with a public index index.ts re-exports Footer from ./components/layout/Footer	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	app/ shell module exists with a public index index.ts re-exports reportWebVitals from ./lib/web-vitals	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/index.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Header.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Header.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Footer.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/Footer.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/MobileNav.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/MobileNav.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/UserMenu.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/components/layout/UserMenu.test.tsx exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/config/navigation.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/config/navigation.test.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/lib/web-vitals.ts exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/styles.css exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the app-shell files live at their new app/ locations apps/web/src/app/styles/showcase.css exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/components/layout/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/components/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/config/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/lib/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/styles/ no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the old horizontal app-shell locations are gone apps/web/src/styles.css (root asset) no longer exists	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old layout components specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old navigation config specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old web-vitals lib specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	no source imports the old app-shell specifiers no .ts/.tsx under apps/web/src references the old root styles asset specifier	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	every app-shell consumer resolves via the new @/app path routes/__root.tsx references @/app	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	every app-shell consumer resolves via the new @/app path routes/__root.test.tsx references @/app	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	every app-shell consumer resolves via the new @/app path routes/__root.tsx imports the styles asset via @/app/styles.css	passed
+apps/web/src/__tests__/app-shell-module.test.ts	vitest	the public API resolves the expected named exports @/app exports Header, Footer, reportWebVitals	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/home no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/about no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/projects no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/contact no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/dashboard no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/server-fns no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/content no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/hooks no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components/shared no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/components no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/config no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/lib no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed apps/web/src/styles no longer exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed config/inquiries.ts is gone (moved into features/inquiries)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dissolved horizontal directories are removed the top-level styles.css is gone (moved to app/styles.css)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/app/index.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/app/components/layout exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/app/config/navigation.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/app/lib/web-vitals.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/app/styles.css exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	relocated app/ and shared/motion surface exists apps/web/src/shared/motion/index.ts exists	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	no stale deep-import specifiers remain no source imports/mocks a migrated-away path	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	no stale deep-import specifiers remain no source reaches deep into a feature/shared/app module	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dead ESLint module-boundary blocks are pruned no block is scoped to apps/web/src/components/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dead ESLint module-boundary blocks are pruned no block is scoped to apps/web/src/hooks/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dead ESLint module-boundary blocks are pruned no block is scoped to apps/web/src/lib/**/*.{ts,tsx}	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	dead ESLint module-boundary blocks are pruned no block scopes any removed horizontal dir under apps/web/src	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	surviving ESLint blocks subsume the pruned layer blocks the app-wide block still denies deep module imports	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	surviving ESLint blocks subsume the pruned layer blocks one block scopes features/, shared/ and app/ together	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	surviving ESLint blocks subsume the pruned layer blocks that block carries the no-importing-routes rule the layer blocks used to	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout has a Key Directories section	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout lists apps/web/src/features/ and apps/web/src/shared/	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout documents the app/ shell layer that absorbed components/layout, config/, lib/ and styles.css	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout names both cross-cutting shared modules (auth and motion)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the dissolved components/ and hooks/ buckets	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the removed apps/web/src/server-fns/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer advertises the removed apps/web/src/content/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout no longer enumerates the per-feature components/{home,about,...} dirs	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	CLAUDE.md Key Directories describe the features/ + shared/ layout preserves the packages/valkey/src/index.ts sanctioned-barrel reference	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout has a Project Structure section	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout discovers the tree entries (floor guard)	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout shows the features/, shared/ and app/ module roots in the tree	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout names both shared modules (auth and motion) on the shared/ entry	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout no longer shows the dissolved components/ and hooks/ tree entries	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout no longer shows the removed server-fns/ dir	passed
+apps/web/src/__tests__/architecture-cleanup.test.ts	vitest	README Project Structure describes the features/ + shared/ layout no longer shows the removed content/ dir	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index has an apps/web/src/features/contact/ directory	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index co-locates a lib/ subdirectory (the moved schema module)	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index exposes a public API at apps/web/src/features/contact/index.ts	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index index.ts re-exports ContactForm from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index index.ts re-exports ContactFormFields from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index index.ts re-exports ContactFormSuccess from its local components/	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	features/contact module exists with a public index keeps the contact-form schema internal (index.ts does not re-export it)	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	the horizontal components/contact directory is gone apps/web/src/components/contact/ no longer exists	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	no source imports the old contact / inquiries deep paths no .ts/.tsx under apps/web/src references @/components/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	no source imports the old contact / inquiries deep paths no .ts/.tsx under apps/web/src references @/server-fns/inquiries	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	ContactForm consumes the inquiries feature via its public barrel features/contact/components/ContactForm.tsx imports submitInquiry from @/features/inquiries	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	every contact consumer resolves via the new @/features/contact path routes/contact.tsx imports from @/features/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	every contact consumer resolves via the new @/features/contact path routes/contact.test.tsx imports from @/features/contact	passed
+apps/web/src/__tests__/contact-feature-module.test.ts	vitest	the public API resolves the three named exports @/features/contact exports ContactForm, ContactFormFields, ContactFormSuccess	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	vitest	AnimatedText dead-code removal apps/web/src/components/shared/AnimatedText.tsx no longer exists	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	vitest	AnimatedText dead-code removal apps/web/src/components/shared/AnimatedText.test.tsx no longer exists	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	vitest	AnimatedText dead-code removal sibling FadeInView survives at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/dead-code-animated-text.test.ts	vitest	no source imports the deleted AnimatedText module nothing under apps/web/src or packages/* imports/mocks AnimatedText	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	vitest	use-mobile dead-code removal apps/web/src/hooks/use-mobile.ts no longer exists	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	vitest	use-mobile dead-code removal apps/web/src/hooks/use-mobile.test.ts no longer exists	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	vitest	use-mobile dead-code removal sibling motion hooks survive at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/dead-code-use-mobile.test.ts	vitest	no source imports the deleted use-mobile module nothing under apps/web/src or packages/* imports/mocks use-mobile	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	doc coverage sanity discovers the extracted packages/* set (13: auth..wallow)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout documents the apps/web + packages/* monorepo layout, not a single-app src/ tree	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout lists every extracted internal package (package list / dependency graph)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout carries no stale pre-migration src/lib/* or SignalR references	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout describes the real-time mechanism as SSE, not SignalR	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout points the session-store note at sealed cookies, not the stale "in memory Map" phrasing	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	CLAUDE.md reflects the pnpm workspace layout updates the no-barrel rule: package src/index.ts is the sanctioned public API	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	README.md reflects the pnpm workspace layout has a Project Structure section documenting apps/web + packages/*	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	README.md reflects the pnpm workspace layout names every extracted internal package	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	README.md reflects the pnpm workspace layout no longer shows the old single-app src/lib subtree (lib/auth, lib/wallow)	passed
+apps/web/src/__tests__/docs-workspace-layout.test.ts	vitest	README.md reflects the pnpm workspace layout carries no stale SignalR references	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	features/ and shared/ module roots exist has an apps/web/src/features/ root (tracked via .gitkeep)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	features/ and shared/ module roots exist has an apps/web/src/shared/ root (tracked via .gitkeep)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	ESLint forbids deep imports into feature/shared module internals defines a noDeepModuleImports group targeting @/features/*/* and @/shared/*/*	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	ESLint forbids deep imports into feature/shared module internals carries the deep-module deny group in the apps/web/src/**/*.{ts,tsx} block	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	ESLint features/shared boundary block exists, scoping both apps/web/src/features and apps/web/src/shared	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	ESLint features/shared boundary block forbids features/shared from importing routes (@/routes/*)	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	ESLint features/shared boundary block also carries the deep-module deny group	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	CLAUDE.md documents the new module roots and convention lists apps/web/src/features/ under Key Directories	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	CLAUDE.md documents the new module roots and convention lists apps/web/src/shared/ under Key Directories	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	CLAUDE.md documents the new module roots and convention documents the bare-module import convention with examples	passed
+apps/web/src/__tests__/feature-architecture.test.ts	vitest	CLAUDE.md documents the new module roots and convention preserves the packages/valkey/src/index.ts sanctioned-barrel reference (guard against clobbering)	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution has vitest configs to check	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution /Users/traveler/Repos/bcordes/vitest.config.ts hardcodes no pnpm store path	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution /Users/traveler/Repos/bcordes/apps/web/vitest.config.ts hardcodes no pnpm store path	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution declares h3 as a dependency of apps/web	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution installs h3 into apps/web/node_modules	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution resolves h3 from apps/web without a vite alias or NODE_PATH fallback	passed
+apps/web/src/__tests__/h3-resolution.test.ts	vitest	h3 resolution resolves h3 to the v2 API the server middleware imports	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index has an apps/web/src/features/home/ directory	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index exposes a public API at apps/web/src/features/home/index.ts	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index index.ts re-exports Hero from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index index.ts re-exports FeaturedWork from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index index.ts re-exports ServicesGrid from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	features/home module exists with a public index index.ts re-exports SkillsShowcase from its local components/	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	the horizontal components/home directory is gone apps/web/src/components/home/ no longer exists	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	no source imports the old @/components/home path no .ts/.tsx under apps/web/src references @/components/home	passed
+apps/web/src/__tests__/home-feature-module.test.ts	vitest	the public API resolves the four named exports @/features/home exports Hero, FeaturedWork, ServicesGrid, SkillsShowcase	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index has an apps/web/src/features/inquiries/ directory	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index co-locates a server-fns/ subdirectory	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index co-locates a lib/ subdirectory (the moved config module)	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index exposes a public API at apps/web/src/features/inquiries/index.ts	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports submitInquiry from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports fetchInquiries from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports fetchMyInquiries from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports fetchInquiry from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports updateInquiryStatus from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports fetchInquiryComments from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports submitInquiryComment from its local ./server-fns/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports STATUS_TO_FRONTEND from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports STATUS_TO_API from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports STATUS_COLORS from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	features/inquiries module exists with a public index index.ts re-exports STATUS_LABELS from its local ./lib/	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	the horizontal inquiries source files are gone apps/web/src/server-fns/inquiries.ts no longer exists	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	the horizontal inquiries source files are gone apps/web/src/config/inquiries.ts no longer exists	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	no source imports the old inquiries paths no .ts/.tsx under apps/web/src references the old server-fns/inquiries path	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	no source imports the old inquiries paths no .ts/.tsx under apps/web/src references @/config/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.index.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.index.test.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.$id.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	every dashboard consumer resolves via the new @/features/inquiries path routes/dashboard/inquiries.$id.test.tsx imports from @/features/inquiries	passed
+apps/web/src/__tests__/inquiries-feature-module.test.ts	vitest	the public API resolves the expected exports @/features/inquiries exports the seven server fns and four status maps	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	MarkdownContent component is deleted components/shared/MarkdownContent.tsx no longer exists	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	MarkdownContent component is deleted components/shared/MarkdownContent.test.tsx no longer exists	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	MarkdownContent component is deleted sibling FadeInView survives at shared/motion (over-deletion guard)	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	no source imports MarkdownContent no source in apps/web/src or packages/* imports/mocks the deleted component	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	apps/web no longer depends on marked is not listed in dependencies	passed
+apps/web/src/__tests__/markdown-content-removed.test.ts	vitest	apps/web no longer depends on marked is not listed in devDependencies	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects absolute http:// actionUrl and falls back to switch result	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation accepts a valid relative actionUrl and returns it directly	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects protocol-relative //evil.com actionUrl and falls through to switch	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects javascript: actionUrl and falls through to switch	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — entityId validation produces correct route when entityId is a valid UUID	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — entityId validation returns fallback when entityId is a non-UUID string	passed
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — missing data fallback returns fallback when no actionUrl and no entityId are present	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index has an apps/web/src/features/notifications/ directory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index co-locates a hooks/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index co-locates a lib/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index co-locates a server-fns/ subdirectory	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index exposes a public API at apps/web/src/features/notifications/index.ts	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports NotificationBell from its local ./components/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports NotificationRow from its local ./components/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports EventStreamProvider from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports useEventStream from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports useEventStreamEvents from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports useNotificationFilters from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports notificationTypes from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports useNotificationSelection from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports usePushNotifications from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports invalidateNotifications from its local ./lib/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports getNotificationRoute from its local ./lib/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports fetchNotifications from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports fetchUnreadCount from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports markAllNotificationsRead from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports markNotificationRead from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports deregisterPushDevice from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports fetchVapidPublicKey from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports listPushDevices from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports registerPushDevice from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports sendTestPush from its local ./server-fns/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports the EventStreamContextValue type from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	features/notifications module exists with a public index index.ts re-exports the NotificationType type from its local ./hooks/	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/components/layout/NotificationBell.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/components/layout/NotificationBell.test.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/components/dashboard/NotificationRow.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/components/dashboard/NotificationRow.test.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/EventStreamProvider.tsx no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/useEventStream.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/useEventStreamEvents.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/useNotificationFilters.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/useNotificationSelection.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/hooks/usePushNotifications.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/server-fns/notifications.ts no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/components/dashboard/ no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the horizontal notification source files are gone apps/web/src/lib/notifications/ no longer exists	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old EventStreamProvider hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useEventStream hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useNotificationFilters hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old useNotificationSelection hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old usePushNotifications hook path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old lib/notifications path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old server-fns/notifications path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old layout/NotificationBell path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	no source imports the old horizontal notification paths no .ts/.tsx under apps/web/src references the old dashboard/NotificationRow path	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/__root.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path app/components/layout/Header.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path app/components/layout/Header.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/notifications.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/notifications.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/settings.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/settings.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.index.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.index.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.$id.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path routes/dashboard/inquiries.$id.test.tsx imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	every notifications consumer resolves via the new @/features/notifications path __tests__/notification-routing.test.ts imports from @/features/notifications	passed
+apps/web/src/__tests__/notifications-feature-module.test.ts	vitest	the public API resolves the expected value exports @/features/notifications exports the components, hooks, lib helpers, and server fns	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index has an apps/web/src/features/projects/ directory	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index co-locates a components/ subdirectory	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index co-locates a content/ subdirectory (the moved data module)	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index exposes a public API at apps/web/src/features/projects/index.ts	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index index.ts re-exports ProjectCard from its local components/	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index index.ts re-exports ProjectFilter from its local components/	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	features/projects module exists with a public index index.ts re-exports the whole content barrel (incl. ShowcaseMeta type)	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	both horizontal projects directories are gone apps/web/src/components/projects/ no longer exists	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	both horizontal projects directories are gone apps/web/src/content/projects/ no longer exists	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	no source imports the old horizontal projects paths no .ts/.tsx under apps/web/src references @/components/projects or @/content/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path features/home/components/FeaturedWork.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path features/home/components/FeaturedWork.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/index.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/index.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/index.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/index.test.ts imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/index.component.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/$slug.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/$slug.test.ts imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	every consumer resolves via the new @/features/projects path routes/projects/$slug.component.test.tsx imports from @/features/projects	passed
+apps/web/src/__tests__/projects-feature-module.test.ts	vitest	the public API resolves the merged value exports @/features/projects exports ProjectCard, ProjectFilter, and the getShowcase* helpers	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields projectType rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields projectType accepts valid enum value: Frontend	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields projectType accepts valid enum value: Full-Stack	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields projectType accepts valid enum value: Consulting	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields projectType accepts valid enum value: Other	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields budgetRange rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields budgetRange accepts valid enum value: Under $5k	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields budgetRange accepts valid enum value: $5k-$15k	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields budgetRange accepts valid enum value: $15k-$50k	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields budgetRange accepts valid enum value: $50k+	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields timeline rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields timeline accepts valid enum value: Less than 1 month	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields timeline accepts valid enum value: 1-3 months	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields timeline accepts valid enum value: 3-6 months	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	submitInquirySchema – enum fields timeline accepts valid enum value: 6+ months	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation fetchInquirySchema rejects a non-UUID string	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation fetchInquirySchema accepts a valid UUID	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation updateInquiryStatusSchema rejects a non-UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation updateInquiryStatusSchema accepts a valid UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation submitInquiryCommentSchema rejects a non-UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation submitInquiryCommentSchema accepts a valid UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation notificationIdSchema (markNotificationRead / deregisterPushDevice) rejects a non-UUID string	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	id fields – UUID validation notificationIdSchema (markNotificationRead / deregisterPushDevice) accepts a valid UUID	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints endpoint rejects a bare string (not a URL)	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints endpoint accepts a valid HTTPS URL	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints endpoint rejects a URL exceeding 2048 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints p256dh rejects a string exceeding 256 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints p256dh accepts a string within 256 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints auth rejects a string exceeding 128 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	vitest	registerPushDeviceSchema – field constraints auth accepts a string within 128 characters	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	apps/web components.json points the ui and utils aliases at the workspace packages	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	apps/web components.json leaves the app-local aliases alone	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	apps/web components.json scaffolds Base UI primitives, not Radix	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	apps/web components.json names a stylesheet that exists	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	packages/ui components.json exists, or the CLI refuses to write into the package at all	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	packages/ui components.json resolves its own components and utils to the packages	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	packages/ui components.json declares no alias the package does not export	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	packages/ui components.json names the theme stylesheet that ships with the primitives	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	packages/ui components.json scaffolds Base UI primitives, not Radix	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	the Base UI migration stays undone apps/web depends on no Radix package	passed
+apps/web/src/__tests__/shadcn-cli-config.test.ts	vitest	the Base UI migration stays undone packages/ui depends on no Radix package	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index has an apps/web/src/shared/auth/ directory	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index exposes a public API at apps/web/src/shared/auth/index.ts	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index index.ts re-exports useUser from its local ./hooks/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index index.ts re-exports useRequireUser from its local ./hooks/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index index.ts re-exports serverRequireAuth from its local ./server-fns/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	shared/auth module exists with a public index index.ts re-exports fetchCurrentUserRoles from its local ./server-fns/	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	the horizontal auth source files are gone apps/web/src/hooks/useUser.ts no longer exists	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	the horizontal auth source files are gone apps/web/src/server-fns/auth.ts no longer exists	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	no source imports the old auth paths no .ts/.tsx under apps/web/src references @/hooks/useUser	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	no source imports the old auth paths no .ts/.tsx under apps/web/src references @/server-fns/auth	passed
+apps/web/src/__tests__/shared-auth-module.test.ts	vitest	the public API resolves the expected named exports @/shared/auth exports useUser, useRequireUser, serverRequireAuth, fetchCurrentUserRoles	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	shared/motion module exists with a public index has an apps/web/src/shared/motion/ directory	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	shared/motion module exists with a public index exposes a public API at apps/web/src/shared/motion/index.ts	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	shared/motion module exists with a public index index.ts re-exports useReducedMotion from its local ./hooks/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	shared/motion module exists with a public index index.ts re-exports useScrollAnimation from its local ./hooks/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	shared/motion module exists with a public index index.ts re-exports FadeInView from its local ./components/	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	the horizontal motion source files are gone apps/web/src/hooks/useReducedMotion.ts no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	the horizontal motion source files are gone apps/web/src/hooks/useScrollAnimation.ts no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	the horizontal motion source files are gone apps/web/src/components/shared/FadeInView.tsx no longer exists	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old useReducedMotion hook path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old useScrollAnimation hook path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	no source imports the old motion paths no .ts/.tsx under apps/web/src references the old FadeInView component path	passed
+apps/web/src/__tests__/shared-motion-module.test.ts	vitest	the public API resolves the expected named exports @/shared/motion exports useReducedMotion, useScrollAnimation, FadeInView	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	vitest	Storybook scans package sources points the stories glob at packages/*/src	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	vitest	Storybook scans package sources has at least one discoverable package story file on disk	passed
+apps/web/src/__tests__/storybook-packages-scan.test.ts	vitest	Storybook scans package sources discovers a packages/ui story specifically	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	vitest	tailwind @source scanning of @bcordes/ui sentinels reach the build only through packages/ui	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	vitest	tailwind @source scanning of @bcordes/ui emits the utilities that only @bcordes/ui uses	passed
+apps/web/src/__tests__/tailwind-source-scanning.test.ts	vitest	tailwind @source scanning of @bcordes/ui declares @source for the packages/ui sources	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	Dockerfile (pnpm workspace aware) copies pnpm-workspace.yaml into the dependency layer	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	Dockerfile (pnpm workspace aware) copies apps/web/package.json before installing	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	Dockerfile (pnpm workspace aware) copies packages/ before installing (forward-compat with future internal packages)	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	Dockerfile (pnpm workspace aware) builds only the bcordes package, not the workspace root	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	Dockerfile (pnpm workspace aware) runtime stage copies the build output from apps/web/.output	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	pnpm --filter bcordes resolves to exactly one package: apps/web	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	CI workflow build job builds the bcordes package via the workspace filter	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	CI workflow test job still runs the root vitest projects config with coverage	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	CI workflow lint job still runs the root lint script	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	CI workflow all jobs install with a frozen lockfile	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please config keys on apps/web instead of the repo root	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please config keeps the plain v<version> tag lineage (include-component-in-tag: false)	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please config preserves the existing release-type and bump strategy	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please config manifest tracks apps/web at the current released version	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please config CHANGELOG.md lives next to the package it describes	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please.yml semver parsing parses a plain v<version> tag (the format include-component-in-tag: false cuts)	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please.yml semver parsing parses a multi-digit plain tag	passed
+apps/web/src/__tests__/workspace-infra.test.ts	vitest	release-please.yml semver parsing does not strip on a "-v" component separator	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) exists at the repo root	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) declares the workspace projects (apps/* and packages/*)	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) delegates app-scoped options to the project, keeping none itself	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) owns the single merged coverage report	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) scopes coverage sources to workspace packages, not a root src/	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	root vitest.config.ts (workspace projects + merged coverage) keeps tests, stories, generated routes and ui primitives out of coverage	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	apps/web/vitest.config.ts (the app project) exists in the app package	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	apps/web/vitest.config.ts (the app project) keeps the app jsdom environment	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	apps/web/vitest.config.ts (the app project) points setupFiles at a resolvable setup module	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	apps/web/vitest.config.ts (the app project) has app-relative include globs covering both .ts and .tsx tests	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	apps/web/vitest.config.ts (the app project) keeps the tsconfig-paths plugin that resolves the @/ alias	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	the root run collects the whole workspace discovers every app test file from the repo root with no extra flags	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	the root run collects the whole workspace collects each workspace package as a project of its own	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	the root run collects the whole workspace collects at least the pre-migration test baseline	passed
+apps/web/src/__tests__/workspace-vitest-config.test.ts	vitest	merged coverage output writes one lcov.info covering apps/web sources	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route Route config exports a route config with notFoundComponent and head	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route Route config head returns correct meta and links	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route NotFound component renders 404 heading	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route NotFound component renders Page Not Found message	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route NotFound component renders description text	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route NotFound component renders a Go Home link pointing to /	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route RootDocument (shellComponent) renders Header, Footer, children, and Toaster	passed
+apps/web/src/routes/__root.test.tsx	vitest	__root route DevTools component renders devtools panel after dynamic imports resolve	passed
+apps/web/src/routes/about.test.tsx	vitest	about route Route config exports a route config with component	passed
+apps/web/src/routes/about.test.tsx	vitest	about route AboutPage component renders AboutHero	passed
+apps/web/src/routes/about.test.tsx	vitest	about route AboutPage component renders Timeline	passed
+apps/web/src/routes/about.test.tsx	vitest	about route AboutPage component renders My Approach section	passed
+apps/web/src/routes/about.test.tsx	vitest	about route AboutPage component renders all four value cards	passed
+apps/web/src/routes/about.test.tsx	vitest	about route AboutPage component renders CTA section with Get in Touch link	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route Route config exports a route config with component	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders page heading	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders contact info section with all items	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders email link with mailto href	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders availability status	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders ContactForm	passed
+apps/web/src/routes/contact.test.tsx	vitest	contact route ContactPage component renders Send a Message heading	passed
+apps/web/src/routes/index.test.tsx	vitest	index route Route config exports a route config with component and loader	passed
+apps/web/src/routes/index.test.tsx	vitest	index route Route config loader returns showcases from getFeaturedShowcases	passed
+apps/web/src/routes/index.test.tsx	vitest	index route HomePage component renders Hero, ServicesGrid, FeaturedWork, and SkillsShowcase	passed
+apps/web/src/routes/index.test.tsx	vitest	index route HomePage component passes showcases to FeaturedWork	passed
+apps/web/src/routes/index.test.tsx	vitest	index route HomePage component renders "Let's Work Together" section	passed
+apps/web/src/routes/index.test.tsx	vitest	index route HomePage component renders Get in Touch link to /contact	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route Route config exports a route config with component	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders page heading	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders experience subtitle	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders Download PDF link	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders Experience section with all jobs	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders Skills section with categories	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders skill badges	passed
+apps/web/src/routes/resume.test.tsx	vitest	resume route ResumePage component renders Education section	passed
+apps/web/src/app/config/navigation.test.ts	vitest	NAV_LINKS is a non-empty array	passed
+apps/web/src/app/config/navigation.test.ts	vitest	NAV_LINKS each entry has href and label strings	passed
+apps/web/src/app/config/navigation.test.ts	vitest	NAV_LINKS contains a Home link pointing to /	passed
+apps/web/src/app/config/navigation.test.ts	vitest	SOCIAL_LINKS is a non-empty array	passed
+apps/web/src/app/config/navigation.test.ts	vitest	SOCIAL_LINKS each entry has label, href, and icon	passed
+apps/web/src/app/config/navigation.test.ts	vitest	SOCIAL_LINKS contains GitHub, LinkedIn, and Email links	passed
+apps/web/src/app/config/navigation.test.ts	vitest	SOCIAL_LINKS GitHub link points to a github.com URL	passed
+apps/web/src/app/config/navigation.test.ts	vitest	SOCIAL_LINKS Email link uses mailto:	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 200 with status "healthy" when Valkey ping returns PONG	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 503 with "ping failed" when Valkey ping returns unexpected value	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 503 with "unreachable" when Valkey ping throws	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 503 with "unreachable" when Valkey ping times out	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 503 with "ping failed" when Valkey ping returns empty string	passed
+apps/web/src/routes/api/health.test.ts	vitest	/api/health returns 503 with "ping failed" when Valkey ping returns null	passed
+apps/web/src/routes/auth/me.test.ts	vitest	GET /auth/me returns user JSON when authenticated	passed
+apps/web/src/routes/auth/me.test.ts	vitest	GET /auth/me returns null when not authenticated	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders the project title	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders the project description	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders the project year	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders all tags as badges	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders the MDX content component	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders nothing in content area when getShowcaseContent returns undefined	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders a "Back to Projects" link in the header	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders a "Back to all projects" link in the footer	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component renders the project image when showcase has an image	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component does not render an image when showcase has no image	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug component calls getShowcaseContent with the showcase slug	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug notFoundComponent renders "Project Not Found" heading	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug notFoundComponent renders descriptive message	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug notFoundComponent renders a link back to /projects	passed
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	projects/$slug notFoundComponent renders the ArrowLeft icon	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	Route config has no project metadata when the loader did not find a project	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	Route config exports a route config with head	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	Route config head returns correct meta tags for a showcase	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	Route config head includes og:image when showcase has an image	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	Route config head omits og:image when showcase has no image	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	GET /projects/$slug loader returns the matching showcase when slug matches	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	GET /projects/$slug loader returns second showcase when its slug matches	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	GET /projects/$slug loader throws notFound() when slug does not match any showcase	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	GET /projects/$slug loader throws notFound() when showcases array is empty	passed
+apps/web/src/routes/projects/$slug.test.ts	vitest	GET /projects/$slug loader uses params.slug for the lookup	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders the page heading and description	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders project cards with titles and descriptions	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component links each project card to /projects/$slug	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component displays correct result count	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component does not show "Clear filters" button when no filters are active	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component filters showcases by tag when a tag button is clicked	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component filters showcases by year when a year button is clicked	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component shows "Clear filters" button when a tag filter is active	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component resets filters when "Clear filters" is clicked	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders empty state when no showcases match filters	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders "Clear all filters" button in empty state and resets on click	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders filter sections for tags and years	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component combines tag and year filters	passed
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders empty list when showcases array is empty	passed
+apps/web/src/routes/projects/index.test.ts	vitest	Route config exports a route config with head	passed
+apps/web/src/routes/projects/index.test.ts	vitest	Route config head returns correct meta tags	passed
+apps/web/src/routes/projects/index.test.ts	vitest	GET /projects/ loader returns showcases from getShowcases()	passed
+apps/web/src/routes/projects/index.test.ts	vitest	GET /projects/ loader calls getShowcases with no arguments	passed
+apps/web/src/routes/projects/index.test.ts	vitest	GET /projects/ loader returns empty array when getShowcases returns empty	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	inquiries.$id loader calls fetchInquiry, fetchInquiryComments, and fetchCurrentUserRoles in parallel	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	inquiries.$id loader returns isAdmin=true when user has admin role	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	inquiries.$id loader returns isAdmin=false when user lacks admin role	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	inquiries.$id loader returns the inquiry and comments from the loader	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders inquiry detail fields	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders the "Inquiry Details" heading	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders the "Back to inquiries" link	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders the status badge	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders "No comments yet." when there are no visible comments	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders public comments for non-admin users	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component admin sees all comments including internal	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component admin sees "Internal" badge on internal comments	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component admin sees "Internal note" checkbox	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component non-admin does NOT see "Internal note" checkbox	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders the comment textarea and Send button	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component renders comment author names and content	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component hides optional fields when not present	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component submits a comment and clears the form	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component does not submit when comment text is empty	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component handles comment submission error gracefully	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	InquiryDetailPage component toggles isInternal checkbox for admin users	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	inquiries.$id beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	inquiries.index loader beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	inquiries.index loader calls fetchMyInquiries and fetchCurrentUserRoles in parallel	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	inquiries.index loader returns isAdmin=true when user has admin role	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	inquiries.index loader returns isAdmin=false when user has no admin role	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	inquiries.index loader returns the inquiries array from fetchMyInquiries	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component renders empty state when no inquiries (admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component renders empty state when no inquiries (non-admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component renders inquiry rows with name, email, and company	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component renders "-" for missing optional fields	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component shows human-readable project type labels	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component admin sees Select controls for status	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component non-admin sees Badge for status instead of Select	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component shows "new" badge count in header	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component shows summary count text	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component shows singular "message" when only 1 inquiry	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component renders the Refresh button	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component navigates to inquiry detail when row is clicked	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component falls back to raw projectType when no label mapping exists	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component calls updateInquiryStatus when admin changes status via Select	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component falls back to raw status label for unknown status values (non-admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component clicking Refresh calls router.invalidate and re-enables button after	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component handleRefresh clears isRefreshing even when invalidate rejects	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	DashboardInquiriesPage component handles status change error gracefully	passed
+apps/web/src/routes/dashboard/inquiries.test.tsx	vitest	inquiries layout route renders an Outlet	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index loader returns notifications from fetchNotifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component renders empty state when no notifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component renders empty state with unread message when filtering unread	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component renders notification rows when present	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows unread count badge when unreadCount > 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component does not show unread count badge when unreadCount is 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component "Mark all as read" button is disabled when unreadCount === 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component "Mark all as read" button is enabled when unreadCount > 0	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component renders filter chip buttons for all notification types	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows "Showing N notification(s)" summary text	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component clicking a notification row triggers navigate	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows selected count when items are selected	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows "Select all" when no items are selected	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows spinner when mark all read mutation is pending	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component shows "Load more" button when 20 or more notifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component does not show "Load more" button when fewer than 20 notifications	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component "Load more" calls setPage when clicked	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component markAllRead onError calls toast.error with failure message	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component clicking an unread notification calls markNotificationRead	passed
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	notifications.index component clicking a read notification does not call markNotificationRead	passed
+apps/web/src/routes/dashboard/notifications.test.tsx	vitest	notifications layout route exports a route with a component	passed
+apps/web/src/routes/dashboard/notifications.test.tsx	vitest	notifications layout route renders an Outlet	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index loader returns result of fetchNotificationSettings	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component renders channel toggle rows	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component renders the Settings header	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component renders Notifications card title and description	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component push channel switch is disabled when not supported	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component push channel switch is disabled when permission is denied	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component "Send test notification" visible when push.isRegistered	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component "Send test notification" not visible when push is not registered	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component toggling a non-push channel calls updateChannelSetting	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component clicking "Send test notification" calls push.sendTest	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handlePushToggle enables push notifications on checked=true	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handlePushToggle disables push notifications on checked=false	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handlePushToggle shows error toast on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handleSendTest shows error toast on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handleToggle appends new entry when channelType is not in localSettings	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handleToggle reverts localSettings and shows toast.error on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index component handleToggle shows generic message for non-Error exceptions	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	settings.index beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/settings.test.tsx	vitest	settings layout route exports a route with a component	passed
+apps/web/src/routes/dashboard/settings.test.tsx	vitest	settings layout route renders an Outlet	passed
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer renders copyright text with current year	passed
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer renders navigation links	passed
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer renders social links with correct aria labels	passed
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer renders social links with correct hrefs	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header renders all navigation link labels	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header renders logo/home link pointing to "/"	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header renders "Get in Touch" CTA linking to /contact	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header adds shadow class when scrolled down	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header removes shadow class when scrolled back to top	passed
+apps/web/src/app/components/layout/Header.test.tsx	vitest	Header renders child component stubs	passed
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav renders the hamburger menu button	passed
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav renders nav links when sheet is opened	passed
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav shows Sign In button when user is not authenticated	passed
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav shows Dashboard and Sign Out when user is authenticated	passed
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav calls SDK logout when Sign Out is clicked	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu returns null when loading	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows Sign In link when no user	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows user name and initials when authenticated	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows fallback initials when name is a single word	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows fallback "?" when user has no name	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu falls back to email when name is null	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu falls back to "User" when name and email are null	passed
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu sign out calls SDK logout	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the heading with name	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the role title	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the "About Me" badge	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the description text	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the profile image with alt text	passed
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders "Available for Remote Work" text	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders the section heading	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders the section description	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders all timeline entry periods	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders all role titles	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders all company names	passed
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders timeline entry descriptions	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm renders all form fields	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm renders the submit button	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows validation errors when submitted with empty required fields	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows success message after successful submission	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows error toast when submission fails	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows loading spinner while submitting	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm pre-fills email and name when user has both	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm pre-fills only email when user has email but no name	passed
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm pre-fills only name when user has name but no email	passed
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields renders all form fields	passed
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields renders the submit button	passed
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields disables name and email fields when disabledFields is set	passed
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields does not disable fields when disabledFields is not set	passed
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	ContactFormSuccess renders success message	passed
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	ContactFormSuccess renders Send Another Message button	passed
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	ContactFormSuccess calls onSendAnother when button is clicked	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip every STATUS_TO_FRONTEND value maps back to its key via STATUS_TO_API	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip every STATUS_TO_API value maps back to its key via STATUS_TO_FRONTEND	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip both maps have the same number of entries	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_COLORS has an entry for every frontend status	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_COLORS all color strings contain Tailwind class patterns	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_LABELS has an entry for every frontend status	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	vitest	STATUS_LABELS label values match the API status keys (PascalCase)	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	does not fall back to service credentials after session expiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations allows a customer to read their inquiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations denies another customer inquiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations does not let an anonymous inquiry be claimed by matching email	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations allows API-authorized staff to read organization inquiries	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations uses the customer submitted endpoint	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations removes internal comments before returning them to a customer	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations rejects customer internal comments without sending a mutation	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations rejects status changes before invoking the API when staff authorization fails	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	inquiry authorization through generated SDK operations preserves user identity for signed-in submission and supplies nullable company	passed
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useUser returns null user when fetch fails	passed
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useUser returns populated user on success	passed
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useUser calls /auth/me endpoint	passed
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useRequireUser returns isAuthenticated true when user exists	passed
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useRequireUser returns isAuthenticated false when user is null	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders nothing when showcases array is empty	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders the section heading	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders the section description	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders "View all work" link pointing to /projects	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders project card titles	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders project descriptions	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders client names and years	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders at most 3 tags per project	passed
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders project links with correct hrefs	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero renders the headline text	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero renders the description paragraph	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero renders "Available for Projects" status badge	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero renders CTA buttons with correct links	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero renders statistics	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero has an aria-label on the intro section	passed
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero has a key statistics list with correct role	passed
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders the section heading	passed
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders the section description	passed
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders all three service card titles	passed
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders service descriptions	passed
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders skill tags for each service	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders the section heading	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders the section description	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders all four category headings	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders frontend skills	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders backend skills	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders tools skills	passed
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders cloud skills	passed
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	fetchCurrentUserRoles returns roles when user is authenticated	passed
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	fetchCurrentUserRoles returns empty roles when no user is authenticated	passed
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	serverRequireAuth delegates to requireAuth with returnTo	passed
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	serverRequireAuth delegates to requireAuth without returnTo	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell returns null when useUser returns null user	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell renders bell button when user is authenticated	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows badge with unread count when > 0	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell does not show badge when count is 0	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows empty state when popover is opened with no notifications	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell renders notification items in popover when notifications exist	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell calls markAllRead when "Mark all as read" is clicked	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell navigates and marks notification read when clicking a notification	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows toast.error when markAllRead mutation fails	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell subscribes to NotificationCreated and optimistically bumps unread count	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows toast when NotificationCreated fires and tab is visible	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows default toast text when notification has no title	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell does not show toast when tab is hidden	passed
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	NotificationBell shows "View all notifications" link in popover	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow renders notification title and message	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow calls onClick when the row is clicked	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow calls onClick when Enter key is pressed	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow calls onClick when Space key is pressed	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow does not call onClick for other keys	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow shows unread indicator for unread notifications	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow does not show unread indicator for read notifications	passed
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	NotificationRow calls onSelect when checkbox is toggled	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream starts connection on mount and transitions connecting -> connected	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream dispatches generic message events to type-matched subscribers	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream dispatches named SSE events to type-matched subscribers	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream does not dispatch to handlers for non-matching types	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream unsubscribe removes the handler	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect reconnects with exponential backoff on error	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect increases backoff delay for consecutive failures	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect caps backoff at 30 seconds	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream closes EventSource and clears timers on unmount	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream clears reconnect timer on unmount during backoff	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream attempt cap stops reconnecting after 10 consecutive errors	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream connection timeout closes EventSource and transitions to reconnecting after 10s timeout when onopen never fires	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream visibility-aware reconnect reconnects immediately when tab becomes visible while disconnected	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream visibility-aware reconnect resets attempts and reconnects when visible after max attempts reached	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream reconnect SSE event resets attempt counter and schedules fresh connection on named reconnect event	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election broadcasts claim on mount	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election only one EventSource is created when useEventStream is mounted — the tab becomes leader	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election becomes follower when existing leader responds to claim	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election a follower promotes itself to leader after 7s without heartbeat	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election an event message on BroadcastChannel calls follower subscribers without an open EventSource	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election follower promotes itself after receiving leader-resign message and timeout elapses	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election on leader unmount, postMessage is called with { type: "leader-resign" }	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election follower does not reconnect on visibility change	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream ignores malformed message data gracefully	passed
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream using hook outside provider throws	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	useEventStreamEvents subscribes for each event key on mount	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	useEventStreamEvents calls unsubscribe functions on unmount	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	useEventStreamEvents subscribes to a single event	passed
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	useEventStreamEvents handles empty events record	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters returns the full array when no filters are active	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters handleTabChange("unread") filters to unread only and resets page	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters handleTabChange("all") removes unread filter	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters handleTypeFilter filters by type and toggles off on second call	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters unreadCount reflects only unread items regardless of filters	passed
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters combines unread and type filters	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection allSelected is false initially	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection selectAll(true) adds all filtered IDs	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection selectAll(false) clears selection	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection selectOne adds and removes a single ID	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection clearSelection empties the set	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection allSelected is true only when all filtered items are selected	passed
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection allSelected is false when filtered list is empty	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications isSupported is true when serviceWorker and PushManager exist	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications isSupported is false when serviceWorker is missing	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications isSupported is false when PushManager is missing	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications isRegistered is true when listPushDevices returns devices	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications isRegistered is false when listPushDevices returns empty array	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications enable mutation calls fetchVapidPublicKey, registers SW, subscribes, and calls registerPushDevice	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications disable mutation calls deregisterPushDevice with the device id	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications sendTest mutation calls sendTestPush	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications onError callbacks logs to console.error when enable fails	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications onError callbacks logs to console.error when disable fails	passed
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	usePushNotifications onError callbacks logs to console.error when sendTest fails	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	unwraps the published channel settings response	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	normalizes string counts	passed
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	does not send unsupported push subscriptions to the platform	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has the correct slug	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has the correct title	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has a description	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has the correct client	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has the correct year	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has all expected tags	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta is marked as featured	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project meta has an image path	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders without crashing	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Overview heading	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Architecture heading	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Key Features heading	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Technical Highlights heading	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders overview description text	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders architecture description about BFF pattern	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Content Pipeline feature	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the OIDC Authentication feature	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Contact System feature	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Admin Dashboard feature	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders Server Functions highlight	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders File-Based Routing highlight	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders SSR highlight	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders Dark Mode highlight	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders CI/CD highlight	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders all list items in Key Features	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders all list items in Technical Highlights	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions TanStack Start in the architecture	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions PKCE in the OIDC feature description	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions Zod validation in the Contact System	passed
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions Docker in CI/CD highlight	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcases returns an array of ShowcaseMeta objects	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcases does not include the Content component on returned items	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcases returns items with required ShowcaseMeta fields	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcases sorts featured items before non-featured, then by year descending	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcases includes the known project slugs	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getFeaturedShowcases returns only featured entries	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getFeaturedShowcases does not include the Content component	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getFeaturedShowcases is a subset of getShowcases	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getFeaturedShowcases is sorted by year descending among featured items	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcase returns a full Showcase object for a known slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcase returns a full Showcase for the bcordes slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcase returns undefined for an unknown slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcase returns undefined for an empty string slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcaseContent returns a component function for a valid slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcaseContent returns a component function for the bcordes slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcaseContent returns undefined for an invalid slug	passed
+apps/web/src/features/projects/content/index.test.ts	vitest	project content data functions getShowcaseContent returns the same Content as getShowcase	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has the correct slug	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has the correct title	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has a description	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has the correct client	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has the correct year	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has all expected tags	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta is marked as featured	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project meta has an image path	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders without crashing	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Overview heading	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Architecture heading	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Key Modules heading	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Technical Highlights heading	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders overview description text	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders architecture description text	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Identity & Auth module	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Billing module	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Storage module	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Messaging module	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Showcases module	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Multi-tenancy highlight	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders OpenIddict Integration highlight	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Rate Limiting highlight	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders API Standards highlight	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Infrastructure highlight	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders all list items in Key Modules	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders all list items in Technical Highlights	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content mentions PKCE in multiple sections	passed
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content mentions PostgreSQL in Infrastructure	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders title, year, and description	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders a link whose href includes the slug	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders tags as badges	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard shows overflow count when more than 3 tags	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard only renders first 3 tags	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard does not render overflow badge when 3 or fewer tags	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders image when provided	passed
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders first letter placeholder when no image	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter renders all tag buttons plus the "All" button	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter calls onTagChange with the tag when a tag button is clicked	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter calls onTagChange with null when "All" is clicked	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter renders selected tag badge with active styling	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter renders "All" badge as selected when no tag is selected	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter renders all year buttons plus the "All Years" button	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter calls onYearChange with the year when a year button is clicked	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter calls onYearChange with null when "All Years" is clicked	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter renders selected year badge with active styling	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter renders "All Years" as selected when no year is selected	passed
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter renders section headings	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	vitest	invalidateNotifications invalidates the notifications list query	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	vitest	invalidateNotifications invalidates the unread-count query	passed
+apps/web/src/features/notifications/lib/query-utils.test.ts	vitest	invalidateNotifications calls invalidateQueries exactly twice	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute actionUrl takes priority returns actionUrl verbatim when present, regardless of type	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskAssigned with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskCompleted with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskComment with entityId produces /dashboard/tasks/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquirySubmitted with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryStatusChanged with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryComment with entityId produces /dashboard/inquiries/:entityId	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute billing type BillingInvoice produces /dashboard/billing	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute unknown type falls back returns /dashboard/notifications for an unrecognized type	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskAssigned without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskCompleted without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskComment without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquirySubmitted without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquiryStatusChanged without entityId falls back to /dashboard/notifications	passed
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquiryComment without entityId falls back to /dashboard/notifications	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView renders children	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView applies hidden classes when isVisible is false and motion not reduced	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView applies visible classes when isVisible is true	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView shows children visible regardless when reducedMotion is true	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView sets transitionDelay to 0ms when reducedMotion is true	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView reflects delay prop in transitionDelay style	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView applies custom className	passed
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	FadeInView passes threshold to useScrollAnimation	passed
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion returns false when prefers-reduced-motion is not set	passed
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion returns true when prefers-reduced-motion is set	passed
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion responds to change events	passed
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion cleans up event listener on unmount	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation isVisible starts as false	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation becomes true on intersection	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation passes options to IntersectionObserver	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation unobserves element after intersection when triggerOnce is true (default)	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation toggles visibility when triggerOnce is false	passed
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.ts	vitest	useScrollAnimation cleans up observer on unmount	passed
+apps/web/e2e/tests/contact-form.spec.ts	playwright	Contact Form > submitting with all fields empty shows client-side validation errors without a network request	expected
+apps/web/e2e/tests/contact-form.spec.ts	playwright	Contact Form > filling valid fields and submitting shows success confirmation	expected
+apps/web/e2e/tests/contact-form.spec.ts	playwright	Contact Form > "Send Another Message" resets the form to its empty initial state	expected
+apps/web/e2e/tests/dashboard.spec.ts	playwright	authenticated session reaches inquiries through the real server	expected
+apps/web/e2e/tests/dashboard.spec.ts	playwright	notification bell displays backend data and marks it read	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	project navigation opens detail and unknown projects show not found	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	unauthenticated dashboard access redirects to login	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Home page > loads with 200 status and displays the hero headline	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Home page > displays hero call-to-action buttons	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Home page > displays key statistics	unexpected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Home page > has navigation links pointing to correct hrefs	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > About page > loads and contains the about section heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > About page > displays the role subtitle	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > About page > displays the "My Approach" values section	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > About page > has navigation links visible	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Projects page > loads and displays the page heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Projects page > lists at least one project card	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Projects page > displays project count text	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Projects page > has navigation links visible	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Contact page > loads and renders the page heading	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Contact page > renders the contact form with required fields	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Contact page > renders contact information section	expected
+apps/web/e2e/tests/public-pages.spec.ts	playwright	Public Pages > Contact page > has navigation links visible	expected
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	SDK session survives rejected logout and direct API access is restricted	expected
