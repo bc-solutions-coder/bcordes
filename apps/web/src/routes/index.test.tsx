@@ -1,120 +1,99 @@
-import { afterEach, assert, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, screen } from '@testing-library/react'
+import { createMockUser } from '@bcordes/auth/testing'
+import { renderFileRoute } from '../../testing/render-file-route'
+import { controlIntersections, controlMotion } from '../../testing/motion'
+import { Route } from './index'
+import type { useUser } from '@/shared/auth'
 
-const mockShowcases = [
-  {
-    slug: 'test-project',
-    title: 'Test Project',
-    description: 'A test project',
-    client: 'Test Client',
-    year: 2025,
-    tags: ['React'],
-    featured: true,
-  },
-]
+const { identity } = vi.hoisted(() => ({ identity: vi.fn<typeof useUser>() }))
+vi.mock('@/shared/auth', () => ({ useUser: identity }))
 
-const { capturedLoader } = vi.hoisted(() => ({
-  capturedLoader: vi.fn<() => unknown>(),
-}))
+beforeEach(() => {
+  identity.mockReturnValue({ user: null, isLoading: false })
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    ...rest
-  }: {
-    to: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  ),
-  createFileRoute:
-    () =>
-    (config: { loader: () => unknown; component: React.ComponentType }) => {
-      capturedLoader.mockImplementation(config.loader)
-      return {
-        options: config,
-        useLoaderData: () => ({ showcases: mockShowcases }),
+describe('Home page', () => {
+  it('loads featured projects for the home page', async () => {
+    await renderFileRoute(Route, '/')
+    expect(screen.getByRole('link', { name: /Bcordes/ })).toHaveAttribute(
+      'href',
+      '/projects/bcordes',
+    )
+    expect(screen.getByRole('link', { name: /Wallow/ })).toHaveAttribute(
+      'href',
+      '/projects/wallow',
+    )
+  })
+
+  it('renders the introduction, services, featured work, and skills on the home page', async () => {
+    await renderFileRoute(Route, '/')
+    expect(
+      screen.getByRole('heading', {
+        name: /^Professional\s*Software Engineering$/,
+        level: 1,
+      }),
+    ).toBeInTheDocument()
+    for (const name of [
+      'What I Do',
+      'Featured Work',
+      'Technologies & Skills',
+    ]) {
+      expect(
+        screen.getByRole('heading', { name, level: 2 }),
+      ).toBeInTheDocument()
+    }
+    expect(screen.getByText('Frontend Development')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Bcordes/ })).toHaveAttribute(
+      'href',
+      '/projects/bcordes',
+    )
+  })
+
+  it('renders "Let\'s Work Together" section', async () => {
+    await renderFileRoute(Route, '/')
+    expect(
+      screen.getByRole('heading', { name: "Let's Work Together", level: 2 }),
+    ).toBeInTheDocument()
+  })
+
+  it.each([
+    { label: 'visitor', user: null, contact: true },
+    {
+      label: 'customer',
+      user: createMockUser({ permissions: [] }),
+      contact: true,
+    },
+    {
+      label: 'inquiry staff',
+      user: createMockUser({ permissions: ['InquiriesRead'] }),
+      contact: false,
+    },
+  ])(
+    'offers contact links to a $label according to inquiry-read permission',
+    async ({ user, contact }) => {
+      identity.mockReturnValue({ user, isLoading: false })
+      await renderFileRoute(Route, '/')
+      if (contact) {
+        const links = screen.getAllByRole('link', { name: 'Get in Touch' })
+        expect(links).toHaveLength(2)
+        for (const link of links)
+          expect(link).toHaveAttribute('href', '/contact')
+      } else {
+        expect(
+          screen.queryByRole('link', { name: 'Get in Touch' }),
+        ).not.toBeInTheDocument()
+        expect(
+          screen.queryByRole('heading', { name: "Let's Work Together" }),
+        ).not.toBeInTheDocument()
       }
     },
-}))
-
-vi.mock('@/features/home', () => ({
-  Hero: () => <div data-testid="hero">Hero</div>,
-  ServicesGrid: () => <div data-testid="services-grid">ServicesGrid</div>,
-  SkillsShowcase: () => <div data-testid="skills-showcase">SkillsShowcase</div>,
-  FeaturedWork: ({ showcases }: { showcases: Array<unknown> }) => (
-    <div data-testid="featured-work">
-      FeaturedWork: {showcases.length} items
-    </div>
-  ),
-}))
-
-vi.mock('@/features/projects', () => ({
-  getFeaturedShowcases: () => mockShowcases,
-}))
-
-vi.mock('@/shared/auth', () => ({
-  useUser: () => ({ user: null, isLoading: false }),
-}))
-
-describe('index route', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
-  describe('Route config', () => {
-    it('exports a route config with component and loader', async () => {
-      const mod = await import('./index')
-      expect(mod.Route).toBeDefined()
-      expect(mod.Route.options).toHaveProperty('component')
-      expect(mod.Route.options).toHaveProperty('loader')
-    })
-
-    it('loader returns showcases from getFeaturedShowcases', async () => {
-      await import('./index')
-      expect(capturedLoader()).toEqual({ showcases: mockShowcases })
-    })
-  })
-
-  describe('HomePage component', () => {
-    it('renders Hero, ServicesGrid, FeaturedWork, and SkillsShowcase', async () => {
-      const mod = await import('./index')
-      const HomePage = mod.Route.options.component
-      assert(HomePage)
-      render(<HomePage />)
-      expect(screen.getByTestId('hero')).toBeTruthy()
-      expect(screen.getByTestId('services-grid')).toBeTruthy()
-      expect(screen.getByTestId('featured-work')).toBeTruthy()
-      expect(screen.getByTestId('skills-showcase')).toBeTruthy()
-    })
-
-    it('passes showcases to FeaturedWork', async () => {
-      const mod = await import('./index')
-      const HomePage = mod.Route.options.component
-      assert(HomePage)
-      render(<HomePage />)
-      expect(screen.getByText('FeaturedWork: 1 items')).toBeTruthy()
-    })
-
-    it('renders "Let\'s Work Together" section', async () => {
-      const mod = await import('./index')
-      const HomePage = mod.Route.options.component
-      assert(HomePage)
-      render(<HomePage />)
-      expect(screen.getByText("Let's Work Together")).toBeTruthy()
-    })
-
-    it('renders Get in Touch link to /contact', async () => {
-      const mod = await import('./index')
-      const HomePage = mod.Route.options.component
-      assert(HomePage)
-      render(<HomePage />)
-      const link = screen.getByText('Get in Touch')
-      expect(link.closest('a')?.getAttribute('href')).toBe('/contact')
-    })
-  })
+  )
 })

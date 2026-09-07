@@ -1,19 +1,23 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
 import { AboutHero } from './AboutHero'
 
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}))
-
 describe('AboutHero', () => {
+  beforeEach(() => {
+    controlMotion(true)
+    controlIntersections()
+  })
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
-  it('renders the heading with name', () => {
+  it('shows Bryan Cordes as the page heading', () => {
     render(<AboutHero />)
-    expect(screen.getByText('Bryan Cordes')).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Bryan Cordes', level: 1 }),
+    ).toBeTruthy()
   })
 
   it('renders the role title', () => {
@@ -26,7 +30,7 @@ describe('AboutHero', () => {
     expect(screen.getByText('About Me')).toBeTruthy()
   })
 
-  it('renders the description text', () => {
+  it('introduces Bryan as a passionate software engineer', () => {
     render(<AboutHero />)
     expect(screen.getByText(/passionate software engineer/i)).toBeTruthy()
   })

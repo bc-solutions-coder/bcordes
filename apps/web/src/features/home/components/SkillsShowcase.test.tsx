@@ -1,34 +1,46 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
 import { SkillsShowcase } from './SkillsShowcase'
 
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}))
-
 describe('SkillsShowcase', () => {
+  beforeEach(() => {
+    controlMotion(true)
+    controlIntersections()
+  })
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
-  it('renders the section heading', () => {
+  it('shows Technologies & Skills as a section heading', () => {
     render(<SkillsShowcase />)
-    expect(screen.getByText('Technologies & Skills')).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Technologies & Skills', level: 2 }),
+    ).toBeTruthy()
   })
 
-  it('renders the section description', () => {
+  it('introduces the professional technology toolkit', () => {
     render(<SkillsShowcase />)
     expect(
       screen.getByText(/comprehensive toolkit built over years/i),
     ).toBeTruthy()
   })
 
-  it('renders all four category headings', () => {
+  it('shows Frontend, Backend, Tools, and Cloud as category headings', () => {
     render(<SkillsShowcase />)
-    expect(screen.getByText('Frontend')).toBeTruthy()
-    expect(screen.getByText('Backend')).toBeTruthy()
-    expect(screen.getByText('Tools')).toBeTruthy()
-    expect(screen.getByText('Cloud')).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Frontend', level: 3 }),
+    ).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Backend', level: 3 }),
+    ).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Tools', level: 3 }),
+    ).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Cloud', level: 3 }),
+    ).toBeTruthy()
   })
 
   it('renders frontend skills', () => {

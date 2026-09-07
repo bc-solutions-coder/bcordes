@@ -1,73 +1,30 @@
-import { afterEach, assert, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, screen } from '@testing-library/react'
+import { renderFileRoute } from '../../testing/render-file-route'
+import { controlIntersections, controlMotion } from '../../testing/motion'
+import { Route } from './resume'
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => ({
-    options: config,
-  }),
-}))
+beforeEach(() => {
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-vi.mock('lucide-react', () => ({
-  Download: (props: Record<string, unknown>) => (
-    <svg data-testid="download-icon" {...props} />
-  ),
-}))
-
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({
-    children,
-    ...rest
-  }: {
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <div data-testid="fade-in-view" {...rest}>
-      {children}
-    </div>
-  ),
-}))
-
-vi.mock('@bcordes/ui/components/badge', () => ({
-  Badge: ({
-    children,
-    ...rest
-  }: {
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <span data-testid="badge" {...rest}>
-      {children}
-    </span>
-  ),
-}))
-
-describe('resume route', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
-  describe('Route config', () => {
-    it('exports a route config with component', async () => {
-      const mod = await import('./resume')
-      expect(mod.Route).toBeDefined()
-      expect(mod.Route.options).toHaveProperty('component')
-    })
-  })
-
-  describe('ResumePage component', () => {
-    it('renders page heading', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
-      expect(screen.getByText('Resume')).toBeTruthy()
+describe('Resume page', () => {
+  describe('Page content', () => {
+    it('renders Resume as the page heading', async () => {
+      await renderFileRoute(Route, '/resume')
+      expect(
+        screen.getByRole('heading', { name: 'Resume', level: 1 }),
+      ).toBeTruthy()
     })
 
-    it('renders experience subtitle', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
+    it('states seven-plus years of professional engineering experience', async () => {
+      await renderFileRoute(Route, '/resume')
       expect(
         screen.getByText(
           '7+ years of professional software engineering experience',
@@ -75,22 +32,17 @@ describe('resume route', () => {
       ).toBeTruthy()
     })
 
-    it('renders Download PDF link', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
-      const downloadLink = screen.getByText('Download PDF')
+    it('offers the resume PDF as a download', async () => {
+      await renderFileRoute(Route, '/resume')
+      const downloadLink = screen.getByRole('link', { name: 'Download PDF' })
+      expect(downloadLink).toHaveAttribute('download')
       expect(downloadLink.closest('a')?.getAttribute('href')).toBe(
         '/Cordes-Resume.pdf',
       )
     })
 
-    it('renders Experience section with all jobs', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
+    it('lists the current employers and engineering roles', async () => {
+      await renderFileRoute(Route, '/resume')
       expect(screen.getByText('Experience')).toBeTruthy()
       expect(
         screen.getAllByText(
@@ -106,10 +58,7 @@ describe('resume route', () => {
     })
 
     it('renders Skills section with categories', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
+      await renderFileRoute(Route, '/resume')
       expect(screen.getByText('Skills')).toBeTruthy()
       expect(screen.getByText('Frontend')).toBeTruthy()
       expect(screen.getByText('Backend')).toBeTruthy()
@@ -118,11 +67,8 @@ describe('resume route', () => {
       expect(screen.getByText('Databases')).toBeTruthy()
     })
 
-    it('renders skill badges', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
+    it('lists TypeScript, React, Node.js, and Docker skills', async () => {
+      await renderFileRoute(Route, '/resume')
       expect(screen.getByText('TypeScript')).toBeTruthy()
       expect(screen.getByText('React')).toBeTruthy()
       expect(screen.getByText('Node.js')).toBeTruthy()
@@ -130,10 +76,7 @@ describe('resume route', () => {
     })
 
     it('renders Education section', async () => {
-      const mod = await import('./resume')
-      const ResumePage = mod.Route.options.component
-      assert(ResumePage)
-      render(<ResumePage />)
+      await renderFileRoute(Route, '/resume')
       expect(screen.getByText('Education')).toBeTruthy()
       expect(
         screen.getByText('Bachelor of Science, Software Engineering'),

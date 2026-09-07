@@ -1,313 +1,241 @@
 import { createMockUser } from '@bcordes/auth/testing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
-import { toast } from 'sonner'
+import { Toaster } from 'sonner'
 import { renderWithProviders } from '@bcordes/test-utils'
 import { ContactForm } from './ContactForm'
 import type { useUser } from '@/shared/auth'
 
-const mockSubmitInquiry = vi.fn()
-const mockUseUser = vi.fn<typeof useUser>(() => ({
-  user: null,
-  isLoading: false,
+const { submit, identity } = vi.hoisted(() => ({
+  submit: vi.fn<(...args: Array<unknown>) => Promise<unknown>>(),
+  identity: vi.fn<typeof useUser>(),
 }))
+vi.mock('@/features/inquiries', () => ({ submitInquiry: submit }))
+vi.mock('@/shared/auth', () => ({ useUser: identity }))
 
-vi.mock('@/features/inquiries', () => ({
-  submitInquiry: (...args: Array<unknown>) => mockSubmitInquiry(...args),
-}))
+beforeEach(() => {
+  submit.mockReset().mockResolvedValue({ id: '123', status: 'new' })
+  identity.mockReturnValue({ user: null, isLoading: false })
+})
+afterEach(() => {
+  cleanup()
+  vi.restoreAllMocks()
+})
 
-vi.mock('@/shared/auth', () => ({
-  useUser: () => mockUseUser(),
-}))
+function showForm() {
+  return renderWithProviders(
+    <>
+      <ContactForm />
+      <Toaster />
+    </>,
+  )
+}
 
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}))
-
-// Browser APIs missing from jsdom.
-Element.prototype.scrollIntoView = vi.fn()
-
-Element.prototype.hasPointerCapture = vi.fn()
-Element.prototype.setPointerCapture = vi.fn()
-Element.prototype.releasePointerCapture = vi.fn()
+async function enterInquiry() {
+  for (const [label, value] of [
+    ['Name', 'John Doe'],
+    ['Email', 'john@example.com'],
+    ['Message', 'Please build an accessible client portal.'],
+  ])
+    fireEvent.change(
+      screen.getByRole('textbox', { name: new RegExp(`^${label}`) }),
+      { target: { value } },
+    )
+  for (const [name, option] of [
+    ['Project Type', 'Frontend Development'],
+    ['Budget Range', '$5k - $15k'],
+    ['Timeline', '1 - 3 months'],
+  ]) {
+    fireEvent.click(screen.getByRole('combobox', { name: new RegExp(name) }))
+    fireEvent.click(await screen.findByRole('option', { name: option }))
+  }
+}
+const inquiry = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  phone: '',
+  company: undefined,
+  projectType: 'Frontend',
+  budgetRange: '$5k-$15k',
+  timeline: '1-3 months',
+  message: 'Please build an accessible client portal.',
+}
 
 describe('ContactForm', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    cleanup()
-  })
-
-  it('renders all form fields', () => {
-    renderWithProviders(<ContactForm />)
-
-    expect(screen.getByLabelText(/^Name/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Email/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Phone/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Company/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Message/)).toBeInTheDocument()
-    const comboboxes = screen.getAllByRole('combobox')
-    expect(comboboxes).toHaveLength(3)
-    expect(screen.getByText(/Project Type/)).toBeInTheDocument()
-    expect(screen.getByText(/Budget Range/)).toBeInTheDocument()
-    expect(screen.getByText(/Timeline/)).toBeInTheDocument()
-  })
-
-  it('renders the submit button', () => {
-    renderWithProviders(<ContactForm />)
-
-    expect(
-      screen.getByRole('button', { name: 'Send Message' }),
-    ).toBeInTheDocument()
-  })
-
-  it('shows validation errors when submitted with empty required fields', async () => {
-    renderWithProviders(<ContactForm />)
-
-    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('Name is required')).toBeInTheDocument()
-    })
-    expect(screen.getByText('Email is required')).toBeInTheDocument()
-    expect(screen.getByText('Message is required')).toBeInTheDocument()
-    expect(screen.getByText('Please select a project type')).toBeInTheDocument()
-    expect(screen.getByText('Please select a budget range')).toBeInTheDocument()
-    expect(screen.getByText('Please select a timeline')).toBeInTheDocument()
-  })
-
-  it('shows success message after successful submission', async () => {
-    mockSubmitInquiry.mockResolvedValueOnce({
-      id: '123',
-      status: 'new',
-    })
-
-    renderWithProviders(<ContactForm />)
-
-    fireEvent.change(screen.getByLabelText(/^Name/), {
-      target: { value: 'John Doe' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Email/), {
-      target: { value: 'john@example.com' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Message/), {
-      target: { value: 'This is a test message for the form.' },
-    })
-
-    const comboboxes = screen.getAllByRole('combobox')
-
-    fireEvent.click(comboboxes[0])
-    await waitFor(() => {
+  it('offers labeled contact fields and project selectors', () => {
+    showForm()
+    for (const name of ['Name', 'Email', 'Phone', 'Company', 'Message']) {
       expect(
-        screen.getByRole('option', { name: 'Frontend Development' }),
-      ).toBeInTheDocument()
+        screen.getByRole('textbox', { name: new RegExp(`^${name}`) }),
+      ).toHaveValue('')
+    }
+    for (const name of ['Project Type', 'Budget Range', 'Timeline']) {
+      expect(
+        screen.getByRole('combobox', { name: new RegExp(name) }),
+      ).toBeEnabled()
+    }
+  })
+
+  it('shows required-field errors without submitting an empty form', async () => {
+    showForm()
+    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
+    expect(await screen.findByText('Name is required')).toBeVisible()
+    for (const message of [
+      'Email is required',
+      'Message is required',
+      'Please select a project type',
+      'Please select a budget range',
+      'Please select a timeline',
+    ]) {
+      expect(screen.getByText(message)).toBeVisible()
+    }
+    expect(submit).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Send Message' })).toBeEnabled()
+  })
+
+  it('submits entered inquiry details and lets the visitor start another message', async () => {
+    showForm()
+    await enterInquiry()
+    fireEvent.change(screen.getByRole('textbox', { name: 'Phone' }), {
+      target: { value: '555-123-4567' },
+    })
+    fireEvent.change(screen.getByRole('textbox', { name: 'Company' }), {
+      target: { value: 'Acme' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
+    expect(await screen.findByText('Message Sent!')).toBeVisible()
+    expect(submit).toHaveBeenCalledExactlyOnceWith({
+      data: { ...inquiry, phone: '555-123-4567', company: 'Acme' },
     })
     fireEvent.click(
-      screen.getByRole('option', { name: 'Frontend Development' }),
-    )
-
-    fireEvent.click(comboboxes[1])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '$5k - $15k' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
-
-    fireEvent.click(comboboxes[2])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '1 - 3 months' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '1 - 3 months' }))
-
-    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('Message Sent!')).toBeInTheDocument()
-    })
-
-    expect(mockSubmitInquiry).toHaveBeenCalledOnce()
-    expect(
       screen.getByRole('button', { name: 'Send Another Message' }),
-    ).toBeInTheDocument()
-  })
-
-  it('shows error toast when submission fails', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    mockSubmitInquiry.mockRejectedValueOnce(new Error('Network error'))
-
-    renderWithProviders(<ContactForm />)
-
-    fireEvent.change(screen.getByLabelText(/^Name/), {
-      target: { value: 'John Doe' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Email/), {
-      target: { value: 'john@example.com' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Message/), {
-      target: { value: 'This is a test message for the form.' },
-    })
-
-    const comboboxes = screen.getAllByRole('combobox')
-
-    fireEvent.click(comboboxes[0])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: 'Frontend Development' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(
-      screen.getByRole('option', { name: 'Frontend Development' }),
     )
-
-    fireEvent.click(comboboxes[1])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '$5k - $15k' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
-
-    fireEvent.click(comboboxes[2])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '1 - 3 months' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '1 - 3 months' }))
-
-    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
-
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('Failed to send message', {
-        description: 'Please try again or email me directly.',
+    for (const name of ['Name', 'Email', 'Phone', 'Company', 'Message']) {
+      const field = screen.getByRole('textbox', {
+        name: new RegExp(`^${name}`),
       })
-    })
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Contact form submission error:',
-      expect.any(Error),
-    )
-
-    expect(screen.queryByText('Message Sent!')).not.toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: 'Send Message' }),
-    ).toBeInTheDocument()
-
-    consoleSpy.mockRestore()
+      expect(field).toHaveValue('')
+      expect(field).toBeEnabled()
+    }
+    for (const [name, placeholder] of [
+      ['Project Type', 'Select project type'],
+      ['Budget Range', 'Select budget range'],
+      ['Timeline', 'Select timeline'],
+    ]) {
+      expect(
+        screen.getByRole('combobox', { name: new RegExp(name) }),
+      ).toHaveTextContent(placeholder)
+    }
+    expect(screen.getByRole('button', { name: 'Send Message' })).toBeEnabled()
+    expect(submit).toHaveBeenCalledTimes(1)
   })
 
-  it('shows loading spinner while submitting', async () => {
-    // Defer resolution to observe the pending state.
-    let resolveSubmit: (value: unknown) => void
-    mockSubmitInquiry.mockImplementation(
+  it('normalizes omitted optional fields when submitting a message', async () => {
+    showForm()
+    await enterInquiry()
+    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
+    expect(await screen.findByText('Message Sent!')).toBeVisible()
+    expect(submit).toHaveBeenCalledExactlyOnceWith({ data: inquiry })
+  })
+
+  it('shows failure feedback and preserves entered details for retry', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    submit.mockRejectedValueOnce(new Error('Network error'))
+    showForm()
+    await enterInquiry()
+    fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
+    expect(await screen.findByText('Failed to send message')).toBeVisible()
+    expect(
+      screen.getByText('Please try again or email me directly.'),
+    ).toBeVisible()
+    expect(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue(
+      inquiry.name,
+    )
+    expect(screen.getByRole('textbox', { name: /^Email/ })).toHaveValue(
+      inquiry.email,
+    )
+    expect(screen.getByRole('textbox', { name: /^Message/ })).toHaveValue(
+      inquiry.message,
+    )
+    expect(screen.queryByText('Message Sent!')).not.toBeInTheDocument()
+    const retry = screen.getByRole('button', { name: 'Send Message' })
+    expect(retry).toBeEnabled()
+    fireEvent.click(retry)
+    expect(await screen.findByText('Message Sent!')).toBeVisible()
+    expect(submit).toHaveBeenNthCalledWith(2, { data: inquiry })
+  })
+
+  it('disables submission and shows Sending while the request is pending', async () => {
+    let complete: () => void = () => {
+      throw new Error('Request has not started')
+    }
+    submit.mockImplementationOnce(
       () =>
-        new Promise((resolve) => {
-          resolveSubmit = resolve
+        new Promise<void>((resolve) => {
+          complete = resolve
         }),
     )
-
-    renderWithProviders(<ContactForm />)
-
-    fireEvent.change(screen.getByLabelText(/^Name/), {
-      target: { value: 'John Doe' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Email/), {
-      target: { value: 'john@example.com' },
-    })
-    fireEvent.change(screen.getByLabelText(/^Message/), {
-      target: { value: 'This is a test message for the form.' },
-    })
-
-    const comboboxes = screen.getAllByRole('combobox')
-
-    fireEvent.click(comboboxes[0])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: 'Frontend Development' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(
-      screen.getByRole('option', { name: 'Frontend Development' }),
-    )
-
-    fireEvent.click(comboboxes[1])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '$5k - $15k' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '$5k - $15k' }))
-
-    fireEvent.click(comboboxes[2])
-    await waitFor(() => {
-      expect(
-        screen.getByRole('option', { name: '1 - 3 months' }),
-      ).toBeInTheDocument()
-    })
-    fireEvent.click(screen.getByRole('option', { name: '1 - 3 months' }))
-
+    showForm()
+    await enterInquiry()
     fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('Sending...')).toBeInTheDocument()
-    })
-    const submitButton = screen.getByRole('button', { name: /Sending/ })
-    expect(submitButton).toBeDisabled()
-
-    resolveSubmit!({ id: '123', status: 'new' })
-
-    await waitFor(() => {
-      expect(screen.getByText('Message Sent!')).toBeInTheDocument()
-    })
+    expect(
+      await screen.findByRole('button', { name: /Sending/ }),
+    ).toBeDisabled()
+    complete()
+    expect(await screen.findByText('Message Sent!')).toBeVisible()
   })
 
-  it('pre-fills email and name when user has both', async () => {
-    mockUseUser.mockReturnValue({
+  it('pre-fills and locks the signed-in name and email', async () => {
+    identity.mockReturnValue({
       user: createMockUser({ email: 'jane@example.com', name: 'Jane Smith' }),
       isLoading: false,
     })
-
-    renderWithProviders(<ContactForm />)
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/^Email/)).toHaveValue('jane@example.com')
-    })
-    expect(screen.getByLabelText(/^Name/)).toHaveValue('Jane Smith')
+    showForm()
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /^Email/ })).toHaveValue(
+        'jane@example.com',
+      ),
+    )
+    expect(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue(
+      'Jane Smith',
+    )
+    expect(screen.getByRole('textbox', { name: /^Name/ })).toBeDisabled()
+    expect(screen.getByRole('textbox', { name: /^Email/ })).toBeDisabled()
   })
 
-  it('pre-fills only email when user has email but no name', async () => {
-    mockUseUser.mockReturnValue({
+  it('locks a known email while leaving a missing name editable', async () => {
+    identity.mockReturnValue({
       user: createMockUser({ email: 'jane@example.com', name: '' }),
       isLoading: false,
     })
-
-    renderWithProviders(<ContactForm />)
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/^Email/)).toHaveValue('jane@example.com')
-    })
-    expect(screen.getByLabelText(/^Name/)).toHaveValue('')
+    showForm()
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /^Email/ })).toHaveValue(
+        'jane@example.com',
+      ),
+    )
+    expect(screen.getByRole('textbox', { name: /^Email/ })).toBeDisabled()
+    const name = screen.getByRole('textbox', { name: /^Name/ })
+    expect(name).toBeEnabled()
+    fireEvent.change(name, { target: { value: 'Jane Smith' } })
+    expect(name).toHaveValue('Jane Smith')
   })
 
-  it('pre-fills only name when user has name but no email', async () => {
-    mockUseUser.mockReturnValue({
+  it('locks a known name while leaving a missing email editable', async () => {
+    identity.mockReturnValue({
       user: createMockUser({ email: '', name: 'Jane Smith' }),
       isLoading: false,
     })
-
-    renderWithProviders(<ContactForm />)
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/^Name/)).toHaveValue('Jane Smith')
-    })
-    expect(screen.getByLabelText(/^Email/)).toHaveValue('')
+    showForm()
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue(
+        'Jane Smith',
+      ),
+    )
+    expect(screen.getByRole('textbox', { name: /^Name/ })).toBeDisabled()
+    const email = screen.getByRole('textbox', { name: /^Email/ })
+    expect(email).toBeEnabled()
+    fireEvent.change(email, { target: { value: 'jane@example.com' } })
+    expect(email).toHaveValue('jane@example.com')
   })
 })

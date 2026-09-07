@@ -11,14 +11,6 @@ describe('ContactFormSuccess', () => {
     expect(screen.getByText(/Thanks for reaching out/)).toBeInTheDocument()
   })
 
-  it('renders Send Another Message button', () => {
-    renderWithProviders(<ContactFormSuccess onSendAnother={vi.fn()} />)
-
-    expect(
-      screen.getByRole('button', { name: 'Send Another Message' }),
-    ).toBeInTheDocument()
-  })
-
   it('calls onSendAnother when button is clicked', () => {
     const onSendAnother = vi.fn()
     renderWithProviders(<ContactFormSuccess onSendAnother={onSendAnother} />)

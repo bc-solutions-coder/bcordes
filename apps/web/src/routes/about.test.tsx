@@ -1,93 +1,96 @@
-import { afterEach, assert, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, screen } from '@testing-library/react'
+import { createMockUser } from '@bcordes/auth/testing'
+import { renderFileRoute } from '../../testing/render-file-route'
+import { controlIntersections, controlMotion } from '../../testing/motion'
+import { Route } from './about'
+import type { useUser } from '@/shared/auth'
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => ({
-    options: config,
-  }),
+const { identity } = vi.hoisted(() => ({
+  identity: vi.fn<typeof useUser>(),
 }))
+vi.mock('@/shared/auth', () => ({ useUser: identity }))
+beforeEach(() => {
+  identity.mockReturnValue({ user: null, isLoading: false })
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-vi.mock('@/features/about', async () => ({
-  ...(await vi.importActual('@/features/about')),
-  AboutHero: () => <div data-testid="about-hero">AboutHero</div>,
-  Timeline: () => <div data-testid="timeline">Timeline</div>,
-}))
-
-vi.mock('@/shared/auth', () => ({
-  useUser: () => ({ user: null, isLoading: false }),
-}))
-
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({
-    children,
-    ...rest
-  }: {
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <div data-testid="fade-in-view" {...rest}>
-      {children}
-    </div>
-  ),
-}))
-
-describe('about route', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
-  describe('Route config', () => {
-    it('exports a route config with component', async () => {
-      const mod = await import('./about')
-      expect(mod.Route).toBeDefined()
-      expect(mod.Route.options).toHaveProperty('component')
-    })
-  })
-
-  describe('AboutPage component', () => {
-    it('renders AboutHero', async () => {
-      const mod = await import('./about')
-      const AboutPage = mod.Route.options.component
-      assert(AboutPage)
-      render(<AboutPage />)
-      expect(screen.getByTestId('about-hero')).toBeTruthy()
+describe('About page', () => {
+  describe('Page content', () => {
+    it('renders the introduction when visiting the about page', async () => {
+      await renderFileRoute(Route, '/about')
+      expect(
+        screen.getByRole('heading', { name: 'Bryan Cordes', level: 1 }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/passionate software engineer/),
+      ).toBeInTheDocument()
     })
 
-    it('renders Timeline', async () => {
-      const mod = await import('./about')
-      const AboutPage = mod.Route.options.component
-      assert(AboutPage)
-      render(<AboutPage />)
-      expect(screen.getByTestId('timeline')).toBeTruthy()
+    it('includes career history on the about page', async () => {
+      await renderFileRoute(Route, '/about')
+      expect(
+        screen.getByRole('heading', { name: 'Career Journey', level: 2 }),
+      ).toBeInTheDocument()
+      expect(screen.getByText('Intterra')).toBeInTheDocument()
     })
 
     it('renders My Approach section', async () => {
-      const mod = await import('./about')
-      const AboutPage = mod.Route.options.component
-      assert(AboutPage)
-      render(<AboutPage />)
-      expect(screen.getByText('My Approach')).toBeTruthy()
+      await renderFileRoute(Route, '/about')
+      expect(
+        screen.getByRole('heading', { name: 'My Approach', level: 2 }),
+      ).toBeTruthy()
     })
 
-    it('renders all four value cards', async () => {
-      const mod = await import('./about')
-      const AboutPage = mod.Route.options.component
-      assert(AboutPage)
-      render(<AboutPage />)
+    it('names the four development principles', async () => {
+      await renderFileRoute(Route, '/about')
       expect(screen.getByText('Quality-Driven Development')).toBeTruthy()
       expect(screen.getByText('Clear Communication')).toBeTruthy()
       expect(screen.getByText('Modern Tech Stack')).toBeTruthy()
       expect(screen.getByText('Client-Focused Solutions')).toBeTruthy()
     })
 
-    it('renders CTA section with Get in Touch link', async () => {
-      const mod = await import('./about')
-      const AboutPage = mod.Route.options.component
-      assert(AboutPage)
-      render(<AboutPage />)
+    it('offers a contact invitation to a signed-out visitor', async () => {
+      await renderFileRoute(Route, '/about')
       expect(screen.getByText("Let's Build Something Great")).toBeTruthy()
-      const link = screen.getByText('Get in Touch')
+      const link = screen.getByRole('link', { name: 'Get in Touch' })
       expect(link.closest('a')?.getAttribute('href')).toBe('/contact')
     })
   })
+  it.each([
+    { label: 'customer', permissions: [], contact: true },
+    { label: 'inquiry staff', permissions: ['InquiriesRead'], contact: false },
+  ])(
+    'offers a contact invitation to $label according to permission',
+    async ({ permissions, contact }) => {
+      identity.mockReturnValue({
+        user: createMockUser({ permissions }),
+        isLoading: false,
+      })
+      await renderFileRoute(Route, '/about')
+      if (contact) {
+        expect(
+          screen.getByRole('heading', { name: "Let's Build Something Great" }),
+        ).toBeInTheDocument()
+        expect(
+          screen.getByRole('link', { name: 'Get in Touch' }),
+        ).toHaveAttribute('href', '/contact')
+      } else {
+        expect(
+          screen.queryByRole('heading', {
+            name: "Let's Build Something Great",
+          }),
+        ).not.toBeInTheDocument()
+        expect(
+          screen.queryByRole('link', { name: 'Get in Touch' }),
+        ).not.toBeInTheDocument()
+      }
+    },
+  )
 })

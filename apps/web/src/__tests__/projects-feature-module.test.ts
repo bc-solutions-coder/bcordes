@@ -36,7 +36,6 @@ const EXTERNAL_CONSUMERS = [
   'features/home/components/FeaturedWork.tsx',
   'features/home/components/FeaturedWork.test.tsx',
   'routes/index.tsx',
-  'routes/index.test.tsx',
   'routes/projects/index.tsx',
   'routes/projects/index.test.ts',
   'routes/projects/index.component.test.tsx',

@@ -1,112 +1,83 @@
-import { afterEach, assert, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderFileRoute } from '../../testing/render-file-route'
+import { controlIntersections, controlMotion } from '../../testing/motion'
+import { Route } from './contact'
+import type { useUser } from '@/shared/auth'
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => ({
-    options: config,
-  }),
+const { identity, submit } = vi.hoisted(() => ({
+  identity: vi.fn<typeof useUser>(),
+  submit: vi.fn(),
 }))
+vi.mock('@/shared/auth', () => ({ useUser: identity }))
+vi.mock('@/features/inquiries', () => ({ submitInquiry: submit }))
+beforeEach(() => {
+  identity.mockReturnValue({ user: null, isLoading: false })
+  submit.mockReset()
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-vi.mock('lucide-react', () => ({
-  Github: (props: Record<string, unknown>) => (
-    <svg data-testid="github-icon" {...props} />
-  ),
-  Linkedin: (props: Record<string, unknown>) => (
-    <svg data-testid="linkedin-icon" {...props} />
-  ),
-  Mail: (props: Record<string, unknown>) => (
-    <svg data-testid="mail-icon" {...props} />
-  ),
-  MapPin: (props: Record<string, unknown>) => (
-    <svg data-testid="mappin-icon" {...props} />
-  ),
-}))
-
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({
-    children,
-    ...rest
-  }: {
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <div data-testid="fade-in-view" {...rest}>
-      {children}
-    </div>
-  ),
-}))
-
-vi.mock('@/features/contact', () => ({
-  ContactForm: () => <div data-testid="contact-form">ContactForm</div>,
-}))
-
-describe('contact route', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
-  describe('Route config', () => {
-    it('exports a route config with component', async () => {
-      const mod = await import('./contact')
-      expect(mod.Route).toBeDefined()
-      expect(mod.Route.options).toHaveProperty('component')
-    })
-  })
-
-  describe('ContactPage component', () => {
-    it('renders page heading', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
-      expect(screen.getByText('Get in Touch')).toBeTruthy()
+describe('Contact page', () => {
+  describe('Page content', () => {
+    it('renders the Get in Touch page heading', async () => {
+      await renderFileRoute(Route, '/contact')
+      expect(
+        screen.getByRole('heading', { name: 'Get in Touch', level: 1 }),
+      ).toBeTruthy()
     })
 
-    it('renders contact info section with all items', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
+    it('offers named contact destinations and a remote-work location', async () => {
+      await renderFileRoute(Route, '/contact')
       expect(screen.getByText('Contact Information')).toBeTruthy()
-      expect(screen.getByText('BC@bcordes.dev')).toBeTruthy()
-      expect(screen.getByText('linkedin.com/in/bryancordes')).toBeTruthy()
-      expect(screen.getByText('github.com/BC-Solutions-Coder')).toBeTruthy()
-      expect(screen.getByText('Remote / US-based')).toBeTruthy()
+      expect(screen.getByRole('link', { name: 'BC@bcordes.dev' })).toBeTruthy()
+      expect(
+        screen.getByRole('link', { name: 'linkedin.com/in/bryancordes' }),
+      ).toHaveAttribute('href', 'https://linkedin.com/in/bryancordes')
+      expect(
+        screen.getByRole('link', { name: 'github.com/BC-Solutions-Coder' }),
+      ).toHaveAttribute('href', 'https://github.com/BC-Solutions-Coder')
+      expect(screen.getByText('Remote / US-based')).toBeInTheDocument()
+      expect(
+        screen.queryByRole('link', { name: 'Remote / US-based' }),
+      ).not.toBeInTheDocument()
     })
 
     it('renders email link with mailto href', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
-      const emailLink = screen.getByText('BC@bcordes.dev')
+      await renderFileRoute(Route, '/contact')
+      const emailLink = screen.getByRole('link', { name: 'BC@bcordes.dev' })
       expect(emailLink.closest('a')?.getAttribute('href')).toBe(
         'mailto:BC@bcordes.dev',
       )
     })
 
     it('renders availability status', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
+      await renderFileRoute(Route, '/contact')
       expect(screen.getByText('Available for projects')).toBeTruthy()
     })
 
-    it('renders ContactForm', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
-      expect(screen.getByTestId('contact-form')).toBeTruthy()
+    it('offers a usable inquiry form on the contact page', async () => {
+      await renderFileRoute(Route, '/contact')
+      for (const name of ['Name', 'Email', 'Phone', 'Company', 'Message']) {
+        expect(
+          screen.getByRole('textbox', { name: new RegExp(`^${name}`) }),
+        ).toBeEnabled()
+      }
+      fireEvent.click(screen.getByRole('button', { name: 'Send Message' }))
+      expect(await screen.findByText('Name is required')).toBeVisible()
+      expect(submit).not.toHaveBeenCalled()
     })
 
-    it('renders Send a Message heading', async () => {
-      const mod = await import('./contact')
-      const ContactPage = mod.Route.options.component
-      assert(ContactPage)
-      render(<ContactPage />)
-      expect(screen.getByText('Send a Message')).toBeTruthy()
+    it('renders the Send a Message section heading', async () => {
+      await renderFileRoute(Route, '/contact')
+      expect(
+        screen.getByRole('heading', { name: 'Send a Message', level: 2 }),
+      ).toBeTruthy()
     })
   })
 })

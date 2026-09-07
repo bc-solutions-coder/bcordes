@@ -7,12 +7,6 @@ import { contactFormSchema } from '../lib/contact-form.schema'
 import { ContactFormFields } from './ContactFormFields'
 import type { ContactFormValues } from '../lib/contact-form.schema'
 
-// Browser APIs missing from jsdom.
-Element.prototype.scrollIntoView = vi.fn()
-Element.prototype.hasPointerCapture = vi.fn()
-Element.prototype.setPointerCapture = vi.fn()
-Element.prototype.releasePointerCapture = vi.fn()
-
 function TestWrapper({
   disabledFields,
 }: {
@@ -43,25 +37,6 @@ function TestWrapper({
 }
 
 describe('ContactFormFields', () => {
-  it('renders all form fields', () => {
-    renderWithProviders(<TestWrapper />)
-
-    expect(screen.getByLabelText(/^Name/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Email/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Phone/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Company/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^Message/)).toBeInTheDocument()
-    expect(screen.getAllByRole('combobox')).toHaveLength(3)
-  })
-
-  it('renders the submit button', () => {
-    renderWithProviders(<TestWrapper />)
-
-    expect(
-      screen.getByRole('button', { name: 'Send Message' }),
-    ).toBeInTheDocument()
-  })
-
   it('disables name and email fields when disabledFields is set', () => {
     renderWithProviders(
       <TestWrapper disabledFields={{ name: true, email: true }} />,

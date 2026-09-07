@@ -1,22 +1,26 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
 import { ServicesGrid } from './ServicesGrid'
 
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}))
-
 describe('ServicesGrid', () => {
+  beforeEach(() => {
+    controlMotion(true)
+    controlIntersections()
+  })
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
-  it('renders the section heading', () => {
+  it('shows What I Do as a section heading', () => {
     render(<ServicesGrid />)
-    expect(screen.getByText('What I Do')).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'What I Do', level: 2 }),
+    ).toBeTruthy()
   })
 
-  it('renders the section description', () => {
+  it('introduces comprehensive software services', () => {
     render(<ServicesGrid />)
     expect(screen.getByText(/comprehensive software solutions/i)).toBeTruthy()
   })
@@ -39,7 +43,7 @@ describe('ServicesGrid', () => {
     expect(screen.getByText(/Strategic guidance on architecture/i)).toBeTruthy()
   })
 
-  it('renders skill tags for each service', () => {
+  it('shows representative frontend, backend, and consulting skills', () => {
     render(<ServicesGrid />)
     expect(screen.getByText('React')).toBeTruthy()
     expect(screen.getByText('TypeScript')).toBeTruthy()

@@ -26,10 +26,7 @@ const OLD_INQUIRIES_PATH = ['@/server-fns', 'inquiries'].join('/')
 
 const INTERNAL_SCHEMA_BASENAME = 'contact-form.schema'
 
-const CONTACT_CONSUMERS = [
-  'routes/contact.tsx',
-  'routes/contact.test.tsx',
-] as const
+const CONTACT_CONSUMERS = ['routes/contact.tsx'] as const
 
 const readIndex = (): string =>
   existsSync(contactFeatureIndex)

@@ -79,7 +79,6 @@ const FORMER_IMPORTERS = [
   'apps/web/src/routes/dashboard/notifications.index.tsx',
   'apps/web/src/routes/dashboard/settings.index.tsx',
   'apps/web/src/routes/projects/$slug.tsx',
-  'apps/web/src/routes/resume.test.tsx',
   'apps/web/src/routes/resume.tsx',
 ]
 

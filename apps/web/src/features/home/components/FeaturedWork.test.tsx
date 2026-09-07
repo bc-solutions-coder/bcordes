@@ -1,34 +1,9 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, screen, within } from '@testing-library/react'
+import { renderRoute } from '../../../../testing/render-route'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
 import { FeaturedWork } from './FeaturedWork'
 import type { ShowcaseMeta } from '@/features/projects'
-
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}))
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    params,
-    children,
-    ...rest
-  }: {
-    to: string
-    params?: Record<string, string>
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => {
-    const href = params
-      ? to.replace(/\$(\w+)/g, (_, key: string) => params[key] ?? '')
-      : to
-    return (
-      <a href={href} {...rest}>
-        {children}
-      </a>
-    )
-  },
-}))
 
 const mockShowcases: Array<ShowcaseMeta> = [
   {
@@ -52,65 +27,87 @@ const mockShowcases: Array<ShowcaseMeta> = [
 ]
 
 describe('FeaturedWork', () => {
+  beforeEach(() => {
+    controlMotion(true)
+    controlIntersections()
+    vi.stubGlobal('scrollTo', vi.fn())
+  })
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
-  it('renders nothing when showcases array is empty', () => {
-    const { container } = render(<FeaturedWork showcases={[]} />)
-    expect(container.innerHTML).toBe('')
+  it('omits the featured-work section when there are no showcases', async () => {
+    await renderRoute(<FeaturedWork showcases={[]} />)
+    expect(
+      screen.queryByRole('heading', { name: 'Featured Work' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 
-  it('renders the section heading', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    expect(screen.getByText('Featured Work')).toBeTruthy()
+  it('shows Featured Work as a section heading when showcases exist', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    expect(
+      screen.getByRole('heading', { name: 'Featured Work', level: 2 }),
+    ).toBeTruthy()
   })
 
-  it('renders the section description', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
+  it('renders the section description', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
     expect(screen.getByText("Recent projects I'm proud of")).toBeTruthy()
   })
 
-  it('renders "View all work" link pointing to /projects', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    const link = screen.getByText('View all work')
-    expect(link.closest('a')?.getAttribute('href')).toBe('/projects')
+  it('links View all work to the projects page', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    const link = screen.getByRole('link', { name: 'View all work' })
+    expect(link.getAttribute('href')).toBe('/projects')
   })
 
-  it('renders project card titles', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    expect(screen.getByText('Project Alpha')).toBeTruthy()
-    expect(screen.getByText('Project Beta')).toBeTruthy()
+  it('shows a heading for each supplied project', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    expect(
+      screen.getByRole('heading', { name: 'Project Alpha', level: 3 }),
+    ).toBeTruthy()
+    expect(
+      screen.getByRole('heading', { name: 'Project Beta', level: 3 }),
+    ).toBeTruthy()
   })
 
-  it('renders project descriptions', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
+  it('renders project descriptions', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
     expect(screen.getByText(/cutting-edge web application/i)).toBeTruthy()
     expect(screen.getByText(/e-commerce platform/i)).toBeTruthy()
   })
 
-  it('renders client names and years', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    expect(screen.getByText('Acme Corp')).toBeTruthy()
-    expect(screen.getByText('2025')).toBeTruthy()
-    expect(screen.getByText('Beta Inc')).toBeTruthy()
-    expect(screen.getByText('2024')).toBeTruthy()
+  it('pairs each project with its client and year', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    for (const [name, client, year] of [
+      ['Project Alpha', 'Acme Corp', '2025'],
+      ['Project Beta', 'Beta Inc', '2024'],
+    ]) {
+      const card = within(screen.getByRole('link', { name: new RegExp(name) }))
+      expect(card.getByText(client)).toBeInTheDocument()
+      expect(card.getByText(year)).toBeInTheDocument()
+    }
   })
 
-  it('renders at most 3 tags per project', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    expect(screen.getByText('React')).toBeTruthy()
-    expect(screen.getByText('TypeScript')).toBeTruthy()
-    expect(screen.getByText('D3.js')).toBeTruthy()
-    expect(screen.queryByText('Extra Tag')).toBeNull()
+  it('shows only the first three tags of each supplied project', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    const alpha = within(screen.getByRole('link', { name: /Project Alpha/ }))
+    for (const tag of ['React', 'TypeScript', 'D3.js'])
+      expect(alpha.getByText(tag)).toBeInTheDocument()
+    expect(alpha.queryByText('Extra Tag')).not.toBeInTheDocument()
+    const beta = within(screen.getByRole('link', { name: /Project Beta/ }))
+    for (const tag of ['Next.js', 'PostgreSQL', 'Stripe'])
+      expect(beta.getByText(tag)).toBeInTheDocument()
   })
 
-  it('renders project links with correct hrefs', () => {
-    render(<FeaturedWork showcases={mockShowcases} />)
-    const alphaLink = screen.getByText('Project Alpha').closest('a')
-    expect(alphaLink?.getAttribute('href')).toBe('/projects/project-alpha')
+  it('links each project title to its slug-specific project page', async () => {
+    await renderRoute(<FeaturedWork showcases={mockShowcases} />)
+    const alphaLink = screen.getByRole('link', { name: /Project Alpha/ })
+    expect(alphaLink.getAttribute('href')).toBe('/projects/project-alpha')
 
-    const betaLink = screen.getByText('Project Beta').closest('a')
-    expect(betaLink?.getAttribute('href')).toBe('/projects/project-beta')
+    const betaLink = screen.getByRole('link', { name: /Project Beta/ })
+    expect(betaLink.getAttribute('href')).toBe('/projects/project-beta')
   })
 })
