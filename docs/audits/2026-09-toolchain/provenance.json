@@ -1,0 +1,21 @@
+{
+  "issue": 55,
+  "started_at": "2026-09-07T14:33:18Z",
+  "start_revision": "6d5accb2ad4f5ed5bec91c3b2883f13d31cf22d0",
+  "end_revision_before_evidence_commit": "dfbe151b4fc7f5772aa63755e5d43e44bab81e9f",
+  "branch": "main",
+  "initial_git_status": "clean",
+  "concurrent_changes": "An unrelated session committed only four shell/routing/auth/motion review documents as dfbe151b4fc7f5772aa63755e5d43e44bab81e9f during the run; application, tests, manifests and lockfile were unchanged.",
+  "platform": "darwin/arm64",
+  "node": "24.11.1",
+  "pnpm": "10.28.2",
+  "cpu_logical": 14,
+  "memory_gib": 24,
+  "default_heap_limit_mib": 4288,
+  "initial_node_options": null,
+  "docker_server": "28.5.1",
+  "docker_platform": "linux/aarch64",
+  "registry_auth_available": true,
+  "measurement_limits": "Single local observations with existing dependencies, browser, images and caches; not clean-machine or cold-cache measurements. Quality checks ran sequentially; read-only network metadata collection ran concurrently. No deployment was triggered.",
+  "raw_logs": "Kept outside the repository under /tmp/bcordes-baseline-55 during execution; this artifact retains command results and selected error descriptions, not raw logs or credentials."
+}

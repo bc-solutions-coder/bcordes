@@ -1,0 +1,125 @@
+[
+  {
+    "name": "install",
+    "command": ["pnpm", "install", "--frozen-lockfile"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:33:18Z",
+    "seconds": 1.09,
+    "exit_code": 0,
+    "result": "Pass; existing install and store, no dependency download benchmark. Reports cyclic query/test-utils workspace dependencies and ignored pnpm.overrides warning."
+  },
+  {
+    "name": "lint",
+    "command": ["pnpm", "lint"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:33:19Z",
+    "seconds": 23.29,
+    "exit_code": -6,
+    "result": "Fail; default heap exhausted, SIGABRT."
+  },
+  {
+    "name": "typecheck",
+    "command": ["pnpm", "typecheck"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:33:42Z",
+    "seconds": 8.5,
+    "exit_code": 0,
+    "result": "Pass; all workspace typecheck scripts."
+  },
+  {
+    "name": "build",
+    "command": ["pnpm", "build"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:33:51Z",
+    "seconds": 9.68,
+    "exit_code": 0,
+    "result": "Pass; production artifact built."
+  },
+  {
+    "name": "production-smoke",
+    "command": ["bash", "scripts/verify-production.sh"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:34:01Z",
+    "seconds": 0.24,
+    "exit_code": 0,
+    "result": "Pass; public pages and referenced CSS/JS assets."
+  },
+  {
+    "name": "chromium-install",
+    "command": [
+      "pnpm",
+      "--filter",
+      "bcordes",
+      "exec",
+      "playwright",
+      "install",
+      "chromium"
+    ],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:34:01Z",
+    "seconds": 0.88,
+    "exit_code": 0,
+    "result": "Pass; browser already available locally."
+  },
+  {
+    "name": "browser",
+    "command": ["pnpm", "--filter", "bcordes", "exec", "playwright", "test"],
+    "environment_overrides": {
+      "E2E_PORT": "4517"
+    },
+    "started_at": "2026-09-07T14:34:02Z",
+    "seconds": 12.94,
+    "exit_code": 1,
+    "result": "Fail; 23 passed, 1 failed: homepage expected 6+; current content shows 7+. Tracked in #53."
+  },
+  {
+    "name": "storybook",
+    "command": ["pnpm", "--filter", "bcordes", "build-storybook"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:34:15Z",
+    "seconds": 5.42,
+    "exit_code": 0,
+    "result": "Pass; generated untracked static output."
+  },
+  {
+    "name": "docker-runtime",
+    "command": ["bash", "scripts/verify-docker.sh"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:34:20Z",
+    "seconds": 24.68,
+    "exit_code": 0,
+    "result": "Pass; native Linux arm64 image, disposable Valkey, two runtime redirect configurations; four cached Docker steps."
+  },
+  {
+    "name": "coverage",
+    "command": ["pnpm", "exec", "vitest", "run", "--coverage"],
+    "environment_overrides": {},
+    "started_at": "2026-09-07T14:34:45Z",
+    "seconds": 36.02,
+    "exit_code": 0,
+    "result": "Pass; 120 files, 1298 tests. Does not resolve intermittent failure #54."
+  },
+  {
+    "name": "lint-8gb",
+    "command": ["pnpm", "lint"],
+    "environment_overrides": {
+      "NODE_OPTIONS": "--max-old-space-size=8192"
+    },
+    "started_at": "2026-09-07T14:35:44Z",
+    "seconds": 23.46,
+    "exit_code": 1,
+    "result": "Fail; five parser errors in generated Storybook JavaScript after the Storybook build."
+  },
+  {
+    "name": "lint-8gb-clean",
+    "command": ["pnpm", "lint"],
+    "environment_overrides": {
+      "NODE_OPTIONS": "--max-old-space-size=8192"
+    },
+    "started_at": "2026-09-07T14:36:51Z",
+    "seconds": 21.99,
+    "exit_code": 0,
+    "preparation": "Removed only untracked storybook-static output created by this baseline run.",
+    "result": "Pass after removing only this run\u2019s generated Storybook output; larger heap is the documented workaround."
+  }
+]

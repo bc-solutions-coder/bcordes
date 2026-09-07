@@ -1,0 +1,274 @@
+[
+  {
+    "name": "bcordes-workspace",
+    "devDependencies": {
+      "@bcordes/config": "link:packages/config",
+      "@vitest/coverage-v8": "3.2.4",
+      "eslint": "10.1.0",
+      "husky": "9.1.7",
+      "jsdom": "27.4.0",
+      "lint-staged": "16.4.0",
+      "prettier": "3.8.1",
+      "typescript": "5.9.3",
+      "vite-tsconfig-paths": "5.1.4",
+      "vitest": "3.2.4"
+    }
+  },
+  {
+    "name": "bcordes",
+    "dependencies": {
+      "@bc-solutions-coder/api-errors": "1.0.0",
+      "@bc-solutions-coder/sdk": "2.0.0",
+      "@bcordes/auth": "link:../../packages/auth",
+      "@bcordes/forms": "link:../../packages/forms",
+      "@bcordes/logger": "link:../../packages/logger",
+      "@bcordes/navigation": "link:../../packages/navigation",
+      "@bcordes/query": "link:../../packages/query",
+      "@bcordes/server": "link:../../packages/server",
+      "@bcordes/ui": "link:../../packages/ui",
+      "@bcordes/utils": "link:../../packages/utils",
+      "@bcordes/valkey": "link:../../packages/valkey",
+      "@bcordes/wallow": "link:../../packages/wallow",
+      "@hookform/resolvers": "5.2.2",
+      "@tailwindcss/vite": "4.1.18",
+      "@tanstack/match-sorter-utils": "8.19.4",
+      "@tanstack/react-devtools": "0.10.0",
+      "@tanstack/react-query": "5.101.2",
+      "@tanstack/react-query-devtools": "5.95.2",
+      "@tanstack/react-router": "1.168.3",
+      "@tanstack/react-router-devtools": "1.166.11",
+      "@tanstack/react-router-ssr-query": "1.166.10",
+      "@tanstack/react-start": "1.167.5",
+      "@tanstack/react-store": "0.9.2",
+      "@tanstack/react-table": "8.21.3",
+      "@tanstack/router-plugin": "1.167.4",
+      "@tanstack/store": "0.9.2",
+      "cmdk": "1.1.1",
+      "h3": "2.0.1-rc.16",
+      "input-otp": "1.4.2",
+      "lucide-react": "0.544.0",
+      "nitro": "3.0.1-alpha.0",
+      "react": "19.2.4",
+      "react-day-picker": "9.13.0",
+      "react-dom": "19.2.4",
+      "react-hook-form": "7.71.1",
+      "react-resizable-panels": "4.5.4",
+      "recharts": "2.15.4",
+      "sonner": "2.0.7",
+      "tailwindcss": "4.1.18",
+      "tw-animate-css": "1.4.0",
+      "vaul": "1.1.2",
+      "vite-tsconfig-paths": "5.1.4",
+      "web-vitals": "5.2.0",
+      "zod": "4.3.6"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../../packages/config",
+      "@bcordes/test-utils": "link:../../packages/test-utils",
+      "@faker-js/faker": "10.2.0",
+      "@playwright/test": "1.58.2",
+      "@storybook/react-vite": "9.1.17",
+      "@tanstack/devtools-event-client": "0.4.3",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "@types/node": "22.19.7",
+      "@types/pg": "8.16.0",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "@vitejs/plugin-react": "5.1.2",
+      "baseline-browser-mapping": "2.9.19",
+      "jsdom": "27.4.0",
+      "rollup-plugin-visualizer": "7.0.1",
+      "storybook": "9.1.17",
+      "vite": "7.3.1"
+    }
+  },
+  {
+    "name": "@bcordes/auth",
+    "dependencies": {
+      "@bc-solutions-coder/api-errors": "1.0.0",
+      "@bc-solutions-coder/sdk": "2.0.0",
+      "@bcordes/logger": "link:../logger",
+      "@bcordes/valkey": "link:../valkey",
+      "@tanstack/react-router": "1.168.3",
+      "@tanstack/react-start": "1.167.5"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config"
+    }
+  },
+  {
+    "name": "@bcordes/authz",
+    "dependencies": {
+      "@bcordes/auth": "link:../auth"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config"
+    }
+  },
+  {
+    "name": "@bcordes/config",
+    "dependencies": {
+      "@tanstack/eslint-config": "0.4.0"
+    }
+  },
+  {
+    "name": "@bcordes/forms",
+    "dependencies": {
+      "@bcordes/ui": "link:../ui",
+      "@bcordes/utils": "link:../utils",
+      "react-hook-form": "7.71.1"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@bcordes/test-utils": "link:../test-utils",
+      "@hookform/resolvers": "5.2.2",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "jsdom": "27.4.0",
+      "react": "19.2.4",
+      "react-dom": "19.2.4",
+      "vite": "7.3.1",
+      "zod": "4.3.6"
+    }
+  },
+  {
+    "name": "@bcordes/logger",
+    "dependencies": {
+      "pino": "10.3.1"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "pino-pretty": "13.1.3"
+    }
+  },
+  {
+    "name": "@bcordes/navigation",
+    "dependencies": {
+      "@bcordes/ui": "link:../ui",
+      "lucide-react": "0.544.0"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@bcordes/test-utils": "link:../test-utils",
+      "@tanstack/react-router": "1.168.3",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "jsdom": "27.4.0",
+      "react": "19.2.4",
+      "react-dom": "19.2.4",
+      "vite": "7.3.1"
+    }
+  },
+  {
+    "name": "@bcordes/query",
+    "dependencies": {
+      "@tanstack/react-query": "5.101.2",
+      "@tanstack/react-query-devtools": "5.95.2"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@bcordes/test-utils": "link:../test-utils",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "jsdom": "27.4.0",
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
+    }
+  },
+  {
+    "name": "@bcordes/server",
+    "devDependencies": {
+      "@bcordes/config": "link:../config"
+    }
+  },
+  {
+    "name": "@bcordes/test-utils",
+    "dependencies": {
+      "@bcordes/query": "link:../query",
+      "@bcordes/ui": "link:../ui",
+      "@tanstack/react-query": "5.101.2",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "jsdom": "27.4.0"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "react": "19.2.4",
+      "react-dom": "19.2.4"
+    }
+  },
+  {
+    "name": "@bcordes/ui",
+    "dependencies": {
+      "@base-ui/react": "1.6.0",
+      "@bcordes/utils": "link:../utils",
+      "class-variance-authority": "0.7.1",
+      "lucide-react": "0.544.0",
+      "sonner": "2.0.7"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@bcordes/test-utils": "link:../test-utils",
+      "@testing-library/dom": "10.4.1",
+      "@testing-library/jest-dom": "6.9.1",
+      "@testing-library/react": "16.3.2",
+      "@types/react": "19.2.10",
+      "@types/react-dom": "19.2.3",
+      "jsdom": "27.4.0",
+      "react": "19.2.4",
+      "react-dom": "19.2.4",
+      "tailwindcss": "4.1.18",
+      "vite": "7.3.1"
+    }
+  },
+  {
+    "name": "@bcordes/utils",
+    "dependencies": {
+      "clsx": "2.1.1",
+      "date-fns": "4.1.0",
+      "tailwind-merge": "3.4.0"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config"
+    }
+  },
+  {
+    "name": "@bcordes/valkey",
+    "dependencies": {
+      "@bc-solutions-coder/sdk": "2.0.0",
+      "ioredis": "5.10.1"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config",
+      "@types/ioredis": "5.0.0"
+    }
+  },
+  {
+    "name": "@bcordes/wallow",
+    "dependencies": {
+      "@bc-solutions-coder/api-errors": "1.0.0",
+      "@bc-solutions-coder/sdk": "2.0.0",
+      "@bcordes/auth": "link:../auth",
+      "@bcordes/logger": "link:../logger",
+      "@bcordes/valkey": "link:../valkey",
+      "@tanstack/react-start": "1.167.5"
+    },
+    "devDependencies": {
+      "@bcordes/config": "link:../config"
+    }
+  }
+]
