@@ -1,21 +1,11 @@
 {
   "source_commit": "25e5bc19c68769e15d8be1afc43177b78d8d3c1d",
-  "status": "proposed; awaiting human review; implementation pending",
+  "status": "accepted plan; implementation pending",
   "files": 8,
   "declarations": 132,
   "test_declarations": 104,
   "suite_declarations": 28,
   "runtime_cases": 113,
-  "proposed_test_dispositions": {
-    "delete": 36,
-    "keep": 11,
-    "rewrite": 43,
-    "rename": 14
-  },
-  "proposed_whole_file_deletions": [
-    "apps/web/src/__tests__/schema-validation.test.ts",
-    "apps/web/src/features/inquiries/lib/inquiries.test.ts"
-  ],
   "owned_test_changes_since_baseline": [],
   "observed_validation": {
     "command": [
@@ -40,5 +30,16 @@
   },
   "new_replacement_file_ownership": {
     "apps/web/src/features/notifications/server-fns/validation.test.ts": "This review owns replacement scenarios for copied notification validators; coordinate with notification review to avoid duplicates."
-  }
+  },
+  "acceptance": "User accepted the complete review proposal: looks good.",
+  "accepted_test_dispositions": {
+    "delete": 36,
+    "keep": 11,
+    "rewrite": 43,
+    "rename": 14
+  },
+  "accepted_whole_file_deletions": [
+    "apps/web/src/__tests__/schema-validation.test.ts",
+    "apps/web/src/features/inquiries/lib/inquiries.test.ts"
+  ]
 }
