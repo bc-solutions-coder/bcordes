@@ -1,6 +1,6 @@
-# Notification pagination decision proposal
+# Notification pagination accepted decision
 
-Proposal for [Decide notification pagination behavior and coverage](https://github.com/bc-solutions-coder/bcordes/issues/81). **Awaiting human acceptance; no product or test changes implemented.**
+Accepted plan for [Decide notification pagination behavior and coverage](https://github.com/bc-solutions-coder/bcordes/issues/81). The user accepted the limited-list proposal with "looks good lets continue". **Implementation remains pending; no product or test changes implemented.**
 
 Recommend an honest limited-list view for this cleanup: remove the inactive Load more control and unused pagination state, preserve the currently loaded notifications and interactions, and make the limit explicit. Defer full pagination as a separate feature rather than adding an unrequested notification-history redesign to test cleanup.
 
@@ -43,4 +43,4 @@ The two current page/filter suites passed all 26 cases, none skipped. That inclu
 
 During implementation, replace the accepted mocked page/filter cases with the real behavior scenarios above, remove obsolete page-state assertions, and verify the listed defects fail before restoring a passing implementation. Run affected tests, relevant browser/build checks and full coverage before merge. All accepted 90% prerequisites and affected-area safeguards remain; do not retain dead state merely to keep incidental coverage.
 
-Acceptance resolves the pagination gap by choosing the limited-list contract. Full history browsing, server-side filters, cursor/page consistency and loading additional batches are explicitly deferred, not hidden implementation obligations. If the user chooses full pagination instead, replace this proposal with its complete behavior and failure-state design before closing the decision.
+Acceptance resolves the pagination gap by choosing the limited-list contract. Full history browsing, server-side filters, cursor/page consistency and loading additional batches are explicitly deferred, not hidden implementation obligations. A later full-pagination request requires a separate complete behavior and failure-state design.
