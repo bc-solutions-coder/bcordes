@@ -70,7 +70,7 @@ describe('resume route', () => {
       render(<ResumePage />)
       expect(
         screen.getByText(
-          '6+ years of professional software engineering experience',
+          '7+ years of professional software engineering experience',
         ),
       ).toBeTruthy()
     })
@@ -92,8 +92,13 @@ describe('resume route', () => {
       assert(ResumePage)
       render(<ResumePage />)
       expect(screen.getByText('Experience')).toBeTruthy()
-      expect(screen.getByText('Freelance Software Engineer')).toBeTruthy()
-      expect(screen.getByText('Drop')).toBeTruthy()
+      expect(
+        screen.getAllByText(
+          'Software Engineer (Contract via Sketch Development)',
+        ),
+      ).toHaveLength(2)
+      expect(screen.getByText('Intterra')).toBeTruthy()
+      expect(screen.getByText('Drop Collaborative')).toBeTruthy()
       expect(screen.getByText('Valiantys')).toBeTruthy()
       expect(screen.getByText('Hyperion, LLC')).toBeTruthy()
       expect(screen.getByText('Quality Assurance Intern')).toBeTruthy()

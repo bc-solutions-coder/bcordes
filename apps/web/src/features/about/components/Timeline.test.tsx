@@ -23,7 +23,7 @@ describe('Timeline', () => {
 
   it('renders all timeline entry periods', () => {
     render(<Timeline />)
-    expect(screen.getByText('Nov 2025 - Feb 2026')).toBeTruthy()
+    expect(screen.getByText('Nov 2025 - Apr 2026')).toBeTruthy()
     expect(screen.getByText('July 2021 - Aug 2025')).toBeTruthy()
     expect(screen.getByText('July 2019 - July 2021')).toBeTruthy()
     expect(screen.getByText('Apr 2019 - June 2019')).toBeTruthy()
@@ -31,14 +31,19 @@ describe('Timeline', () => {
 
   it('renders all role titles', () => {
     render(<Timeline />)
-    expect(screen.getByText('Freelance Software Engineer')).toBeTruthy()
+    expect(
+      screen.getAllByText(
+        'Software Engineer (Contract via Sketch Development)',
+      ),
+    ).toHaveLength(2)
     expect(screen.getAllByText('Software Engineer')).toHaveLength(2)
     expect(screen.getByText('Quality Assurance Intern')).toBeTruthy()
   })
 
   it('renders all company names', () => {
     render(<Timeline />)
-    expect(screen.getByText('Drop')).toBeTruthy()
+    expect(screen.getByText('Intterra')).toBeTruthy()
+    expect(screen.getByText('Drop Collaborative')).toBeTruthy()
     expect(screen.getByText('Valiantys')).toBeTruthy()
     expect(screen.getByText('Hyperion, LLC')).toBeTruthy()
     expect(screen.getByText('Flightdocs Inc')).toBeTruthy()

@@ -10,19 +10,25 @@ interface TimelineEntry {
 
 const timelineData: Array<TimelineEntry> = [
   {
-    period: 'Nov 2025 - Feb 2026',
-    role: 'Freelance Software Engineer',
-    company: 'Drop',
+    period: 'Apr 2026 - July 2026',
+    role: 'Software Engineer (Contract via Sketch Development)',
+    company: 'Intterra',
     description:
-      'Designed and built a customer-facing enforcement management module in Angular 20, enabling violation tracking workflows with complete audit trails for state regulatory compliance.',
-    isCurrent: true,
+      'Migrated React applications to a feature-based architecture, cut load times by 80% and bundle size by 60%, and raised test coverage from 12% to over 80%. Standardized shared components, architectural boundaries, and CI pipelines.',
+  },
+  {
+    period: 'Nov 2025 - Apr 2026',
+    role: 'Software Engineer (Contract via Sketch Development)',
+    company: 'Drop Collaborative',
+    description:
+      'Designed and built a customer-facing enforcement management module in Angular 21, enabling violation tracking workflows with complete audit trails for state regulatory compliance. Built a C# workflow pipeline to automate notification routing.',
   },
   {
     period: 'July 2021 - Aug 2025',
     role: 'Software Engineer',
     company: 'Valiantys',
     description:
-      'Designed, built, and deployed 25+ Angular and React commercial applications. Led software re-architecture into an Nx monorepo, improving code organization and cross-team efficiency.',
+      'Designed, built, and deployed 24+ Angular and React commercial applications. Led software re-architecture into an Nx monorepo, improving code organization and cross-team efficiency.',
   },
   {
     period: 'July 2019 - July 2021',

@@ -9,7 +9,7 @@ interface Stat {
 }
 
 const stats: Array<Stat> = [
-  { value: '6+', label: 'Years Experience' },
+  { value: '7+', label: 'Years Experience' },
   { value: '25+', label: 'Projects Delivered' },
   { value: '100%', label: 'Client Satisfaction' },
 ]

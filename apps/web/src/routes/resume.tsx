@@ -9,12 +9,27 @@ export const Route = createFileRoute('/resume')({
 
 const experience = [
   {
-    title: 'Freelance Software Engineer',
-    company: 'Drop',
-    period: 'Nov 2025 - Feb 2026',
+    title: 'Software Engineer (Contract via Sketch Development)',
+    company: 'Intterra',
+    period: 'Apr 2026 - July 2026',
+    description:
+      'React application architecture, performance, and developer workflows.',
+    highlights: [
+      'Migrated multiple React applications to a feature-based architecture, eliminating hundreds of lines of duplicated components',
+      'Cut application load times by 80% and bundle size by 60%',
+      'Raised test coverage from 12% to over 80% and built CI pipelines gating merges on passing builds, halving manual regression effort',
+      'Consolidated shared components to propagate fixes application-wide and reduce customer-reported bugs',
+      'Restructured the codebase for AI-assisted development and standardized architectural boundaries and code ownership',
+    ],
+  },
+  {
+    title: 'Software Engineer (Contract via Sketch Development)',
+    company: 'Drop Collaborative',
+    period: 'Nov 2025 - Apr 2026',
     description: 'Contract work on regulatory compliance software.',
     highlights: [
-      'Designed and built a customer-facing enforcement management module in Angular 20 with complete audit trails for state regulatory compliance',
+      'Designed and built a customer-facing enforcement management module in Angular 21 with complete audit trails for state regulatory compliance',
+      'Designed and built a C# workflow pipeline that automatically routed violation and remediation notifications to regulatory authorities and responsible personnel',
       'Developed end-to-end corrective action tracking system that streamlined consultant-customer communication',
       'Implemented workflow automation for regulatory violation remediation with real-time tracking',
     ],
@@ -25,7 +40,8 @@ const experience = [
     period: 'July 2021 - Aug 2025',
     description: 'Full-stack development on Atlassian ecosystem applications.',
     highlights: [
-      'Designed, built, and deployed 25+ Angular and React commercial applications',
+      'Designed, built, and deployed 24+ Angular and React commercial applications',
+      'Designed and instructed an Angular bootcamp curriculum for developers across all experience levels as a client-facing service',
       'Integrated Atlassian Rovo AI agents into company-wide Nx monorepo for scalable automation',
       'Led software re-architecture into Nx monorepo with projected 72% reduction in merge conflicts',
       'Created Electron + React tools integrated with Confluence, leading to 37% increase in early contract completion',
@@ -68,8 +84,28 @@ const skills = {
     'HTML5',
     'SCSS',
   ],
-  Backend: ['Node.js', 'Nest.js', 'C#', 'Java'],
-  'Cloud & Infrastructure': ['AWS', 'Terraform', 'Docker', 'CI/CD pipelines'],
+  Backend: [
+    'Node.js',
+    'Nest.js',
+    'C#',
+    '.NET',
+    'Java',
+    'REST',
+    'CQRS',
+    'Microservices',
+  ],
+  'Cloud & Infrastructure': [
+    'AWS',
+    'GCP',
+    'Terraform',
+    'Ansible',
+    'Docker',
+    'Kubernetes',
+    'k3s',
+    'Proxmox',
+    'Linux',
+    'CI/CD pipelines',
+  ],
   'Tools & Platforms': [
     'Atlassian Suite',
     'Jira',
@@ -78,8 +114,31 @@ const skills = {
     'Electron',
     'Nx',
     'Twilio',
+    'Turborepo',
+    'pnpm workspaces',
+    'Git',
+    'GitHub',
+    'GitLab',
+    'Gitea',
   ],
-  Databases: ['MySQL', 'PostgreSQL'],
+  Databases: [
+    'MySQL',
+    'PostgreSQL',
+    'MongoDB',
+    'Redis',
+    'Valkey',
+    'MinIO',
+    'Garage HQ',
+  ],
+  'DevOps & Security': [
+    'GitOps',
+    'Automated Testing',
+    'SSO',
+    'Authelia',
+    'CrowdSec',
+    'Encryption',
+    'Monitoring & Alerting',
+  ],
 }
 
 const education = [
@@ -102,7 +161,7 @@ function ResumePage() {
                   Resume
                 </h1>
                 <p className="text-lg text-foreground-secondary">
-                  6+ years of professional software engineering experience
+                  7+ years of professional software engineering experience
                 </p>
               </div>
               <a

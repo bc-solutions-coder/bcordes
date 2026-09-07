@@ -50,7 +50,7 @@ export function AboutHero() {
             <FadeInView delay={400}>
               <p className="text-foreground-secondary text-lg leading-relaxed max-w-xl mb-6">
                 I'm a passionate software engineer with a love for building
-                elegant, scalable solutions. With over six years of experience
+                elegant, scalable solutions. With over seven years of experience
                 across the full stack, I specialize in turning complex problems
                 into clean, maintainable code. My approach combines technical
                 excellence with clear communication to deliver results that

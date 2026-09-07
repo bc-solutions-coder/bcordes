@@ -58,7 +58,7 @@ describe('Hero', () => {
 
   it('renders statistics', () => {
     render(<Hero />)
-    expect(screen.getByText('6+')).toBeTruthy()
+    expect(screen.getByText('7+')).toBeTruthy()
     expect(screen.getByText('Years Experience')).toBeTruthy()
     expect(screen.getByText('25+')).toBeTruthy()
     expect(screen.getByText('Projects Delivered')).toBeTruthy()
