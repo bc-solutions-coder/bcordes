@@ -14,6 +14,10 @@ Query inspector tests mount the real TanStack devtools host, display the named p
 
 All 1,222 full-workspace tests pass without failures or skips. Coverage is 94.23% lines, 93.07% statements, 90.31% branches and 90.83% functions. Every denominator and all four 90% thresholds remain unchanged; no retained source file loses covered lines, statements, branches or functions relative to the preceding slice.
 
-Eleven deliberate defects failed: shared query contexts, ignored provider client, empty inspector, wrong inspector label, enabled query retries, shared render cache, ignored render options, ignored log severity, eager connection, changed cache namespace, and missing class conflict resolution. Every mutation was restored in `finally` before the passing full suite.
+Twelve deliberate defects failed: shared query contexts, ignored provider client, empty inspector, wrong inspector label, enabled query retries, shared render cache, ignored render options, ignored log severity, missing development transport, eager connection, changed cache namespace, and missing class conflict resolution. Every mutation was restored in `finally`. The first eleven preceded the passing full suite; the independent development transport probe was added during review and followed by all three logger tests passing.
 
 Focused files were run throughout. Commands: `pnpm test --coverage --reporter=json`, `pnpm typecheck`, `pnpm build`, `pnpm lint`, `pnpm format:check`, `python3 scripts/check-docs.py`, and `git diff --check`. Existing browser evidence remains separate; no new browser or remote CI credit is claimed. Final source-guard cleanup can reuse these public consumer outcomes.
+
+## Review
+
+The spec review requested an independent development transport failure probe. A nonexistent transport made the development subprocess assertion fail; restoring the transport passed all three logger cases. Standards review found no documented-standard violations or actionable heuristic findings.
