@@ -1,0 +1,9 @@
+file	tests	suites	keep	rename	rewrite	delete	whole_file_deletion
+apps/web/src/__tests__/schema-validation.test.ts	21	13	0	0	0	21	conditional
+apps/web/src/features/inquiries/lib/inquiries.test.ts	7	3	0	0	0	7	conditional
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	10	1	4	2	4	0	no
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	22	3	2	4	12	4	no
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	23	2	4	4	12	3	no
+apps/web/src/routes/dashboard/inquiries.test.tsx	1	1	0	0	1	0	no
+apps/web/src/routes/dashboard/settings.index.test.tsx	18	4	1	4	13	0	no
+apps/web/src/routes/dashboard/settings.test.tsx	2	1	0	0	1	1	no

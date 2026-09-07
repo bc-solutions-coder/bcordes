@@ -1,0 +1,114 @@
+file	title	status
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields projectType rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields projectType accepts valid enum value: Frontend	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields projectType accepts valid enum value: Full-Stack	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields projectType accepts valid enum value: Consulting	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields projectType accepts valid enum value: Other	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields budgetRange rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields budgetRange accepts valid enum value: Under $5k	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields budgetRange accepts valid enum value: $5k-$15k	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields budgetRange accepts valid enum value: $15k-$50k	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields budgetRange accepts valid enum value: $50k+	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields timeline rejects an arbitrary string	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields timeline accepts valid enum value: Less than 1 month	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields timeline accepts valid enum value: 1-3 months	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields timeline accepts valid enum value: 3-6 months	passed
+apps/web/src/__tests__/schema-validation.test.ts	submitInquirySchema – enum fields timeline accepts valid enum value: 6+ months	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation fetchInquirySchema rejects a non-UUID string	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation fetchInquirySchema accepts a valid UUID	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation updateInquiryStatusSchema rejects a non-UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation updateInquiryStatusSchema accepts a valid UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation submitInquiryCommentSchema rejects a non-UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation submitInquiryCommentSchema accepts a valid UUID id	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation notificationIdSchema (markNotificationRead / deregisterPushDevice) rejects a non-UUID string	passed
+apps/web/src/__tests__/schema-validation.test.ts	id fields – UUID validation notificationIdSchema (markNotificationRead / deregisterPushDevice) accepts a valid UUID	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints endpoint rejects a bare string (not a URL)	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints endpoint accepts a valid HTTPS URL	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints endpoint rejects a URL exceeding 2048 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints p256dh rejects a string exceeding 256 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints p256dh accepts a string within 256 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints auth rejects a string exceeding 128 characters	passed
+apps/web/src/__tests__/schema-validation.test.ts	registerPushDeviceSchema – field constraints auth accepts a string within 128 characters	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	inquiries.$id loader calls fetchInquiry, fetchInquiryComments, and fetchCurrentUserRoles in parallel	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	inquiries.$id loader returns isAdmin=true when user has admin role	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	inquiries.$id loader returns isAdmin=false when user lacks admin role	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	inquiries.$id loader returns the inquiry and comments from the loader	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component renders inquiry detail fields	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component renders the ""Inquiry Details"" heading"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component renders the ""Back to inquiries"" link"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component renders the status badge	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component renders ""No comments yet."" when there are no visible comments"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component renders public comments for non-admin users	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component admin sees all comments including internal	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component admin sees ""Internal"" badge on internal comments"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component admin sees ""Internal note"" checkbox"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	"InquiryDetailPage component non-admin does NOT see ""Internal note"" checkbox"	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component renders the comment textarea and Send button	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component renders comment author names and content	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component hides optional fields when not present	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component submits a comment and clears the form	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component does not submit when comment text is empty	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component handles comment submission error gracefully	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	InquiryDetailPage component toggles isInternal checkbox for admin users	passed
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	inquiries.$id beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	inquiries.index loader beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	inquiries.index loader calls fetchMyInquiries and fetchCurrentUserRoles in parallel	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	inquiries.index loader returns isAdmin=true when user has admin role	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	inquiries.index loader returns isAdmin=false when user has no admin role	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	inquiries.index loader returns the inquiries array from fetchMyInquiries	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component renders empty state when no inquiries (admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component renders empty state when no inquiries (non-admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component renders inquiry rows with name, email, and company	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	"DashboardInquiriesPage component renders ""-"" for missing optional fields"	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component shows human-readable project type labels	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component admin sees Select controls for status	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component non-admin sees Badge for status instead of Select	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	"DashboardInquiriesPage component shows ""new"" badge count in header"	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component shows summary count text	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	"DashboardInquiriesPage component shows singular ""message"" when only 1 inquiry"	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component renders the Refresh button	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component navigates to inquiry detail when row is clicked	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component falls back to raw projectType when no label mapping exists	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component calls updateInquiryStatus when admin changes status via Select	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component falls back to raw status label for unknown status values (non-admin)	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component clicking Refresh calls router.invalidate and re-enables button after	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component handleRefresh clears isRefreshing even when invalidate rejects	passed
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	DashboardInquiriesPage component handles status change error gracefully	passed
+apps/web/src/routes/dashboard/inquiries.test.tsx	inquiries layout route renders an Outlet	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index loader returns result of fetchNotificationSettings	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component renders channel toggle rows	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component renders the Settings header	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component renders Notifications card title and description	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component push channel switch is disabled when not supported	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component push channel switch is disabled when permission is denied	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	"settings.index component ""Send test notification"" visible when push.isRegistered"	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	"settings.index component ""Send test notification"" not visible when push is not registered"	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component toggling a non-push channel calls updateChannelSetting	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	"settings.index component clicking ""Send test notification"" calls push.sendTest"	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handlePushToggle enables push notifications on checked=true	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handlePushToggle disables push notifications on checked=false	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handlePushToggle shows error toast on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handleSendTest shows error toast on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handleToggle appends new entry when channelType is not in localSettings	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handleToggle reverts localSettings and shows toast.error on failure	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index component handleToggle shows generic message for non-Error exceptions	passed
+apps/web/src/routes/dashboard/settings.index.test.tsx	settings.index beforeLoad calls serverRequireAuth with returnTo path	passed
+apps/web/src/routes/dashboard/settings.test.tsx	settings layout route exports a route with a component	passed
+apps/web/src/routes/dashboard/settings.test.tsx	settings layout route renders an Outlet	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip every STATUS_TO_FRONTEND value maps back to its key via STATUS_TO_API	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip every STATUS_TO_API value maps back to its key via STATUS_TO_FRONTEND	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_TO_FRONTEND / STATUS_TO_API roundtrip both maps have the same number of entries	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_COLORS has an entry for every frontend status	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_COLORS all color strings contain Tailwind class patterns	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_LABELS has an entry for every frontend status	passed
+apps/web/src/features/inquiries/lib/inquiries.test.ts	STATUS_LABELS label values match the API status keys (PascalCase)	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	does not fall back to service credentials after session expiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations allows a customer to read their inquiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations denies another customer inquiry	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations does not let an anonymous inquiry be claimed by matching email	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations allows API-authorized staff to read organization inquiries	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations uses the customer submitted endpoint	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations removes internal comments before returning them to a customer	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations rejects customer internal comments without sending a mutation	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations rejects status changes before invoking the API when staff authorization fails	passed
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	inquiry authorization through generated SDK operations preserves user identity for signed-in submission and supplies nullable company	passed
