@@ -17,7 +17,7 @@ const timelineData: Array<TimelineEntry> = [
       'Migrated React applications to a feature-based architecture, cut load times by 80% and bundle size by 60%, and raised test coverage from 12% to over 80%. Standardized shared components, architectural boundaries, and CI pipelines.',
   },
   {
-    period: 'Nov 2025 - Apr 2026',
+    period: 'Nov 2025 - Feb 2026',
     role: 'Software Engineer (Contract via Sketch Development)',
     company: 'Drop Collaborative',
     description:

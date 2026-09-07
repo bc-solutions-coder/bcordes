@@ -25,7 +25,7 @@ const experience = [
   {
     title: 'Software Engineer (Contract via Sketch Development)',
     company: 'Drop Collaborative',
-    period: 'Nov 2025 - Apr 2026',
+    period: 'Nov 2025 - Feb 2026',
     description: 'Contract work on regulatory compliance software.',
     highlights: [
       'Designed and built a customer-facing enforcement management module in Angular 21 with complete audit trails for state regulatory compliance',

@@ -34,7 +34,7 @@ April 2026 - July 2026
 ### Drop Collaborative
 
 Software Engineer (Contract via Sketch Development)
-November 2025 - April 2026
+November 2025 - February 2026
 
 - Built a customer-facing enforcement management module within an existing Angular 21 application, enabling consultants and
   clients to create violation tracking workflows with complete audit trails for state regulatory compliance.

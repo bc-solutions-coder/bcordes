@@ -23,7 +23,7 @@ describe('Timeline', () => {
 
   it('renders all timeline entry periods', () => {
     render(<Timeline />)
-    expect(screen.getByText('Nov 2025 - Apr 2026')).toBeTruthy()
+    expect(screen.getByText('Nov 2025 - Feb 2026')).toBeTruthy()
     expect(screen.getByText('July 2021 - Aug 2025')).toBeTruthy()
     expect(screen.getByText('July 2019 - July 2021')).toBeTruthy()
     expect(screen.getByText('Apr 2019 - June 2019')).toBeTruthy()
