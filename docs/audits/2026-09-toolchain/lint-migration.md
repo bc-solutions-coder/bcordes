@@ -7,7 +7,8 @@ The installed ESLint configuration has 74 enabled rules on the representative
 app, route, auth and query files; UI components and forms disable only
 `no-unnecessary-condition`. Oxlint 1.82.0 native rule metadata identifies three
 remaining gaps: type-parameter naming, spaced comments and import-group ordering.
-Its JS plugin API is still alpha and has not been approved as a fallback.
+Its JS plugin API is still alpha. The user approved trying that implementation;
+the isolated results below show that two of the three rules work.
 
 | Existing rule                                            | Candidate replacement                            | Status                                                       |
 | -------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
@@ -102,7 +103,7 @@ restriction, removed tilde alias, app module entrypoint restrictions and
 features/shared/app-to-routes restriction, including each diagnostic message.
 No new exclusions or default-rule assumptions are permitted.
 
-## Decision needed
+## Original decision point
 
 To preserve all current rules without adopting alpha plugin support, keep a
 small ESLint pass for the three gaps while Oxlint handles native checks. This
@@ -133,5 +134,40 @@ globs require a recursive final ** for nested paths. For example, migrate
 existing boundary policy. Keep each existing diagnostic message.
 
 These probes establish the listed behavior, not complete equivalence of every
-option. The three style-rule decisions remain pending; no policy has been
-retired and no alpha plugin fallback has been enabled.
+option. No policy has been retired. The subsequent authorized JS plugin trial is
+documented below; no repository lint command has been replaced yet.
+
+## Authorized JS plugin trial
+
+On September 7, the user requested trying Oxlint's JS plugin implementation.
+Oxlint 1.82.0 loaded the existing plugins with explicit aliases, preserving the
+three effective ESLint rule configurations:
+
+| Plugin and rule                                                | Result                                                                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `@stylistic/eslint-plugin` 5.10.0, `spaced-comment`            | Reports `//bad`, accepts `// Good`, and fixes the missing space.                            |
+| `eslint-plugin-import-x` 4.16.1, `order`                       | Reports a relative import before a Node builtin, accepts the reverse, and fixes the order.  |
+| `@typescript-eslint/eslint-plugin` 8.57.1, `naming-convention` | Crashes during rule creation on both valid and invalid generic names.                       |
+| `@typescript-eslint/eslint-plugin` 8.69.0, `naming-convention` | Same crash on a valid generic name, with supported TypeScript 6.0.3 in an isolated install. |
+
+The naming configuration selects only type parameters, but the upstream rule
+unconditionally calls `getParserServices(context, true)` during creation. Oxlint
+cannot supply the required parser services. The failure occurs before checking
+`TValue` or `Bad`, so this is not a naming diagnostic. Oxlint's documented lack
+of type-aware JS plugin support applies; native type-aware linting does not
+provide those ESLint parser services.
+
+An isolated install of the latest naming plugin with TypeScript 7.0.2 also fails
+peer dependency resolution: its parser requires TypeScript `>=4.8.4 <6.1.0`.
+Using supported TypeScript 6.0.3 still reproduces the parser-services crash.
+No peer constraints were bypassed and no workspace dependencies changed.
+
+With the naming plugin removed from the probe, the invalid file produces exactly
+the expected two diagnostics and the valid file is clean. Both autofixes apply,
+and a second lint pass is clean. These are narrow behavior probes, not proof of
+all import-group classification or comment-option edge cases.
+
+The trial therefore does not yet replace ESLint. A custom syntax-only generic
+naming plugin, or retaining ESLint for the upstream naming rule, needs a follow-up
+decision. Trial configurations and fixtures stayed in ignored scratch/temporary
+directories; no source-text tests were added.
