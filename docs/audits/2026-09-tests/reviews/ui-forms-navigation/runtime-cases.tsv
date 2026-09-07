@@ -1,0 +1,203 @@
+file	title	status
+packages/forms/package.test.ts	@bcordes/forms package manifest declares the workspace package conventions	passed
+packages/forms/package.test.ts	@bcordes/forms package manifest exports a single barrel entry point, straight from source	passed
+packages/forms/package.test.ts	@bcordes/forms package manifest owns the react-hook-form runtime dep that moved off @bcordes/ui	passed
+packages/forms/package.test.ts	@bcordes/forms package manifest keeps @hookform/resolvers and zod dev-only	passed
+packages/forms/package.test.ts	@bcordes/forms package manifest takes react as a peer, and owns no theme (no tailwindcss)	passed
+packages/forms/package.test.ts	the form primitive really moved out of @bcordes/ui holds form.tsx and its test at packages/forms/src	passed
+packages/forms/package.test.ts	the form primitive really moved out of @bcordes/ui leaves nothing behind under packages/ui/src/components	passed
+packages/forms/package.test.ts	the form primitive really moved out of @bcordes/ui reaches Label cross-package and keeps cn from @bcordes/utils	passed
+packages/forms/package.test.ts	the stale @bcordes/ui wiring spec and manifest are corrected drops react-hook-form and its dev tooling from packages/ui/package.json	passed
+packages/forms/package.test.ts	the stale @bcordes/ui wiring spec and manifest are corrected removes form from the @bcordes/ui package.test.ts component lists	passed
+packages/forms/package.test.ts	the stale @bcordes/ui wiring spec and manifest are corrected drops the react-hook-form dependency assertion from that spec	passed
+packages/forms/package.test.ts	the barrel exposes exactly the primitive, no react-hook-form leaks re-exports every form symbol from src/index.ts	passed
+packages/forms/package.test.ts	the barrel exposes exactly the primitive, no react-hook-form leaks does not re-export react-hook-form internals through the barrel	passed
+packages/forms/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/forms/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/forms/package.test.ts	workspace wiring resolves its '.' export from apps/web	passed
+packages/forms/package.test.ts	every form-primitive importer was rewritten leaves no @bcordes/ui/components/form import anywhere	passed
+packages/forms/package.test.ts	every form-primitive importer was rewritten redirects the former importers to @bcordes/forms	passed
+packages/forms/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms holds SelectFormField.tsx and its test at packages/forms/src	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms leaves nothing behind under apps/web contact	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms re-exports SelectFormField and its public types from the barrel	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms composes the primitive as a sibling and the Select cross-package	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms exposes overridable trigger/content class props (the one behaviour change)	passed
+packages/forms/package.test.ts	SelectFormField really moved into @bcordes/forms has apps/web consume SelectFormField from the package, not a local file	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) is re-exported from the package barrel entry point	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) renders the label	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) renders the required asterisk when required, and omits it otherwise	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) renders every option when opened	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) propagates the chosen value through the react-hook-form field (onChange)	passed
+packages/forms/src/SelectFormField.test.tsx	SelectFormField (generalized, @bcordes/forms) applies a custom triggerClassName when supplied	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) exposes all 7 public exports	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) forwards the generated id to the child input and matches label htmlFor	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) renders the input directly with no extra wrapper node (Slot semantics)	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) links aria-describedby to the description when there is no error	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) sets aria-invalid and extends aria-describedby to the message on error	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) renders no FormMessage node until there is an error	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) does not call onSubmit while the field is invalid	passed
+packages/forms/src/form.test.tsx	form (Radix Slot -> cloneElement migration contract) useFormField throws a clear error outside a FormField provider	passed
+packages/navigation/src/MainNav.test.tsx	MainNav is importable from the package barrel (@bcordes/navigation)	passed
+packages/navigation/src/MainNav.test.tsx	MainNav renders one link per injected NavItem, using the injected labels/paths	passed
+packages/navigation/src/MainNav.test.tsx	MainNav renders the injected items, not any hard-coded bcordes routes	passed
+packages/navigation/src/MainNav.test.tsx	MainNav marks the active item from the current route	passed
+packages/navigation/src/MainNav.test.tsx	MainNav honours NavItem.exact for active matching (exact item not active on child route)	passed
+packages/navigation/src/MainNav.test.tsx	MainNav renders the injected logo slot	passed
+packages/navigation/src/MainNav.test.tsx	MainNav renders the injected actions slot	passed
+packages/navigation/src/MainNav.test.tsx	MainNav renders no nav links for an empty items array	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav is importable from the package barrel (@bcordes/navigation)	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders one link per injected NavItem when the sheet is open	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders the injected items, not any hard-coded bcordes routes	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav marks the active item from the current route	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders the injected logo slot when open	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders the injected actions slot when open	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders a hamburger trigger with an accessible label	passed
+packages/navigation/src/MobileNav.test.tsx	MobileNav renders no nav links for an empty items array when open	passed
+packages/ui/package.test.ts	@bcordes/ui package manifest declares the workspace package conventions	passed
+packages/ui/package.test.ts	@bcordes/ui package manifest exports every primitive as its own subpath, straight from source	passed
+packages/ui/package.test.ts	@bcordes/ui package manifest declares the runtime dependencies the primitives actually import	passed
+packages/ui/package.test.ts	@bcordes/ui package manifest takes react and tailwind as peers, not as its own copies	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds avatar.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds badge.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds button.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds card.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds checkbox.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds dialog.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds dropdown-menu.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds input.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds label.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds navigation-menu.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds popover.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds progress.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds select.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds separator.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds sheet.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds skeleton.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds sonner.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds spinner.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds switch.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds table.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds tabs.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds textarea.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web holds tooltip.tsx at packages/ui/src/components	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web leaves nothing behind under apps/web/src/components/ui	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings avatar.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings badge.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings button.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings checkbox.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings dialog.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings dropdown-menu.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings label.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings navigation-menu.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings popover.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings progress.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings select.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings separator.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings sheet.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings switch.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings tabs.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web brings tooltip.test.tsx along with it	passed
+packages/ui/package.test.ts	the primitives really moved out of apps/web keeps cn coming from @bcordes/utils, not a re-created local copy	passed
+packages/ui/package.test.ts	the theme tokens ship with the primitives that read them defines the :root tokens and the @theme mapping in the package	passed
+packages/ui/package.test.ts	the theme tokens ship with the primitives that read them leaves the app stylesheet owning tailwind, fonts and its own animations	passed
+packages/ui/package.test.ts	the theme tokens ship with the primitives that read them leaves showcase.css in the app	passed
+packages/ui/package.test.ts	workspace wiring is a workspace: dependency of apps/web	passed
+packages/ui/package.test.ts	workspace wiring takes @base-ui/react and class-variance-authority off apps/web	passed
+packages/ui/package.test.ts	workspace wiring is linked into apps/web/node_modules by pnpm install	passed
+packages/ui/package.test.ts	workspace wiring resolves './components/button' from apps/web through the exports map	passed
+packages/ui/package.test.ts	workspace wiring resolves './components/badge' from apps/web through the exports map	passed
+packages/ui/package.test.ts	workspace wiring resolves './components/label' from apps/web through the exports map	passed
+packages/ui/package.test.ts	workspace wiring resolves './components/sonner' from apps/web through the exports map	passed
+packages/ui/package.test.ts	every importer was rewritten leaves no @/components/ui import anywhere	passed
+packages/ui/package.test.ts	every importer was rewritten points the shadcn ui alias at the package	passed
+packages/ui/package.test.ts	every importer was rewritten redirects every former importer to @bcordes/ui/components/*	passed
+packages/ui/package.test.ts	the package runs in the root vitest collects the package's own tests as its own project	passed
+packages/ui/package.test.ts	the package runs in the root vitest keeps the primitives out of the merged coverage report	passed
+packages/ui/src/components/avatar.test.tsx	"Avatar (Radix -> Base UI migration contract) renders root with data-slot=""avatar"" and base classes"	passed
+packages/ui/src/components/avatar.test.tsx	"Avatar (Radix -> Base UI migration contract) renders the fallback (data-slot=""avatar-fallback"") with its children when no image"	passed
+packages/ui/src/components/avatar.test.tsx	Avatar (Radix -> Base UI migration contract) keeps showing the fallback when the image source fails to load	passed
+packages/ui/src/components/avatar.test.tsx	Avatar (Radix -> Base UI migration contract) exports Avatar, AvatarImage, AvatarFallback with a stable API	passed
+packages/ui/src/components/avatar.test.tsx	Avatar (Radix -> Base UI migration contract) merges caller className on the root	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) renders a native <span> by default	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) preserves data-slot on the root	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) merges caller className with the variant classes	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) keeps badgeVariants exported and producing per-variant classes	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) applies the resolved variant classes onto the rendered badge	passed
+packages/ui/src/components/badge.test.tsx	Badge (Radix Slot -> Base UI render migration contract) composes onto an anchor via the render prop (asChild -> render)	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) renders a native <button> by default	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) preserves data-slot, data-variant and data-size on the root	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) merges caller className with the variant classes	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) keeps buttonVariants exported and producing per-variant classes	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) produces distinct size classes	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) applies the resolved variant/size classes onto the rendered button	passed
+packages/ui/src/components/button.test.tsx	Button (Radix Slot -> Base UI render migration contract) composes onto an anchor via the render prop (asChild -> render)	passed
+packages/ui/src/components/checkbox.test.tsx	"Checkbox (Radix -> Base UI migration contract) renders with role=""checkbox"" and data-slot=""checkbox"""	passed
+packages/ui/src/components/checkbox.test.tsx	Checkbox (Radix -> Base UI migration contract) reflects the checked state via aria-checked and a data-checked attribute	passed
+packages/ui/src/components/checkbox.test.tsx	Checkbox (Radix -> Base UI migration contract) reflects the unchecked state via a data-unchecked attribute	passed
+packages/ui/src/components/checkbox.test.tsx	Checkbox (Radix -> Base UI migration contract) renders the indicator with the CheckIcon svg when checked	passed
+packages/ui/src/components/checkbox.test.tsx	Checkbox (Radix -> Base UI migration contract) merges caller className and keeps the peer base class	passed
+packages/ui/src/components/dialog.test.tsx	"Dialog (Radix -> Base UI migration contract) opens from the trigger and exposes role=""dialog"""	passed
+packages/ui/src/components/dialog.test.tsx	Dialog (Radix -> Base UI migration contract) renders content, title and description with their data-slots	passed
+packages/ui/src/components/dialog.test.tsx	"Dialog (Radix -> Base UI migration contract) renders the close button (data-slot=""dialog-close"") when showCloseButton is true"	passed
+packages/ui/src/components/dialog.test.tsx	Dialog (Radix -> Base UI migration contract) omits the close button when showCloseButton is false	passed
+packages/ui/src/components/dialog.test.tsx	Dialog (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/dialog.test.tsx	Dialog (Radix -> Base UI migration contract) closes when the close button is clicked	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) opens the menu from the trigger	passed
+packages/ui/src/components/dropdown-menu.test.tsx	"DropdownMenu (Radix -> Base UI migration contract) renders items with data-slot=""dropdown-menu-item"" and menuitem role"	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) fires onClick when an item is activated	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) reflects checkbox checked state via data-checked plus an indicator slot	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) reflects the selected radio item via data-checked plus an indicator slot	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) renders label and separator with their data-slots	passed
+packages/ui/src/components/dropdown-menu.test.tsx	DropdownMenu (Radix -> Base UI migration contract) closes the menu after an item is selected	passed
+packages/ui/src/components/label.test.tsx	"Label (Radix -> native migration contract) renders a <label> element with data-slot=""label"""	passed
+packages/ui/src/components/label.test.tsx	Label (Radix -> native migration contract) wires htmlFor to associate with a control	passed
+packages/ui/src/components/label.test.tsx	Label (Radix -> native migration contract) activates its associated control when clicked (label -> control wiring)	passed
+packages/ui/src/components/label.test.tsx	Label (Radix -> native migration contract) preserves peer-disabled styling classes	passed
+packages/ui/src/components/label.test.tsx	Label (Radix -> native migration contract) merges caller className	passed
+packages/ui/src/components/navigation-menu.test.tsx	NavigationMenu (Radix -> Base UI migration contract) renders list, item and link with their data-slots	passed
+packages/ui/src/components/navigation-menu.test.tsx	NavigationMenu (Radix -> Base UI migration contract) exposes data-active on an active link	passed
+packages/ui/src/components/navigation-menu.test.tsx	NavigationMenu (Radix -> Base UI migration contract) reveals a trigger content panel when its item is open	passed
+packages/ui/src/components/navigation-menu.test.tsx	NavigationMenu (Radix -> Base UI migration contract) opens a trigger content panel on click	passed
+packages/ui/src/components/popover.test.tsx	"Popover (Radix -> Base UI migration contract) renders the trigger with data-slot=""popover-trigger"" and stays closed initially"	passed
+packages/ui/src/components/popover.test.tsx	"Popover (Radix -> Base UI migration contract) opens on trigger click and renders the popup with data-slot=""popover-content"""	passed
+packages/ui/src/components/popover.test.tsx	Popover (Radix -> Base UI migration contract) merges a caller className onto the popup	passed
+packages/ui/src/components/popover.test.tsx	Popover (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/progress.test.tsx	"Progress (Radix -> Base UI migration contract) renders root with data-slot=""progress"""	passed
+packages/ui/src/components/progress.test.tsx	Progress (Radix -> Base UI migration contract) exposes progressbar semantics reflecting the value (0-100)	passed
+packages/ui/src/components/progress.test.tsx	"Progress (Radix -> Base UI migration contract) renders a track wrapper with data-slot=""progress-track"""	passed
+packages/ui/src/components/progress.test.tsx	"Progress (Radix -> Base UI migration contract) renders an indicator with data-slot=""progress-indicator"""	passed
+packages/ui/src/components/progress.test.tsx	Progress (Radix -> Base UI migration contract) drives indicator width from value via inline width, not a manual translateX transform	passed
+packages/ui/src/components/progress.test.tsx	Progress (Radix -> Base UI migration contract) preserves the indicator accent class (bg-primary)	passed
+packages/ui/src/components/select.test.tsx	Select (Radix -> Base UI migration contract) renders the placeholder in the trigger while nothing is selected	passed
+packages/ui/src/components/select.test.tsx	"Select (Radix -> Base UI migration contract) shows options with data-slot=""select-item"" and option role when open"	passed
+packages/ui/src/components/select.test.tsx	Select (Radix -> Base UI migration contract) marks the selected item with the data-selected attribute	passed
+packages/ui/src/components/select.test.tsx	Select (Radix -> Base UI migration contract) updates the displayed value when an option is chosen	passed
+packages/ui/src/components/select.test.tsx	"Select (Radix -> Base UI migration contract) renders the popup content with data-slot=""select-content"""	passed
+packages/ui/src/components/separator.test.tsx	"Separator (Radix -> Base UI migration contract) renders without crashing and exposes data-slot=""separator"""	passed
+packages/ui/src/components/separator.test.tsx	Separator (Radix -> Base UI migration contract) defaults to horizontal orientation reflected via data-orientation	passed
+packages/ui/src/components/separator.test.tsx	"Separator (Radix -> Base UI migration contract) forwards orientation=""vertical"" to data-orientation for styling selectors"	passed
+packages/ui/src/components/separator.test.tsx	Separator (Radix -> Base UI migration contract) preserves the base-token classes (bg-border, shrink-0)	passed
+packages/ui/src/components/separator.test.tsx	Separator (Radix -> Base UI migration contract) merges caller className	passed
+packages/ui/src/components/separator.test.tsx	Separator (Radix -> Base UI migration contract) exposes an accessible separator role with aria-orientation (decorative dropped)	passed
+packages/ui/src/components/sheet.test.tsx	"Sheet (Radix -> Base UI migration contract) opens from the trigger and exposes role=""dialog"""	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) renders content, title and description with their data-slots	passed
+packages/ui/src/components/sheet.test.tsx	"Sheet (Radix -> Base UI migration contract) defaults to the right side (data-side=""right"")"	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (top)	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (right)	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (bottom)	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) honors the side prop via a stable data-side attribute (left)	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) closes when the close button is clicked	passed
+packages/ui/src/components/sheet.test.tsx	Sheet (Radix -> Base UI migration contract) closes when Escape is pressed	passed
+packages/ui/src/components/switch.test.tsx	"Switch (Radix -> Base UI migration contract) renders with role=""switch"" and data-slot=""switch"""	passed
+packages/ui/src/components/switch.test.tsx	"Switch (Radix -> Base UI migration contract) renders a thumb with data-slot=""switch-thumb"""	passed
+packages/ui/src/components/switch.test.tsx	Switch (Radix -> Base UI migration contract) reflects the checked state via aria-checked and a data-checked attribute	passed
+packages/ui/src/components/switch.test.tsx	Switch (Radix -> Base UI migration contract) reflects the unchecked state via a data-unchecked attribute	passed
+packages/ui/src/components/switch.test.tsx	Switch (Radix -> Base UI migration contract) merges caller className and keeps the peer base class	passed
+packages/ui/src/components/tabs.test.tsx	Tabs (Radix -> Base UI migration contract) renders tab triggers and the active panel with their data-slots	passed
+packages/ui/src/components/tabs.test.tsx	Tabs (Radix -> Base UI migration contract) marks the active tab with the data-active attribute	passed
+packages/ui/src/components/tabs.test.tsx	Tabs (Radix -> Base UI migration contract) activates a tab and shows its panel when clicked	passed
+packages/ui/src/components/tooltip.test.tsx	"Tooltip (Radix -> Base UI migration contract) renders the trigger with data-slot=""tooltip-trigger"""	passed
+packages/ui/src/components/tooltip.test.tsx	Tooltip (Radix -> Base UI migration contract) does not render the content while closed	passed
+packages/ui/src/components/tooltip.test.tsx	"Tooltip (Radix -> Base UI migration contract) shows the content with data-slot=""tooltip-content"" and its text when open"	passed
+packages/ui/src/components/tooltip.test.tsx	Tooltip (Radix -> Base UI migration contract) merges a caller className onto the content	passed

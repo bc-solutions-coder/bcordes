@@ -1,0 +1,82 @@
+{
+  "source_commit": "5279defe8168fcdbdfb7000faebc319f79fea8e2",
+  "status": "proposed; awaiting human review; implementation pending",
+  "files": 22,
+  "declarations": 193,
+  "test_declarations": 159,
+  "suite_declarations": 34,
+  "runtime_cases": 202,
+  "proposed_test_dispositions": {
+    "delete": 69,
+    "rewrite": 70,
+    "keep": 16,
+    "rename": 4
+  },
+  "proposed_whole_file_deletions": [
+    "packages/forms/package.test.ts",
+    "packages/ui/package.test.ts"
+  ],
+  "owned_test_changes_since_baseline": [],
+  "owned_worktree_hashes": {
+    "packages/forms/package.test.ts": "9c7946b6dc1a1107c4ebc811f967fc351ac2e8a80ad16d31bbefd3f89dacc81c",
+    "packages/forms/src/SelectFormField.test.tsx": "bb4b79b87af73c3bc1f18665d937b1c3552288ab6d2f5083fcebc4de3a1f120b",
+    "packages/forms/src/form.test.tsx": "4573205f098da8fcb7167f6da7721fe886a5091f81007a0df79060b7f45963ce",
+    "packages/navigation/src/MainNav.test.tsx": "3caa90e9d0e72eb4d6a78b8470fd33a71164ae0ac4250d4950a7b7e755a763ac",
+    "packages/navigation/src/MobileNav.test.tsx": "fcdde5fae47d4d85c46b30352b5d9b80d612f415f5900cf2be41661e3ad63bae",
+    "packages/ui/package.test.ts": "0b5e05c39ec250bdff6422c96aaaf076ae2f5d26ccc1270761727fe07d40476c",
+    "packages/ui/src/components/avatar.test.tsx": "5508e8a8d09c955f48dc23e7b7833128ce9b5c6ae858c3c29d448e5b42c0d526",
+    "packages/ui/src/components/badge.test.tsx": "e576cb114304fb046e9a52bca99f3e51c029a5270cd281ebb612a674b6f892a2",
+    "packages/ui/src/components/button.test.tsx": "d016aacea226959ea2873bed1f87107d794eb888e1fa838b8f2483ffe6ebc085",
+    "packages/ui/src/components/checkbox.test.tsx": "2e952c82bf73c003307dfd7d157aa73793ad039b18a1fdfd8dd4c0395477dbbd",
+    "packages/ui/src/components/dialog.test.tsx": "dcfc4716ea8c20c609ec59d9c1fd46d1097c750aa29c784613d9a6c234e84426",
+    "packages/ui/src/components/dropdown-menu.test.tsx": "bce1cfda08f09794179f0aef564011807f2ead69a7735495e67f6f7233522065",
+    "packages/ui/src/components/label.test.tsx": "73beb770947533f0491990c23b1a1705b6d9d94045bd8a7cdbe137d6e6057708",
+    "packages/ui/src/components/navigation-menu.test.tsx": "204a9ce9d993bd54d1bf5e35c4065875ce9754c8ad205336d2c2882e992f2bd5",
+    "packages/ui/src/components/popover.test.tsx": "9dd571ac8e2d137ec3f3c82cfab231a9a1ba0e4aa0c57a918becb14e5745733c",
+    "packages/ui/src/components/progress.test.tsx": "b9d616402c4b97254ed07311bb07bfbd908750aae877b39929a1e984bedf0237",
+    "packages/ui/src/components/select.test.tsx": "27206b0a4af6649cf9e1f40f9faa21b0c5fd411167a6e7894fbeb521cf9d2913",
+    "packages/ui/src/components/separator.test.tsx": "3e13db1d8b7f2263091db04bbfa2334bd57f35f6eb1410faebf20f932500942e",
+    "packages/ui/src/components/sheet.test.tsx": "227e73ae2d160d01607d378540b57f450f46c2ebffd7e3a5c1a81fdf2efc9a50",
+    "packages/ui/src/components/switch.test.tsx": "de3f2fc7b79797f21a9dfcd85803abcc281e715f68fa6e50b5206813ed486dad",
+    "packages/ui/src/components/tabs.test.tsx": "d9d8cc450444af553cfcb49e51ae74b4bdf71a9d1b5598d064ae640dcc4d41d4",
+    "packages/ui/src/components/tooltip.test.tsx": "32d66f48f8214e9dc260b0e203c6f67fd3b84eb33abf76c4803ed04c73216afa"
+  },
+  "new_replacement_ownership": {
+    "apps/web/e2e/tests/ui-component-behavior.spec.ts": "This review owns browser scenarios for current component appearance, public customization, placement, avatar image states and real-router active navigation. A test-only fixture harness may accompany it; no production showcase route is required."
+  },
+  "observed_validation": {
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "packages/forms/package.test.ts",
+      "packages/forms/src/SelectFormField.test.tsx",
+      "packages/forms/src/form.test.tsx",
+      "packages/navigation/src/MainNav.test.tsx",
+      "packages/navigation/src/MobileNav.test.tsx",
+      "packages/ui/package.test.ts",
+      "packages/ui/src/components/avatar.test.tsx",
+      "packages/ui/src/components/badge.test.tsx",
+      "packages/ui/src/components/button.test.tsx",
+      "packages/ui/src/components/checkbox.test.tsx",
+      "packages/ui/src/components/dialog.test.tsx",
+      "packages/ui/src/components/dropdown-menu.test.tsx",
+      "packages/ui/src/components/label.test.tsx",
+      "packages/ui/src/components/navigation-menu.test.tsx",
+      "packages/ui/src/components/popover.test.tsx",
+      "packages/ui/src/components/progress.test.tsx",
+      "packages/ui/src/components/select.test.tsx",
+      "packages/ui/src/components/separator.test.tsx",
+      "packages/ui/src/components/sheet.test.tsx",
+      "packages/ui/src/components/switch.test.tsx",
+      "packages/ui/src/components/tabs.test.tsx",
+      "packages/ui/src/components/tooltip.test.tsx",
+      "--reporter=json",
+      "--outputFile=/tmp/bcordes-ui-run.json"
+    ],
+    "passed": 202,
+    "failed": 0,
+    "skipped": 0
+  }
+}
