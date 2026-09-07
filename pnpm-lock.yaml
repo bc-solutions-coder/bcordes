@@ -430,16 +430,6 @@ importers:
         version: 19.2.4(react@19.2.4)
 
   packages/server:
-    dependencies:
-      '@bcordes/auth':
-        specifier: workspace:*
-        version: link:../auth
-      '@tanstack/react-start':
-        specifier: ~1.167.5
-        version: 1.167.5(crossws@0.4.4(srvx@0.11.12))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@22.19.7)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
-      h3:
-        specifier: 2.0.1-rc.16
-        version: 2.0.1-rc.16(crossws@0.4.4(srvx@0.11.12))
     devDependencies:
       '@bcordes/config':
         specifier: workspace:*

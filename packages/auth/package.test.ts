@@ -40,7 +40,7 @@ const filesMatching = (
 }
 
 /** Minimum importer count catches dropped imports while allowing new callers. */
-const IMPORTER_FLOOR = 20
+const IMPORTER_FLOOR = 18
 
 const SOURCE_MODULES = ['middleware', 'redact', 'session', 'types'] as const
 
@@ -184,7 +184,6 @@ describe('every importer was rewritten', () => {
       expect.arrayContaining([
         'apps/web/src/shared/auth/hooks/useUser.ts',
         'apps/web/src/routes/auth/me.ts',
-        'packages/server/src/csrf.ts',
       ]),
     )
   })

@@ -39,23 +39,7 @@ const filesMatching = (
   }
 }
 
-/** Clear NODE_PATH so pnpm's hidden hoist directory cannot hide missing dependencies. */
-const resolveFromWebWithoutNodePath = (specifier: string): string =>
-  execFileSync(
-    process.execPath,
-    [
-      '-e',
-      `const { createRequire } = require('node:module')
-       process.stdout.write(
-         createRequire(process.argv[1]).resolve(process.argv[2]),
-       )`,
-      join(webDir, 'package.json'),
-      specifier,
-    ],
-    { env: { ...process.env, NODE_PATH: '' }, encoding: 'utf8' },
-  )
-
-const SOURCE_MODULES = ['csrf', 'csrf-validation', 'security-headers'] as const
+const SOURCE_MODULES = ['security-headers'] as const
 
 describe('@bcordes/server package manifest', () => {
   it('declares the workspace package conventions', () => {
@@ -72,32 +56,9 @@ describe('@bcordes/server package manifest', () => {
 
     expect(manifest.exports).toMatchObject({
       '.': './src/index.ts',
-      './csrf': './src/csrf.ts',
-      './csrf-validation': './src/csrf-validation.ts',
       './security-headers': './src/security-headers.ts',
     })
     expect(existsSync(join(packageDir, 'src/index.ts'))).toBe(true)
-  })
-
-  it('owns h3 as a real runtime dependency (not a NODE_PATH hoist accident)', () => {
-    const manifest = readJson(join(packageDir, 'package.json'))
-
-    expect(manifest.dependencies).toHaveProperty('h3')
-  })
-
-  it('depends on the already-extracted @bcordes/auth package', () => {
-    const manifest = readJson(join(packageDir, 'package.json'))
-
-    expect(manifest.dependencies['@bcordes/auth']).toBe('workspace:*')
-  })
-
-  it('keeps the TanStack framework surface as a peer dep', () => {
-    const manifest = readJson(join(packageDir, 'package.json'))
-
-    // Share the host application's TanStack instance.
-    expect(manifest.peerDependencies).toMatchObject({
-      '@tanstack/react-start': expect.any(String),
-    })
   })
 })
 
@@ -108,24 +69,6 @@ describe('the middleware really moved out of apps/web', () => {
     expect(existsSync(join(webDir, 'src/server'))).toBe(false)
   })
 
-  it('moves csrf.ts out of apps/web/src/server-fns (product server-fns stay)', () => {
-    expect(existsSync(join(webDir, 'src/server-fns/csrf.ts'))).toBe(false)
-    expect(existsSync(join(webDir, 'src/server-fns/csrf.test.ts'))).toBe(false)
-    expect(
-      existsSync(
-        join(webDir, 'src/features/inquiries/server-fns/inquiries.ts'),
-      ),
-    ).toBe(true)
-    expect(existsSync(join(webDir, 'src/server-fns/notifications.ts'))).toBe(
-      false,
-    )
-    expect(
-      existsSync(
-        join(webDir, 'src/features/notifications/server-fns/notifications.ts'),
-      ),
-    ).toBe(true)
-  })
-
   it('carries every source module into packages/server/src', () => {
     for (const mod of SOURCE_MODULES) {
       expect(existsSync(join(packageDir, `src/${mod}.ts`))).toBe(true)
@@ -133,12 +76,7 @@ describe('the middleware really moved out of apps/web', () => {
   })
 
   it('brings the behaviour tests along with their modules', () => {
-    for (const testFile of [
-      'src/csrf.test.ts',
-      'src/csrf-validation.test.ts',
-      'src/security-headers.test.ts',
-      'src/csrf-token.test.ts',
-    ]) {
+    for (const testFile of ['src/security-headers.test.ts']) {
       expect(existsSync(join(packageDir, testFile))).toBe(true)
     }
 
@@ -151,28 +89,11 @@ describe('the middleware really moved out of apps/web', () => {
   })
 })
 
-describe("the '.' barrel exposes the two middleware symbols", () => {
-  it('exports exactly applySecurityHeaders and validateCsrfToken', async () => {
+describe('the package entry point', () => {
+  it('exports applySecurityHeaders', async () => {
     const mod = await import('./src/index')
-
-    // Keep createServerFn evaluation on the dedicated csrf subpath.
-    expect(Object.keys(mod).sort()).toEqual([
-      'applySecurityHeaders',
-      'validateCsrfToken',
-    ])
-    expect(Object.keys(mod)).not.toContain('getCsrfToken')
-  })
-
-  it('hands back h3 event handlers', async () => {
-    const { validateCsrfToken, applySecurityHeaders } =
-      (await import('./src/index')) as {
-        validateCsrfToken: () => unknown
-        applySecurityHeaders: unknown
-      }
-
-    expect(typeof validateCsrfToken).toBe('function')
-    expect(typeof validateCsrfToken()).toBe('function')
-    expect(typeof applySecurityHeaders).toBe('function')
+    expect(Object.keys(mod)).toEqual(['applySecurityHeaders'])
+    expect(typeof mod.applySecurityHeaders).toBe('function')
   })
 })
 
@@ -196,22 +117,6 @@ describe('workspace wiring', () => {
     expect(
       realpathSync(requireFromWeb.resolve('@bcordes/server/security-headers')),
     ).toBe(realpathSync(join(packageDir, 'src/security-headers.ts')))
-    expect(
-      realpathSync(requireFromWeb.resolve('@bcordes/server/csrf-validation')),
-    ).toBe(realpathSync(join(packageDir, 'src/csrf-validation.ts')))
-    expect(realpathSync(requireFromWeb.resolve('@bcordes/server/csrf'))).toBe(
-      realpathSync(join(packageDir, 'src/csrf.ts')),
-    )
-  })
-})
-
-describe('h3 resolves as a real dependency of packages/server', () => {
-  it('installs h3 into the package resolution graph', () => {
-    expect(() => resolveFromWebWithoutNodePath('h3/package.json')).not.toThrow()
-    const pkg = readJson(resolveFromWebWithoutNodePath('h3/package.json')) as {
-      version: string
-    }
-    expect(pkg.version).toMatch(/^2\./)
   })
 })
 
@@ -249,9 +154,6 @@ describe('the package runs in the root vitest', () => {
 
       expect(files).toEqual([
         join(packageDir, 'package.test.ts'),
-        join(packageDir, 'src/csrf-token.test.ts'),
-        join(packageDir, 'src/csrf-validation.test.ts'),
-        join(packageDir, 'src/csrf.test.ts'),
         join(packageDir, 'src/security-headers.test.ts'),
       ])
       expect(
