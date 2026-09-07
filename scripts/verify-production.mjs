@@ -60,7 +60,7 @@ async function startServer() {
     server.stdout.on('data', (data) => {
       output += data
       const address = output.match(
-        /Listening on (http:\/\/127\.0\.0\.1:\d+)/,
+        /Listening on:?\s+(http:\/\/127\.0\.0\.1:\d+)/,
       )?.[1]
       if (address) finish(resolve, address)
     })

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { QueryClient, useQuery } from '@tanstack/react-query'
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query'
 import * as Query from '@bcordes/query'
 
 // Verify the router and its rendered children share the hydrated query client.
@@ -19,35 +19,17 @@ const SSR_KEY = ['router-ssr-probe']
 
 /** A dehydrated query cache with no pending streamed queries. */
 function dehydratedRouterPayload(data: string) {
+  const queryClient = new QueryClient()
+  queryClient.setQueryData(SSR_KEY, data)
   return {
-    dehydratedQueryClient: {
-      mutations: [],
-      queries: [
-        {
-          queryKey: SSR_KEY,
-          queryHash: JSON.stringify(SSR_KEY),
-          state: {
-            data,
-            dataUpdateCount: 1,
-            dataUpdatedAt: Date.now(),
-            error: null,
-            errorUpdateCount: 0,
-            errorUpdatedAt: 0,
-            fetchFailureCount: 0,
-            fetchFailureReason: null,
-            fetchMeta: null,
-            isInvalidated: false,
-            status: 'success' as const,
-            fetchStatus: 'idle' as const,
-          },
+    query: {
+      initial: dehydrate(queryClient).queries,
+      stream: new ReadableStream({
+        start(controller) {
+          controller.close()
         },
-      ],
+      }),
     },
-    queryStream: new ReadableStream({
-      start(controller) {
-        controller.close()
-      },
-    }),
   }
 }
 

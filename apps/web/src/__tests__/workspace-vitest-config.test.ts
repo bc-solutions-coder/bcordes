@@ -220,10 +220,35 @@ describe('apps/web/vitest.config.ts (the app project)', () => {
     expect(patterns).toMatch(/tsx/)
   })
 
-  it('keeps the tsconfig-paths plugin that resolves the @/ alias', async () => {
-    const { pluginNames } = await loadConfig(appConfigPath)
-
-    expect(pluginNames).toContain('vite-tsconfig-paths')
+  it('resolves the @/ alias through the app test configuration', async () => {
+    const { stdout } = await execFileAsync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        `
+        import { createServer } from 'vite'
+        const server = await createServer({
+          configFile: process.argv[1],
+          logLevel: 'silent',
+          server: { middlewareMode: true },
+        })
+        try {
+          const resolved = await server.pluginContainer.resolveId(
+            '@/features/home',
+            process.argv[2],
+          )
+          process.stdout.write(JSON.stringify(resolved?.id))
+        } finally {
+          await server.close()
+        }
+      `,
+        appConfigPath,
+        join(appDir, 'src/routes/index.tsx'),
+      ],
+      { cwd: appDir, encoding: 'utf8' },
+    )
+    expect(JSON.parse(stdout)).toBe(join(appDir, 'src/features/home/index.ts'))
   })
 })
 

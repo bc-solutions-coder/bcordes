@@ -145,3 +145,41 @@ repository check retained generated Storybook output without formatting it.
 All 1297 tests, workspace typechecks, lint and format:check passed. Only four
 existing files required formatting changes; those are committed separately.
 Both standards and spec reviews reported no implementation findings.
+
+## Vite, routing and Nitro, #58
+
+Vite 8.2.2 uses integrated Rolldown with React plugin 6.1.1. Start 1.168.50,
+Router 1.170.33, router-plugin 1.168.36 and their workspace peers now agree on
+Router Core 1.171.28. Removed the old Router/Core overrides. The Seroval
+override forced 1.5.1 below Router's required ^1.6.2 and caused an SSR
+`ctx.addCleanup` failure; removing it resolves Seroval 1.6.4.
+
+Nitro is pinned to the approved 3.0.260903-beta. Its build mixed bundled React
+with an external React instance used by the store shim, causing invalid-hook
+errors during SSR. React and React DOM now remain external and are explicitly
+traced into the portable output. Local production and isolated Docker checks
+verify that configuration. The server entry remains `.output/server/index.mjs`.
+The production verifier accepts Nitro's added colon in its listening message.
+
+Tailwind and its Vite plugin moved together to 4.3.3 because the old plugin
+excluded Vite 8. React Query/Devtools moved to 5.102.8 because the SSR query
+adapter 1.167.2 requires Query >=5.102.0. #59 and #74 record that coordination.
+React itself and the other TanStack libraries remain separate work.
+
+App, Vitest and Storybook use native tsconfig aliases. Storybook has its own
+small Vite config: inheriting app server plugins caused Start's manifest plugin
+to reject Storybook's multiple entries. Both direct alias-plugin dependencies
+were removed after development, production, test and story resolution passed.
+The alias test resolves a real module; the SSR query fixture now dehydrates a
+real QueryClient into the adapter's new query.initial/query.stream envelope.
+All existing behavior assertions remain. The regenerated route tree retains
+the same route inventory and hierarchy.
+
+Verification passed 1297 coverage tests, all typechecks, application and static
+Storybook builds, four-page production smoke checks, all 24 browser tests, and
+Docker runtime checks under both redirect configurations. Development app and
+Button story rendered without browser page errors. The analysis build produced
+a 1.19 MB stats.html; the existing visualizer remains compatible. A direct
+warning-handler probe preserved suppression of dependency-only unused imports
+and forwarding of application and unrelated warnings. The sole remaining peer
+warning is the pre-existing ESLint/import-x mismatch owned by #57.

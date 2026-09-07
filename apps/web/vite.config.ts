@@ -2,22 +2,22 @@ import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import { nitro } from 'nitro/vite'
 import viteReact from '@vitejs/plugin-react'
-import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 const config = defineConfig({
+  resolve: { tsconfigPaths: true },
   plugins: [
-    viteTsConfigPaths({
-      projects: ['./tsconfig.json'],
-    }),
     tailwindcss(),
     tanstackStart({
       router: {
         routeFileIgnorePattern: '\\.test\\.(tsx?|jsx?)$',
       },
     }),
-    nitro(),
+    nitro({
+      rolldownConfig: { external: [/^react(?:-dom)?(?:\/|$)/] },
+      traceDeps: ['react', 'react-dom'],
+    }),
     viteReact(),
     ...(process.env.ANALYZE
       ? [
@@ -31,7 +31,7 @@ const config = defineConfig({
   ],
   build: {
     chunkSizeWarningLimit: 600,
-    rollupOptions: {
+    rolldownOptions: {
       onwarn(warning, defaultHandler) {
         // Suppress unused-import warnings from dependencies.
         if (
