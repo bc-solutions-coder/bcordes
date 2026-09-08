@@ -1,6 +1,6 @@
 # Notification behavior and accepted product gaps
 
-Implementation for [issue 99](https://github.com/bc-solutions-coder/bcordes/issues/99), based on `1b8ad95`. [dispositions.tsv](dispositions.tsv) maps all 117 original cases to retained or replacement behavior. Ten accepted duplicate or structural declarations were removed or consolidated. The stream, push and badge boundary cases added by issue 90 remain covered.
+Implementation for [issue 99](https://github.com/bc-solutions-coder/bcordes/issues/99), based on `1b8ad95`, implemented in `82c2183`. [dispositions.tsv](dispositions.tsv) maps all 117 original cases to retained or replacement behavior. Ten accepted duplicate or structural declarations were removed or consolidated. The stream, push and badge boundary cases added by issue 90 remain covered.
 
 The notification page requests page 1 with 20 records, preserves returned order, and explicitly describes the loaded list. Filters show N of M loaded notifications, including zero results. Empty copy refers to the loaded list. The inert Load more button and unused page state are removed under the accepted issue 81 decision; complete pagination remains deferred. Tests use full, short and empty responses, all seven type controls, combined unread/type filters, selected IDs and actual SDK requests. Mark all read remains account-wide even while filters and selection are active.
 

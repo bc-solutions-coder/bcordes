@@ -631,5 +631,6 @@
     "The appearance fixture public import required framework transforms, so the standalone fixture was replaced by the built authenticated page.",
     "Read styling is captured after actual CSS transitions finish."
   ],
-  "coverageLossAssessment": "The filter hook loses three covered lines and statements because unused page state and reset calls were deleted. The page loses two covered branches while removing inert pagination; all remaining page branches are covered. No unchanged production file loses coverage."
+  "coverageLossAssessment": "The filter hook loses three covered lines and statements because unused page state and reset calls were deleted. The page loses two covered branches while removing inert pagination; all remaining page branches are covered. No unchanged production file loses coverage.",
+  "implementationRevision": "82c2183"
 }
