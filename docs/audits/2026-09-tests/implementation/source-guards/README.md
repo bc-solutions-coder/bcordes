@@ -1,0 +1,11 @@
+# Remaining source-guard removal — #103
+
+Implements [#103](https://github.com/bc-solutions-coder/bcordes/issues/103) from base `a651665`, following the [accepted source-guard review](../../reviews/app-migration-source-guards/README.md). [Dispositions](dispositions.tsv) retain all 279 original declarations: 200 cases and 79 suites, including historical absences. Twenty remaining files are deleted; the H3-resolution file was already absent.
+
+All six useful execution obligations have verified owners in [prerequisites](prerequisites.tsv): built Storybook usability, delivered package styling, two tag-output examples, a real application alias consumer and actual root coverage execution. Their implementation records include relevant deliberate-defect failure and restored success. This slice reuses those checks and adds no duplicate test. The global coverage prerequisite and production/Docker checks are also complete.
+
+The deleted files enforced migration history, source location/import/export spellings, obsolete library absence, documentation/manifest/configuration structure, fixed discovery inventories and emitted selector spellings. Earlier slices already retired conflicting consumer lists and relocated the tag cases. The final removal also eliminates the environment-gated legacy source cases that skipped in CI. Product behavior, compiler/lint diagnostics, runtime build/browser checks and documentation-quality commands remain in their designated owners.
+
+Archival audit scripts remain outside standing behavioral gates. The remaining filesystem observations in config tests inspect actual compiler emission, actual coverage output, or supply controlled lint configuration; they do not assert implementation source. No production code, coverage threshold or exclusion changes in this slice.
+
+Final verification passes 743 Vitest cases, 50 browser cases and 29 standalone CLI cases with no failures or skips, plus the built Storybook probe. Every measured per-file coverage value is unchanged: 97.39% lines, 96.18% statements, 92.35% branches and 96.08% functions. Both reviews found no issues. [Summary](summary.json) and [coverage](coverage-summary.json) record the results; no incidental coverage loss occurred. No remote CI or publication success is inferred from pushing commits.

@@ -1,0 +1,98 @@
+{
+  "issue": 103,
+  "baseRevision": "a651665",
+  "originalDeclarations": 279,
+  "originalCases": 200,
+  "originalSuites": 79,
+  "removedFiles": [
+    "apps/web/src/__tests__/about-feature-module.test.ts",
+    "apps/web/src/__tests__/app-shell-module.test.ts",
+    "apps/web/src/__tests__/architecture-cleanup.test.ts",
+    "apps/web/src/__tests__/contact-feature-module.test.ts",
+    "apps/web/src/__tests__/dead-code-animated-text.test.ts",
+    "apps/web/src/__tests__/dead-code-use-mobile.test.ts",
+    "apps/web/src/__tests__/docs-workspace-layout.test.ts",
+    "apps/web/src/__tests__/feature-architecture.test.ts",
+    "apps/web/src/__tests__/home-feature-module.test.ts",
+    "apps/web/src/__tests__/inquiries-feature-module.test.ts",
+    "apps/web/src/__tests__/markdown-content-removed.test.ts",
+    "apps/web/src/__tests__/notifications-feature-module.test.ts",
+    "apps/web/src/__tests__/projects-feature-module.test.ts",
+    "apps/web/src/__tests__/shadcn-cli-config.test.ts",
+    "apps/web/src/__tests__/shared-auth-module.test.ts",
+    "apps/web/src/__tests__/shared-motion-module.test.ts",
+    "apps/web/src/__tests__/storybook-packages-scan.test.ts",
+    "apps/web/src/__tests__/tailwind-source-scanning.test.ts",
+    "apps/web/src/__tests__/workspace-infra.test.ts",
+    "apps/web/src/__tests__/workspace-vitest-config.test.ts"
+  ],
+  "removedLines": 3277,
+  "tests": {
+    "numPassedTests": 743,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [],
+  "coverageLosses": [],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": true,
+  "exclusionsUnchanged": true,
+  "reviews": {
+    "spec": 0,
+    "standards": 0
+  },
+  "deliberateDefects": "No new or replaced test in this deletion-only slice; designated prerequisite owners record all six replacement defect/restoration proofs.",
+  "commands": [
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-source-suite.json",
+    "pnpm exec playwright test --reporter=json (cwd apps/web)",
+    "pnpm test:verification",
+    "pnpm verify:storybook",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ],
+  "browser": {
+    "startTime": "2026-09-08T02:37:35.154Z",
+    "duration": 18317.028000000002,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "standaloneCliTests": 29,
+  "storybookRuntime": "Passed actual built package story"
+}

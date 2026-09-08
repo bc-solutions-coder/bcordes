@@ -1,0 +1,9 @@
+contract	owner	evidence
+Usable built package story	102	../storybook-release/summary.json
+Delivered package-only component styling	100	../ui-forms-navigation/summary.json
+v0.1.7 release outputs	102	../storybook-release/summary.json
+v1.10.2 release outputs	102	../storybook-release/summary.json
+Actual application alias consumer	91	../tooling/summary.json
+Executed root app/package coverage	91	../tooling/summary.json
+All four enforced 90% coverage gates	90/91	../coverage-prerequisite/summary.json
+Production/Docker serving and cleanup	101	../production-tooling/summary.json
