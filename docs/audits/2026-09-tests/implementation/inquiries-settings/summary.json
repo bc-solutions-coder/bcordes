@@ -468,5 +468,6 @@
     "One full run alongside typecheck/lint hit the existing query-inspector lazy-render timeout; final full run uses four workers without concurrent quality processes.",
     "First inbound mapping probe selected no tests; corrected selector caught the defect.",
     "Tooltip output has no tooltip role; browser assertions use actual visible explanation text."
-  ]
+  ],
+  "implementationRevision": "ed10255"
 }

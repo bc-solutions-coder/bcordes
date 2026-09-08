@@ -1,6 +1,6 @@
 # Inquiries, settings and registered validators
 
-Implementation for [issue 98](https://github.com/bc-solutions-coder/bcordes/issues/98), based on `d0e5722`. [dispositions.tsv](dispositions.tsv) maps all 104 original cases to their replacement behavior. The 36 accepted structural or duplicate declarations were removed or consolidated after the replacements passed. The copied-schema and status-map test files are gone.
+Implementation for [issue 98](https://github.com/bc-solutions-coder/bcordes/issues/98), based on `d0e5722`, implemented in `ed10255`. [dispositions.tsv](dispositions.tsv) maps all 104 original cases to their replacement behavior. The 36 accepted structural or duplicate declarations were removed or consolidated after the replacements passed. The copied-schema and status-map test files are gone.
 
 Inquiry server tests execute the actual registered Zod validators and handlers through a thin framework adapter, then inspect real SDK requests. They cover all supported enum choices, invalid UUIDs, length limits, explicit inbound and outbound status mappings, ownership, internal-note privacy, expired sessions, and signed-in versus service-client submissions. The fixture supplies distinct authorization headers; actual credential propagation remains covered by the auth and browser boundaries from earlier slices. This adapter proves validation and handler behavior, not framework HTTP transport.
 
