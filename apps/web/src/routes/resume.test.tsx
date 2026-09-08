@@ -35,10 +35,7 @@ describe('Resume page', () => {
     it('offers the resume PDF as a download', async () => {
       await renderFileRoute(Route, '/resume')
       const downloadLink = screen.getByRole('link', { name: 'Download PDF' })
-      expect(downloadLink).toHaveAttribute('download')
-      expect(downloadLink.closest('a')?.getAttribute('href')).toBe(
-        '/Cordes-Resume.pdf',
-      )
+      expect(downloadLink).toHaveAttribute('download', 'Cordes-Resume.pdf')
     })
 
     it('lists the current employers and engineering roles', async () => {

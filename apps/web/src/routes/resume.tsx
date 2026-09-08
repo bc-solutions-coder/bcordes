@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Download } from 'lucide-react'
 import { Badge } from '@bcordes/ui/components/badge'
+import resumePdf from './-assets/Cordes-Resume.pdf?url'
 import { FadeInView } from '@/shared/motion'
 
 export const Route = createFileRoute('/resume')({
@@ -165,8 +166,8 @@ function ResumePage() {
                 </p>
               </div>
               <a
-                href="/Cordes-Resume.pdf"
-                download
+                href={resumePdf}
+                download="Cordes-Resume.pdf"
                 className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
               >
                 <Download className="h-4 w-4" />

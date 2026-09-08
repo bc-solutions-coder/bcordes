@@ -1,6 +1,6 @@
 # Bryan Cordes
 
-Source: [Download resume](../apps/web/public/Cordes-Resume.pdf)
+Source: [Download resume](../apps/web/src/routes/-assets/Cordes-Resume.pdf)
 
 Fort Myers, FL | (239) 777-8800 | Bryan.Cordes@bcordes.dev | https://www.linkedin.com/in/bryancordes
 
