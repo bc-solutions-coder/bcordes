@@ -142,5 +142,114 @@
     "git diff --check"
   ],
   "docker": "Reused #101 pinned linux/amd64 image under arm64 emulation; final run checks both configurations; no image publication",
-  "normalCi": "Pending final implementation commit; attach run and coverage artifact before closure"
+  "normalCi": {
+    "revision": "6bca2177659a9af07ee423dd4d0da200891a2179",
+    "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "test",
+        "conclusion": "success",
+        "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/job/101921178963"
+      },
+      {
+        "name": "build",
+        "conclusion": "success",
+        "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/job/101921179058"
+      },
+      {
+        "name": "lint",
+        "conclusion": "success",
+        "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/job/101921179110"
+      },
+      {
+        "name": "typecheck",
+        "conclusion": "success",
+        "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/job/101921179175"
+      }
+    ],
+    "runtime": {
+      "unitPassed": 743,
+      "unitFailed": 0,
+      "unitSkipped": 0,
+      "browserPassed": 50,
+      "browserFlaky": 0,
+      "cliPassed": 29,
+      "cliFailed": 0,
+      "cliSkipped": 0,
+      "storybook": "passed"
+    },
+    "artifact": {
+      "id": 10039081864,
+      "name": "coverage-report",
+      "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/artifacts/10039081864",
+      "archiveDigest": "sha256:a4b0e672b78657f126e5748217fb7df740d95bceeca60382f1c7f708a2daa9b4",
+      "downloadedSummarySha256": "5f73d9b89c4b52b7e9f1744a588bb4b00e06e5e481b2710b3fd9ac677144eb14",
+      "sizeBytes": 351939
+    },
+    "coverage": {
+      "lines": {
+        "total": 1075,
+        "covered": 1049,
+        "skipped": 0,
+        "pct": 97.58
+      },
+      "statements": {
+        "total": 1153,
+        "covered": 1111,
+        "skipped": 0,
+        "pct": 96.35
+      },
+      "functions": {
+        "total": 383,
+        "covered": 370,
+        "skipped": 0,
+        "pct": 96.6
+      },
+      "branches": {
+        "total": 667,
+        "covered": 617,
+        "skipped": 0,
+        "pct": 92.5
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "coverageDeltaFromLocal": [
+      {
+        "file": "packages/valkey/src/client.ts",
+        "metric": "lines",
+        "localCovered": 8,
+        "ciCovered": 10,
+        "total": 11
+      },
+      {
+        "file": "packages/valkey/src/client.ts",
+        "metric": "statements",
+        "localCovered": 8,
+        "ciCovered": 10,
+        "total": 12
+      },
+      {
+        "file": "packages/valkey/src/client.ts",
+        "metric": "branches",
+        "localCovered": 4,
+        "ciCovered": 5,
+        "total": 6
+      },
+      {
+        "file": "packages/valkey/src/client.ts",
+        "metric": "functions",
+        "localCovered": 1,
+        "ciCovered": 3,
+        "total": 4
+      }
+    ],
+    "deltaAssessment": "Only additional Valkey callback execution is measured in CI; no denominator change or per-file coverage loss. Local lower totals remain the conservative report."
+  },
+  "implementationRevision": "6bca2177659a9af07ee423dd4d0da200891a2179"
 }

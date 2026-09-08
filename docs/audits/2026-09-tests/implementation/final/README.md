@@ -1,6 +1,6 @@
 # Final behavior-test reconciliation — #104
 
-Completes [#104](https://github.com/bc-solutions-coder/bcordes/issues/104) for [epic #88](https://github.com/bc-solutions-coder/bcordes/issues/88), against accepted baseline `e872519d71918ec2f9fb1ecf24d865eeea401b09`. The final local gates pass. Normal CI evidence for the final implementation revision will be attached before closure.
+Completes [#104](https://github.com/bc-solutions-coder/bcordes/issues/104) for [epic #88](https://github.com/bc-solutions-coder/bcordes/issues/88), against accepted baseline `e872519d71918ec2f9fb1ecf24d865eeea401b09`. Final implementation revision `6bca2177659a9af07ee423dd4d0da200891a2179` passes both local gates and [normal CI](https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193).
 
 The cleaned suite has 743 passing unit cases, 50 passing browser cases and 29 passing standalone CLI cases, with no failures, skips or browser retries. The built Storybook runtime probe also passes. The baseline had 1,288 unit and 24 browser cases. Static declaration totals and runtime expansions differ because parameterized cases and loops expand during execution.
 
@@ -31,5 +31,7 @@ Final inspection found that the earlier coverage fixture exercised only package 
 ## Verification scope
 
 Fresh local production build, full coverage, Chromium browser suite, 29 CLI cases, production HTTP smoke, Storybook build/runtime, typecheck, lint, formatting and documentation links pass. The final Docker check reuses the pinned #101 linux/amd64 image under arm64 emulation and verifies public serving under both callback/logout URL configurations. The #101 evidence also proves real success/failure resource cleanup. These checks do not claim live identity-provider authentication, registry publication or deployment. Browser auth exercises synthetic sessions through the real built transport.
+
+The final CI run passes all four jobs: test, build, lint and typecheck. Its logs confirm 743 unit cases, 50 browser cases, 29 CLI cases and the built Storybook probe. The downloaded [coverage artifact](https://github.com/bc-solutions-coder/bcordes/actions/runs/34181438193/artifacts/10039081864) measures 97.58% lines, 96.35% statements, 92.50% branches and 96.60% functions. The only difference from local results is additional Valkey callback execution, with identical denominators and no per-file loss. [CI results](ci-results.json) preserve job links, artifact digest and counter differences; [CI coverage](ci-coverage-summary.json) preserves the downloaded values.
 
 Both independent reviews found no remaining issues. [Summary](summary.json) records commands, totals, the final defect evidence and CI status. Prior slice evidence retains each accepted title/deletion map and its deliberate-defect/restoration results.
