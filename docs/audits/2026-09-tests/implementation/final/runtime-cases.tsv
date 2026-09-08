@@ -1,0 +1,823 @@
+file	runner	title	status	owner
+packages/config/config.test.ts	vitest	accepts typed JSX and app aliases without emitting JavaScript and diagnoses invalid compiler inputs	passed	91
+packages/config/coverage-behavior.test.ts	vitest	emits coverage for executed app and package code and rejects uncovered behavior at the configured thresholds	passed	91
+packages/config/oxlint-plugin.test.ts	vitest	reports invalid type parameter names and accepts supported names and suppression	passed	91
+packages/config/oxlint-plugin.test.ts	vitest	rejects forbidden imports and style violations, permits exceptions, and fixes supported style errors	passed	91
+packages/config/runner-behavior.test.ts	vitest	executes every workspace project and provides the application alias, DOM matchers and cleanup	passed	91
+packages/config/typecheck-coverage.test.ts	vitest	reports a type error in every workspace member through the root typecheck command	passed	91
+packages/query/src/devtools.test.tsx	vitest	labels the query inspector in the developer tools	passed	94
+packages/query/src/devtools.test.tsx	vitest	shows cached queries and their data in the query inspector	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider keeps query data isolated between contexts	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider renders children	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider renders data and subsequent updates from the supplied query cache	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider renders multiple children	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider uses caller freshness settings to avoid refetching cached data	passed	94
+packages/query/src/root-provider.test.tsx	vitest	Query provider serves server-hydrated query data to children without refetching	passed	94
+packages/authz/src/fixtures.test.ts	vitest	recognizes default user fixture permissions without granting inquiry access	passed	93
+packages/authz/src/fixtures.test.ts	vitest	uses overridden fixture roles and permissions for authorization	passed	93
+packages/authz/src/fixtures.test.ts	vitest	grants admin fixture capabilities and respects explicit restrictions	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasRole returns true when the user has the role	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasRole returns false when the user lacks the role	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasRole returns false for a null user	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns true when the user has at least one	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns false when the user has none	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasAnyRole returns false for an empty candidate list	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasPermission returns true when the permission is present	passed	93
+packages/authz/src/predicates.test.ts	vitest	hasPermission returns false when permissions are empty	passed	93
+packages/authz/src/predicates.test.ts	vitest	can grants when a role grants the action	passed	93
+packages/authz/src/predicates.test.ts	vitest	can denies when neither roles nor direct permissions grant the action	passed	93
+packages/authz/src/predicates.test.ts	vitest	can denies for a null user	passed	93
+packages/forms/src/SelectFormField.test.tsx	vitest	Project type form selection names the selection control and shows its placeholder	passed	100
+packages/forms/src/SelectFormField.test.tsx	vitest	Project type form selection shows the required indicator only when requested	passed	100
+packages/forms/src/SelectFormField.test.tsx	vitest	Project type form selection offers every supplied option	passed	100
+packages/forms/src/SelectFormField.test.tsx	vitest	Project type form selection displays and submits the chosen option value	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission names the editable control through its label	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission describes a valid control with its help text	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission describes an invalid control with both help and error text	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission shows the required error only after an invalid submission	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission rejects empty input, then submits the corrected value and clears the error	passed	100
+packages/forms/src/form.test.tsx	vitest	Accessible form submission throws when the field hook has no form context	passed	100
+packages/logger/src/logger.test.ts	vitest	emits structured production records with child bindings at the default info level	passed	94
+packages/logger/src/logger.test.ts	vitest	filters records below the configured production severity	passed	94
+packages/logger/src/logger.test.ts	vitest	emits readable development messages and exits cleanly	passed	94
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation opens the destination selected from the supplied named links	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation renders exactly the custom item links	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation reports current-page state at /projects with exact=true	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation reports current-page state at /projects with exact=false	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation reports current-page state at /projects/alpha with exact=true	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation reports current-page state at /projects/alpha with exact=false	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation shows the supplied brand and keeps the supplied action usable	passed	100
+packages/navigation/src/MainNav.test.tsx	vitest	Desktop navigation renders no item links for an empty collection while preserving a brand link	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation opens the selected destination and reports navigation without closing the controlled sheet	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation renders exactly the custom item links	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation shows the injected brand and opens the supplied sign-in destination	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation opens and dismisses the sheet while reporting both public open-state changes	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation keeps parent-controlled state authoritative and closes when the parent accepts dismissal	passed	100
+packages/navigation/src/MobileNav.test.tsx	vitest	Mobile navigation renders no item links for an empty collection	passed	100
+packages/server/src/security-headers.test.ts	vitest	preserves redirects and multiple session cookies while adding security headers	passed	93
+packages/server/src/security-headers.test.ts	vitest	preserves event-stream content type and readable response body	passed	93
+packages/server/src/security-headers.test.ts	vitest	requires HTTPS for production responses while preserving their contents	passed	93
+packages/test-utils/src/render.test.tsx	vitest	renders asynchronous query data and interactive updates through the public helpers	passed	94
+packages/test-utils/src/render.test.tsx	vitest	does not retry a rejected query	passed	94
+packages/test-utils/src/render.test.tsx	vitest	does not share cached query data between separate renders	passed	94
+packages/test-utils/src/render.test.tsx	vitest	applies the caller container and base element options	passed	94
+packages/utils/src/format.test.ts	vitest	"formatRelativeTime returns ""just now"" for less than 60 seconds ago"	passed	94
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns minutes ago for 1-59 minutes	passed	94
+packages/utils/src/format.test.ts	vitest	"formatRelativeTime returns ""1m ago"" at exactly 60 seconds"	passed	94
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns hours ago for 1-23 hours	passed	94
+packages/utils/src/format.test.ts	vitest	"formatRelativeTime returns ""1h ago"" at exactly 60 minutes"	passed	94
+packages/utils/src/format.test.ts	vitest	formatRelativeTime returns days ago for 1-6 days	passed	94
+packages/utils/src/format.test.ts	vitest	formatRelativeTime falls back to short date for 7+ days	passed	94
+packages/utils/src/format.test.ts	vitest	formatRelativeTime falls back to short date for much older dates	passed	94
+packages/utils/src/format.test.ts	vitest	"formatDateTime formats a date as ""Jan 5, 2025, 02:30 PM"""	passed	94
+packages/utils/src/format.test.ts	vitest	formatDateTime formats midnight as 12:00 AM	passed	94
+packages/utils/src/format.test.ts	vitest	formatDateTime formats noon as 12:00 PM	passed	94
+packages/utils/src/format.test.ts	vitest	formatDateTime pads minutes with leading zero	passed	94
+packages/utils/src/format.test.ts	vitest	formatDateTime handles PM hours correctly	passed	94
+packages/utils/src/utils.test.ts	vitest	cn merges multiple class names	passed	94
+packages/utils/src/utils.test.ts	vitest	cn resolves conflicting Tailwind classes (last wins)	passed	94
+packages/utils/src/utils.test.ts	vitest	cn handles conditional class names with falsy values	passed	94
+packages/utils/src/utils.test.ts	vitest	cn returns empty string for no input	passed	94
+packages/utils/src/utils.test.ts	vitest	cn returns empty string for all-falsy input	passed	94
+packages/utils/src/utils.test.ts	vitest	cn handles array inputs	passed	94
+packages/utils/src/utils.test.ts	vitest	cn handles object inputs for conditional classes	passed	94
+packages/utils/src/utils.test.ts	vitest	cn merges conflicting Tailwind modifiers correctly	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey returns the same instance when called twice (singleton)	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey throws a descriptive error when REDIS_URL is not set	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client getValkey connects once to the configured endpoint on first use	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client keys session(id) returns bcordes:session:<id>	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client keys sessionLock(id) returns bcordes:lock:session:<id>	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client keys serviceToken() returns bcordes:service-token	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client keys serviceTokenLock() returns bcordes:lock:service-token	passed	94
+packages/valkey/src/client.test.ts	vitest	valkey client keys oidcConfig() returns bcordes:oidc-config	passed	94
+packages/valkey/src/sdk.test.ts	vitest	stores, replaces and deletes values through the SDK storage interface	passed	94
+packages/valkey/src/sdk.test.ts	vitest	conditionally creates values without overwriting an existing value	passed	94
+packages/valkey/src/sdk.test.ts	vitest	expires values created with and without conditional creation	passed	94
+packages/valkey/src/sdk.test.ts	vitest	adds unique set members, removes members and expires the set	passed	94
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access returns null without a session	passed	93
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access uses profile permissions when session claims differ	passed	93
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access rejects a profile belonging to another session user	passed	93
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access returns signed out when the profile request is unauthorized	passed	93
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access redirects signed-out navigation to login with the encoded return path	passed	93
+packages/auth/src/middleware.test.ts	vitest	Authenticated identity and access denies staff access when an admin role lacks the API capability	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[empty]"" for undefined"	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[empty]"" for null"	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[empty]"" for empty string"	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[redacted]"" for a 3-char string"	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[redacted]"" for a 4-char string"	passed	93
+packages/auth/src/redact.test.ts	vitest	"redact returns ""[redacted:...bcde]"" for a 5-char string"	passed	93
+packages/auth/src/redact.test.ts	vitest	redact reveals only the final four characters of a long secret	passed	93
+packages/auth/src/redact.test.ts	vitest	redactUser includes id, name, roles, and tenantId from the input	passed	93
+packages/auth/src/redact.test.ts	vitest	redactUser contains exactly the allowed keys	passed	93
+packages/auth/src/session.integration.test.ts	vitest	finds a persisted session from its cookie and stops finding it after destruction	passed	93
+packages/auth/src/session.integration.test.ts	vitest	returns the verified customer profile with the supported name fallback	passed	93
+packages/auth/src/session.integration.test.ts	vitest	returns the verified customer profile with the supported name fallback	passed	93
+packages/auth/src/session.integration.test.ts	vitest	returns the verified customer profile with the supported name fallback	passed	93
+packages/auth/src/session.integration.test.ts	vitest	returns the verified customer profile with the supported name fallback	passed	93
+packages/auth/src/session.integration.test.ts	vitest	does not authenticate a missing or mismatched profile identity	passed	93
+packages/auth/src/session.integration.test.ts	vitest	does not authenticate a missing or mismatched profile identity	passed	93
+packages/auth/src/session.integration.test.ts	vitest	denies staff access to a verified customer without inquiry-read permission	passed	93
+packages/auth/src/session.integration.test.ts	vitest	redirects an unauthenticated request back through login	passed	93
+packages/auth/src/session.integration.test.ts	vitest	allows verified staff with inquiry-read permission	passed	93
+packages/auth/src/session.integration.test.ts	vitest	authorizes a notification write using the persisted session CSRF token	passed	93
+packages/auth/src/session.integration.test.ts	vitest	rejects an SDK profile request without a session instead of contacting the backend	passed	93
+packages/auth/src/session.integration.test.ts	vitest	refuses to configure persistent authentication without a storage URL	passed	93
+packages/auth/src/session.integration.test.ts	vitest	refuses insecure session cookies in production	passed	93
+packages/auth/src/testing/index.test.ts	vitest	creates matching session and user identities with a future session expiration	passed	93
+packages/auth/src/testing/index.test.ts	vitest	applies user and session overrides used by authenticated scenarios	passed	93
+packages/auth/src/testing/index.test.ts	vitest	gives admin sessions their intended inquiry capabilities	passed	93
+packages/auth/src/testing/index.test.ts	vitest	allows admin fixture capabilities and identities to be overridden	passed	93
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar fallback content shows supplied initials when no image is available	passed	100
+packages/ui/src/components/avatar.test.tsx	vitest	Avatar fallback content keeps fallback content available while an image is not yet loaded	passed	100
+packages/ui/src/components/badge.test.tsx	vitest	Badge content shows static content without presenting an action	passed	100
+packages/ui/src/components/badge.test.tsx	vitest	Badge content preserves a supplied link destination	passed	100
+packages/ui/src/components/button.test.tsx	vitest	Button actions activates its callback unless disabled	passed	100
+packages/ui/src/components/button.test.tsx	vitest	Button actions preserves link semantics and the caller destination	passed	100
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox selection honors a checked initial value	passed	100
+packages/ui/src/components/checkbox.test.tsx	vitest	Checkbox selection toggles both ways, reports public values and refuses disabled changes	passed	100
+packages/ui/src/components/dialog.test.tsx	vitest	"Dialog opens from the trigger and exposes role=""dialog"""	passed	100
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog names and describes the dialog and exposes its body	passed	100
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog omits the close button when showCloseButton is false	passed	100
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog closes when Escape is pressed	passed	100
+packages/ui/src/components/dialog.test.tsx	vitest	Dialog closes when the close button is clicked	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu opens the menu from the trigger	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu exposes the named item in the open menu	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu fires onClick when an item is activated	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu toggles a menu checkbox and reports the new value	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu selects a different radio option and reports its value	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu shows the account heading and separator in the open menu	passed	100
+packages/ui/src/components/dropdown-menu.test.tsx	vitest	DropdownMenu closes the menu after an item is selected	passed	100
+packages/ui/src/components/label.test.tsx	vitest	Control labels names the intended editable control	passed	100
+packages/ui/src/components/label.test.tsx	vitest	Control labels activates its associated control when clicked	passed	100
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu exposes a navigation landmark and named destination link	passed	100
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu reports current-page semantics only for the active destination	passed	100
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu shows the controlled panel destination and removes it when closed	passed	100
+packages/ui/src/components/navigation-menu.test.tsx	vitest	NavigationMenu opens a trigger content panel on click	passed	100
+packages/ui/src/components/popover.test.tsx	vitest	Popover shows the named trigger while its body is closed	passed	100
+packages/ui/src/components/popover.test.tsx	vitest	Popover shows its body after the trigger is activated	passed	100
+packages/ui/src/components/popover.test.tsx	vitest	Popover closes when Escape is pressed	passed	100
+packages/ui/src/components/progress.test.tsx	vitest	Progress value reports the supplied value within its zero-to-one-hundred range	passed	100
+packages/ui/src/components/select.test.tsx	vitest	Select shows a placeholder before selection	passed	100
+packages/ui/src/components/select.test.tsx	vitest	Select shows the supplied options in an open listbox	passed	100
+packages/ui/src/components/select.test.tsx	vitest	Select reports the selected option and displays its value	passed	100
+packages/ui/src/components/select.test.tsx	vitest	Select displays the chosen value and closes the list	passed	100
+packages/ui/src/components/separator.test.tsx	vitest	Separator semantics defaults to horizontal separation	passed	100
+packages/ui/src/components/separator.test.tsx	vitest	Separator semantics reports vertical separation when requested	passed	100
+packages/ui/src/components/sheet.test.tsx	vitest	"Sheet opens from the trigger and exposes role=""dialog"""	passed	100
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet names and describes the sheet and exposes its body	passed	100
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet closes when the close button is clicked	passed	100
+packages/ui/src/components/sheet.test.tsx	vitest	Sheet closes when Escape is pressed	passed	100
+packages/ui/src/components/switch.test.tsx	vitest	Switch selection honors a checked initial value	passed	100
+packages/ui/src/components/switch.test.tsx	vitest	Switch selection toggles both ways, reports public values and refuses disabled changes	passed	100
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs names the tab list controls and their active panel	passed	100
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs reports the selected tab and its unselected alternative	passed	100
+packages/ui/src/components/tabs.test.tsx	vitest	Tabs selects the activated tab and replaces the named panel	passed	100
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip does not render the content while closed	passed	100
+packages/ui/src/components/tooltip.test.tsx	vitest	Tooltip shows and hides content when the controlled open state changes	passed	100
+packages/wallow/src/client.test.ts	vitest	uses the public client factory to fetch each request session profile	passed	93
+packages/wallow/src/client.test.ts	vitest	reuses a usable public service client for authenticated inquiry submissions	passed	93
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration hydrates server data into the router cache	passed	95
+apps/web/src/router.ssr-query.test.tsx	vitest	router SSR query integration serves the hydrated data to components under the router's Wrap without refetching	passed	95
+apps/web/src/router.test.tsx	vitest	loads the selected route and renders its loader result	passed	95
+apps/web/src/router.test.tsx	vitest	loads the destination on link intent before navigation	passed	95
+apps/web/src/router.test.tsx	vitest	isolates query data between independently created routers	passed	95
+apps/web/src/start.test.ts	vitest	does not expose unsupported API request /api/private	passed	90
+apps/web/src/start.test.ts	vitest	does not expose unsupported API request /api/events	passed	90
+apps/web/src/start.test.ts	vitest	does not expose unsupported API request /api/events?subscribe=Notifications	passed	90
+apps/web/src/start.test.ts	vitest	does not expose unsupported API request /api/events?subscribe=Notifications,Inquiries&extra=1	passed	90
+apps/web/src/start.test.ts	vitest	rejects a cross-origin POST before the page handler	passed	90
+apps/web/src/start.test.ts	vitest	rejects a cross-origin PUT before the page handler	passed	90
+apps/web/src/start.test.ts	vitest	rejects a cross-origin DELETE before the page handler	passed	90
+apps/web/src/start.test.ts	vitest	rejects cross-origin logout before delegating to the session handler	passed	90
+apps/web/src/start.test.ts	vitest	preserves a supported GET response with security headers	passed	90
+apps/web/src/start.test.ts	vitest	preserves a supported HEAD response with security headers	passed	90
+apps/web/src/start.test.ts	vitest	preserves a supported OPTIONS response with security headers	passed	90
+apps/web/src/start.test.ts	vitest	preserves a supported POST response with security headers	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /api/health	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /source.map	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /favicon.ico	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /node_modules/resource	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /@vite/client	passed	90
+apps/web/src/start.test.ts	vitest	preserves serving of /src/resource	passed	90
+apps/web/src/start.test.ts	vitest	preserves a downstream 404 response	passed	90
+apps/web/src/start.test.ts	vitest	preserves a downstream 503 response	passed	90
+apps/web/src/start.test.ts	vitest	propagates a downstream failure to framework error recovery	passed	90
+apps/web/src/start.test.ts	vitest	requires authentication for the supported event subscription	passed	90
+apps/web/src/start.test.ts	vitest	lets the BFF reject an unknown authentication endpoint without reaching a page handler	passed	90
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects absolute http:// actionUrl and uses the inquiry destination	passed	99
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects protocol-relative //evil.com actionUrl and uses the task destination	passed	99
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — URL validation rejects javascript: actionUrl and uses the task destination	passed	99
+apps/web/src/__tests__/notification-routing.test.ts	vitest	getNotificationRoute — entityId validation returns fallback when entityId is a non-UUID string	passed	99
+apps/web/src/routes/__root.error.test.tsx	vitest	recovers a transient render failure when the customer tries again	passed	95
+apps/web/src/routes/__root.error.test.tsx	vitest	offers home navigation when the thrown value is not an Error	passed	95
+apps/web/src/routes/__root.error.test.tsx	vitest	shows the thrown Error message in development	passed	95
+apps/web/src/routes/__root.error.test.tsx	vitest	keeps production errors generic and allows home navigation	passed	95
+apps/web/src/routes/__root.error.test.tsx	vitest	keeps recovery controls usable when the render failure persists after reset	passed	95
+apps/web/src/routes/__root.shell.test.tsx	vitest	generates the site title, description, canonical URL and identity metadata	passed	95
+apps/web/src/routes/__root.shell.test.tsx	vitest	serves page content with named header and footer navigation and a sign-in destination	passed	95
+apps/web/src/routes/__root.test.tsx	vitest	explains that an unknown page was not found	passed	95
+apps/web/src/routes/__root.test.tsx	vitest	returns home from an unknown page	passed	95
+apps/web/src/routes/__root.test.tsx	vitest	offers the named router and query inspectors from the development shell	passed	95
+apps/web/src/routes/about.test.tsx	vitest	About page Page content renders the introduction when visiting the about page	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page Page content includes career history on the about page	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page Page content renders My Approach section	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page Page content names the four development principles	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page Page content offers a contact invitation to a signed-out visitor	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page offers a contact invitation to customer according to permission	passed	96
+apps/web/src/routes/about.test.tsx	vitest	About page offers a contact invitation to inquiry staff according to permission	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content renders the Get in Touch page heading	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content offers named contact destinations and a remote-work location	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content renders email link with mailto href	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content renders availability status	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content offers a usable inquiry form on the contact page	passed	96
+apps/web/src/routes/contact.test.tsx	vitest	Contact page Page content renders the Send a Message section heading	passed	96
+apps/web/src/routes/index.test.tsx	vitest	Home page loads featured projects for the home page	passed	96
+apps/web/src/routes/index.test.tsx	vitest	Home page renders the introduction, services, featured work, and skills on the home page	passed	96
+apps/web/src/routes/index.test.tsx	vitest	"Home page renders ""Let's Work Together"" section"	passed	96
+apps/web/src/routes/index.test.tsx	vitest	Home page offers contact links to a visitor according to inquiry-read permission	passed	96
+apps/web/src/routes/index.test.tsx	vitest	Home page offers contact links to a customer according to inquiry-read permission	passed	96
+apps/web/src/routes/index.test.tsx	vitest	Home page offers contact links to a inquiry staff according to inquiry-read permission	passed	96
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content renders Resume as the page heading	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content states seven-plus years of professional engineering experience	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content offers the resume PDF as a download	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content lists the current employers and engineering roles	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content renders Skills section with categories	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content lists TypeScript, React, Node.js, and Docker skills	passed	95
+apps/web/src/routes/resume.test.tsx	vitest	Resume page Page content renders Education section	passed	95
+apps/web/src/routes/api/health.test.ts	vitest	"/api/health returns 200 with status ""healthy"" when Valkey ping returns PONG"	passed	95
+apps/web/src/routes/api/health.test.ts	vitest	"/api/health returns 503 with ""ping failed"" when Valkey ping returns unexpected value"	passed	95
+apps/web/src/routes/api/health.test.ts	vitest	"/api/health returns 503 with ""unreachable"" when Valkey ping throws"	passed	95
+apps/web/src/routes/api/health.test.ts	vitest	"/api/health returns 503 with ""ping failed"" when Valkey ping returns empty string"	passed	95
+apps/web/src/routes/api/health.test.ts	vitest	"/api/health returns 503 with ""ping failed"" when Valkey ping returns null"	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure auth_failed and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure state_mismatch and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure missing_params and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure too_many_redirects and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure unrecognized and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	explains sign-in failure undefined and offers another login attempt	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	lets a customer leave the error page for home	passed	95
+apps/web/src/routes/auth/error.test.tsx	vitest	lets a customer contact the site about a persistent sign-in problem	passed	95
+apps/web/src/routes/auth/me.test.ts	vitest	GET /auth/me returns user JSON when authenticated	passed	95
+apps/web/src/routes/auth/me.test.ts	vitest	GET /auth/me returns null when not authenticated	passed	95
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details renders the project title	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details renders the project description	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details renders the project year	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details shows every project technology tag	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details shows the body belonging to the loaded bcordes project	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details shows the body belonging to the loaded wallow project	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details keeps project details and usable Back to Projects navigation when the body is unavailable	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details keeps project details and usable Back to all projects navigation when the body is unavailable	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	"Project details renders a ""Back to Projects"" link in the header"	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	"Project details renders a ""Back to all projects"" link in the footer"	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details renders the project image when showcase has an image	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Project details does not render an image when showcase has no image	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	"Unknown project renders ""Project Not Found"" heading"	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Unknown project renders descriptive message	passed	97
+apps/web/src/routes/projects/$slug.component.test.tsx	vitest	Unknown project renders a link back to /projects	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page metadata has no project metadata when the loader did not find a project	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page metadata provides project title, description and canonical Open Graph URL	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page metadata publishes an Open Graph image when the project has an image	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page metadata omits the Open Graph image when the project has no image	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page loading loads Project A when its slug matches	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page loading loads Project B when its slug matches	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page loading shows project-not-found for an unknown slug	passed	97
+apps/web/src/routes/projects/$slug.test.ts	vitest	Project page loading shows project-not-found when the catalog is empty	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders the page heading and description	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders project cards with titles and descriptions	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component links each project card to /projects/$slug	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component displays correct result count	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	"projects/index component does not show ""Clear filters"" button when no filters are active"	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component filters showcases by tag when a tag button is clicked	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component filters showcases by year when a year button is clicked	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	"projects/index component shows ""Clear filters"" button when a tag filter is active"	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component restores all projects and clears both filters when Clear filters is clicked	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders empty state when no showcases match filters	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component restores all projects and clears both filters when Clear all filters is clicked	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders filter sections for tags and years	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component combines tag and year filters	passed	97
+apps/web/src/routes/projects/index.component.test.tsx	vitest	projects/index component renders empty list when showcases array is empty	passed	97
+apps/web/src/routes/projects/index.test.ts	vitest	Projects page provides Projects title, description and canonical Open Graph URL	passed	97
+apps/web/src/routes/projects/index.test.ts	vitest	Projects page loads published projects into the projects page	passed	97
+apps/web/src/routes/projects/index.test.ts	vitest	Projects page shows an empty project list when the catalog returns no projects	passed	97
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	loads the inquiry and comments selected by UUID 550e8400-e29b-41d4-a716-446655440000	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	loads the inquiry and comments selected by UUID 550e8400-e29b-41d4-a716-446655440001	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	shows contact and project values under their labels, submission time and message	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	omits absent optional detail fields	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	returns to the inquiry list through the Back to inquiries link	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	shows in_progress status as in progress	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	uses permission rather than roles [ 'user' ] for internal notes	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	uses permission rather than roles [ 'admin' ] for internal notes	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	shows no comments when customers have no public comments (internal only: false)	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	shows no comments when customers have no public comments (internal only: true)	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	sends a trimmed comment with internal=false, disables Send while pending, then resets and shows it	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	sends a trimmed comment with internal=true, disables Send while pending, then resets and shows it	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	"does not submit an empty or whitespace-only draft """""	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	"does not submit an empty or whitespace-only draft ""   """	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	retains a failed comment draft and sends it successfully on retry	passed	98
+apps/web/src/routes/dashboard/inquiries.$id.test.tsx	vitest	redirects signed-out detail visitors before fetching protected content	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	uses InquiriesRead permission for editing with roles [ 'user' ]	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	uses InquiriesRead permission for editing with roles [ 'admin' ]	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	explains the empty list for [ 'InquiriesRead' ]	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	explains the empty list for [ 'InquiriesWrite' ]	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	associates each customer with their email, company, project and budget	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows placeholders in each missing optional column while preserving a populated row	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows the read-only New status to customers	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows the read-only Reviewed status to customers	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows the read-only Contacted status to customers	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows the read-only Closed status to customers	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	counts only new inquiries in the header	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	uses singular message for one result	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	preserves an unknown project type and humanizes an unknown status	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	opens the selected inquiry 550e8400-e29b-41d4-a716-446655440000 through the nested detail route	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	opens the selected inquiry 550e8400-e29b-41d4-a716-446655440001 through the nested detail route	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	persists New and reloads the row without opening detail	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	persists Reviewed and reloads the row without opening detail	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	persists Contacted and reloads the row without opening detail	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	persists Closed and reloads the row without opening detail	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	disables refresh until new records arrive, then permits another refresh	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	shows a failed status update, keeps the persisted status, and permits retry	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	redirects signed-out visitors to sign in with the inquiry return destination before loading inquiries	passed	98
+apps/web/src/routes/dashboard/inquiries.index.test.tsx	vitest	surfaces a failed refresh through the router and permits a successful reload	passed	98
+apps/web/src/routes/dashboard/inquiries.test.tsx	vitest	renders both list and detail content inside the real inquiries parent	passed	98
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	shows all 20 returned notifications with an explicit loaded-list limit and no inactive continuation	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to TaskAssigned and restores it when Tasks is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to InquirySubmitted and restores it when Inquiries is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to InquiryComment and restores it when Inquiry Replies is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to SystemAlert and restores it when Alerts is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to Announcement and restores it when Announcements is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to BillingInvoice and restores it when Billing is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	filters the loaded list to Mention and restores it when Mentions is cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	preserves returned order in a short batch and combines unread and type filters	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	keeps the loaded-list limit and truthful counts visible for an empty response	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	scopes a zero-match unread filter to the loaded list and restores results when cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	scopes a zero-match type filter to the loaded list and restores results when cleared	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	selects and deselects individual rows without navigating	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	selects only visible notifications and clears the selection	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	marks the whole account read despite a filter and selection, disables repeats, and refreshes the loaded state	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	does not write when every loaded notification is already read	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	shows mark-all failure without changing read state or reporting success and permits retry	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	opens the inquiry from a row with isRead=false and writes only for unread items	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	opens the inquiry from a row with isRead=true and writes only for unread items	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	refreshes visible notifications and the loaded unread count after a real stream event	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	redirects signed-out visitors before loading protected notifications	passed	99
+apps/web/src/routes/dashboard/notifications.index.test.tsx	vitest	shows the router error screen after a failed notification load	passed	99
+apps/web/src/routes/dashboard/notifications.test.tsx	vitest	renders the real notification index inside its parent route	passed	99
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	loads the saved preferences into all four channel controls	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	optimistically changes SMS from false and persists only that channel	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	optimistically changes SMS from true and persists only that channel	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	creates and persists a previously unsaved Email preference without changing other channels	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	rolls back an optimistic preference after rejection and shows the failure	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows generic failure feedback when the update operation rejects with a non-Error value	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	prevents push registration when supported=false and permission=default	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	prevents push registration when supported=true and permission=denied	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the test notification action only when the controlled hook reports registered=false	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the test notification action only when the controlled hook reports registered=true	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the resulting state and success feedback after a controlled push toggle from false	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the resulting state and success feedback after a controlled push toggle from true	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows success after the controlled public hook completes a test notification	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the current authenticated push-enable failure without registering a device or claiming success	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	shows the current authenticated test-delivery failure for a cached device without claiming success	passed	98
+apps/web/src/routes/dashboard/settings.index.test.tsx	vitest	redirects signed-out visitors with the settings return destination before loading preferences	passed	98
+apps/web/src/routes/dashboard/settings.test.tsx	vitest	renders the settings index and loaded controls inside the real settings parent	passed	98
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero shows Bryan Cordes as the page heading	passed	96
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the role title	passed	96
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	"AboutHero renders the ""About Me"" badge"	passed	96
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero introduces Bryan as a passionate software engineer	passed	96
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	AboutHero renders the profile image with alt text	passed	96
+apps/web/src/features/about/components/AboutHero.test.tsx	vitest	"AboutHero renders ""Available for Remote Work"" text"	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline shows Career Journey as a section heading	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline introduces the career timeline as professional growth	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline shows all five career periods from April 2026 through April 2019	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline shows two contract roles, two engineer roles, and one QA internship	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline renders all company names	passed	96
+apps/web/src/features/about/components/Timeline.test.tsx	vitest	Timeline describes enforcement workflows and monorepo experience	passed	96
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer renders copyright text with current year	passed	95
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer links Home, Projects, About, and Resume to their public pages	passed	95
+apps/web/src/app/components/layout/Footer.test.tsx	vitest	Footer offers named GitHub, LinkedIn, and email links to the correct destinations	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	links Home, Projects, About, and Resume to their public pages	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	links the BC Solutions logo to the home page	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	sets contact-link availability for a visitor using inquiry-read permission	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	sets contact-link availability for a customer using inquiry-read permission	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	sets contact-link availability for a administrator using inquiry-read permission	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	offers account and mobile navigation while scrolling from 0	passed	95
+apps/web/src/app/components/layout/Header.test.tsx	vitest	offers account and mobile navigation while scrolling from 100	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav opens public navigation links and closes after selecting a destination	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav offers a sign-in link when signed out	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav offers dashboard and sign-out actions when authenticated	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav closes navigation and reports a failed sign-out	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav closes mobile navigation after choosing Get in Touch	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav closes mobile navigation after choosing Dashboard	passed	95
+apps/web/src/app/components/layout/MobileNav.test.tsx	vitest	MobileNav hides the contact action for inquiry administrators	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu hides account actions while user identity is loading	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu offers a sign-in link when signed out	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows user name and initials when authenticated	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu shows the first initial for a single-word name	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	"UserMenu shows fallback ""?"" when user has no name"	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu falls back to email when name is null	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	"UserMenu falls back to ""User"" when name and email are null"	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu offers the dashboard destination and signs out through the SDK	passed	95
+apps/web/src/app/components/layout/UserMenu.test.tsx	vitest	UserMenu reports a failed sign-out so the user can try again	passed	95
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm offers labeled contact fields and project selectors	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows required-field errors without submitting an empty form	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm submits entered inquiry details and lets the visitor start another message	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm normalizes omitted optional fields when submitting a message	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm shows failure feedback and preserves entered details for retry	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm disables submission and shows Sending while the request is pending	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm pre-fills and locks the signed-in name and email	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm locks a known email while leaving a missing name editable	passed	96
+apps/web/src/features/contact/components/ContactForm.test.tsx	vitest	ContactForm locks a known name while leaving a missing email editable	passed	96
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields disables name and email fields when disabledFields is set	passed	96
+apps/web/src/features/contact/components/ContactFormFields.test.tsx	vitest	ContactFormFields does not disable fields when disabledFields is not set	passed	96
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	ContactFormSuccess renders success message	passed	96
+apps/web/src/features/contact/components/ContactFormSuccess.test.tsx	vitest	ContactFormSuccess calls onSendAnother when button is clicked	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork omits the featured-work section when there are no showcases	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork shows Featured Work as a section heading when showcases exist	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders the section description	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork links View all work to the projects page	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork shows a heading for each supplied project	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork renders project descriptions	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork pairs each project with its client and year	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork shows only the first three tags of each supplied project	passed	96
+apps/web/src/features/home/components/FeaturedWork.test.tsx	vitest	FeaturedWork links each project title to its slug-specific project page	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero shows Professional Software Engineering as the page heading	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero introduces BC Solutions web application services	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero announces availability for projects as a status	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero shows project and contact links to visitors without inquiry-read permission	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero pairs experience, delivery, and satisfaction statistics with their values	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero exposes the introduction as a named region	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero exposes three items in the Key statistics list	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero offers contact to customer according to inquiry-read permission	passed	96
+apps/web/src/features/home/components/Hero.test.tsx	vitest	Hero offers contact to inquiry staff according to inquiry-read permission	passed	96
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid shows What I Do as a section heading	passed	96
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid introduces comprehensive software services	passed	96
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders all three service card titles	passed	96
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid renders service descriptions	passed	96
+apps/web/src/features/home/components/ServicesGrid.test.tsx	vitest	ServicesGrid shows representative frontend, backend, and consulting skills	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase shows Technologies & Skills as a section heading	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase introduces the professional technology toolkit	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase shows Frontend, Backend, Tools, and Cloud as category headings	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders frontend skills	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders backend skills	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders tools skills	passed	96
+apps/web/src/features/home/components/SkillsShowcase.test.tsx	vitest	SkillsShowcase renders cloud skills	passed	96
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders title, year, and description	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard links the project title to its detail route	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard shows each tag when fewer than four are provided	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard shows +1 when project tags overflow the first three	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard shows +2 when project tags overflow the first three	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard does not render overflow badge when 3 or fewer tags	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders image when provided	passed	97
+apps/web/src/features/projects/components/ProjectCard.test.tsx	vitest	ProjectCard renders first letter placeholder when no image	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter shows an All button and a button for each technology	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter tag filter calls onTagChange with the tag when a tag button is clicked	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	"ProjectFilter tag filter calls onTagChange with null when ""All"" is clicked"	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter shows an All Years button and a button for each year	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter year filter calls onYearChange with the year when a year button is clicked	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	"ProjectFilter year filter calls onYearChange with null when ""All Years"" is clicked"	passed	97
+apps/web/src/features/projects/components/ProjectFilter.test.tsx	vitest	ProjectFilter renders section headings	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project publishes bcordes at its project URL with its details	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Overview heading	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Architecture heading	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Key Features heading	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Technical Highlights heading	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders overview description text	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders architecture description about BFF pattern	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Content Pipeline feature	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the OIDC Authentication feature	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Contact System feature	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders the Admin Dashboard feature	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders Server Functions highlight	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders File-Based Routing highlight	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders SSR highlight	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders Dark Mode highlight	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content renders CI/CD highlight	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions TanStack Start in the architecture	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions PKCE in the OIDC feature description	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions Zod validation in the Contact System	passed	97
+apps/web/src/features/projects/content/bcordes.test.tsx	vitest	bcordes project Content mentions Docker in CI/CD highlight	passed	97
+apps/web/src/features/projects/content/catalog-selection.test.ts	vitest	Catalog selection orders the catalog and selects featured entries for two featured projects with different ye…	passed	97
+apps/web/src/features/projects/content/catalog-selection.test.ts	vitest	Catalog selection orders the catalog and selects featured entries for an older featured project and newer non…	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog returns all project metadata that survives router serialization	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog returns featured project metadata that survives router serialization	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog includes the known project slugs	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog is a subset of getShowcases	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcase returns renderable wallow content for its slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcase returns renderable bcordes content for its slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcase returns undefined for an unknown slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcase returns undefined for an empty string slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcaseContent returns renderable wallow content for its slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcaseContent returns renderable bcordes content for its slug	passed	97
+apps/web/src/features/projects/content/index.test.ts	vitest	Published project catalog getShowcaseContent returns undefined for an invalid slug	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project publishes wallow at its project URL with its details	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Overview heading	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Architecture heading	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Key Modules heading	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Technical Highlights heading	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders overview description text	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders architecture description text	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Identity & Auth module	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Billing module	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Storage module	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Messaging module	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders the Showcases module	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Multi-tenancy highlight	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders OpenIddict Integration highlight	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Rate Limiting highlight	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders API Standards highlight	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content renders Infrastructure highlight	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content describes PKCE support in identity and provider integration	passed	97
+apps/web/src/features/projects/content/wallow.test.tsx	vitest	wallow project Content mentions PostgreSQL in Infrastructure	passed	97
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	does not fall back to service credentials after session expiry	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns an owned inquiry with New normalized to new	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns an owned inquiry with Reviewed normalized to reviewed	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns an owned inquiry with Contacted normalized to contacted	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns an owned inquiry with Closed normalized to closed	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests lowercases an unrecognized inbound status	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests hides another customer’s inquiry with a not-found response	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests does not let an anonymous inquiry be claimed by matching email	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests allows staff with inquiry-read permission to read another user’s inquiry	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns My submission from /v1/inquiries/submitted with normalized status	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests returns Organization inquiry from /v1/inquiries with normalized status	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests loads the organization list after staff authorization	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests removes internal comments before returning them to a customer	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests rejects customer internal comments without sending a mutation	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests rejects status changes before invoking the API when staff authorization fails	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests sends new as New for the authorized inquiry status change	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests sends reviewed as Reviewed for the authorized inquiry status change	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests sends contacted as Contacted for the authorized inquiry status change	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests sends closed as Closed for the authorized inquiry status change	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests submits through the signed-in client with company undefined	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests submits through the signed-in client with company Client company	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Inquiry access and status requests submits anonymously through the service client	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits projectType Frontend through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits projectType Full-Stack through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits projectType Consulting through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits projectType Other through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits budgetRange Under $5k through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits budgetRange $5k-$15k through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits budgetRange $15k-$50k through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits budgetRange $50k+ through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits timeline Less than 1 month through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits timeline 1-3 months through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits timeline 3-6 months through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits timeline 6+ months through its registered validator	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid projectType before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid budgetRange before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid timeline before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid name before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid name before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid email before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid email before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid phone before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid message before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects invalid message before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation preserves the maximum supported name in the request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation preserves the maximum supported phone in the request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation preserves the maximum supported message in the request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects malformed UUIDs in fetchInquiry before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects malformed UUIDs in fetchInquiryComments before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects malformed UUIDs in updateInquiryStatus before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects malformed UUIDs in submitInquiryComment before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects unsupported inquiry statuses before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects an invalid comment length before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation rejects an invalid comment length before any request	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits a public comment within the supported length	passed	98
+apps/web/src/features/inquiries/server-fns/inquiries.test.ts	vitest	Registered inquiry validation submits a public comment within the supported length	passed	98
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	opens the actual inquiry destination while marking the notification read is still pending	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	handles a failed read after navigation, retains unread state, and persists a later retry	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	opens an already-read notification without sending a write	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	does not show a notification button to a signed-out visitor	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows the account unread count 5, capped at 99+	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows the account unread count 120, capped at 99+	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	removes a previously visible badge when the authoritative count becomes zero	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows the empty popover for an empty returned list	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows only the first five returned notifications with their own messages and relative times	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	disables mark-all while pending and refreshes the list and badge after success	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows mark-all rejection without claiming success and leaves the action usable	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	bumps the badge for a delivered event before reconciling authoritative data (uncached=false)	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	bumps the badge for a delivered event before reconciling authoritative data (uncached=true)	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows event feedback Lowercase event title only when the tab is visible	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows event feedback Uppercase event title only when the tab is visible	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows event feedback New notification only when the tab is visible	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	shows event feedback Hidden event title only when the tab is visible	passed	99
+apps/web/src/features/notifications/components/NotificationBell.test.tsx	vitest	opens the full notification page through View all notifications	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	shows the title, message and 2h ago timestamp for 2026-03-25T00:00:00Z	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	shows the title, message and just now timestamp for 2026-03-25T01:59:40Z	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	"activates the notification through ""click"""	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	"activates the notification through ""Enter"""	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	"activates the notification through "" """	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	does not activate the notification when Tab is pressed	passed	99
+apps/web/src/features/notifications/components/NotificationRow.test.tsx	vitest	selects and deselects the same notification without activating its row	passed	99
+apps/web/src/features/notifications/lib/query-utils.test.ts	vitest	refreshes the active notification list and unread count without changing unrelated cached data	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute actionUrl takes priority uses a safe relative actionUrl ahead of the type-specific destination	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskAssigned with entityId produces /dashboard/tasks/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskCompleted with entityId produces /dashboard/tasks/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute task types route to /dashboard/tasks/:entityId TaskComment with entityId produces /dashboard/tasks/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquirySubmitted with entityId produces /dashboard/inquiries/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryStatusChanged with entityId produces /dashboard/inquiries/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute inquiry types route to /dashboard/inquiries/:entityId InquiryComment with entityId produces /dashboard/inquiries/:entityId	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute billing type BillingInvoice produces /dashboard/billing	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute unknown type falls back returns /dashboard/notifications for an unrecognized type	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskAssigned without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskCompleted without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back TaskComment without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquirySubmitted without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquiryStatusChanged without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/lib/routing.test.ts	vitest	getNotificationRoute missing entityId falls back InquiryComment without entityId falls back to /dashboard/notifications	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream stays disconnected without a signed-in customer	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream clears private notification data and closes the stream when the customer signs out	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream starts connection on mount and transitions connecting -> connected	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream dispatches generic message events to type-matched subscribers	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream dispatches named SSE events to type-matched subscribers	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream does not dispatch to handlers for non-matching types	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream stops delivering events after unsubscribe	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect retries after one second and resets the retry delay after a successful connection	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect increases backoff delay for consecutive failures	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream exponential backoff reconnect caps backoff at 30 seconds	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream closes the open event stream when its provider unmounts	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream clears reconnect timer on unmount during backoff	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream attempt cap stops after the initial connection and ten unopened retries	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream connection timeout closes an unopened stream at ten seconds and starts its retry one second later	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream visibility-aware reconnect reconnects a disconnected leader on visibility and cancels its old scheduled retry	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream visibility-aware reconnect visibility restores a fresh retry budget after all ten retries are exhausted	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream reconnect SSE event a server reconnect request resets an unopened retry to the one-second delay	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election relays named and generic events from the leader to other tabs and local subscribers	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election keeps a follower disconnected while the leader continues sending heartbeats	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election answers competing claims and ignores relayed duplicates while acting as leader	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election two mounted providers share one leader stream and deliver relayed events to the follower	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election opens one stream after the leadership claim window when no leader responds	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election becomes follower when existing leader responds to claim	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election a follower waits seven seconds after the latest heartbeat before claiming leadership	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election an event message on BroadcastChannel calls follower subscribers without an open EventSource	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election follower promotes itself after receiving leader-resign message and timeout elapses	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election a surviving follower takes over promptly when the real leader provider unmounts	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream BroadcastChannel leader election follower does not reconnect on visibility change	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream removes one subscriber without disturbing another and allows repeated unsubscribe	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream ignores malformed message data gracefully	passed	99
+apps/web/src/features/notifications/hooks/useEventStream.test.ts	vitest	useEventStream using hook outside provider throws	passed	99
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	"delivers only subscribed stream types ""NotificationCreated"" with their exact payloads"	passed	99
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	"delivers only subscribed stream types ""SystemAlert"" with their exact payloads"	passed	99
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	stops delivery to an unmounted consumer while a surviving subscriber still receives both event types	passed	99
+apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts	vitest	allows an empty subscription map to mount and unmount without disrupting an active consumer	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters returns the full array when no filters are active	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters shows only unread notifications from the loaded list	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters restores the loaded list when the unread filter is cleared	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters shows only the selected type until that filter is toggled off	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters counts unread entries in the loaded list independently of filters	passed	99
+apps/web/src/features/notifications/hooks/useNotificationFilters.test.ts	vitest	useNotificationFilters combines unread and type filters	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection starts with no notifications selected	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection selects every notification in the filtered list	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection deselects every notification when select-all is cleared	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection selects and deselects one notification	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection clears all selected notifications	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection reports all selected only after every visible notification is selected	passed	99
+apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts	vitest	useNotificationSelection does not report all selected for an empty list	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	supports browser push when both worker and PushManager APIs exist	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	does not support push when serviceWorker is missing	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	does not support push when PushManager is missing	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	reports registered when the controlled server returns a device	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	clears cached registration when the completed device query returns no devices	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	passes decoded key bytes and subscription credentials to controlled operations, then reflects registration and permission	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	deregisters the first returned device and reflects the refreshed empty collection	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	does not deregister anything when there are no push devices	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	reports default permission when the browser has no Notification API	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	refreshes registration after the controlled test-send operation completes	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	propagates enable failure Key request failed without starting registration	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	propagates enable failure Browser push is awaiting the Wallow delivery and device authorization update. without starting registration	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	propagates deregistration failure and preserves registered state	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	propagates test-send failure Test request failed and preserves registered state	passed	99
+apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx	vitest	propagates test-send failure Browser push is awaiting the Wallow delivery and device authorization update. and preserves registered state	passed	99
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	unwraps the published channel settings response	passed	99
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	returns a numeric unread count from the published string count	passed	99
+apps/web/src/features/notifications/server-fns/notifications.test.ts	vitest	requests the first 20 notifications and preserves the returned entries and order	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered notification UUID validation rejects malformed UUIDs for markNotificationRead before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered notification UUID validation rejects malformed UUIDs for deregisterPushDevice before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered notification UUID validation marks the authorized notification UUID as read	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered notification UUID validation rejects a signed-out read before sending traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered notification UUID validation reaches the authenticated unavailable contract for a valid device UUID	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation rejects invalid endpoint before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation rejects invalid endpoint before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation rejects invalid p256dh before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation rejects invalid auth before authentication or traffic	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation validates HTTPS endpoint and reaches the authenticated unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation validates HTTP endpoint and reaches the authenticated unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation validates 2048-character endpoint and reaches the authenticated unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation validates 256-character key and reaches the authenticated unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation validates 128-character auth and reaches the authenticated unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation requires sign-in for valid registration input before the unavailable contract	passed	99
+apps/web/src/features/notifications/server-fns/validation.test.ts	vitest	Registered browser push validation requires sign-in for valid deregistration input before the unavailable contract	passed	99
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	renders children without a requested delay	passed	95
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	preserves the requested delay when the observed content enters the reveal region	passed	95
+apps/web/src/shared/motion/components/FadeInView.test.tsx	vitest	removes the requested delay when the browser preference changes to reduced motion	passed	95
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion returns false when prefers-reduced-motion is not set	passed	95
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion returns true when prefers-reduced-motion is set	passed	95
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion updates the preference when reduced motion is enabled and disabled	passed	95
+apps/web/src/shared/motion/hooks/useReducedMotion.test.ts	vitest	useReducedMotion stops listening after unmount while another subscriber continues receiving changes	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation remains hidden when no element is attached	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation reveals the attached element when it intersects	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation configures the reveal region with the requested threshold and margin	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation stays visible after its first intersection by default	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation hides the element again after it leaves when repeated animation is enabled	passed	95
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	vitest	useScrollAnimation stops observing its element after unmount while another observer remains active	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Current user capabilities returns the authenticated profile roles and permissions	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Current user capabilities returns empty roles and permissions when signed out	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization preserves the login redirect for {""returnTo"":""/dashboard""}"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization preserves the login redirect for {}	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization preserves the login redirect for {}	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization preserves the login redirect for {""returnTo"":""/dashboard?tab=inquiries#details""}"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization preserves the login redirect for {""returnTo"":""""}"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization preserves the login redirect for {""returnTo"":""https://example.com/path""}"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization rejects malformed input null before checking the session	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization rejects malformed input undefined before checking the session	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input ""dashboard"" before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization rejects malformed input 42 before checking the session	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input {""returnTo"":42} before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input {""returnTo"":false} before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input {""returnTo"":[]} before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input {""returnTo"":null} before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	"Server authorization rejects malformed input {""returnTo"":{}} before checking the session"	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization waits for authorization before completing an allowed request	passed	95
+apps/web/src/shared/auth/server-fns/auth.test.ts	vitest	Server authorization propagates an authorization service failure	passed	95
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useUser returns no user after an unauthorized response	passed	95
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useUser returns populated user on success	passed	95
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useRequireUser returns isAuthenticated true when user exists	passed	95
+apps/web/src/shared/auth/hooks/useUser.test.ts	vitest	useRequireUser returns isAuthenticated false when user is null	passed	95
+apps/web/e2e/tests/auth-input-validation.spec.ts	playwright	validates authorization input before profile access through the built transport	expected	95
+apps/web/e2e/tests/contact-form.spec.ts	playwright	submitting with all fields empty shows client-side validation errors without a network request	expected	92
+apps/web/e2e/tests/contact-form.spec.ts	playwright	filling valid fields and submitting shows success confirmation	expected	92
+apps/web/e2e/tests/contact-form.spec.ts	playwright	"""Send Another Message"" resets the form to its empty initial state"	expected	92
+apps/web/e2e/tests/dashboard.spec.ts	playwright	authenticated session reaches inquiries through the real server	expected	92
+apps/web/e2e/tests/dashboard.spec.ts	playwright	notification bell marks this session read and preserves zero unread after reload	expected	92
+apps/web/e2e/tests/dashboard.spec.ts	playwright	bell navigation survives a pending failed read and a later retry persists	expected	92
+apps/web/e2e/tests/notification-appearance.spec.ts	playwright	distinguishes unread and read appearance after the saved notification is read	expected	99
+apps/web/e2e/tests/project-filter-appearance.spec.ts	playwright	distinguishes the selected technology and restores the All appearance on reset	expected	97
+apps/web/e2e/tests/project-filter-appearance.spec.ts	playwright	distinguishes the selected year and restores the All appearance on reset	expected	97
+apps/web/e2e/tests/public-pages.spec.ts	playwright	project navigation opens detail and unknown projects show not found	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	unauthenticated inquiry request returns a 307 login redirect with returnTo	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	loads with 200 status and displays the hero headline	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	hero actions navigate to projects and contact	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	displays key statistics	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	header navigation works from home, about, projects and contact	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	loads and contains the about section heading	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	displays the role subtitle	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	"displays the ""My Approach"" values section"	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	loads and displays the page heading	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	lists named projects with their detail links	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	project filters show the correct named results and reset the count	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	loads and renders the page heading	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	renders the named contact fields and submit button	expected	92
+apps/web/e2e/tests/public-pages.spec.ts	playwright	renders contact information section	expected	92
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	cross-origin logout is rejected and preserves the same user	expected	92
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	trusted-origin logout rejects an invalid CSRF token and preserves the session	expected	92
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	trusted logout with this session CSRF token ends the session	expected	92
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	direct API access is unavailable without forwarding to the backend	expected	92
+apps/web/e2e/tests/sdk-boundaries.spec.ts	playwright	a real notification mutation succeeds locally and rejects a cross-origin replay without another write	expected	92
+apps/web/e2e/tests/settings-push.spec.ts	playwright	explains why browser push is unsupported	expected	98
+apps/web/e2e/tests/settings-push.spec.ts	playwright	explains why browser push is blocked	expected	98
+apps/web/e2e/tests/shell-error-recovery.spec.ts	playwright	shows a generic production fallback and returns home after a controlled authorization service failure	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	shows content immediately and removes its requested delay under reduced motion	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	adds header elevation after scrolling and removes it at the top	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	elevates the header when the browser reports an initially scrolled document	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	offers the real router and query inspectors during development	expected	95
+apps/web/e2e/tests/shell-motion.spec.ts	playwright	excludes developer controls from the production page	expected	95
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	renders distinct button and badge variants, hover effects and button dimensions	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	applies caller border, label color and form popup customizations	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	visibly marks checked controls and moves both switch sizes after toggling	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	fills the requested progress fraction and draws oriented customizable separators	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	loads an avatar image, shows fallback after a real failure and preserves round framing and caller ring	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	places the default sheet against its requested viewport edge	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	places the top sheet against its requested viewport edge	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	places the right sheet against its requested viewport edge	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	places the bottom sheet against its requested viewport edge	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	places the left sheet against its requested viewport edge	expected	100
+apps/web/e2e/tests/ui-component-behavior.spec.ts	playwright	moves the visible active distinction between mobile navigation destinations	expected	100
+scripts/release-tag-outputs.test.mjs	node:test	writes version, major and minor outputs for v0.1.7	passed	102
+scripts/release-tag-outputs.test.mjs	node:test	writes version, major and minor outputs for v1.10.2	passed	102
+scripts/verify-production.test.mjs	node:test	accepts distinct served pages and direct nonempty assets through the Node CLI	passed	101
+scripts/verify-production.test.mjs	node:test	accepts distinct served pages and direct nonempty assets through the shell wrapper from another directory	passed	101
+scripts/verify-production.test.mjs	node:test	rejects generic pages from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects wrong about heading from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects page redirect from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects page MIME from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects page error from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects missing CSS reference from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects missing JS reference from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects CSS redirect from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects JS redirect from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects CSS MIME from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects JS MIME from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects CSS error from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects JS error from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects empty CSS from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	rejects empty JS from the supplied endpoint	passed	101
+scripts/verify-production.test.mjs	node:test	reports a missing production artifact and exits without waiting for startup timeout	passed	101
+scripts/verify-production.test.mjs	node:test	rejects invalid Docker CLI arguments before creating resources	passed	101
+scripts/verify-production.test.mjs	node:test	reuses one image for both OIDC URL configurations without a build token and cleans its resources	passed	101
+scripts/verify-production.test.mjs	node:test	rejects redirect readiness within its deadline and reports diagnostics before cleanup	passed	101
+scripts/verify-production.test.mjs	node:test	rejects missing readiness within its deadline and reports diagnostics before cleanup	passed	101
+scripts/verify-production.test.mjs	node:test	rejects stalled readiness within its deadline and reports diagnostics before cleanup	passed	101
+scripts/verify-production.test.mjs	node:test	times out an individual stalled health request and retries before the overall deadline	passed	101
+scripts/verify-production.test.mjs	node:test	stops its owned server after successful verification	passed	101
+scripts/verify-production.test.mjs	node:test	stops its owned server after a page verification failure with diagnostics	passed	101
+scripts/verify-production.test.mjs	node:test	cleans Docker resources when public smoke fails after successful readiness	passed	101

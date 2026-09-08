@@ -1,0 +1,146 @@
+{
+  "issue": 104,
+  "parent": 88,
+  "baseRevision": "7efa4c3",
+  "baselineRevision": "e872519d71918ec2f9fb1ecf24d865eeea401b09",
+  "inventory": {
+    "files": 115,
+    "tests": 653,
+    "titles": 761,
+    "assertions": 1775,
+    "emptyFiles": [],
+    "candidates": 8
+  },
+  "handoffDeclarationRecords": 1447,
+  "originalDeclarations": 1445,
+  "acceptedSupplementDeclarations": 2,
+  "runtimeCases": 822,
+  "unit": {
+    "numPassedTests": 743,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-08T02:45:50.376Z",
+    "duration": 16985.31,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "nodeCli": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0
+  },
+  "storybook": "Actual built UI/Button Default visible/enabled/click-focus passes",
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "baselineCoverage": {
+    "lines": {
+      "total": 1078,
+      "covered": 909,
+      "skipped": 0,
+      "pct": 84.32
+    },
+    "statements": {
+      "total": 1158,
+      "covered": 964,
+      "skipped": 0,
+      "pct": 83.24
+    },
+    "functions": {
+      "total": 386,
+      "covered": 325,
+      "skipped": 0,
+      "pct": 84.19
+    },
+    "branches": {
+      "total": 668,
+      "covered": 506,
+      "skipped": 0,
+      "pct": 75.74
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChangesSinceSourceGuardRemoval": [],
+  "thresholds": {
+    "lines": 90,
+    "statements": 90,
+    "branches": 90,
+    "functions": 90
+  },
+  "exclusionsUnchanged": true,
+  "denominatorChanges": "Only accepted production/unused-helper removals and fixes; details coverage-delta.tsv",
+  "sourceAssertionsRemaining": 0,
+  "unresolvedMigrationGuards": 0,
+  "searchClassification": "source-candidates.tsv; legitimate input/output/DOM/type-boundary candidates manually classified",
+  "newResources": 50,
+  "reviews": {
+    "spec": 0,
+    "standards": 0
+  },
+  "finalProbeCorrection": "Earlier package-only coverage fixture did not independently prove app inclusion. Existing probe now verifies executed app and package LCOV branch counters under actual root runner, partial failure and complete success. This supersedes earlier broad prerequisite claims.",
+  "defects": [
+    {
+      "defect": "app-coverage-omitted",
+      "exitCode": 1
+    },
+    {
+      "defect": "package-coverage-omitted",
+      "exitCode": 1
+    }
+  ],
+  "commands": [
+    "pnpm build",
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-final-suite.json",
+    "pnpm exec playwright test --reporter=json (cwd apps/web)",
+    "node --test --test-reporter=tap scripts/verify-production.test.mjs scripts/release-tag-outputs.test.mjs",
+    "bash scripts/verify-production.sh",
+    "pnpm --filter bcordes build-storybook",
+    "pnpm verify:storybook",
+    "bash scripts/verify-docker.sh --image bcordes:verification-101",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ],
+  "docker": "Reused #101 pinned linux/amd64 image under arm64 emulation; final run checks both configurations; no image publication",
+  "normalCi": "Pending final implementation commit; attach run and coverage artifact before closure"
+}

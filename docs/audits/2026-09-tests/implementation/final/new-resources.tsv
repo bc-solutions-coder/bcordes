@@ -1,0 +1,51 @@
+path	role	owner	evidence
+apps/web/e2e/fixtures/backend.ts	controlled fixture or supporting module	92	../browser/README.md
+apps/web/e2e/fixtures/components.ts	controlled fixture or supporting module	97	../projects/README.md
+apps/web/e2e/fixtures/guest.ts	controlled fixture or supporting module	92	../browser/README.md
+apps/web/e2e/tests/auth-input-validation.spec.ts	test entrypoint	95	../shell/README.md
+apps/web/e2e/tests/notification-appearance.spec.ts	test entrypoint	99	../notifications/README.md
+apps/web/e2e/tests/project-filter-appearance.spec.ts	test entrypoint	97	../projects/README.md
+apps/web/e2e/tests/settings-push.spec.ts	test entrypoint	98	../inquiries-settings/README.md
+apps/web/e2e/tests/shell-error-recovery.spec.ts	test entrypoint	95	../shell/README.md
+apps/web/e2e/tests/shell-motion.spec.ts	test entrypoint	95	../shell/README.md
+apps/web/e2e/tests/ui-component-behavior.spec.ts	test entrypoint	100	../ui-forms-navigation/README.md
+apps/web/e2e/tests/ui-component-behavior.spec.ts-snapshots/checkbox-states.png	browser golden output	100	../ui-forms-navigation/README.md
+apps/web/src/features/notifications/server-fns/validation.test.ts	test entrypoint	98	../inquiries-settings/README.md
+apps/web/src/features/projects/content/catalog-selection.test.ts	test entrypoint	97	../projects/README.md
+apps/web/src/routes/__root.error.test.tsx	test entrypoint	90	../coverage-prerequisite/README.md
+apps/web/src/routes/__root.shell.test.tsx	test entrypoint	95	../shell/README.md
+apps/web/src/routes/auth/error.test.tsx	test entrypoint	90	../coverage-prerequisite/README.md
+apps/web/src/shared/motion/hooks/useScrollAnimation.test.tsx	test entrypoint	95	../shell/README.md
+apps/web/src/start.test.ts	test entrypoint	90	../coverage-prerequisite/README.md
+apps/web/testing/dashboard-backend.ts	controlled fixture or supporting module	98	../inquiries-settings/README.md
+apps/web/testing/dashboard-browser.ts	controlled fixture or supporting module	99	../notifications/README.md
+apps/web/testing/motion-browser.tsx	controlled fixture or supporting module	95	../shell/README.md
+apps/web/testing/motion.html	controlled fixture or supporting module	95	../shell/README.md
+apps/web/testing/motion.ts	controlled fixture or supporting module	95	../shell/README.md
+apps/web/testing/project-filter-browser.tsx	controlled fixture or supporting module	97	../projects/README.md
+apps/web/testing/project-filter.html	controlled fixture or supporting module	97	../projects/README.md
+apps/web/testing/render-dashboard.tsx	controlled fixture or supporting module	98	../inquiries-settings/README.md
+apps/web/testing/render-file-route.tsx	controlled fixture or supporting module	96	../public/README.md
+apps/web/testing/render-project-route.tsx	controlled fixture or supporting module	97	../projects/README.md
+apps/web/testing/render-route.tsx	controlled fixture or supporting module	95	../shell/README.md
+apps/web/testing/render-serialized-projects.tsx	controlled fixture or supporting module	97	../projects/README.md
+apps/web/testing/server-functions.ts	controlled fixture or supporting module	98	../inquiries-settings/README.md
+apps/web/testing/ui-components.css	controlled fixture or supporting module	100	../ui-forms-navigation/README.md
+apps/web/testing/ui-components.html	controlled fixture or supporting module	100	../ui-forms-navigation/README.md
+apps/web/testing/ui-components.tsx	controlled fixture or supporting module	100	../ui-forms-navigation/README.md
+packages/auth/src/session.integration.test.ts	test entrypoint	90	../coverage-prerequisite/README.md
+packages/auth/src/testing/index.test.ts	test entrypoint	93	../auth-packages/README.md
+packages/authz/src/fixtures.test.ts	test entrypoint	93	../auth-packages/README.md
+packages/config/coverage-behavior.test.ts	test entrypoint	91	../tooling/README.md
+packages/config/runner-behavior.test.ts	test entrypoint	91	../tooling/README.md
+packages/config/testing/workspace.ts	controlled fixture or supporting module	91	../tooling/README.md
+packages/logger/src/logger.test.ts	test entrypoint	94	../infrastructure/README.md
+packages/navigation/testing/render-navigation.tsx	controlled fixture or supporting module	100	../ui-forms-navigation/README.md
+packages/test-utils/src/render.test.tsx	test entrypoint	94	../infrastructure/README.md
+packages/valkey/src/sdk.test.ts	test entrypoint	90	../coverage-prerequisite/README.md
+packages/wallow/src/client.test.ts	test entrypoint	93	../auth-packages/README.md
+scripts/release-tag-outputs.sh	executable verification command	102	../storybook-release/README.md
+scripts/release-tag-outputs.test.mjs	test entrypoint	102	../storybook-release/README.md
+scripts/test-fixtures/valkey.ts	controlled fixture or supporting module	90	../coverage-prerequisite/README.md
+scripts/verify-production.test.mjs	test entrypoint	101	../production-tooling/README.md
+scripts/verify-storybook.mjs	executable verification command	102	../storybook-release/README.md

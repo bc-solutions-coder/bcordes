@@ -1,0 +1,83 @@
+file	metric	baseline_covered	baseline_total	final_covered	final_total	assessment
+apps/web/src/app/components/layout/MobileNav.tsx	lines	9	10	10	10	Behavior coverage increased; no denominator change
+apps/web/src/app/components/layout/MobileNav.tsx	statements	11	12	12	12	Behavior coverage increased; no denominator change
+apps/web/src/app/components/layout/MobileNav.tsx	functions	4	5	5	5	Behavior coverage increased; no denominator change
+apps/web/src/app/components/layout/UserMenu.tsx	lines	11	12	12	12	Behavior coverage increased; no denominator change
+apps/web/src/app/components/layout/UserMenu.tsx	statements	13	14	14	14	Behavior coverage increased; no denominator change
+apps/web/src/app/components/layout/UserMenu.tsx	functions	4	5	5	5	Behavior coverage increased; no denominator change
+apps/web/src/app/lib/web-vitals.ts	lines	0	9	6	9	Behavior coverage increased; no denominator change
+apps/web/src/app/lib/web-vitals.ts	statements	0	9	6	9	Behavior coverage increased; no denominator change
+apps/web/src/app/lib/web-vitals.ts	functions	0	4	2	4	Behavior coverage increased; no denominator change
+apps/web/src/features/contact/components/ContactForm.tsx	statements	22	23	23	23	Behavior coverage increased; no denominator change
+apps/web/src/features/contact/components/ContactForm.tsx	functions	3	4	4	4	Behavior coverage increased; no denominator change
+apps/web/src/features/inquiries/server-fns/inquiries.ts	lines	33	39	39	39	Behavior coverage increased; no denominator change
+apps/web/src/features/inquiries/server-fns/inquiries.ts	statements	34	40	40	40	Behavior coverage increased; no denominator change
+apps/web/src/features/inquiries/server-fns/inquiries.ts	branches	17	22	22	22	Behavior coverage increased; no denominator change
+apps/web/src/features/inquiries/server-fns/inquiries.ts	functions	9	10	10	10	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/components/NotificationBell.tsx	lines	37	37	40	40	#99 accepted handled read-failure behavior adds real mutation/error paths
+apps/web/src/features/notifications/components/NotificationBell.tsx	statements	39	39	42	42	#99 accepted handled read-failure behavior adds real mutation/error paths
+apps/web/src/features/notifications/components/NotificationBell.tsx	branches	23	26	26	26	#99 accepted handled read-failure behavior adds real mutation/error paths
+apps/web/src/features/notifications/components/NotificationBell.tsx	functions	13	13	16	16	#99 accepted handled read-failure behavior adds real mutation/error paths
+apps/web/src/features/notifications/hooks/EventStreamProvider.tsx	lines	182	198	195	198	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/hooks/EventStreamProvider.tsx	statements	192	221	207	221	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/hooks/EventStreamProvider.tsx	branches	79	123	99	123	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/hooks/useNotificationFilters.ts	lines	18	18	15	15	#99 removes unused pagination state
+apps/web/src/features/notifications/hooks/useNotificationFilters.ts	statements	24	24	21	21	#99 removes unused pagination state
+apps/web/src/features/notifications/hooks/usePushNotifications.ts	lines	37	38	38	38	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/hooks/usePushNotifications.ts	statements	38	39	39	39	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/hooks/usePushNotifications.ts	branches	7	10	9	10	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/server-fns/notifications.ts	lines	20	29	29	29	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/server-fns/notifications.ts	statements	21	30	30	30	Behavior coverage increased; no denominator change
+apps/web/src/features/notifications/server-fns/notifications.ts	functions	6	14	14	14	Behavior coverage increased; no denominator change
+apps/web/src/features/projects/content/index.ts	statements	13	14	14	14	Behavior coverage increased; no denominator change
+apps/web/src/features/projects/content/index.ts	branches	1	4	3	4	Behavior coverage increased; no denominator change
+apps/web/src/routes/__root.tsx	lines	22	25	25	25	Behavior coverage increased; no denominator change
+apps/web/src/routes/__root.tsx	statements	23	28	26	28	Behavior coverage increased; no denominator change
+apps/web/src/routes/__root.tsx	branches	5	9	8	9	Behavior coverage increased; no denominator change
+apps/web/src/routes/__root.tsx	functions	10	13	12	13	Behavior coverage increased; no denominator change
+apps/web/src/routes/auth/error.tsx	lines	0	8	8	8	Behavior coverage increased; no denominator change
+apps/web/src/routes/auth/error.tsx	statements	0	8	8	8	Behavior coverage increased; no denominator change
+apps/web/src/routes/auth/error.tsx	branches	0	4	4	4	Behavior coverage increased; no denominator change
+apps/web/src/routes/auth/error.tsx	functions	0	2	2	2	Behavior coverage increased; no denominator change
+apps/web/src/routes/dashboard/notifications.index.tsx	lines	27	34	32	33	#99 removes inert pagination and describes loaded-list filtering truthfully
+apps/web/src/routes/dashboard/notifications.index.tsx	statements	28	35	32	33	#99 removes inert pagination and describes loaded-list filtering truthfully
+apps/web/src/routes/dashboard/notifications.index.tsx	branches	27	29	25	25	#99 removes inert pagination and describes loaded-list filtering truthfully
+apps/web/src/routes/dashboard/notifications.index.tsx	functions	13	19	16	17	#99 removes inert pagination and describes loaded-list filtering truthfully
+apps/web/src/start.ts	lines	0	49	43	51	#92 enforces logout request CSRF origin boundary
+apps/web/src/start.ts	statements	0	52	46	54	#92 enforces logout request CSRF origin boundary
+apps/web/src/start.ts	branches	0	31	35	36	#92 enforces logout request CSRF origin boundary
+apps/web/src/start.ts	functions	0	6	6	6	#92 enforces logout request CSRF origin boundary
+packages/auth/src/bff.ts	lines	0	9	8	9	Behavior coverage increased; no denominator change
+packages/auth/src/bff.ts	statements	0	9	8	9	Behavior coverage increased; no denominator change
+packages/auth/src/bff.ts	branches	0	12	11	12	Behavior coverage increased; no denominator change
+packages/auth/src/bff.ts	functions	0	2	1	2	Behavior coverage increased; no denominator change
+packages/auth/src/middleware.ts	lines	16	18	18	18	Behavior coverage increased; no denominator change
+packages/auth/src/middleware.ts	statements	19	21	21	21	Behavior coverage increased; no denominator change
+packages/auth/src/middleware.ts	branches	23	30	30	30	Behavior coverage increased; no denominator change
+packages/auth/src/sdk.ts	lines	0	15	15	15	Behavior coverage increased; no denominator change
+packages/auth/src/sdk.ts	statements	0	17	16	17	Behavior coverage increased; no denominator change
+packages/auth/src/sdk.ts	branches	0	14	10	14	Behavior coverage increased; no denominator change
+packages/auth/src/sdk.ts	functions	0	2	2	2	Behavior coverage increased; no denominator change
+packages/auth/src/session.ts	lines	0	3	3	3	Behavior coverage increased; no denominator change
+packages/auth/src/session.ts	statements	0	3	3	3	Behavior coverage increased; no denominator change
+packages/auth/src/session.ts	functions	0	2	2	2	Behavior coverage increased; no denominator change
+packages/auth/src/testing/index.ts	lines	3	4	4	4	Behavior coverage increased; no denominator change
+packages/auth/src/testing/index.ts	statements	3	4	4	4	Behavior coverage increased; no denominator change
+packages/auth/src/testing/index.ts	branches	3	4	4	4	Behavior coverage increased; no denominator change
+packages/auth/src/testing/index.ts	functions	3	4	4	4	Behavior coverage increased; no denominator change
+packages/server/src/security-headers.ts	lines	8	9	9	9	Behavior coverage increased; no denominator change
+packages/server/src/security-headers.ts	statements	8	9	9	9	Behavior coverage increased; no denominator change
+packages/server/src/security-headers.ts	branches	1	2	2	2	Behavior coverage increased; no denominator change
+packages/test-utils/src/setup.ts	branches	7	10	9	10	Behavior coverage increased; no denominator change
+packages/test-utils/src/setup.ts	functions	4	6	6	6	Behavior coverage increased; no denominator change
+packages/valkey/src/sdk.ts	lines	0	14	14	14	Behavior coverage increased; no denominator change
+packages/valkey/src/sdk.ts	statements	0	15	15	15	Behavior coverage increased; no denominator change
+packages/valkey/src/sdk.ts	branches	0	8	8	8	Behavior coverage increased; no denominator change
+packages/valkey/src/sdk.ts	functions	0	8	8	8	Behavior coverage increased; no denominator change
+packages/wallow/src/service-client.ts	lines	0	2	2	2	Behavior coverage increased; no denominator change
+packages/wallow/src/service-client.ts	statements	0	2	2	2	Behavior coverage increased; no denominator change
+packages/wallow/src/service-client.ts	functions	0	1	1	1	Behavior coverage increased; no denominator change
+packages/wallow/src/testing/index.ts	lines	4	4	0	0	#93 removes unused private fixture factory after consumer search
+packages/wallow/src/testing/index.ts	statements	5	5	0	0	#93 removes unused private fixture factory after consumer search
+packages/wallow/src/testing/index.ts	branches	2	2	0	0	#93 removes unused private fixture factory after consumer search
+packages/wallow/src/testing/index.ts	functions	4	4	0	0	#93 removes unused private fixture factory after consumer search
