@@ -1,6 +1,6 @@
 # Production and Docker verification — #101
 
-Implements [#101](https://github.com/bc-solutions-coder/bcordes/issues/101) from base `11d6ccf`, following [standalone tooling review](../../reviews/standalone-tooling/README.md). The [disposition map](dispositions.tsv) accounts for all 48 original check, command and exclusion rows. These are not 48 additional tests. [Resources](resources.tsv) records the new standalone entrypoint and CI wiring; [summary](summary.json) records commands, results, deliberate defects and image identities.
+Implements [#101](https://github.com/bc-solutions-coder/bcordes/issues/101) at implementation revision `a044b93` from base `11d6ccf`, following [standalone tooling review](../../reviews/standalone-tooling/README.md). The [disposition map](dispositions.tsv) accounts for all 48 original check, command and exclusion rows. These are not 48 additional tests. [Resources](resources.tsv) records the new standalone entrypoint and CI wiring; [summary](summary.json) records commands, results, deliberate defects and image identities.
 
 The production CLI requires each served route's expected heading and direct, correctly typed, nonempty sampled CSS and JavaScript. Its 27 Node-runner cases execute real subprocesses and controlled HTTP endpoints, including wrong pages, redirects, missing references, bad assets, lifecycle failures and cleanup. Docker command fixtures control only the external Docker boundary; separate real-container runs prove success and failure cleanup.
 

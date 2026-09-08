@@ -187,5 +187,6 @@
     "python3 scripts/check-docs.py",
     "bash -n scripts/verify-docker.sh scripts/verify-production.sh",
     "git diff --check"
-  ]
+  ],
+  "implementationRevision": "a044b93"
 }
