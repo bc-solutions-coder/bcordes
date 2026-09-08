@@ -1,0 +1,191 @@
+{
+  "issue": 101,
+  "baseRevision": "11d6ccf",
+  "originalLedgerRows": 48,
+  "tests": {
+    "numPassedTests": 1059,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "standaloneCliTests": 27,
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": true,
+  "exclusionsUnchanged": true,
+  "defects": [
+    {
+      "defect": "page-identity-ignored",
+      "file": "scripts/verify-production.mjs",
+      "selector": "generic pages|wrong about heading",
+      "exitCode": 1,
+      "failedTests": 2
+    },
+    {
+      "defect": "redirects-followed",
+      "file": "scripts/verify-production.mjs",
+      "selector": "CSS redirect|JS redirect",
+      "exitCode": 1,
+      "failedTests": 2
+    },
+    {
+      "defect": "empty-assets-accepted",
+      "file": "scripts/verify-production.mjs",
+      "selector": "empty CSS|empty JS",
+      "exitCode": 1,
+      "failedTests": 2
+    },
+    {
+      "defect": "owned-server-cleanup-lost",
+      "file": "scripts/verify-production.mjs",
+      "selector": "stops its owned server",
+      "exitCode": 1,
+      "failedTests": 2
+    },
+    {
+      "defect": "readiness-redirect-accepted",
+      "file": "scripts/verify-docker.sh",
+      "selector": "rejects redirect readiness",
+      "exitCode": 1,
+      "failedTests": 1
+    },
+    {
+      "defect": "readiness-request-bound-lost",
+      "file": "scripts/verify-docker.sh",
+      "selector": "individual stalled health",
+      "exitCode": 1,
+      "failedTests": 1
+    },
+    {
+      "defect": "readiness-all-bounds-lost",
+      "file": "scripts/verify-docker.sh",
+      "selector": "rejects stalled readiness",
+      "exitCode": 1,
+      "failedTests": 1
+    },
+    {
+      "defect": "image-pin-lost",
+      "file": "scripts/verify-docker.sh",
+      "selector": "reuses one image",
+      "exitCode": 1,
+      "failedTests": 1
+    },
+    {
+      "defect": "docker-cleanup-lost",
+      "file": "scripts/verify-docker.sh",
+      "selector": "cleans Docker resources",
+      "exitCode": 1,
+      "failedTests": 1
+    },
+    {
+      "defect": "wrong-query-inspector-label",
+      "exitCode": 1,
+      "failedTests": 2,
+      "restored": "full suite passes"
+    }
+  ],
+  "docker": [
+    {
+      "image": "bcordes:verification-101",
+      "imageId": "sha256:57064aa36d9379ae92aa164c4781dd58206c6d44b0b628860ae231f46476c081",
+      "os": "linux",
+      "architecture": "amd64",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "ownedContainersRemaining": "",
+      "ownedNetworksRemaining": ""
+    },
+    {
+      "image": "bcordes:verification-101-failure",
+      "imageId": "sha256:1fd18eb04dadaa99bc80ca61ee922e8e36d80d03b11bf2e932ad3ed0980b816b",
+      "os": "linux",
+      "architecture": "amd64",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "ownedContainersRemaining": "",
+      "ownedNetworksRemaining": ""
+    }
+  ],
+  "hostDockerPlatform": "linux/arm64/v8; amd64 image emulated",
+  "queryInspectorLinux": {
+    "cpus": 0.5,
+    "image": "bcordes:verification-101-tools",
+    "platform": "linux/amd64",
+    "before": {
+      "failed": 2
+    },
+    "after": {
+      "passed": 2
+    }
+  },
+  "priorCi": {
+    "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34178671539",
+    "revision": "11d6ccf",
+    "jobs": {
+      "build": "success",
+      "typecheck": "success",
+      "lint": "success",
+      "test": "failure"
+    },
+    "failure": "Two query-inspector timing failures reproduced and corrected locally; no new remote success claimed."
+  },
+  "priorDockerWorkflow": [
+    {
+      "conclusion": "success",
+      "databaseId": 34147876945,
+      "headSha": "3b24e7e7b65363d9cf95674fd88bf98f0e2e1cd7",
+      "status": "completed",
+      "url": "https://github.com/bc-solutions-coder/bcordes/actions/runs/34147876945"
+    }
+  ],
+  "reviews": {
+    "spec": 0,
+    "standardsHard": 0,
+    "standardsHeuristic": 1,
+    "resolution": "Separate failure labels from structured fixture target/mode/extension."
+  },
+  "commands": [
+    "pnpm test:verification",
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-production-suite.json",
+    "bash scripts/verify-production.sh",
+    "docker build --platform linux/amd64 --secret id=node_auth_token,env=NODE_AUTH_TOKEN -t bcordes:verification-101 .",
+    "bash scripts/verify-docker.sh --image bcordes:verification-101",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "bash -n scripts/verify-docker.sh scripts/verify-production.sh",
+    "git diff --check"
+  ]
+}

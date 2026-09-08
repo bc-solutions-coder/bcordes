@@ -36,7 +36,7 @@ Export `NODE_AUTH_TOKEN` with read access to both private packages, then run:
 bash scripts/verify-docker.sh
 ```
 
-The [verifier](../scripts/verify-docker.sh) builds the image using a BuildKit secret, starts disposable Valkey, and checks health, public HTML, and assets against two runtime origins. It removes its containers and network afterward. It does not verify live Wallow login or authorization.
+The [verifier](../scripts/verify-docker.sh) builds the image using a BuildKit secret, starts disposable Valkey, and pins the built image ID and checks direct health readiness, route-specific public HTML and sampled assets under two callback/logout URL configurations. Requests use the published loopback address. Health requests are limited to two seconds within an overall 30-second deadline. It removes its containers and network afterward. It does not verify live Wallow login or authorization.
 
 To build an image without running that verifier:
 

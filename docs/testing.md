@@ -4,17 +4,18 @@ Run commands from the repository root after [setup](setup.md).
 
 ## Choose a check
 
-| Command                                              | Checks                                                            |
-| ---------------------------------------------------- | ----------------------------------------------------------------- |
-| `pnpm test`                                          | All Vitest workspace projects                                     |
-| `pnpm exec vitest run apps/web/src/features/contact` | Tests matching one feature path                                   |
-| `pnpm exec vitest run --coverage`                    | Workspace tests and coverage reports in `coverage/`               |
-| `pnpm typecheck`                                     | TypeScript in every workspace package                             |
-| `pnpm lint`                                          | Oxlint typed rules, JS plugins and module boundaries              |
-| `pnpm format:check`                                  | Oxfmt formatting without modifying files                          |
-| `python3 scripts/check-docs.py`                      | Local documentation links and heading anchors                     |
-| `pnpm build`                                         | Production app build                                              |
-| `bash scripts/verify-production.sh`                  | Built server, public HTML pages, and referenced CSS and JS assets |
+| Command                                              | Checks                                                             |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| `pnpm test:verification`                             | Production and Docker verifier CLIs against controlled HTTP inputs |
+| `pnpm test`                                          | All Vitest workspace projects                                      |
+| `pnpm exec vitest run apps/web/src/features/contact` | Tests matching one feature path                                    |
+| `pnpm exec vitest run --coverage`                    | Workspace tests and coverage reports in `coverage/`                |
+| `pnpm typecheck`                                     | TypeScript in every workspace package                              |
+| `pnpm lint`                                          | Oxlint typed rules, JS plugins and module boundaries               |
+| `pnpm format:check`                                  | Oxfmt formatting without modifying files                           |
+| `python3 scripts/check-docs.py`                      | Local documentation links and heading anchors                      |
+| `pnpm build`                                         | Production app build                                               |
+| `bash scripts/verify-production.sh`                  | Built server, public HTML pages, and referenced CSS and JS assets  |
 
 `pnpm format` rewrites formatting with Oxfmt. `pnpm check` also runs Oxlint with fixes. Use `pnpm exec oxfmt --check <path>` for a file-specific check. The [pre-commit hook](../.husky/pre-commit) runs Oxfmt and the active linter through `lint-staged`; it does not replace tests or type checking.
 
@@ -43,7 +44,7 @@ Coverage excludes stories, tests, generated routes, `types.ts`, and UI primitive
 
 ## Verify the production app
 
-Build first, then run `bash scripts/verify-production.sh`. The [script](../scripts/verify-production.mjs) starts the built Node server with synthetic settings and unreachable external services. It verifies public page responses and nonempty CSS and JavaScript assets. To check an already-running server, pass its URL:
+Build first, then run `bash scripts/verify-production.sh`. The [script](../scripts/verify-production.mjs) starts the built Node server with synthetic settings and unreachable external services. It requires each public route to serve its expected heading with direct HTTP 200 and HTML content type. It samples the first referenced CSS and JavaScript assets and requires direct HTTP 200, the matching content type and a nonempty body; asset redirects fail. This does not enumerate all lazy-loaded chunks. Run `pnpm test:verification` to exercise the CLI success, failure, deadline and cleanup contracts against controlled HTTP inputs. CI runs the same standalone checks. To check an already-running server, pass its URL:
 
 ```sh
 bash scripts/verify-production.sh http://127.0.0.1:3000
@@ -51,7 +52,7 @@ bash scripts/verify-production.sh http://127.0.0.1:3000
 
 The [browser verification guide](../apps/web/e2e/README.md) owns Playwright commands, ports, Valkey setup, and fixture behavior. The suite runs the production artifact against a controlled backend. Its login checks stop at the identity-provider redirect; it does not authenticate against live OIDC or establish live Wallow compatibility.
 
-For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with Docker available and `NODE_AUTH_TOKEN` exported. It builds the image using a secret mount, starts a disposable Valkey container, and checks the same image under two runtime redirect configurations. Use `bash scripts/verify-docker.sh --image <local-image>` to check an already-built image without registry credentials. PR runtime verification uses that path. See [deployment](deployment.md) for release checks.
+For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with Docker available and `NODE_AUTH_TOKEN` exported. It builds the image using a secret mount, starts a disposable Valkey container, and pins its image ID and checks public serving under two callback/logout URL configurations. Readiness requires direct HTTP 200, limits each request to two seconds, and stops after an overall 30-second deadline. `VERIFY_READINESS_TIMEOUT_MS` can shorten the deadline for isolated failure checks. The loop does not exercise login, callbacks or logout. Use `bash scripts/verify-docker.sh --image <local-image>` to check an already-built image without registry credentials. PR runtime verification uses that path. See [deployment](deployment.md) for release checks.
 
 ## Match CI
 

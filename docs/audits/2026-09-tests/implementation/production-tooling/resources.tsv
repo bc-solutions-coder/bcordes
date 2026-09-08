@@ -1,0 +1,5 @@
+path	purpose	owner
+scripts/verify-production.test.mjs	Standalone Node test runner exercising verifier CLIs with real controlled HTTP inputs	101; final reconciliation104
+package.json#test:verification	Local entrypoint for standalone CLI contracts	101
+.github/workflows/ci.yml	Runs the same CLI command before the existing coverage suite	101
+packages/query/src/devtools.test.tsx	Scoped asynchronous waits for the actual lazy inspector host after reproduced CI timeout; assertions retained	101 follow-up to94

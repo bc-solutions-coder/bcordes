@@ -69,7 +69,13 @@ async function startServer() {
 
 async function verify(baseURL) {
   let home = ''
-  for (const path of ['/', '/about', '/projects', '/contact']) {
+  const pages = [
+    ['/', 'Professional Software Engineering'],
+    ['/about', 'Bryan Cordes'],
+    ['/projects', 'Projects'],
+    ['/contact', 'Get in Touch'],
+  ]
+  for (const [path, heading] of pages) {
     const response = await fetch(new URL(path, baseURL), {
       signal: AbortSignal.timeout(15_000),
       redirect: 'manual',
@@ -78,6 +84,17 @@ async function verify(baseURL) {
     assert.match(response.headers.get('content-type') ?? '', /text\/html/)
     const html = await response.text()
     assert.match(html, /<html/)
+    const headings = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map(
+      (match) =>
+        match[1]
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim(),
+    )
+    assert.ok(
+      headings.includes(heading),
+      `${path} expected heading: ${heading}`,
+    )
     if (path === '/') home = html
     console.log(`GET ${path}: 200 HTML`)
   }
@@ -96,6 +113,7 @@ async function verify(baseURL) {
     assert.ok(path, `Home page references a ${extension} asset`)
     const response = await fetch(new URL(path, baseURL), {
       signal: AbortSignal.timeout(15_000),
+      redirect: 'manual',
     })
     assert.equal(response.status, 200, `${path} HTTP status`)
     assert.match(response.headers.get('content-type') ?? '', contentType)

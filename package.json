@@ -18,7 +18,8 @@
     "format:check": "oxfmt --check",
     "check": "oxfmt && pnpm lint --fix",
     "storybook": "pnpm --filter bcordes storybook",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:verification": "node --test scripts/verify-production.test.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

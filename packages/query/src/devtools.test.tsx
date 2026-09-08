@@ -32,41 +32,65 @@ afterEach(() => {
   localStorage.clear()
 })
 
-it('labels the query inspector in the developer tools', async () => {
-  const { queryClient } = getContext()
-  render(
-    <Provider queryClient={queryClient}>
-      <TanStackDevtools
-        plugins={[devtoolsPlugin]}
-        config={{ defaultOpen: true }}
-      />
-    </Provider>,
-  )
-  expect(
-    await screen.findByText('Tanstack Query', { exact: true }),
-  ).toBeVisible()
-})
+it(
+  'labels the query inspector in the developer tools',
+  { timeout: 15_000 },
+  async () => {
+    const { queryClient } = getContext()
+    render(
+      <Provider queryClient={queryClient}>
+        <TanStackDevtools
+          plugins={[devtoolsPlugin]}
+          config={{ defaultOpen: true }}
+        />
+      </Provider>,
+    )
+    expect(
+      await screen.findByText(
+        'Tanstack Query',
+        { exact: true },
+        { timeout: 10_000 },
+      ),
+    ).toBeVisible()
+  },
+)
 
-it('shows cached queries and their data in the query inspector', async () => {
-  const { queryClient } = getContext()
-  queryClient.setQueryData(['inspector-fixture'], {
-    message: 'Cached inspection value',
-  })
-  render(
-    <Provider queryClient={queryClient}>
-      <TanStackDevtools
-        plugins={[devtoolsPlugin]}
-        config={{ defaultOpen: true }}
-      />
-    </Provider>,
-  )
-  expect(
-    await screen.findByText('Tanstack Query', { exact: true }),
-  ).toBeVisible()
-  fireEvent.click(
-    await screen.findByText('["inspector-fixture"]', { exact: true }),
-  )
-  expect(await screen.findByRole('textbox', { name: 'message:' })).toHaveValue(
-    'Cached inspection value',
-  )
-})
+it(
+  'shows cached queries and their data in the query inspector',
+  { timeout: 15_000 },
+  async () => {
+    const { queryClient } = getContext()
+    queryClient.setQueryData(['inspector-fixture'], {
+      message: 'Cached inspection value',
+    })
+    render(
+      <Provider queryClient={queryClient}>
+        <TanStackDevtools
+          plugins={[devtoolsPlugin]}
+          config={{ defaultOpen: true }}
+        />
+      </Provider>,
+    )
+    expect(
+      await screen.findByText(
+        'Tanstack Query',
+        { exact: true },
+        { timeout: 10_000 },
+      ),
+    ).toBeVisible()
+    fireEvent.click(
+      await screen.findByText(
+        '["inspector-fixture"]',
+        { exact: true },
+        { timeout: 10_000 },
+      ),
+    )
+    expect(
+      await screen.findByRole(
+        'textbox',
+        { name: 'message:' },
+        { timeout: 10_000 },
+      ),
+    ).toHaveValue('Cached inspection value')
+  },
+)

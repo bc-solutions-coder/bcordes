@@ -39,6 +39,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PNPM_CONFIG_USERCONFIG: ${{ env.NPM_CONFIG_USERCONFIG }}
 
+      - name: Test verification CLIs
+        run: pnpm test:verification
+
       - name: Run tests
         run: pnpm vitest run --coverage
 
