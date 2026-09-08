@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/bc-solutions-coder/bcordes/compare/v0.1.9...v0.1.10) (2026-09-08)
+
+
+### Bug Fixes
+
+* version resume downloads to avoid stale CDN copies ([#105](https://github.com/bc-solutions-coder/bcordes/issues/105)) ([cf3f2e4](https://github.com/bc-solutions-coder/bcordes/commit/cf3f2e4dfd1da59b89fd14326e425044e529d75e))
+
 ## [0.1.9](https://github.com/bc-solutions-coder/bcordes/compare/v0.1.8...v0.1.9) (2026-09-07)
 
 
