@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from './dialog'
+} from '@bcordes/ui/components/dialog'
 
 function renderDialog(props?: { showCloseButton?: boolean; open?: boolean }) {
   return render(
@@ -21,7 +21,7 @@ function renderDialog(props?: { showCloseButton?: boolean; open?: boolean }) {
   )
 }
 
-describe('Dialog (Radix -> Base UI migration contract)', () => {
+describe('Dialog', () => {
   it('opens from the trigger and exposes role="dialog"', async () => {
     render(
       <Dialog>
@@ -37,26 +37,12 @@ describe('Dialog (Radix -> Base UI migration contract)', () => {
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
   })
 
-  it('renders content, title and description with their data-slots', () => {
+  it('names and describes the dialog and exposes its body', () => {
     renderDialog()
-    const content = screen
-      .getByText('Dialog body')
-      .closest('[data-slot="dialog-content"]')
-    expect(content).not.toBeNull()
-    expect(screen.getByText('Dialog title')).toHaveAttribute(
-      'data-slot',
-      'dialog-title',
-    )
-    expect(screen.getByText('Dialog description')).toHaveAttribute(
-      'data-slot',
-      'dialog-description',
-    )
-  })
-
-  it('renders the close button (data-slot="dialog-close") when showCloseButton is true', () => {
-    renderDialog({ showCloseButton: true })
-    const close = screen.getByRole('button', { name: /close/i })
-    expect(close).toHaveAttribute('data-slot', 'dialog-close')
+    expect(
+      screen.getByRole('dialog', { name: 'Dialog title' }),
+    ).toHaveAccessibleDescription('Dialog description')
+    expect(screen.getByText('Dialog body')).toBeVisible()
   })
 
   it('omits the close button when showCloseButton is false', () => {

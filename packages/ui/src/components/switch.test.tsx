@@ -1,37 +1,36 @@
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { Switch } from './switch'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { Switch } from '@bcordes/ui/components/switch'
 
-describe('Switch (Radix -> Base UI migration contract)', () => {
-  it('renders with role="switch" and data-slot="switch"', () => {
-    render(<Switch />)
-    const sw = screen.getByRole('switch')
-    expect(sw).toHaveAttribute('data-slot', 'switch')
+describe('Switch selection', () => {
+  it('honors a checked initial value', () => {
+    render(<Switch aria-label="Receive updates" defaultChecked />)
+    expect(
+      screen.getByRole('switch', { name: 'Receive updates' }),
+    ).toBeChecked()
   })
-
-  it('renders a thumb with data-slot="switch-thumb"', () => {
-    const { container } = render(<Switch />)
-    expect(container.querySelector('[data-slot="switch-thumb"]')).not.toBeNull()
-  })
-
-  it('reflects the checked state via aria-checked and a data-checked attribute', () => {
-    render(<Switch defaultChecked />)
-    const sw = screen.getByRole('switch')
-    expect(sw).toHaveAttribute('aria-checked', 'true')
-    expect(sw).toHaveAttribute('data-checked')
-  })
-
-  it('reflects the unchecked state via a data-unchecked attribute', () => {
-    render(<Switch />)
-    const sw = screen.getByRole('switch')
-    expect(sw).toHaveAttribute('aria-checked', 'false')
-    expect(sw).toHaveAttribute('data-unchecked')
-  })
-
-  it('merges caller className and keeps the peer base class', () => {
-    render(<Switch className="custom-switch" />)
-    const sw = screen.getByRole('switch')
-    expect(sw).toHaveClass('custom-switch')
-    expect(sw).toHaveClass('peer')
+  it('toggles both ways, reports public values and refuses disabled changes', () => {
+    const onCheckedChange = vi.fn()
+    const { rerender } = render(
+      <Switch aria-label="Receive updates" onCheckedChange={onCheckedChange} />,
+    )
+    const control = screen.getByRole('switch', { name: 'Receive updates' })
+    expect(control).not.toBeChecked()
+    fireEvent.click(control)
+    expect(control).toBeChecked()
+    expect(onCheckedChange.mock.calls.at(-1)?.[0]).toBe(true)
+    fireEvent.click(control)
+    expect(control).not.toBeChecked()
+    expect(onCheckedChange.mock.calls.at(-1)?.[0]).toBe(false)
+    rerender(
+      <Switch
+        aria-label="Receive updates"
+        onCheckedChange={onCheckedChange}
+        disabled
+      />,
+    )
+    fireEvent.click(control)
+    expect(control).not.toBeChecked()
+    expect(onCheckedChange).toHaveBeenCalledTimes(2)
   })
 })

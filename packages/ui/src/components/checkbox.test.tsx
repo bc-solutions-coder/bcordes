@@ -1,41 +1,39 @@
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { Checkbox } from './checkbox'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { Checkbox } from '@bcordes/ui/components/checkbox'
 
-describe('Checkbox (Radix -> Base UI migration contract)', () => {
-  it('renders with role="checkbox" and data-slot="checkbox"', () => {
-    render(<Checkbox />)
-    const cb = screen.getByRole('checkbox')
-    expect(cb).toHaveAttribute('data-slot', 'checkbox')
+describe('Checkbox selection', () => {
+  it('honors a checked initial value', () => {
+    render(<Checkbox aria-label="Receive updates" defaultChecked />)
+    expect(
+      screen.getByRole('checkbox', { name: 'Receive updates' }),
+    ).toBeChecked()
   })
-
-  it('reflects the checked state via aria-checked and a data-checked attribute', () => {
-    render(<Checkbox defaultChecked />)
-    const cb = screen.getByRole('checkbox')
-    expect(cb).toHaveAttribute('aria-checked', 'true')
-    expect(cb).toHaveAttribute('data-checked')
-  })
-
-  it('reflects the unchecked state via a data-unchecked attribute', () => {
-    render(<Checkbox />)
-    const cb = screen.getByRole('checkbox')
-    expect(cb).toHaveAttribute('aria-checked', 'false')
-    expect(cb).toHaveAttribute('data-unchecked')
-  })
-
-  it('renders the indicator with the CheckIcon svg when checked', () => {
-    const { container } = render(<Checkbox defaultChecked />)
-    const indicator = container.querySelector(
-      '[data-slot="checkbox-indicator"]',
+  it('toggles both ways, reports public values and refuses disabled changes', () => {
+    const onCheckedChange = vi.fn()
+    const { rerender } = render(
+      <Checkbox
+        aria-label="Receive updates"
+        onCheckedChange={onCheckedChange}
+      />,
     )
-    expect(indicator).not.toBeNull()
-    expect(indicator!.querySelector('svg')).not.toBeNull()
-  })
-
-  it('merges caller className and keeps the peer base class', () => {
-    render(<Checkbox className="custom-check" />)
-    const cb = screen.getByRole('checkbox')
-    expect(cb).toHaveClass('custom-check')
-    expect(cb).toHaveClass('peer')
+    const control = screen.getByRole('checkbox', { name: 'Receive updates' })
+    expect(control).not.toBeChecked()
+    fireEvent.click(control)
+    expect(control).toBeChecked()
+    expect(onCheckedChange.mock.calls.at(-1)?.[0]).toBe(true)
+    fireEvent.click(control)
+    expect(control).not.toBeChecked()
+    expect(onCheckedChange.mock.calls.at(-1)?.[0]).toBe(false)
+    rerender(
+      <Checkbox
+        aria-label="Receive updates"
+        onCheckedChange={onCheckedChange}
+        disabled
+      />,
+    )
+    fireEvent.click(control)
+    expect(control).not.toBeChecked()
+    expect(onCheckedChange).toHaveBeenCalledTimes(2)
   })
 })

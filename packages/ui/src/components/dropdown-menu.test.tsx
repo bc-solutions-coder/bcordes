@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import {
@@ -10,9 +11,9 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './dropdown-menu'
+} from '@bcordes/ui/components/dropdown-menu'
 
-describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
+describe('DropdownMenu', () => {
   it('opens the menu from the trigger', async () => {
     render(
       <DropdownMenu>
@@ -27,7 +28,7 @@ describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
     expect(await screen.findByText('Profile')).toBeInTheDocument()
   })
 
-  it('renders items with data-slot="dropdown-menu-item" and menuitem role', () => {
+  it('exposes the named item in the open menu', async () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
@@ -36,9 +37,9 @@ describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
         </DropdownMenuContent>
       </DropdownMenu>,
     )
-    const item = screen.getByText('Profile')
-    expect(item).toHaveAttribute('data-slot', 'dropdown-menu-item')
-    expect(item).toHaveAttribute('role', 'menuitem')
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Profile' })).toBeVisible(),
+    )
   })
 
   it('fires onClick when an item is activated', () => {
@@ -55,53 +56,74 @@ describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
-  it('reflects checkbox checked state via data-checked plus an indicator slot', () => {
-    render(
-      <DropdownMenu defaultOpen>
-        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuCheckboxItem checked>
-            Show status bar
-          </DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-      </DropdownMenu>,
-    )
-    const item = screen
-      .getByText('Show status bar')
-      .closest('[data-slot="dropdown-menu-checkbox-item"]')
-    expect(item).not.toBeNull()
-    expect(item).toHaveAttribute('data-checked')
-    expect(
-      document.querySelector(
-        '[data-slot="dropdown-menu-checkbox-item-indicator"]',
-      ),
-    ).not.toBeNull()
+  it('toggles a menu checkbox and reports the new value', () => {
+    const onCheckedChange = vi.fn()
+    function Menu() {
+      const [checked, setChecked] = useState(true)
+      return (
+        <DropdownMenu open>
+          <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuCheckboxItem
+              checked={checked}
+              onCheckedChange={(value) => {
+                setChecked(value)
+                onCheckedChange(value)
+              }}
+            >
+              Show status bar
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+    render(<Menu />)
+    const item = screen.getByRole('menuitemcheckbox', {
+      name: 'Show status bar',
+    })
+    expect(item).toBeChecked()
+    fireEvent.click(item)
+    expect(item).not.toBeChecked()
+    expect(onCheckedChange).toHaveBeenLastCalledWith(false)
+    fireEvent.click(item)
+    expect(item).toBeChecked()
+    expect(onCheckedChange).toHaveBeenLastCalledWith(true)
   })
 
-  it('reflects the selected radio item via data-checked plus an indicator slot', () => {
-    render(
-      <DropdownMenu defaultOpen>
-        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuRadioGroup value="a">
-            <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="b">Option B</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>,
-    )
-    const selected = screen
-      .getByText('Option A')
-      .closest('[data-slot="dropdown-menu-radio-item"]')
-    expect(selected).toHaveAttribute('data-checked')
-    expect(
-      document.querySelector(
-        '[data-slot="dropdown-menu-radio-item-indicator"]',
-      ),
-    ).not.toBeNull()
+  it('selects a different radio option and reports its value', () => {
+    const onValueChange = vi.fn()
+    function Menu() {
+      const [value, setValue] = useState('a')
+      return (
+        <DropdownMenu open>
+          <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup
+              value={value}
+              onValueChange={(next) => {
+                setValue(next)
+                onValueChange(next)
+              }}
+            >
+              <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="b">Option B</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+    render(<Menu />)
+    const a = screen.getByRole('menuitemradio', { name: 'Option A' }),
+      b = screen.getByRole('menuitemradio', { name: 'Option B' })
+    expect(a).toBeChecked()
+    expect(b).not.toBeChecked()
+    fireEvent.click(b)
+    expect(a).not.toBeChecked()
+    expect(b).toBeChecked()
+    expect(onValueChange).toHaveBeenCalledWith('b')
   })
 
-  it('renders label and separator with their data-slots', () => {
+  it('shows the account heading and separator in the open menu', async () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
@@ -112,13 +134,8 @@ describe('DropdownMenu (Radix -> Base UI migration contract)', () => {
         </DropdownMenuContent>
       </DropdownMenu>,
     )
-    expect(screen.getByText('My Account')).toHaveAttribute(
-      'data-slot',
-      'dropdown-menu-label',
-    )
-    expect(
-      document.querySelector('[data-slot="dropdown-menu-separator"]'),
-    ).not.toBeNull()
+    await waitFor(() => expect(screen.getByText('My Account')).toBeVisible())
+    expect(screen.getByRole('separator')).toBeVisible()
   })
 
   it('closes the menu after an item is selected', async () => {

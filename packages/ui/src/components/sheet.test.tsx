@@ -6,15 +6,13 @@ import {
   SheetDescription,
   SheetTitle,
   SheetTrigger,
-} from './sheet'
+} from '@bcordes/ui/components/sheet'
 
-type Side = 'top' | 'right' | 'bottom' | 'left'
-
-function renderSheet(props?: { open?: boolean; side?: Side }) {
+function renderSheet(props?: { open?: boolean }) {
   return render(
     <Sheet defaultOpen={props?.open ?? true}>
       <SheetTrigger>Open sheet</SheetTrigger>
-      <SheetContent side={props?.side}>
+      <SheetContent>
         <SheetTitle>Sheet title</SheetTitle>
         <SheetDescription>Sheet description</SheetDescription>
         <p>Sheet body</p>
@@ -23,7 +21,7 @@ function renderSheet(props?: { open?: boolean; side?: Side }) {
   )
 }
 
-describe('Sheet (Radix -> Base UI migration contract)', () => {
+describe('Sheet', () => {
   it('opens from the trigger and exposes role="dialog"', async () => {
     render(
       <Sheet>
@@ -39,40 +37,13 @@ describe('Sheet (Radix -> Base UI migration contract)', () => {
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
   })
 
-  it('renders content, title and description with their data-slots', () => {
+  it('names and describes the sheet and exposes its body', () => {
     renderSheet()
-    const content = screen
-      .getByText('Sheet body')
-      .closest('[data-slot="sheet-content"]')
-    expect(content).not.toBeNull()
-    expect(screen.getByText('Sheet title')).toHaveAttribute(
-      'data-slot',
-      'sheet-title',
-    )
-    expect(screen.getByText('Sheet description')).toHaveAttribute(
-      'data-slot',
-      'sheet-description',
-    )
+    expect(
+      screen.getByRole('dialog', { name: 'Sheet title' }),
+    ).toHaveAccessibleDescription('Sheet description')
+    expect(screen.getByText('Sheet body')).toBeVisible()
   })
-
-  it('defaults to the right side (data-side="right")', () => {
-    renderSheet()
-    const content = screen
-      .getByText('Sheet body')
-      .closest('[data-slot="sheet-content"]')
-    expect(content).toHaveAttribute('data-side', 'right')
-  })
-
-  it.each<Side>(['top', 'right', 'bottom', 'left'])(
-    'honors the side prop via a stable data-side attribute (%s)',
-    (side) => {
-      renderSheet({ side })
-      const content = screen
-        .getByText('Sheet body')
-        .closest('[data-slot="sheet-content"]')
-      expect(content).toHaveAttribute('data-side', side)
-    },
-  )
 
   it('closes when the close button is clicked', async () => {
     renderSheet()

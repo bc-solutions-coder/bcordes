@@ -1,0 +1,14 @@
+@import 'tailwindcss' source(none);
+@import 'tw-animate-css';
+@import '@bcordes/ui/styles.css';
+@source '../../../packages/ui/src';
+@source '../../../packages/forms/src';
+@source '../../../packages/navigation/src';
+@source './ui-components.tsx';
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+}

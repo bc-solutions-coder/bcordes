@@ -1,126 +1,146 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import { MobileNav } from '@bcordes/navigation'
+import { renderNavigation } from '../testing/render-navigation'
 
-import { MobileNav } from './MobileNav'
-import { MobileNav as MobileNavFromBarrel } from './index'
-import type { NavItem } from './types'
-
-// The Link stub simulates exact or prefix matching against a controlled path.
-let currentPath = '/'
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    activeProps,
-    activeOptions,
-    className,
-    onClick,
-    ...rest
-  }: {
-    to: string
-    children?: React.ReactNode
-    activeProps?: { className?: string }
-    activeOptions?: { exact?: boolean }
-    className?: string
-    onClick?: (e: unknown) => void
-    [key: string]: unknown
-  }) => {
-    const isActive = activeOptions?.exact
-      ? to === currentPath
-      : currentPath.startsWith(to)
-    const resolved = isActive
-      ? (activeProps?.className ?? className)
-      : className
-    return (
-      <a
-        href={to}
-        className={resolved}
-        data-active={isActive}
-        onClick={onClick}
-        {...rest}
-      >
-        {children}
-      </a>
-    )
-  },
-}))
-
-const ITEMS: ReadonlyArray<NavItem> = [
-  { label: 'Home', to: '/', exact: true },
+const items = [
   { label: 'Projects', to: '/projects' },
   { label: 'About', to: '/about' },
 ]
 
-describe('MobileNav', () => {
-  it('is importable from the package barrel (@bcordes/navigation)', () => {
-    expect(typeof MobileNavFromBarrel).toBe('function')
-    expect(MobileNavFromBarrel).toBe(MobileNav)
+describe('Mobile navigation', () => {
+  it('opens the selected destination and reports navigation without closing the controlled sheet', async () => {
+    const onNavigate = vi.fn()
+    renderNavigation(<MobileNav items={items} open onNavigate={onNavigate} />)
+    const dialog = await screen.findByRole('dialog', { name: 'Navigation' })
+    for (const item of items)
+      expect(
+        within(dialog).getByRole('link', { name: item.label }),
+      ).toHaveAttribute('href', item.to)
+    fireEvent.click(within(dialog).getByRole('link', { name: 'About' }))
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole('link', { name: 'About' }),
+      ).toHaveAttribute('aria-current', 'page'),
+    )
+    expect(
+      within(dialog).getByRole('link', { name: 'Projects' }),
+    ).not.toHaveAttribute('aria-current')
+    expect(onNavigate).toHaveBeenCalledOnce()
+    expect(dialog).toBeVisible()
+    expect(
+      screen.getByRole('heading', { name: '/about destination', hidden: true }),
+    ).toBeInTheDocument()
   })
-
-  it('renders one link per injected NavItem when the sheet is open', () => {
-    render(<MobileNav items={ITEMS} defaultOpen />)
-
-    for (const item of ITEMS) {
-      const link = screen.getByText(item.label).closest('a')
-      expect(link).not.toBeNull()
-      expect(link!.getAttribute('href')).toBe(item.to)
+  it('renders exactly the custom item links', async () => {
+    renderNavigation(
+      <MobileNav
+        items={[
+          { label: 'Docs', to: '/docs' },
+          { label: 'Pricing', to: '/pricing' },
+        ]}
+        defaultOpen
+      />,
+    )
+    const nav = within(await screen.findByRole('dialog')).getByRole(
+      'navigation',
+    )
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((link) => [link.textContent, link.getAttribute('href')]),
+    ).toEqual([
+      ['Docs', '/docs'],
+      ['Pricing', '/pricing'],
+    ])
+  })
+  it('shows the injected brand and opens the supplied sign-in destination', async () => {
+    renderNavigation(
+      <MobileNav
+        items={items}
+        defaultOpen
+        logo={<span>Custom brand</span>}
+        actions={<Link to="/auth/login">Sign In</Link>}
+      />,
+    )
+    const dialog = await screen.findByRole('dialog')
+    expect(within(dialog).getByText('Custom brand')).toBeVisible()
+    const action = within(dialog).getByRole('link', { name: 'Sign In' })
+    expect(action).toHaveAttribute('href', '/auth/login')
+    fireEvent.click(action)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', {
+          name: '/auth/login destination',
+          hidden: true,
+        }),
+      ).toBeInTheDocument(),
+    )
+  })
+  it('opens and dismisses the sheet while reporting both public open-state changes', async () => {
+    const onOpenChange = vi.fn()
+    renderNavigation(
+      <MobileNav
+        items={items}
+        triggerLabel="Browse pages"
+        onOpenChange={onOpenChange}
+      />,
+    )
+    fireEvent.click(await screen.findByRole('button', { name: 'Browse pages' }))
+    expect(
+      await screen.findByRole('dialog', { name: 'Navigation' }),
+    ).toBeVisible()
+    expect(screen.getByRole('link', { name: 'Projects' })).toBeVisible()
+    expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(true)
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
+    expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(false)
+  })
+  it('keeps parent-controlled state authoritative and closes when the parent accepts dismissal', async () => {
+    const onOpenChange = vi.fn()
+    function Parent() {
+      const [open, setOpen] = useState(true)
+      return (
+        <MobileNav
+          items={items}
+          open={open}
+          onOpenChange={onOpenChange}
+          actions={
+            <button onClick={() => setOpen(false)}>Accept dismissal</button>
+          }
+        />
+      )
     }
+    renderNavigation(<Parent />)
+    const dialog = await screen.findByRole('dialog')
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+    expect(onOpenChange.mock.calls.at(-1)?.[0]).toBe(false)
+    expect(dialog).toBeVisible()
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'Accept dismissal' }),
+    )
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
   })
-
-  it('renders the injected items, not any hard-coded bcordes routes', () => {
-    const custom: ReadonlyArray<NavItem> = [{ label: 'Docs', to: '/docs' }]
-    render(<MobileNav items={custom} defaultOpen />)
-
-    expect(screen.getByText('Docs')).toBeDefined()
-    expect(screen.queryByText('Projects')).toBeNull()
-    expect(screen.queryByText('Resume')).toBeNull()
-  })
-
-  it('marks the active item from the current route', () => {
-    currentPath = '/about'
-    render(<MobileNav items={ITEMS} defaultOpen />)
-
-    const active = screen.getByText('About').closest('a')
-    expect(active!.getAttribute('data-active')).toBe('true')
-    currentPath = '/'
-  })
-
-  it('renders the injected logo slot when open', () => {
-    render(
+  it('renders no item links for an empty collection', async () => {
+    renderNavigation(
       <MobileNav
-        items={ITEMS}
+        items={[]}
         defaultOpen
-        logo={<div data-testid="logo">BRAND</div>}
+        logo={<a href="/docs">Custom brand</a>}
       />,
     )
-    expect(screen.getByTestId('logo')).toBeDefined()
-  })
-
-  it('renders the injected actions slot when open', () => {
-    render(
-      <MobileNav
-        items={ITEMS}
-        defaultOpen
-        actions={
-          <a href="/auth/login" data-testid="sign-in">
-            Sign In
-          </a>
-        }
-      />,
-    )
-    expect(screen.getByTestId('sign-in')).toBeDefined()
-  })
-
-  it('renders a hamburger trigger with an accessible label', () => {
-    render(<MobileNav items={ITEMS} triggerLabel="Open navigation menu" />)
-    expect(screen.getByLabelText('Open navigation menu')).toBeDefined()
-  })
-
-  it('renders no nav links for an empty items array when open', () => {
-    render(<MobileNav items={[]} defaultOpen />)
-
-    expect(screen.queryByText('Home')).toBeNull()
-    expect(screen.queryByText('Projects')).toBeNull()
+    const dialog = await screen.findByRole('dialog')
+    expect(
+      within(within(dialog).getByRole('navigation')).queryAllByRole('link'),
+    ).toEqual([])
+    expect(
+      within(dialog).getByRole('link', { name: 'Custom brand' }),
+    ).toHaveAttribute('href', '/docs')
   })
 })

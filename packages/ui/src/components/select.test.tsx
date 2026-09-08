@@ -6,7 +6,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './select'
+} from '@bcordes/ui/components/select'
 
 function renderSelect(props?: {
   defaultOpen?: boolean
@@ -25,43 +25,37 @@ function renderSelect(props?: {
   )
 }
 
-describe('Select (Radix -> Base UI migration contract)', () => {
-  it('renders the placeholder in the trigger while nothing is selected', () => {
+describe('Select', () => {
+  it('shows a placeholder before selection', () => {
     renderSelect()
-    const trigger = document.querySelector('[data-slot="select-trigger"]')
-    expect(trigger).not.toBeNull()
-    expect(trigger).toHaveTextContent('Pick a fruit')
+    expect(screen.getByRole('combobox')).toHaveTextContent('Pick a fruit')
   })
 
-  it('shows options with data-slot="select-item" and option role when open', () => {
+  it('shows the supplied options in an open listbox', () => {
     renderSelect({ defaultOpen: true })
-    const options = screen.getAllByRole('option')
-    expect(options.length).toBeGreaterThanOrEqual(2)
-    expect(options[0]).toHaveAttribute('data-slot', 'select-item')
+    expect(screen.getByRole('listbox')).toBeVisible()
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible()
+    expect(screen.getByRole('option', { name: 'Banana' })).toBeVisible()
   })
 
-  it('marks the selected item with the data-selected attribute', () => {
+  it('reports the selected option and displays its value', () => {
     renderSelect({ defaultOpen: true, defaultValue: 'Apple' })
-    const selected = screen
-      .getByRole('option', { name: 'Apple' })
-      .closest('[data-slot="select-item"]')
-    expect(selected).toHaveAttribute('data-selected')
-  })
-
-  it('updates the displayed value when an option is chosen', async () => {
-    renderSelect()
-    fireEvent.click(screen.getByText('Pick a fruit'))
-    fireEvent.click(await screen.findByRole('option', { name: 'Banana' }))
-    await waitFor(() => {
-      const trigger = document.querySelector('[data-slot="select-trigger"]')
-      expect(trigger).toHaveTextContent('Banana')
-    })
-  })
-
-  it('renders the popup content with data-slot="select-content"', () => {
-    renderSelect({ defaultOpen: true })
     expect(
-      document.querySelector('[data-slot="select-content"]'),
-    ).not.toBeNull()
+      screen.getByRole('option', { name: 'Apple', selected: true }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('option', { name: 'Banana', selected: false }),
+    ).toBeVisible()
+    expect(screen.getByRole('combobox')).toHaveTextContent('Apple')
+  })
+
+  it('displays the chosen value and closes the list', async () => {
+    renderSelect()
+    fireEvent.click(screen.getByRole('combobox'))
+    fireEvent.click(await screen.findByRole('option', { name: 'Banana' }))
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveTextContent('Banana'),
+    )
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
   })
 })

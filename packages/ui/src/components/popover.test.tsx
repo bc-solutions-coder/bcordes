@@ -1,44 +1,32 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@bcordes/ui/components/popover'
 
-describe('Popover (Radix -> Base UI migration contract)', () => {
-  it('renders the trigger with data-slot="popover-trigger" and stays closed initially', () => {
+describe('Popover', () => {
+  it('shows the named trigger while its body is closed', () => {
     render(
       <Popover>
-        <PopoverTrigger>Open popover</PopoverTrigger>
+        <PopoverTrigger>Open</PopoverTrigger>
         <PopoverContent>Popover body</PopoverContent>
       </Popover>,
     )
-    const trigger = screen.getByText('Open popover')
-    expect(trigger).toHaveAttribute('data-slot', 'popover-trigger')
-    expect(screen.queryByText('Popover body')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Open' })).toBeVisible()
+    expect(screen.queryByText('Popover body')).not.toBeInTheDocument()
   })
 
-  it('opens on trigger click and renders the popup with data-slot="popover-content"', async () => {
+  it('shows its body after the trigger is activated', async () => {
     render(
       <Popover>
-        <PopoverTrigger>Open popover</PopoverTrigger>
+        <PopoverTrigger>Open</PopoverTrigger>
         <PopoverContent>Popover body</PopoverContent>
       </Popover>,
     )
-    fireEvent.click(screen.getByText('Open popover'))
-    const body = await screen.findByText('Popover body')
-    const content = body.closest('[data-slot="popover-content"]')
-    expect(content).not.toBeNull()
-  })
-
-  it('merges a caller className onto the popup', async () => {
-    render(
-      <Popover>
-        <PopoverTrigger>Open popover</PopoverTrigger>
-        <PopoverContent className="custom-popover">Popover body</PopoverContent>
-      </Popover>,
-    )
-    fireEvent.click(screen.getByText('Open popover'))
-    await screen.findByText('Popover body')
-    const content = document.querySelector('[data-slot="popover-content"]')
-    expect(content).toHaveClass('custom-popover')
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }))
+    expect(await screen.findByText('Popover body')).toBeVisible()
   })
 
   it('closes when Escape is pressed', async () => {

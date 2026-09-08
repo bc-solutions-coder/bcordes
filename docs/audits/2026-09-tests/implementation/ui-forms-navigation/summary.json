@@ -1,0 +1,508 @@
+{
+  "issue": 100,
+  "baseRevision": "94e2874",
+  "tests": {
+    "numPassedTests": 1059,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-08T01:58:42.899Z",
+    "duration": 17507.525999999998,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [],
+  "coverageLosses": [],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": true,
+  "exclusionsUnchanged": true,
+  "unitDefects": [
+    {
+      "defect": "form-label-unlinked",
+      "file": "packages/forms/src/form.tsx",
+      "test": "packages/forms/src/form.test.tsx",
+      "selector": "names the editable",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-help-unlinked",
+      "file": "packages/forms/src/form.tsx",
+      "test": "packages/forms/src/form.test.tsx",
+      "selector": "describes a valid",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-error-unlinked",
+      "file": "packages/forms/src/form.tsx",
+      "test": "packages/forms/src/form.test.tsx",
+      "selector": "describes an invalid",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-invalid-state-lost",
+      "file": "packages/forms/src/form.tsx",
+      "test": "packages/forms/src/form.test.tsx",
+      "selector": "describes an invalid",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-error-hidden",
+      "file": "packages/forms/src/form.tsx",
+      "test": "packages/forms/src/form.test.tsx",
+      "selector": "rejects empty input",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-select-value-lost",
+      "file": "packages/forms/src/SelectFormField.tsx",
+      "test": "packages/forms/src/SelectFormField.test.tsx",
+      "selector": "displays and submits",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "form-select-label-lost",
+      "file": "packages/forms/src/SelectFormField.tsx",
+      "test": "packages/forms/src/SelectFormField.test.tsx",
+      "selector": "names the selection",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "desktop-wrong-destination",
+      "file": "packages/navigation/src/MainNav.tsx",
+      "test": "packages/navigation/src/MainNav.test.tsx",
+      "selector": "opens the destination",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "desktop-exact-ignored",
+      "file": "packages/navigation/src/MainNav.tsx",
+      "test": "packages/navigation/src/MainNav.test.tsx",
+      "selector": "current-page state",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 3
+    },
+    {
+      "defect": "desktop-brand-lost",
+      "file": "packages/navigation/src/MainNav.tsx",
+      "test": "packages/navigation/src/MainNav.test.tsx",
+      "selector": "supplied brand",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "desktop-action-lost",
+      "file": "packages/navigation/src/MainNav.tsx",
+      "test": "packages/navigation/src/MainNav.test.tsx",
+      "selector": "supplied brand",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "mobile-callback-lost",
+      "file": "packages/navigation/src/MobileNav.tsx",
+      "test": "packages/navigation/src/MobileNav.test.tsx",
+      "selector": "selected destination",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "mobile-heading-lost",
+      "file": "packages/navigation/src/MobileNav.tsx",
+      "test": "packages/navigation/src/MobileNav.test.tsx",
+      "selector": "opens and dismisses",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "mobile-controlled-state-ignored",
+      "file": "packages/navigation/src/MobileNav.tsx",
+      "test": "packages/navigation/src/MobileNav.test.tsx",
+      "selector": "parent-controlled",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "mobile-open-report-lost",
+      "file": "packages/navigation/src/MobileNav.tsx",
+      "test": "packages/navigation/src/MobileNav.test.tsx",
+      "selector": "opens and dismisses",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "button-disabled-ignored",
+      "file": "packages/ui/src/components/button.tsx",
+      "test": "packages/ui/src/components/button.test.tsx",
+      "selector": "activates its callback",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "button-link-lost",
+      "file": "packages/ui/src/components/button.tsx",
+      "test": "packages/ui/src/components/button.test.tsx",
+      "selector": "preserves link",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "badge-link-lost",
+      "file": "packages/ui/src/components/badge.tsx",
+      "test": "packages/ui/src/components/badge.test.tsx",
+      "selector": "supplied link",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "checkbox-disabled-ignored",
+      "file": "packages/ui/src/components/checkbox.tsx",
+      "test": "packages/ui/src/components/checkbox.test.tsx",
+      "selector": "toggles both ways",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "switch-disabled-ignored",
+      "file": "packages/ui/src/components/switch.tsx",
+      "test": "packages/ui/src/components/switch.test.tsx",
+      "selector": "toggles both ways",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "label-target-lost",
+      "file": "packages/ui/src/components/label.tsx",
+      "test": "packages/ui/src/components/label.test.tsx",
+      "selector": "intended editable|activates its",
+      "exitCode": 1,
+      "failedTests": 2,
+      "passedTests": 0
+    },
+    {
+      "defect": "progress-value-lost",
+      "file": "packages/ui/src/components/progress.tsx",
+      "test": "packages/ui/src/components/progress.test.tsx",
+      "selector": "supplied value",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "dialog-body-lost",
+      "file": "packages/ui/src/components/dialog.tsx",
+      "test": "packages/ui/src/components/dialog.test.tsx",
+      "selector": "names and describes",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "sheet-body-lost",
+      "file": "packages/ui/src/components/sheet.tsx",
+      "test": "packages/ui/src/components/sheet.test.tsx",
+      "selector": "names and describes",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "popover-body-lost",
+      "file": "packages/ui/src/components/popover.tsx",
+      "test": "packages/ui/src/components/popover.test.tsx",
+      "selector": "shows its body",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "tooltip-controlled-open-lost",
+      "file": "packages/ui/src/components/tooltip.tsx",
+      "test": "packages/ui/src/components/tooltip.test.tsx",
+      "selector": "controlled open state",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "tabs-selection-lost",
+      "file": "packages/ui/src/components/tabs.tsx",
+      "test": "packages/ui/src/components/tabs.test.tsx",
+      "selector": "selects the activated",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "select-options-lost",
+      "file": "packages/ui/src/components/select.tsx",
+      "test": "packages/ui/src/components/select.test.tsx",
+      "selector": "supplied options",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "menu-checkbox-handler-lost",
+      "file": "packages/ui/src/components/dropdown-menu.tsx",
+      "test": "packages/ui/src/components/dropdown-menu.test.tsx",
+      "selector": "toggles a menu checkbox",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "navigation-menu-current-lost",
+      "file": "packages/ui/src/components/navigation-menu.tsx",
+      "test": "packages/ui/src/components/navigation-menu.test.tsx",
+      "selector": "current-page semantics",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0,
+      "probeCorrection": "Apply active=false after spread props so the deliberate defect takes effect."
+    }
+  ],
+  "browserDefects": [
+    {
+      "defect": "package-styling-omitted",
+      "file": "apps/web/testing/ui-components.css",
+      "selector": "button and badge",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:52:38.921Z",
+        "duration": 3793.6960000000004,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "checkbox-indicator-missing",
+      "file": "packages/ui/src/components/checkbox.tsx",
+      "selector": "visibly marks checked",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:52:43.864Z",
+        "duration": 3543.541,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "progress-wrong-value",
+      "file": "packages/ui/src/components/progress.tsx",
+      "selector": "requested progress",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:52:48.516Z",
+        "duration": 2883.382,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "sheet-side-ignored",
+      "file": "packages/ui/src/components/sheet.tsx",
+      "selector": "places the left",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:52:52.519Z",
+        "duration": 3096.023,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "sheet-default-wrong",
+      "file": "packages/ui/src/components/sheet.tsx",
+      "selector": "places the default",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:52:56.733Z",
+        "duration": 3682.7520000000004,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "avatar-fallback-missing",
+      "file": "packages/ui/src/components/avatar.tsx",
+      "selector": "loads an avatar",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:01.570Z",
+        "duration": 7880.290999999999,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "avatar-ring-lost",
+      "file": "packages/ui/src/components/avatar.tsx",
+      "selector": "loads an avatar",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:10.565Z",
+        "duration": 2938.19,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "button-caller-border-lost",
+      "file": "packages/ui/src/components/button.tsx",
+      "selector": "caller border",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:14.604Z",
+        "duration": 2957.5029999999997,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "form-popup-customization-lost",
+      "file": "packages/forms/src/SelectFormField.tsx",
+      "selector": "caller border",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:18.676Z",
+        "duration": 8410.938,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "form-trigger-customization-lost",
+      "file": "packages/forms/src/SelectFormField.tsx",
+      "selector": "caller border",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:28.186Z",
+        "duration": 2862.4519999999998,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "switch-thumb-motion-lost",
+      "file": "packages/ui/src/components/switch.tsx",
+      "selector": "visibly marks checked",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:53:32.172Z",
+        "duration": 3096.339,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    }
+  ],
+  "originalCases": 159,
+  "acceptedDeletedDeclarations": 69,
+  "reviews": {
+    "spec": 0,
+    "standards": 0,
+    "resolvedStandardsFinding": null
+  },
+  "commands": [
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-ui-suite.json",
+    "pnpm exec playwright test --reporter=json (cwd apps/web)",
+    "pnpm build",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ],
+  "newResources": "resources.tsv",
+  "diagnosticNotes": [
+    "The first full run caught unused test imports in the actual workspace typecheck test; corrected before final validation.",
+    "Current SelectFormField displays the stored value, not the option label.",
+    "Popup border measurement waits for the previous popup to close.",
+    "The initial active-link mutation override preceded spread props; the corrected override catches the defect."
+  ],
+  "coverageLossAssessment": "No measured per-file coverage loss or denominator change."
+}

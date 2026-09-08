@@ -1,20 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@bcordes/ui/components/tooltip'
 
 // Controlled open avoids pointer and timer races in jsdom.
-describe('Tooltip (Radix -> Base UI migration contract)', () => {
-  it('renders the trigger with data-slot="tooltip-trigger"', () => {
-    render(
-      <Tooltip>
-        <TooltipTrigger>Hover me</TooltipTrigger>
-        <TooltipContent>Tooltip text</TooltipContent>
-      </Tooltip>,
-    )
-    const trigger = screen.getByText('Hover me')
-    expect(trigger).toHaveAttribute('data-slot', 'tooltip-trigger')
-  })
-
+describe('Tooltip', () => {
   it('does not render the content while closed', () => {
     render(
       <Tooltip>
@@ -25,32 +18,21 @@ describe('Tooltip (Radix -> Base UI migration contract)', () => {
     expect(screen.queryByText('Tooltip text')).toBeNull()
   })
 
-  it('shows the content with data-slot="tooltip-content" and its text when open', async () => {
-    render(
-      <Tooltip open>
-        <TooltipTrigger>Hover me</TooltipTrigger>
-        <TooltipContent>Tooltip text</TooltipContent>
-      </Tooltip>,
+  it('shows and hides content when the controlled open state changes', async () => {
+    function Content({ open }: { open: boolean }) {
+      return (
+        <Tooltip open={open}>
+          <TooltipTrigger>Details</TooltipTrigger>
+          <TooltipContent>Tooltip text</TooltipContent>
+        </Tooltip>
+      )
+    }
+    const { rerender } = render(<Content open />)
+    expect(screen.getByRole('button', { name: 'Details' })).toBeVisible()
+    await waitFor(() => expect(screen.getByText('Tooltip text')).toBeVisible())
+    rerender(<Content open={false} />)
+    await waitFor(() =>
+      expect(screen.queryByText('Tooltip text')).not.toBeInTheDocument(),
     )
-    // The data-slot excludes the hidden accessibility copy of the label.
-    await waitFor(() => {
-      const content = document.querySelector('[data-slot="tooltip-content"]')
-      expect(content).not.toBeNull()
-      expect(content).toHaveTextContent('Tooltip text')
-    })
-  })
-
-  it('merges a caller className onto the content', async () => {
-    render(
-      <Tooltip open>
-        <TooltipTrigger>Hover me</TooltipTrigger>
-        <TooltipContent className="custom-tooltip">Tooltip text</TooltipContent>
-      </Tooltip>,
-    )
-    await waitFor(() => {
-      const content = document.querySelector('[data-slot="tooltip-content"]')
-      expect(content).not.toBeNull()
-      expect(content).toHaveClass('custom-tooltip')
-    })
   })
 })

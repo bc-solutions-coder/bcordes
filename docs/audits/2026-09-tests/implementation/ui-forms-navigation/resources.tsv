@@ -1,0 +1,9 @@
+path	purpose	owner
+apps/web/e2e/tests/ui-component-behavior.spec.ts	Measured component appearance and interactions	100; final reconciliation 104
+apps/web/e2e/tests/ui-component-behavior.spec.ts-snapshots/checkbox-states.png	Small text-free checked and unchecked appearance baseline	100; final reconciliation 104
+apps/web/testing/ui-components.html	Test-only component document	100; final reconciliation 104
+apps/web/testing/ui-components.tsx	Real package components and router with controlled inputs	100; final reconciliation 104
+apps/web/testing/ui-components.css	Tailwind compilation with public package theme and package sources	100; package-styling prerequisite 103
+packages/navigation/testing/render-navigation.tsx	Real memory-router destinations and restored browser scroll boundary	100; final reconciliation 104
+apps/web/e2e/fixtures/components.ts	Existing Vite fixture extended with the component document URL	100; final reconciliation 104
+apps/web/playwright.config.ts	Shared path for the platform-neutral text-free snapshot	100; final reconciliation 104

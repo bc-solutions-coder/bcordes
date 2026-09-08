@@ -7,10 +7,10 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from './navigation-menu'
+} from '@bcordes/ui/components/navigation-menu'
 
-describe('NavigationMenu (Radix -> Base UI migration contract)', () => {
-  it('renders list, item and link with their data-slots', () => {
+describe('NavigationMenu', () => {
+  it('exposes a navigation landmark and named destination link', () => {
     render(
       <NavigationMenu>
         <NavigationMenuList>
@@ -20,17 +20,14 @@ describe('NavigationMenu (Radix -> Base UI migration contract)', () => {
         </NavigationMenuList>
       </NavigationMenu>,
     )
-    expect(
-      document.querySelector('[data-slot="navigation-menu-list"]'),
-    ).not.toBeNull()
-    expect(
-      document.querySelector('[data-slot="navigation-menu-item"]'),
-    ).not.toBeNull()
-    const link = screen.getByText('About')
-    expect(link).toHaveAttribute('data-slot', 'navigation-menu-link')
+    expect(screen.getByRole('navigation')).toBeVisible()
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute(
+      'href',
+      '/about',
+    )
   })
 
-  it('exposes data-active on an active link', () => {
+  it('reports current-page semantics only for the active destination', () => {
     render(
       <NavigationMenu>
         <NavigationMenuList>
@@ -39,32 +36,46 @@ describe('NavigationMenu (Radix -> Base UI migration contract)', () => {
               About
             </NavigationMenuLink>
           </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>,
-    )
-    expect(screen.getByText('About')).toHaveAttribute('data-active')
-  })
-
-  it('reveals a trigger content panel when its item is open', async () => {
-    render(
-      <NavigationMenu value="products">
-        <NavigationMenuList>
-          <NavigationMenuItem value="products">
-            <NavigationMenuTrigger>Products</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <NavigationMenuLink href="/widgets">Widgets</NavigationMenuLink>
-            </NavigationMenuContent>
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/projects">Projects</NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>,
     )
-    await waitFor(() => {
-      const content = document.querySelector(
-        '[data-slot="navigation-menu-content"]',
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+    expect(screen.getByRole('link', { name: 'Projects' })).not.toHaveAttribute(
+      'aria-current',
+    )
+  })
+
+  it('shows the controlled panel destination and removes it when closed', async () => {
+    function Menu({ value }: { value: string | null }) {
+      return (
+        <NavigationMenu value={value}>
+          <NavigationMenuList>
+            <NavigationMenuItem value="products">
+              <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink href="/widgets">Widgets</NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       )
-      expect(content).not.toBeNull()
-      expect(content).toHaveTextContent('Widgets')
-    })
+    }
+    const { rerender } = render(<Menu value="products" />)
+    expect(
+      await screen.findByRole('link', { name: 'Widgets' }),
+    ).toHaveAttribute('href', '/widgets')
+    rerender(<Menu value={null} />)
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('link', { name: 'Widgets' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('opens a trigger content panel on click', async () => {

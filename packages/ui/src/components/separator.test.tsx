@@ -1,42 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Separator } from './separator'
+import { Separator } from '@bcordes/ui/components/separator'
 
-describe('Separator (Radix -> Base UI migration contract)', () => {
-  it('renders without crashing and exposes data-slot="separator"', () => {
-    const { container } = render(<Separator />)
-    expect(container.querySelector('[data-slot="separator"]')).not.toBeNull()
+describe('Separator semantics', () => {
+  it('defaults to horizontal separation', () => {
+    render(<Separator />)
+    expect(
+      screen.getByRole('separator').getAttribute('aria-orientation') ??
+        'horizontal',
+    ).toBe('horizontal')
   })
-
-  it('defaults to horizontal orientation reflected via data-orientation', () => {
-    const { container } = render(<Separator />)
-    const el = container.querySelector('[data-slot="separator"]')!
-    expect(el).toHaveAttribute('data-orientation', 'horizontal')
-  })
-
-  it('forwards orientation="vertical" to data-orientation for styling selectors', () => {
-    const { container } = render(<Separator orientation="vertical" />)
-    const el = container.querySelector('[data-slot="separator"]')!
-    expect(el).toHaveAttribute('data-orientation', 'vertical')
-  })
-
-  it('preserves the base-token classes (bg-border, shrink-0)', () => {
-    const { container } = render(<Separator />)
-    const el = container.querySelector('[data-slot="separator"]')!
-    expect(el).toHaveClass('bg-border')
-    expect(el).toHaveClass('shrink-0')
-  })
-
-  it('merges caller className', () => {
-    const { container } = render(<Separator className="custom-sep" />)
-    expect(container.querySelector('[data-slot="separator"]')).toHaveClass(
-      'custom-sep',
-    )
-  })
-
-  it('exposes an accessible separator role with aria-orientation (decorative dropped)', () => {
+  it('reports vertical separation when requested', () => {
     render(<Separator orientation="vertical" />)
-    const el = screen.getByRole('separator')
-    expect(el).toHaveAttribute('aria-orientation', 'vertical')
+    expect(screen.getByRole('separator')).toHaveAttribute(
+      'aria-orientation',
+      'vertical',
+    )
   })
 })

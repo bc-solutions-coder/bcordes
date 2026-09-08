@@ -43,8 +43,22 @@ async function serve({
 
 export const test = base.extend<
   {},
-  { motionURL: string; developerURL: string; projectFilterURL: string }
+  {
+    motionURL: string
+    developerURL: string
+    projectFilterURL: string
+    uiComponentsURL: string
+  }
 >({
+  uiComponentsURL: [
+    ({}, use) =>
+      serve({
+        config: { configFile: false, plugins: [react(), tailwind()] },
+        pathname: '/testing/ui-components.html',
+        use,
+      }),
+    { scope: 'worker' },
+  ],
   projectFilterURL: [
     ({}, use) =>
       serve({

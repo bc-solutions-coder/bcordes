@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
   useFormField,
-} from './form'
+} from '@bcordes/forms'
 
 const schema = z.object({
   email: z.string().min(1, 'Email is required'),
@@ -51,110 +51,71 @@ function TestForm({ onSubmit }: { onSubmit?: (values: FormValues) => void }) {
   )
 }
 
-describe('form (Radix Slot -> cloneElement migration contract)', () => {
-  it('exposes all 7 public exports', async () => {
-    const mod = await import('./form')
-    for (const name of [
-      'Form',
-      'FormItem',
-      'FormLabel',
-      'FormControl',
-      'FormDescription',
-      'FormMessage',
-      'FormField',
-      'useFormField',
-    ]) {
-      expect(mod[name as keyof typeof mod]).toBeDefined()
-    }
+describe('Accessible form submission', () => {
+  it('names the editable control through its label', () => {
+    render(<TestForm />)
+    expect(screen.getByRole('textbox', { name: 'Email' })).toBe(
+      screen.getByPlaceholderText('you@example.com'),
+    )
   })
 
-  it('forwards the generated id to the child input and matches label htmlFor', () => {
+  it('describes a valid control with its help text', () => {
     render(<TestForm />)
-
-    const input = screen.getByPlaceholderText('you@example.com')
-    const label = screen.getByText('Email')
-
-    expect(input).toHaveAttribute('id')
-    expect(input.getAttribute('id')).toMatch(/-form-item$/)
-
-    expect(label).toHaveAttribute('for', input.getAttribute('id'))
-
-    expect(screen.getByLabelText('Email')).toBe(input)
-  })
-
-  it('renders the input directly with no extra wrapper node (Slot semantics)', () => {
-    render(<TestForm />)
-
-    const input = screen.getByPlaceholderText('you@example.com')
-
-    expect(input.tagName).toBe('INPUT')
-    expect(input).toHaveAttribute('data-slot', 'form-control')
-
-    const item = input.closest('[data-slot="form-item"]')
-    expect(item).not.toBeNull()
-    expect(input.parentElement).toBe(item)
-  })
-
-  it('links aria-describedby to the description when there is no error', () => {
-    render(<TestForm />)
-
-    const input = screen.getByPlaceholderText('you@example.com')
-    const description = screen.getByText('We never share your email.')
-
-    expect(input).toHaveAttribute('aria-describedby', description.id)
+    const input = screen.getByRole('textbox', { name: 'Email' })
+    expect(input).toHaveAccessibleDescription('We never share your email.')
     expect(input).toHaveAttribute('aria-invalid', 'false')
   })
 
-  it('sets aria-invalid and extends aria-describedby to the message on error', async () => {
+  it('describes an invalid control with both help and error text', async () => {
     render(<TestForm />)
-
-    const input = screen.getByPlaceholderText('you@example.com')
-    const description = screen.getByText('We never share your email.')
-
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
-    const message = await screen.findByText('Email is required')
-
-    expect(input).toHaveAttribute('aria-invalid', 'true')
-    expect(input).toHaveAttribute(
-      'aria-describedby',
-      `${description.id} ${message.id}`,
-    )
-
-    expect(message).toHaveAttribute('data-slot', 'form-message')
-    expect(message.id).toMatch(/-form-item-message$/)
-  })
-
-  it('renders no FormMessage node until there is an error', async () => {
-    render(<TestForm />)
-
-    expect(screen.queryByText('Email is required')).not.toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
-    await waitFor(() =>
-      expect(screen.getByText('Email is required')).toBeInTheDocument(),
-    )
-  })
-
-  it('does not call onSubmit while the field is invalid', async () => {
-    const onSubmit = vi.fn()
-    render(<TestForm onSubmit={onSubmit} />)
-
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
     await screen.findByText('Email is required')
-
-    expect(onSubmit).not.toHaveBeenCalled()
+    const input = screen.getByRole('textbox', { name: 'Email' })
+    expect(input).toHaveAttribute('aria-invalid', 'true')
+    expect(input).toHaveAccessibleDescription(
+      'We never share your email. Email is required',
+    )
   })
 
-  it('useFormField throws a clear error outside a FormField provider', () => {
+  it('shows the required error only after an invalid submission', async () => {
+    render(<TestForm />)
+    expect(screen.queryByText('Email is required')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+    expect(await screen.findByText('Email is required')).toBeVisible()
+  })
+
+  it('rejects empty input, then submits the corrected value and clears the error', async () => {
+    const onSubmit = vi.fn()
+    render(<TestForm onSubmit={onSubmit} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+    await screen.findByText('Email is required')
+    expect(onSubmit).not.toHaveBeenCalled()
+    fireEvent.change(screen.getByRole('textbox', { name: 'Email' }), {
+      target: { value: 'reader@example.com' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ email: 'reader@example.com' })
+    expect(screen.queryByText('Email is required')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Email' })).toHaveAttribute(
+      'aria-invalid',
+      'false',
+    )
+    expect(
+      screen.getByRole('textbox', { name: 'Email' }),
+    ).toHaveAccessibleDescription('We never share your email.')
+  })
+
+  it('throws when the field hook has no form context', () => {
     function Consumer() {
       useFormField()
       return null
     }
-
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    expect(() => render(<Consumer />)).toThrow()
-    spy.mockRestore()
+    try {
+      expect(() => render(<Consumer />)).toThrow()
+    } finally {
+      spy.mockRestore()
+    }
   })
 })

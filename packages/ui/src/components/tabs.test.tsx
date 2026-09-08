@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
+import { fireEvent, render, screen } from '@testing-library/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@bcordes/ui/components/tabs'
 
 function renderTabs(defaultValue = 'account') {
   return render(
@@ -15,36 +20,41 @@ function renderTabs(defaultValue = 'account') {
   )
 }
 
-describe('Tabs (Radix -> Base UI migration contract)', () => {
-  it('renders tab triggers and the active panel with their data-slots', () => {
+describe('Tabs', () => {
+  it('names the tab list controls and their active panel', () => {
     renderTabs()
-    expect(document.querySelector('[data-slot="tabs-list"]')).not.toBeNull()
-    const accountTab = screen.getByRole('tab', { name: 'Account' })
-    expect(accountTab).toHaveAttribute('data-slot', 'tabs-trigger')
-    const panel = screen.getByText('Account panel')
-    expect(panel).toHaveAttribute('data-slot', 'tabs-content')
-  })
-
-  it('marks the active tab with the data-active attribute', () => {
-    renderTabs()
-    expect(screen.getByRole('tab', { name: 'Account' })).toHaveAttribute(
-      'data-active',
-    )
-    expect(screen.getByRole('tab', { name: 'Password' })).not.toHaveAttribute(
-      'data-active',
+    expect(screen.getByRole('tablist')).toBeVisible()
+    expect(screen.getByRole('tab', { name: 'Account' })).toBeVisible()
+    expect(screen.getByRole('tab', { name: 'Password' })).toBeVisible()
+    expect(screen.getByRole('tabpanel', { name: 'Account' })).toHaveTextContent(
+      'Account panel',
     )
   })
 
-  it('activates a tab and shows its panel when clicked', async () => {
+  it('reports the selected tab and its unselected alternative', () => {
     renderTabs()
-    expect(screen.queryByText('Password panel')).toBeNull()
+    expect(
+      screen.getByRole('tab', { name: 'Account', selected: true }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('tab', { name: 'Password', selected: false }),
+    ).toBeVisible()
+  })
+
+  it('selects the activated tab and replaces the named panel', async () => {
+    renderTabs()
     fireEvent.click(screen.getByRole('tab', { name: 'Password' }))
-    await waitFor(() => {
-      expect(screen.getByRole('tab', { name: 'Password' })).toHaveAttribute(
-        'data-active',
-      )
-    })
-    expect(screen.getByText('Password panel')).toBeInTheDocument()
-    expect(screen.queryByText('Account panel')).toBeNull()
+    expect(
+      await screen.findByRole('tabpanel', { name: 'Password' }),
+    ).toHaveTextContent('Password panel')
+    expect(
+      screen.getByRole('tab', { name: 'Password', selected: true }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('tab', { name: 'Account', selected: false }),
+    ).toBeVisible()
+    expect(
+      screen.queryByRole('tabpanel', { name: 'Account' }),
+    ).not.toBeInTheDocument()
   })
 })
