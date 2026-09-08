@@ -35,6 +35,6 @@ Disable submission while a request is pending and show a useful failure state. C
 
 ## Preview and verify
 
-Run `pnpm storybook` from the repository root to open Storybook on port 6006. Run `pnpm --filter bcordes build-storybook` for a static build. The [Storybook config](../apps/web/.storybook/main.ts) discovers `*.stories.*` files in both app and package source and loads app styles through its preview config. [Button stories](../packages/ui/src/components/button.stories.tsx) show the current story format.
+Run `pnpm storybook` from the repository root to open Storybook on port 6006. Run `pnpm --filter bcordes build-storybook` for a static build, then `pnpm verify:storybook` to exercise the built package Button story in Chromium. The [Storybook config](../apps/web/.storybook/main.ts) discovers `*.stories.*` files in both app and package source and loads app styles through its preview config. [Button stories](../packages/ui/src/components/button.stories.tsx) show the current story format.
 
 Check keyboard operation, focus, labels, disabled states, and narrow layouts when changing an interactive component. Add behavior tests beside it using the [testing guide](testing.md), and use the browser suite for changes that depend on the production app.

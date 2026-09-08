@@ -1,0 +1,83 @@
+{
+  "issue": 102,
+  "baseRevision": "111283b",
+  "originalBehaviorCases": 3,
+  "tests": {
+    "numPassedTests": 1057,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "standaloneCliTests": 29,
+  "storybookRuntime": "UI/Button Default: visible, enabled and accepts focus on click; local Chromium, built static artifact",
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": true,
+  "exclusionsUnchanged": true,
+  "defects": [
+    {
+      "defect": "missing-story",
+      "exitCode": 1
+    },
+    {
+      "defect": "disabled-story",
+      "exitCode": 1
+    },
+    {
+      "defect": "tag-prefix-retained",
+      "exitCode": 1
+    },
+    {
+      "defect": "minor-truncated",
+      "exitCode": 1
+    }
+  ],
+  "reviews": {
+    "spec": 0,
+    "standardsHard": 0,
+    "resolvedObservation": "Nested cleanup ensures preview server closes even if browser shutdown rejects."
+  },
+  "commands": [
+    "pnpm --filter bcordes build-storybook",
+    "pnpm verify:storybook",
+    "pnpm test:verification",
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-storybook-suite.json",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "bash -n scripts/release-tag-outputs.sh",
+    "git diff --check"
+  ]
+}

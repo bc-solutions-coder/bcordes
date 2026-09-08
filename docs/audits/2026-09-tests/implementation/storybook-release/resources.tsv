@@ -1,0 +1,8 @@
+path	purpose	owner
+scripts/verify-storybook.mjs	Serve built Storybook and exercise emitted package story in Chromium	102
+scripts/release-tag-outputs.sh	Shared release workflow tag transformation	102
+scripts/release-tag-outputs.test.mjs	Two actual script/output-file behavior cases	102
+package.json#verify:storybook	Local runtime probe entrypoint	102
+package.json#test:verification	Includes release output cases	102
+.github/workflows/ci.yml	Storybook runtime gate after separate compilation	102
+.github/workflows/release-please.yml	Invokes shared transformation with tag environment input	102

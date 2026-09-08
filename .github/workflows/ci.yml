@@ -115,6 +115,9 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter bcordes build-storybook
 
+      - name: Verify rendered Storybook
+        run: pnpm verify:storybook
+
   lint:
     runs-on: ubuntu-latest
     permissions:

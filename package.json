@@ -19,7 +19,8 @@
     "check": "oxfmt && pnpm lint --fix",
     "storybook": "pnpm --filter bcordes storybook",
     "prepare": "husky",
-    "test:verification": "node --test scripts/verify-production.test.mjs"
+    "verify:storybook": "node scripts/verify-storybook.mjs",
+    "test:verification": "node --test scripts/verify-production.test.mjs scripts/release-tag-outputs.test.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [

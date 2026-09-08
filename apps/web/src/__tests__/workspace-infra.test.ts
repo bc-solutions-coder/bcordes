@@ -1,59 +1,13 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { afterAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 // These tests use the app tsconfig; the workspace root has none.
 // Use a path string because fileURLToPath rejects jsdom's URL instances.
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const read = (rel: string) => readFileSync(join(repoRoot, rel), 'utf8')
-
-// Run the workflow semver script with a supplied tag and temporary GITHUB_OUTPUT.
-function runSemverStep(tag: string): Record<string, string> {
-  const workflow = read('.github/workflows/release-please.yml')
-  const step = workflow
-    .split(/\n {6}- name: /)
-    .find((s) => s.startsWith('Parse semver from tag'))
-  if (!step)
-    throw new Error('no "Parse semver from tag" step in release-please.yml')
-
-  const body = step.slice(step.indexOf('run: |') + 'run: |'.length)
-  const script = body
-    .split('\n')
-    .map((line) => line.replace(/^ {10}/, ''))
-    .join('\n')
-    // The released tag is the only workflow expression in this script.
-    .replace(/\$\{\{[^}]*\}\}/g, tag)
-    .split(/\n {6}- name: /)[0]
-
-  const dir = mkdtempSync(join(tmpdir(), 'semver-step-'))
-  tmpDirs.push(dir)
-  const outFile = join(dir, 'github_output')
-  execFileSync(
-    'bash',
-    ['-euo', 'pipefail', '-c', `: > "$GITHUB_OUTPUT"\n${script}`],
-    {
-      env: { ...process.env, GITHUB_OUTPUT: outFile },
-    },
-  )
-
-  return Object.fromEntries(
-    readFileSync(outFile, 'utf8')
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => {
-        const i = line.indexOf('=')
-        return [line.slice(0, i), line.slice(i + 1)]
-      }),
-  )
-}
-
-const tmpDirs: Array<string> = []
-afterAll(() =>
-  tmpDirs.forEach((d) => rmSync(d, { recursive: true, force: true })),
-)
 
 describe('Dockerfile (pnpm workspace aware)', () => {
   const dockerfile = read('Dockerfile')
@@ -156,22 +110,6 @@ describe('release-please config', () => {
 })
 
 describe('release-please.yml semver parsing', () => {
-  it('parses a plain v<version> tag (the format include-component-in-tag: false cuts)', () => {
-    expect(runSemverStep('v0.1.7')).toMatchObject({
-      version: '0.1.7',
-      major: '0',
-      minor: '0.1',
-    })
-  })
-
-  it('parses a multi-digit plain tag', () => {
-    expect(runSemverStep('v1.10.2')).toMatchObject({
-      version: '1.10.2',
-      major: '1',
-      minor: '1.10',
-    })
-  })
-
   it('does not strip on a "-v" component separator', () => {
     const script = read('.github/workflows/release-please.yml')
     expect(script).not.toContain('##*-v')

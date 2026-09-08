@@ -4,18 +4,19 @@ Run commands from the repository root after [setup](setup.md).
 
 ## Choose a check
 
-| Command                                              | Checks                                                             |
-| ---------------------------------------------------- | ------------------------------------------------------------------ |
-| `pnpm test:verification`                             | Production and Docker verifier CLIs against controlled HTTP inputs |
-| `pnpm test`                                          | All Vitest workspace projects                                      |
-| `pnpm exec vitest run apps/web/src/features/contact` | Tests matching one feature path                                    |
-| `pnpm exec vitest run --coverage`                    | Workspace tests and coverage reports in `coverage/`                |
-| `pnpm typecheck`                                     | TypeScript in every workspace package                              |
-| `pnpm lint`                                          | Oxlint typed rules, JS plugins and module boundaries               |
-| `pnpm format:check`                                  | Oxfmt formatting without modifying files                           |
-| `python3 scripts/check-docs.py`                      | Local documentation links and heading anchors                      |
-| `pnpm build`                                         | Production app build                                               |
-| `bash scripts/verify-production.sh`                  | Built server, public HTML pages, and referenced CSS and JS assets  |
+| Command                                              | Checks                                                            |
+| ---------------------------------------------------- | ----------------------------------------------------------------- |
+| `pnpm test:verification`                             | Production/Docker CLI contracts and release-tag output files      |
+| `pnpm verify:storybook`                              | Built package story discovery and rendered Button usability       |
+| `pnpm test`                                          | All Vitest workspace projects                                     |
+| `pnpm exec vitest run apps/web/src/features/contact` | Tests matching one feature path                                   |
+| `pnpm exec vitest run --coverage`                    | Workspace tests and coverage reports in `coverage/`               |
+| `pnpm typecheck`                                     | TypeScript in every workspace package                             |
+| `pnpm lint`                                          | Oxlint typed rules, JS plugins and module boundaries              |
+| `pnpm format:check`                                  | Oxfmt formatting without modifying files                          |
+| `python3 scripts/check-docs.py`                      | Local documentation links and heading anchors                     |
+| `pnpm build`                                         | Production app build                                              |
+| `bash scripts/verify-production.sh`                  | Built server, public HTML pages, and referenced CSS and JS assets |
 
 `pnpm format` rewrites formatting with Oxfmt. `pnpm check` also runs Oxlint with fixes. Use `pnpm exec oxfmt --check <path>` for a file-specific check. The [pre-commit hook](../.husky/pre-commit) runs Oxfmt and the active linter through `lint-staged`; it does not replace tests or type checking.
 
@@ -54,8 +55,14 @@ The [browser verification guide](../apps/web/e2e/README.md) owns Playwright comm
 
 For Docker build and runtime changes, run `bash scripts/verify-docker.sh` with Docker available and `NODE_AUTH_TOKEN` exported. It builds the image using a secret mount, starts a disposable Valkey container, and pins its image ID and checks public serving under two callback/logout URL configurations. Readiness requires direct HTTP 200, limits each request to two seconds, and stops after an overall 30-second deadline. `VERIFY_READINESS_TIMEOUT_MS` can shorten the deadline for isolated failure checks. The loop does not exercise login, callbacks or logout. Use `bash scripts/verify-docker.sh --image <local-image>` to check an already-built image without registry credentials. PR runtime verification uses that path. See [deployment](deployment.md) for release checks.
 
+## Verify built Storybook and release tags
+
+Run `pnpm --filter bcordes build-storybook`, then `pnpm verify:storybook`. Chromium must be installed with `pnpm --filter bcordes exec playwright install chromium`. The probe serves the static artifact on an ephemeral loopback port, finds UI/Button Default through its emitted index, and checks the rendered frame has a visible, enabled Button that accepts focus on click. It closes the browser and preview server afterward. Compilation and runtime verification are separate CI steps; this is one story, not exhaustive component coverage.
+
+`pnpm test:verification` also executes [release-tag-outputs.sh](../scripts/release-tag-outputs.sh), which the release workflow uses directly. The two accepted tag inputs must write exact version, major and minor values to temporary output files. These checks do not publish a release or define malformed-tag behavior.
+
 ## Match CI
 
-[CI](../.github/workflows/ci.yml) runs Vitest with coverage, lint, recursive type checking, a production build, production smoke checks, Chromium browser flows, and a static Storybook build. Browser failures upload `apps/web/e2e/test-results/`; coverage uploads separately. CI uses Node 24 and the package manager version declared in the root manifest.
+[CI](../.github/workflows/ci.yml) runs Vitest with coverage, lint, recursive type checking, a production build, production smoke checks, Chromium browser flows, a static Storybook build, and its rendered package story. Standalone CLI checks also exercise both supported release-tag examples through the shared workflow script. Browser failures upload `apps/web/e2e/test-results/`; coverage uploads separately. CI uses Node 24 and the package manager version declared in the root manifest.
 
 Run the checks affected by a change before handing it off. A passing fixture suite proves behavior against those fixtures; external platform registration, credentials, and deployed API contracts still need the [deployment checks](deployment.md).
