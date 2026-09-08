@@ -1,0 +1,23 @@
+# Project browsing, content and filters
+
+Implementation for [issue 97](https://github.com/bc-solutions-coder/bcordes/issues/97), based on `4da5119`, implemented in `d50a197`. [dispositions.tsv](dispositions.tsv) maps all 139 original project cases. Thirty structural or duplicate declarations were removed after their named replacements passed. Four style assertions moved to two browser scenarios, each covering selection and reset.
+
+Published project tests follow real catalog-card links into real detail routes, then assert project title, description, year, technologies and image output. Meaningful project prose remains. Headings use accessible roles; the two Wallow PKCE claims are associated with their named content items rather than a global occurrence count. The unused client metadata constants and incidental list counts are gone.
+
+The real catalog receives two isolated metadata pairs: featured projects with different years, then an older featured project beside a newer nonfeatured project. Exact selected and ordered slugs expose reversed ordering, wrong featured priority and missing filtering. Public lookup cases render the returned content and check project-specific prose. Serialization cases run TanStack's actual server dehydration, execute its generated bootstrap in a local VM, hydrate a separate client router, and render the transferred cards. The client loader rejects refetch, so local recomputation cannot mask a failed transfer. Unserializable component data fails for both catalog APIs.
+
+Project routes now load real components under a shared memory-router fixture. Metadata assertions inspect generated document tags. Known and unknown slugs produce distinct page outcomes, including recovery links. Both back links reach the projects page, including when a project's body is unavailable. Real catalog bodies distinguish Bcordes from Wallow. Controlled catalog outputs retain empty, missing-image and multi-project filtering cases without replacing router behavior.
+
+Both reset controls activate technology and year filters, then restore all three named projects and the full result count. Named buttons replace text-search and non-null assertions. ProjectCard's overflow case includes both four-tag and five-tag boundaries. The browser fixture loads the actual public ProjectFilter and app stylesheet with contrasting technology/year inputs. Computed backgrounds distinguish selected and unselected controls, move after selection and return after reset. The shared Vite fixture was renamed from motion.ts to components.ts as it now serves both fixtures. Existing production-page browser filtering remains complementary coverage.
+
+## Verification and review
+
+Nineteen deliberate defects failed, then source was restored in `finally`: reversed year order, wrong featured priority, missing featured filtering, unserializable component values in both catalog APIs, wrong detail body and selection, wrong Open Graph URL, missing recovery, wrong back destination, incomplete year reset in each control, wrong card URL, wrong overflow count, wrong published image, and each of the four selected/default filter appearances. Failures were rendered-output, serialization/hydration or computed-style failures. A first back-link mutation changed the not-found link while selecting the normal-detail test; that probe was corrected to mutate the actual detail link and failed as intended.
+
+All 1,179 unit tests and 35 browser tests pass without failures or skips. Coverage is 95.07% lines, 94.02% statements, 90.90% branches and 92.14% functions. Typecheck, lint, formatting, documentation links and diff checks pass. Both required reviews have zero findings. [summary.json](summary.json) records final commands, full-suite results, browser results, deliberate defects and coverage differences. [coverage-summary.json](coverage-summary.json) preserves per-file measurements.
+
+The obsolete 947-declaration floor in `workspace-vitest-config.test.ts` failed as redundant tests were deleted. Its case and unused constant/comment were removed. Issue 91 already proves actual project discovery and execution; remaining source-guard cleanup stays with issue 103. No new source assertion was added.
+
+The measured function loss is one empty JSDOM `scrollIntoView` fallback in `packages/test-utils/src/setup.ts`, from six covered functions to five. It has no behavior to assert; this slice does not add a test solely to invoke the no-op. No application file loses covered lines, statements, branches or functions. Coverage denominators, exclusions and all four 90% thresholds remain unchanged.
+
+Browser checks use the unchanged production artifact plus controlled local component fixtures. Local verification does not claim remote CI success.

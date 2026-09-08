@@ -1,0 +1,147 @@
+{
+  "issue": 97,
+  "baseRevision": "4da5119",
+  "implementationRevision": "d50a197",
+  "tests": {
+    "numPassedTests": 1179,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-08T00:17:02.660Z",
+    "duration": 13190.872,
+    "expected": 35,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1023,
+      "skipped": 0,
+      "pct": 95.07
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1086,
+      "skipped": 0,
+      "pct": 94.02
+    },
+    "functions": {
+      "total": 382,
+      "covered": 352,
+      "skipped": 0,
+      "pct": 92.14
+    },
+    "branches": {
+      "total": 671,
+      "covered": 610,
+      "skipped": 0,
+      "pct": 90.9
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageLosses": [
+    {
+      "file": "/Users/traveler/Repos/bcordes/packages/test-utils/src/setup.ts",
+      "metric": "functions",
+      "before": 6,
+      "after": 5
+    }
+  ],
+  "lossAssessment": "The only lost function is the empty JSDOM scrollIntoView fallback at packages/test-utils/src/setup.ts:22. No application behavior coverage is lost. No test added solely to execute a no-op.",
+  "denominatorsUnchanged": true,
+  "defects": [
+    {
+      "defect": "reverse-catalog-year",
+      "exitCode": 1
+    },
+    {
+      "defect": "reverse-featured-priority",
+      "exitCode": 1
+    },
+    {
+      "defect": "unfiltered-featured-catalog",
+      "exitCode": 1
+    },
+    {
+      "defect": "unserializable-catalog-content",
+      "exitCode": 1
+    },
+    {
+      "defect": "unserializable-featured-content",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-body",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-selection",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-project-og-url",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-project-recovery",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-back-link",
+      "exitCode": 1
+    },
+    {
+      "defect": "uncleared-result-year-filter",
+      "exitCode": 1
+    },
+    {
+      "defect": "uncleared-empty-year-filter",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-project-card-link",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-overflow-count",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-published-project-image",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-selected-tag-appearance",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-all-tags-appearance",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-selected-year-appearance",
+      "exitCode": 1
+    },
+    {
+      "defect": "missing-all-years-appearance",
+      "exitCode": 1
+    }
+  ],
+  "commands": [
+    "pnpm test --coverage --reporter=json",
+    "pnpm --filter bcordes exec playwright test --reporter=json",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ]
+}
