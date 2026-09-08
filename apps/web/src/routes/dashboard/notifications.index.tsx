@@ -70,7 +70,6 @@ function NotificationsIndexPage() {
   const {
     unreadOnly,
     activeType,
-    setPage,
     filtered: filteredNotifications,
     unreadCount,
     handleTabChange,
@@ -134,6 +133,9 @@ function NotificationsIndexPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-8">
+        <p className="mb-4 text-sm text-muted-foreground">
+          Showing up to 20 notifications. Filters apply to this list.
+        </p>
         <Tabs
           value={unreadOnly ? 'unread' : 'all'}
           onValueChange={handleTabChange}
@@ -196,13 +198,10 @@ function NotificationsIndexPage() {
           <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary py-16">
             <Bell className="mb-4 h-12 w-12 text-muted-foreground" />
             <h2 className="mb-2 text-lg font-medium text-foreground">
-              No notifications
+              {unreadOnly || activeType
+                ? 'No notifications match these filters in the loaded list.'
+                : 'No notifications in this list.'}
             </h2>
-            <p className="text-foreground-secondary">
-              {unreadOnly
-                ? 'You have no unread notifications.'
-                : 'You have no notifications yet.'}
-            </p>
           </div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-border bg-secondary">
@@ -219,24 +218,10 @@ function NotificationsIndexPage() {
           </div>
         )}
 
-        {filteredNotifications.length >= 20 && (
-          <div className="mt-4 flex justify-center">
-            <Button
-              variant="outline"
-              onClick={() => setPage((p) => p + 1)}
-              className="border-border text-foreground-secondary hover:text-foreground hover:bg-background"
-            >
-              Load more
-            </Button>
-          </div>
-        )}
-
-        {filteredNotifications.length > 0 && (
-          <div className="mt-4 text-sm text-muted-foreground">
-            Showing {filteredNotifications.length} notification
-            {filteredNotifications.length !== 1 ? 's' : ''}
-          </div>
-        )}
+        <div className="mt-4 text-sm text-muted-foreground">
+          Showing {filteredNotifications.length} of {notifications.length}{' '}
+          loaded notifications
+        </div>
       </main>
     </div>
   )

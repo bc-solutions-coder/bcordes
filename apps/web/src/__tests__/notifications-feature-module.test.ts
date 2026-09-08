@@ -89,7 +89,6 @@ const CONSUMERS = [
   'app/components/layout/Header.tsx',
   'app/components/layout/Header.test.tsx',
   'routes/dashboard/notifications.index.tsx',
-  'routes/dashboard/notifications.index.test.tsx',
   'routes/dashboard/settings.index.tsx',
   'routes/dashboard/settings.index.test.tsx',
   'routes/dashboard/inquiries.index.tsx',

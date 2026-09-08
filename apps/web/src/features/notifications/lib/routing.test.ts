@@ -23,7 +23,7 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
 
 describe('getNotificationRoute', () => {
   describe('actionUrl takes priority', () => {
-    it('returns actionUrl verbatim when present, regardless of type', () => {
+    it('uses a safe relative actionUrl ahead of the type-specific destination', () => {
       const types = [
         'TaskAssigned',
         'InquirySubmitted',

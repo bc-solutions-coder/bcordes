@@ -1,0 +1,635 @@
+{
+  "issue": 99,
+  "baseRevision": "1b8ad95",
+  "tests": {
+    "numPassedTests": 1190,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-08T01:35:51.122Z",
+    "duration": 15535.725,
+    "expected": 39,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1075,
+      "covered": 1047,
+      "skipped": 0,
+      "pct": 97.39
+    },
+    "statements": {
+      "total": 1153,
+      "covered": 1109,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "functions": {
+      "total": 383,
+      "covered": 368,
+      "skipped": 0,
+      "pct": 96.08
+    },
+    "branches": {
+      "total": 667,
+      "covered": 616,
+      "skipped": 0,
+      "pct": 92.35
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "metrics": {
+        "lines": {
+          "before": 37,
+          "after": 40,
+          "totalBefore": 37,
+          "totalAfter": 40
+        },
+        "statements": {
+          "before": 39,
+          "after": 42,
+          "totalBefore": 39,
+          "totalAfter": 42
+        },
+        "branches": {
+          "before": 24,
+          "after": 26,
+          "totalBefore": 26,
+          "totalAfter": 26
+        },
+        "functions": {
+          "before": 13,
+          "after": 16,
+          "totalBefore": 13,
+          "totalAfter": 16
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "metrics": {
+        "lines": {
+          "before": 191,
+          "after": 195,
+          "totalBefore": 198,
+          "totalAfter": 198
+        },
+        "statements": {
+          "before": 203,
+          "after": 207,
+          "totalBefore": 221,
+          "totalAfter": 221
+        },
+        "branches": {
+          "before": 98,
+          "after": 99,
+          "totalBefore": 123,
+          "totalAfter": 123
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/hooks/useNotificationFilters.ts",
+      "metrics": {
+        "lines": {
+          "before": 18,
+          "after": 15,
+          "totalBefore": 18,
+          "totalAfter": 15
+        },
+        "statements": {
+          "before": 24,
+          "after": 21,
+          "totalBefore": 24,
+          "totalAfter": 21
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/server-fns/notifications.ts",
+      "metrics": {
+        "lines": {
+          "before": 26,
+          "after": 29,
+          "totalBefore": 29,
+          "totalAfter": 29
+        },
+        "statements": {
+          "before": 27,
+          "after": 30,
+          "totalBefore": 30,
+          "totalAfter": 30
+        },
+        "functions": {
+          "before": 12,
+          "after": 14,
+          "totalBefore": 14,
+          "totalAfter": 14
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/routes/dashboard/notifications.index.tsx",
+      "metrics": {
+        "lines": {
+          "before": 27,
+          "after": 32,
+          "totalBefore": 34,
+          "totalAfter": 33
+        },
+        "statements": {
+          "before": 28,
+          "after": 32,
+          "totalBefore": 35,
+          "totalAfter": 33
+        },
+        "branches": {
+          "before": 27,
+          "after": 25,
+          "totalBefore": 29,
+          "totalAfter": 25
+        },
+        "functions": {
+          "before": 13,
+          "after": 16,
+          "totalBefore": 19,
+          "totalAfter": 17
+        }
+      }
+    }
+  ],
+  "coverageLosses": [
+    "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/hooks/useNotificationFilters.ts",
+    "/Users/traveler/Repos/bcordes/apps/web/src/routes/dashboard/notifications.index.tsx"
+  ],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": false,
+  "exclusionsUnchanged": true,
+  "unitDefects": [
+    {
+      "defect": "wrong-first-page",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/notifications.test.ts",
+      "selector": "first 20",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "lost-returned-items",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/notifications.test.ts",
+      "selector": "first 20",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "lost-channel-state",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/notifications.test.ts",
+      "selector": "channel settings",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "lost-count-normalization",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/notifications.test.ts",
+      "selector": "numeric unread count",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "missing-list-scope",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "explicit loaded-list limit|empty response",
+      "exitCode": 1,
+      "failedTests": 2,
+      "passedTests": 0
+    },
+    {
+      "defect": "inactive-continuation-restored",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "explicit loaded-list limit",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "first-page-truncated",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "explicit loaded-list limit",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "wrong-loaded-count",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "filters the loaded list",
+      "exitCode": 1,
+      "failedTests": 7,
+      "passedTests": 0
+    },
+    {
+      "defect": "accountwide-empty-copy",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "zero-match",
+      "exitCode": 1,
+      "failedTests": 2,
+      "passedTests": 0
+    },
+    {
+      "defect": "missing-unread-filter",
+      "file": "apps/web/src/features/notifications/hooks/useNotificationFilters.ts",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "combines unread",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "missing-type-filter",
+      "file": "apps/web/src/features/notifications/hooks/useNotificationFilters.ts",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "filters the loaded list",
+      "exitCode": 1,
+      "failedTests": 7,
+      "passedTests": 0
+    },
+    {
+      "defect": "wrong-returned-order",
+      "file": "apps/web/src/features/notifications/hooks/useNotificationFilters.ts",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "preserves returned order",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "wrong-selected-ids",
+      "file": "apps/web/src/features/notifications/hooks/useNotificationSelection.ts",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "selects only visible",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "selection-never-removed",
+      "file": "apps/web/src/features/notifications/hooks/useNotificationSelection.ts",
+      "test": "apps/web/src/features/notifications/hooks/useNotificationSelection.test.ts",
+      "selector": "selects and deselects",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "wrong-refresh-keys",
+      "file": "apps/web/src/features/notifications/lib/query-utils.ts",
+      "test": "apps/web/src/features/notifications/lib/query-utils.test.ts",
+      "selector": "refreshes the active",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "page-mark-all-no-feedback",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "marks the whole account",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "page-mark-all-wrong-operation",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "marks the whole account",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "page-read-error-no-feedback",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "opens the inquiry",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 1
+    },
+    {
+      "defect": "page-signedout-wrong-return",
+      "file": "apps/web/src/routes/dashboard/notifications.index.tsx",
+      "test": "apps/web/src/routes/dashboard/notifications.index.test.tsx",
+      "selector": "redirects signed-out",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-read-no-feedback",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "handles a failed read",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-failure-fabricates-read",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "handles a failed read",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-read-no-refresh",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "handles a failed read",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-displays-six",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "first five",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-zero-badge-stays",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "previously visible badge",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-event-no-bump",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "bumps the badge",
+      "exitCode": 1,
+      "failedTests": 2,
+      "passedTests": 0
+    },
+    {
+      "defect": "bell-hidden-toast-shown",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "Hidden event title",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "wrong-view-all-link",
+      "file": "apps/web/src/features/notifications/components/NotificationBell.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationBell.test.tsx",
+      "selector": "View all notifications",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "row-click-wrong-record",
+      "file": "apps/web/src/features/notifications/components/NotificationRow.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationRow.test.tsx",
+      "selector": "activates the notification",
+      "exitCode": 1,
+      "failedTests": 3,
+      "passedTests": 0
+    },
+    {
+      "defect": "row-keyboard-space-ignored",
+      "file": "apps/web/src/features/notifications/components/NotificationRow.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationRow.test.tsx",
+      "selector": "activates the notification",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 2
+    },
+    {
+      "defect": "row-selection-click-bubbles",
+      "file": "apps/web/src/features/notifications/components/NotificationRow.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationRow.test.tsx",
+      "selector": "selects and deselects",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "row-selection-always-checked",
+      "file": "apps/web/src/features/notifications/components/NotificationRow.tsx",
+      "test": "apps/web/src/features/notifications/components/NotificationRow.test.tsx",
+      "selector": "selects and deselects",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "event-hook-wrong-subscriptions",
+      "file": "apps/web/src/features/notifications/hooks/useEventStreamEvents.ts",
+      "test": "apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts",
+      "selector": "delivers only subscribed",
+      "exitCode": 1,
+      "failedTests": 2,
+      "passedTests": 0
+    },
+    {
+      "defect": "event-hook-no-unsubscribe",
+      "file": "apps/web/src/features/notifications/hooks/useEventStreamEvents.ts",
+      "test": "apps/web/src/features/notifications/hooks/useEventStreamEvents.test.ts",
+      "selector": "unmounted consumer",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-slow-first-retry",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "ten unopened retries",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-short-budget",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "ten unopened retries",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-late-open-timeout",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "unopened stream at ten seconds",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-named-reset-lost",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "server reconnect request resets",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-follower-relay-lost",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "two mounted providers",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "stream-resignation-lost",
+      "file": "apps/web/src/features/notifications/hooks/EventStreamProvider.tsx",
+      "test": "apps/web/src/features/notifications/hooks/useEventStream.test.ts",
+      "selector": "surviving follower takes over",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "push-key-bytes-wrong",
+      "file": "apps/web/src/features/notifications/hooks/usePushNotifications.ts",
+      "test": "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "selector": "decoded key bytes",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "push-refetch-lost",
+      "file": "apps/web/src/features/notifications/hooks/usePushNotifications.ts",
+      "test": "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "selector": "decoded key bytes|deregisters the first|refreshes registration",
+      "exitCode": 1,
+      "failedTests": 3,
+      "passedTests": 0
+    },
+    {
+      "defect": "push-register-payload-wrong",
+      "file": "apps/web/src/features/notifications/hooks/usePushNotifications.ts",
+      "test": "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "selector": "decoded key bytes",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    },
+    {
+      "defect": "push-disable-id-wrong",
+      "file": "apps/web/src/features/notifications/hooks/usePushNotifications.ts",
+      "test": "apps/web/src/features/notifications/hooks/usePushNotifications.test.tsx",
+      "selector": "deregisters the first",
+      "exitCode": 1,
+      "failedTests": 1,
+      "passedTests": 0
+    }
+  ],
+  "browserDefects": [
+    {
+      "defect": "missing-feedback-and-emphasis",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:30:18.851Z",
+        "duration": 9142.505,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "navigation-waits-for-read",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:30:32.650Z",
+        "duration": 8182.476000000001,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "defect": "unread-emphasis-removed-real-dashboard",
+      "exitCode": 1,
+      "stats": {
+        "startTime": "2026-09-08T01:34:11.848Z",
+        "duration": 8692.865,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    }
+  ],
+  "originalCases": 117,
+  "acceptedDeletedDeclarations": 10,
+  "reviews": {
+    "spec": 0,
+    "standards": 0,
+    "resolvedStandardsFinding": "Removed the standalone fixture with an internal feature import; appearance uses the authenticated built page."
+  },
+  "commands": [
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-notifications-suite.json",
+    "pnpm exec playwright test --reporter=json (cwd apps/web)",
+    "pnpm build",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ],
+  "earlyRemovalsFor103": [
+    {
+      "file": "apps/web/src/__tests__/notifications-feature-module.test.ts",
+      "removedConsumers": ["routes/dashboard/notifications.index.test.tsx"]
+    }
+  ],
+  "diagnosticNotes": [
+    "The first focused integration run exposed one obsolete source-inventory consumer entry, removed early for #103.",
+    "The appearance fixture public import required framework transforms, so the standalone fixture was replaced by the built authenticated page.",
+    "Read styling is captured after actual CSS transitions finish."
+  ],
+  "coverageLossAssessment": "The filter hook loses three covered lines and statements because unused page state and reset calls were deleted. The page loses two covered branches while removing inert pagination; all remaining page branches are covered. No unchanged production file loses coverage."
+}

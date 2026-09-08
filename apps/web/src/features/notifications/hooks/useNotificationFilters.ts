@@ -18,7 +18,6 @@ export { notificationTypes }
 export function useNotificationFilters(notifications: Array<Notification>) {
   const [unreadOnly, setUnreadOnly] = useState(false)
   const [activeType, setActiveType] = useState<NotificationType | null>(null)
-  const [page, setPage] = useState(1)
 
   const filtered = useMemo(() => {
     let result = notifications
@@ -34,19 +33,15 @@ export function useNotificationFilters(notifications: Array<Notification>) {
 
   const handleTabChange = useCallback((value: string) => {
     setUnreadOnly(value === 'unread')
-    setPage(1)
   }, [])
 
   const handleTypeFilter = useCallback((type: NotificationType) => {
     setActiveType((prev) => (prev === type ? null : type))
-    setPage(1)
   }, [])
 
   return {
     unreadOnly,
     activeType,
-    page,
-    setPage,
     filtered,
     unreadCount,
     handleTabChange,

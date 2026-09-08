@@ -13,17 +13,27 @@ import { Route as InquiryList } from '../src/routes/dashboard/inquiries.index'
 import { Route as InquiryDetail } from '../src/routes/dashboard/inquiries.$id'
 import { Route as Settings } from '../src/routes/dashboard/settings'
 import { Route as SettingsIndex } from '../src/routes/dashboard/settings.index'
+import { Route as Notifications } from '../src/routes/dashboard/notifications'
+import { Route as NotificationsIndex } from '../src/routes/dashboard/notifications.index'
 import { backend } from './dashboard-backend'
 import type { AnyRoute } from '@tanstack/react-router'
 import type { QueryClient } from '@tanstack/react-query'
-import { EventStreamProvider } from '@/features/notifications'
+import { EventStreamProvider, NotificationBell } from '@/features/notifications'
 
 export async function renderDashboard(
   path = '/dashboard/inquiries',
-  prepare?: (client: QueryClient) => void,
+  {
+    prepare,
+    bell = false,
+  }: { prepare?: (client: QueryClient) => void; bell?: boolean } = {},
 ) {
   const root = createRootRoute({
-    component: Outlet,
+    component: () => (
+      <>
+        {bell && <NotificationBell />}
+        <Outlet />
+      </>
+    ),
     notFoundComponent: () => <p>Outside the dashboard</p>,
   })
   function attach(route: AnyRoute, parent: AnyRoute, routePath: string) {
@@ -39,6 +49,8 @@ export async function renderDashboard(
   attach(InquiryDetail, Inquiries, '$id')
   attach(Settings, root, '/dashboard/settings')
   attach(SettingsIndex, Settings, '/')
+  attach(Notifications, root, '/dashboard/notifications')
+  attach(NotificationsIndex, Notifications, '/')
   const context = getContext()
   context.queryClient.setDefaultOptions({ queries: { retry: false } })
   context.queryClient.setQueryData(
@@ -50,6 +62,7 @@ export async function renderDashboard(
     routeTree: root.addChildren([
       Inquiries.addChildren([InquiryList, InquiryDetail]),
       Settings.addChildren([SettingsIndex]),
+      Notifications.addChildren([NotificationsIndex]),
     ]),
     history: createMemoryHistory({ initialEntries: [path] }),
     context,

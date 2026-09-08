@@ -57,6 +57,12 @@ export function NotificationBell() {
     },
   })
 
+  const markRead = useMutation({
+    mutationFn: (id: string) => markNotificationRead({ data: { id } }),
+    onSuccess: () => invalidateNotifications(queryClient),
+    onError: () => toast.error('Failed to mark notification as read'),
+  })
+
   useEffect(() => {
     if (!user) return
     const unsubscribe = subscribe('NotificationCreated', (envelope) => {
@@ -78,14 +84,13 @@ export function NotificationBell() {
   const displayedNotifications = notifications.slice(0, 5)
 
   const handleClick = useCallback(
-    async (notification: Notification) => {
+    (notification: Notification) => {
       if (!notification.isRead) {
-        await markNotificationRead({ data: { id: notification.id } })
-        invalidateNotifications(queryClient)
+        markRead.mutate(notification.id)
       }
       navigate({ to: getNotificationRoute(notification) })
     },
-    [navigate, queryClient],
+    [navigate, markRead],
   )
 
   if (!user) return null

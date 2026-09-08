@@ -22,7 +22,7 @@ const FALLBACK = '/dashboard/notifications'
 const VALID_UUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
 
 describe('getNotificationRoute — URL validation', () => {
-  it('rejects absolute http:// actionUrl and falls back to switch result', () => {
+  it('rejects absolute http:// actionUrl and uses the inquiry destination', () => {
     const notification = makeNotification({
       type: 'InquirySubmitted',
       actionUrl: 'http://evil.com/steal-cookies',
@@ -32,15 +32,7 @@ describe('getNotificationRoute — URL validation', () => {
     expect(route).toBe(`/dashboard/inquiries/${VALID_UUID}`)
   })
 
-  it('accepts a valid relative actionUrl and returns it directly', () => {
-    const notification = makeNotification({
-      actionUrl: '/dashboard/foo',
-    })
-    const route = getNotificationRoute(notification)
-    expect(route).toBe('/dashboard/foo')
-  })
-
-  it('rejects protocol-relative //evil.com actionUrl and falls through to switch', () => {
+  it('rejects protocol-relative //evil.com actionUrl and uses the task destination', () => {
     const notification = makeNotification({
       type: 'TaskAssigned',
       actionUrl: '//evil.com/payload',
@@ -50,7 +42,7 @@ describe('getNotificationRoute — URL validation', () => {
     expect(route).toBe(`/dashboard/tasks/${VALID_UUID}`)
   })
 
-  it('rejects javascript: actionUrl and falls through to switch', () => {
+  it('rejects javascript: actionUrl and uses the task destination', () => {
     const notification = makeNotification({
       type: 'TaskComment',
       actionUrl: 'javascript:alert(1)',
@@ -62,31 +54,10 @@ describe('getNotificationRoute — URL validation', () => {
 })
 
 describe('getNotificationRoute — entityId validation', () => {
-  it('produces correct route when entityId is a valid UUID', () => {
-    const notification = makeNotification({
-      type: 'InquirySubmitted',
-      entityId: VALID_UUID,
-    })
-    const route = getNotificationRoute(notification)
-    expect(route).toBe(`/dashboard/inquiries/${VALID_UUID}`)
-  })
-
   it('returns fallback when entityId is a non-UUID string', () => {
     const notification = makeNotification({
       type: 'InquirySubmitted',
       entityId: '../../../etc/passwd',
-    })
-    const route = getNotificationRoute(notification)
-    expect(route).toBe(FALLBACK)
-  })
-})
-
-describe('getNotificationRoute — missing data fallback', () => {
-  it('returns fallback when no actionUrl and no entityId are present', () => {
-    const notification = makeNotification({
-      type: 'InquirySubmitted',
-      actionUrl: undefined,
-      entityId: undefined,
     })
     const route = getNotificationRoute(notification)
     expect(route).toBe(FALLBACK)

@@ -322,9 +322,9 @@ it('shows the current authenticated push-enable failure without registering a de
 it('shows the current authenticated test-delivery failure for a cached device without claiming success', async () => {
   supportPush()
   vi.spyOn(console, 'error').mockImplementation(() => {})
-  await renderDashboard(path, (client) =>
-    client.setQueryData(['push-devices'], [device]),
-  )
+  await renderDashboard(path, {
+    prepare: (client) => client.setQueryData(['push-devices'], [device]),
+  })
   fireEvent.click(
     await screen.findByRole('button', { name: 'Send test notification' }),
   )

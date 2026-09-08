@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import { useNotificationSelection } from './useNotificationSelection'
 import type { Notification } from '@bcordes/wallow/types'
@@ -27,15 +27,13 @@ const fixtures: Array<Notification> = [
 ]
 
 describe('useNotificationSelection', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('allSelected is false initially', () => {
+  it('starts with no notifications selected', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
     expect(result.current.allSelected).toBe(false)
     expect(result.current.selectedIds.size).toBe(0)
   })
 
-  it('selectAll(true) adds all filtered IDs', () => {
+  it('selects every notification in the filtered list', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
     act(() => result.current.selectAll(true))
@@ -47,7 +45,7 @@ describe('useNotificationSelection', () => {
     expect(result.current.allSelected).toBe(true)
   })
 
-  it('selectAll(false) clears selection', () => {
+  it('deselects every notification when select-all is cleared', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
     act(() => result.current.selectAll(true))
@@ -58,7 +56,7 @@ describe('useNotificationSelection', () => {
     expect(result.current.allSelected).toBe(false)
   })
 
-  it('selectOne adds and removes a single ID', () => {
+  it('selects and deselects one notification', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
     act(() => result.current.selectOne('b', true))
@@ -70,7 +68,7 @@ describe('useNotificationSelection', () => {
     expect(result.current.selectedIds.size).toBe(0)
   })
 
-  it('clearSelection empties the set', () => {
+  it('clears all selected notifications', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
     act(() => result.current.selectAll(true))
@@ -80,7 +78,7 @@ describe('useNotificationSelection', () => {
     expect(result.current.selectedIds.size).toBe(0)
   })
 
-  it('allSelected is true only when all filtered items are selected', () => {
+  it('reports all selected only after every visible notification is selected', () => {
     const { result } = renderHook(() => useNotificationSelection(fixtures))
 
     act(() => result.current.selectOne('a', true))
@@ -91,7 +89,7 @@ describe('useNotificationSelection', () => {
     expect(result.current.allSelected).toBe(true)
   })
 
-  it('allSelected is false when filtered list is empty', () => {
+  it('does not report all selected for an empty list', () => {
     const { result } = renderHook(() => useNotificationSelection([]))
     expect(result.current.allSelected).toBe(false)
   })

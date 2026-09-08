@@ -1,15 +1,8 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithProviders } from '@bcordes/test-utils'
 import { NotificationRow } from './NotificationRow'
-import type * as BcordesUtils from '@bcordes/utils'
 import type { Notification } from '@bcordes/wallow/types'
-
-// Mock time formatting; keep cn real for the UI primitives.
-vi.mock('@bcordes/utils', async (importOriginal) => ({
-  ...(await importOriginal<typeof BcordesUtils>()),
-  formatRelativeTime: vi.fn(() => '2 hours ago'),
-}))
 
 function makeNotification(overrides: Partial<Notification> = {}): Notification {
   return {
@@ -26,91 +19,77 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
     ...overrides,
   }
 }
-
-const defaultProps = () => ({
-  notification: makeNotification(),
-  selectedIds: new Set<string>() as ReadonlySet<string>,
-  typeConfig: {},
-  onSelect: vi.fn(),
-  onClick: vi.fn(),
+function props() {
+  return {
+    notification: makeNotification(),
+    selectedIds: new Set<string>(),
+    typeConfig: {},
+    onSelect: vi.fn(),
+    onClick: vi.fn(),
+  }
+}
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] })
+  vi.setSystemTime(new Date('2026-03-25T02:00:00Z'))
+})
+afterEach(() => {
+  cleanup()
+  vi.useRealTimers()
 })
 
-describe('NotificationRow', () => {
-  afterEach(() => {
-    cleanup()
+it.each([
+  { createdAt: '2026-03-25T00:00:00Z', relative: '2h ago' },
+  { createdAt: '2026-03-25T01:59:40Z', relative: 'just now' },
+])(
+  'shows the title, message and $relative timestamp for $createdAt',
+  ({ createdAt, relative }) => {
+    const row = props()
+    renderWithProviders(
+      <NotificationRow
+        {...row}
+        notification={makeNotification({ createdAt })}
+      />,
+    )
+    expect(screen.getByText('New Inquiry')).toBeVisible()
+    expect(screen.getByText('Someone submitted a contact form')).toBeVisible()
+    expect(screen.getByText(relative)).toBeVisible()
+  },
+)
+it.each(['click', 'Enter', ' '])(
+  'activates the notification through %j',
+  (activation) => {
+    const row = props()
+    renderWithProviders(<NotificationRow {...row} />)
+    const button = screen.getByRole('button')
+    if (activation === 'click') fireEvent.click(button)
+    else fireEvent.keyDown(button, { key: activation })
+    expect(row.onClick.mock.calls).toEqual([[row.notification]])
+  },
+)
+it('does not activate the notification when Tab is pressed', () => {
+  const row = props()
+  renderWithProviders(<NotificationRow {...row} />)
+  fireEvent.keyDown(screen.getByRole('button'), { key: 'Tab' })
+  expect(row.onClick).not.toHaveBeenCalled()
+})
+it('selects and deselects the same notification without activating its row', () => {
+  const row = props()
+  const { rerender } = renderWithProviders(<NotificationRow {...row} />)
+  const checkbox = screen.getByRole('checkbox', {
+    name: 'Select notification: New Inquiry',
   })
-
-  it('renders notification title and message', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    expect(screen.getByText('New Inquiry')).toBeInTheDocument()
-    expect(
-      screen.getByText('Someone submitted a contact form'),
-    ).toBeInTheDocument()
-    expect(screen.getByText('2 hours ago')).toBeInTheDocument()
-  })
-
-  it('calls onClick when the row is clicked', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    fireEvent.click(screen.getByRole('button'))
-    expect(props.onClick).toHaveBeenCalledWith(props.notification)
-  })
-
-  it('calls onClick when Enter key is pressed', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    fireEvent.keyDown(screen.getByRole('button'), { key: 'Enter' })
-    expect(props.onClick).toHaveBeenCalledWith(props.notification)
-  })
-
-  it('calls onClick when Space key is pressed', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    fireEvent.keyDown(screen.getByRole('button'), { key: ' ' })
-    expect(props.onClick).toHaveBeenCalledWith(props.notification)
-  })
-
-  it('does not call onClick for other keys', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    fireEvent.keyDown(screen.getByRole('button'), { key: 'Tab' })
-    expect(props.onClick).not.toHaveBeenCalled()
-  })
-
-  it('shows unread indicator for unread notifications', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    const title = screen.getByText('New Inquiry')
-    expect(title.className).toContain('font-semibold')
-  })
-
-  it('does not show unread indicator for read notifications', () => {
-    const props = {
-      ...defaultProps(),
-      notification: makeNotification({ isRead: true }),
-    }
-    renderWithProviders(<NotificationRow {...props} />)
-
-    const title = screen.getByText('New Inquiry')
-    expect(title.className).toContain('font-medium')
-    expect(title.className).not.toContain('font-semibold')
-  })
-
-  it('calls onSelect when checkbox is toggled', () => {
-    const props = defaultProps()
-    renderWithProviders(<NotificationRow {...props} />)
-
-    const checkbox = screen.getByRole('checkbox', {
-      name: /select notification/i,
-    })
-    fireEvent.click(checkbox)
-    expect(props.onSelect).toHaveBeenCalledWith('notif-1', true)
-  })
+  expect(checkbox).not.toBeChecked()
+  fireEvent.click(checkbox)
+  expect(row.onSelect.mock.calls).toEqual([['notif-1', true]])
+  expect(row.onClick).not.toHaveBeenCalled()
+  rerender(<NotificationRow {...row} selectedIds={new Set(['notif-1'])} />)
+  expect(checkbox).toBeChecked()
+  fireEvent.click(checkbox)
+  expect(row.onSelect.mock.calls).toEqual([
+    ['notif-1', true],
+    ['notif-1', false],
+  ])
+  expect(row.onClick).not.toHaveBeenCalled()
+  rerender(<NotificationRow {...row} selectedIds={new Set()} />)
+  expect(checkbox).not.toBeChecked()
 })

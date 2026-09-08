@@ -1,436 +1,459 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
-import type * as BcordesUtils from '@bcordes/utils'
-import type { Notification } from '@bcordes/wallow/types'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  screen,
+  waitFor,
+} from '@testing-library/react'
+import {
+  backend,
+  firstInquiryId,
+  makeNotification,
+  pauseRequest,
+  resetBackend,
+  secondInquiryId,
+} from '../../../testing/dashboard-backend'
+import { DashboardEventSource } from '../../../testing/dashboard-browser'
+import { renderDashboard } from '../../../testing/render-dashboard'
 
-const mockToast = { success: vi.fn(), error: vi.fn() }
-vi.mock('sonner', () => ({
-  toast: mockToast,
-}))
+vi.mock(
+  '@tanstack/react-start',
+  () => import('../../../testing/server-functions'),
+)
+vi.mock(
+  '@bcordes/auth/session',
+  () => import('../../../testing/dashboard-backend'),
+)
+vi.mock('@bcordes/auth/sdk', () => import('../../../testing/dashboard-backend'))
+vi.mock(
+  '@bcordes/wallow/client',
+  () => import('../../../testing/dashboard-backend'),
+)
 
-const mockFetchNotifications = vi.fn()
-const mockMarkNotificationRead = vi.fn()
-const mockMarkAllNotificationsRead = vi.fn()
+beforeEach(() => {
+  resetBackend()
+  DashboardEventSource.instances = []
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+  vi.stubGlobal('BroadcastChannel', undefined)
+  vi.stubGlobal('EventSource', DashboardEventSource)
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+})
 
-const mockUseNotificationFilters = vi.fn()
-const mockUseNotificationSelection = vi.fn()
+it('shows all 20 returned notifications with an explicit loaded-list limit and no inactive continuation', async () => {
+  backend.notifications = Array.from({ length: 20 }, (_, index) =>
+    makeNotification({
+      id: `550e8400-e29b-41d4-a716-${String(index).padStart(12, '0')}`,
+      title: `Loaded message ${index + 1}`,
+    }),
+  )
+  await renderDashboard('/dashboard/notifications')
+  expect(
+    screen.getByText(
+      'Showing up to 20 notifications. Filters apply to this list.',
+    ),
+  ).toBeVisible()
+  expect(
+    screen.getByText('Showing 20 of 20 loaded notifications'),
+  ).toBeVisible()
+  expect(
+    screen
+      .getAllByText(/^Loaded message /)
+      .map((element) => element.textContent),
+  ).toEqual(
+    Array.from({ length: 20 }, (_, index) => `Loaded message ${index + 1}`),
+  )
+  expect(
+    screen.queryByRole('button', { name: 'Load more' }),
+  ).not.toBeInTheDocument()
+})
 
-// Keep NotificationRow real while mocking page dependencies.
-vi.mock('@/features/notifications', async () => ({
-  ...(await vi.importActual('@/features/notifications')),
-  fetchNotifications: (...args: Array<unknown>) =>
-    mockFetchNotifications(...args),
-  markNotificationRead: (...args: Array<unknown>) =>
-    mockMarkNotificationRead(...args),
-  markAllNotificationsRead: (...args: Array<unknown>) =>
-    mockMarkAllNotificationsRead(...args),
-  useEventStreamEvents: vi.fn(),
-  notificationTypes: [
-    'TaskAssigned',
-    'InquirySubmitted',
-    'InquiryComment',
-    'SystemAlert',
-    'Announcement',
-    'BillingInvoice',
-    'Mention',
-  ],
-  useNotificationFilters: (...args: Array<unknown>) =>
-    mockUseNotificationFilters(...args),
-  useNotificationSelection: (...args: Array<unknown>) =>
-    mockUseNotificationSelection(...args),
-  invalidateNotifications: vi.fn(),
-  getNotificationRoute: vi.fn(() => '/dashboard'),
-}))
+const typeLabels = [
+  ['TaskAssigned', 'Tasks'],
+  ['InquirySubmitted', 'Inquiries'],
+  ['InquiryComment', 'Inquiry Replies'],
+  ['SystemAlert', 'Alerts'],
+  ['Announcement', 'Announcements'],
+  ['BillingInvoice', 'Billing'],
+  ['Mention', 'Mentions'],
+] as const
 
-vi.mock('@/shared/auth', () => ({
-  serverRequireAuth: vi.fn(),
-}))
+it.each(typeLabels)(
+  'filters the loaded list to %s and restores it when %s is cleared',
+  async (type, label) => {
+    backend.notifications = typeLabels.map(([kind], index) =>
+      makeNotification({
+        id: `550e8400-e29b-41d4-a716-${String(index).padStart(12, '0')}`,
+        type: kind,
+        title: `${kind} message`,
+      }),
+    )
+    const { queryClient } = await renderDashboard('/dashboard/notifications')
+    await waitFor(() => expect(queryClient.isFetching()).toBe(0))
+    const initialRequests = backend.requests.length
+    fireEvent.click(screen.getByRole('button', { name: label }))
+    expect(screen.getByText(`${type} message`)).toBeVisible()
+    expect(screen.getAllByText(/ message$/)).toHaveLength(1)
+    expect(
+      screen.getByText('Showing 1 of 7 loaded notifications'),
+    ).toBeVisible()
+    fireEvent.click(screen.getByRole('button', { name: label }))
+    expect(screen.getAllByText(/ message$/)).toHaveLength(7)
+    expect(
+      screen.getByText('Showing 7 of 7 loaded notifications'),
+    ).toBeVisible()
+    expect(backend.requests).toHaveLength(initialRequests)
+  },
+)
 
-// Keep cn() real for UI components while stubbing relative time.
-vi.mock('@bcordes/utils', async (importOriginal) => ({
-  ...(await importOriginal<typeof BcordesUtils>()),
-  formatRelativeTime: vi.fn((d: string) => d),
-}))
+it('preserves returned order in a short batch and combines unread and type filters', async () => {
+  backend.notifications = [
+    makeNotification({
+      id: firstInquiryId,
+      title: 'Older inquiry',
+      createdAt: '2026-01-01T00:00:00Z',
+    }),
+    makeNotification({
+      id: secondInquiryId,
+      title: 'Newest alert',
+      type: 'SystemAlert',
+      createdAt: '2026-02-01T00:00:00Z',
+    }),
+    makeNotification({
+      id: '550e8400-e29b-41d4-a716-446655440002',
+      title: 'Read inquiry',
+      isRead: true,
+      createdAt: '2026-01-15T00:00:00Z',
+    }),
+  ]
+  await renderDashboard('/dashboard/notifications')
+  expect(
+    screen
+      .getAllByRole('checkbox')
+      .slice(1)
+      .map((element) => element.getAttribute('aria-label')),
+  ).toEqual([
+    'Select notification: Older inquiry',
+    'Select notification: Newest alert',
+    'Select notification: Read inquiry',
+  ])
+  expect(screen.getByText('Showing 3 of 3 loaded notifications')).toBeVisible()
+  expect(screen.getByText('2 unread')).toBeVisible()
+  fireEvent.click(screen.getByRole('tab', { name: 'Unread' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Inquiries' }))
+  expect(screen.getByText('Older inquiry')).toBeVisible()
+  expect(screen.queryByText('Newest alert')).not.toBeInTheDocument()
+  expect(screen.queryByText('Read inquiry')).not.toBeInTheDocument()
+  expect(screen.getByText('Showing 1 of 3 loaded notifications')).toBeVisible()
+  fireEvent.click(screen.getByRole('tab', { name: 'All' }))
+  expect(screen.getByText('Read inquiry')).toBeVisible()
+  expect(screen.getByText('Showing 2 of 3 loaded notifications')).toBeVisible()
+})
 
-const mockNavigate = vi.fn()
-const mockUseLoaderData = vi.fn()
+it('keeps the loaded-list limit and truthful counts visible for an empty response', async () => {
+  backend.notifications = []
+  await renderDashboard('/dashboard/notifications')
+  expect(
+    screen.getByRole('heading', { name: 'No notifications in this list.' }),
+  ).toBeVisible()
+  expect(
+    screen.getByText(
+      'Showing up to 20 notifications. Filters apply to this list.',
+    ),
+  ).toBeVisible()
+  expect(screen.getByText('Showing 0 of 0 loaded notifications')).toBeVisible()
+  expect(
+    screen.queryByRole('button', { name: 'Load more' }),
+  ).not.toBeInTheDocument()
+})
 
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (config: Record<string, unknown>) => ({
-    ...config,
-    useLoaderData: () => mockUseLoaderData(),
-  }),
-  useNavigate: () => mockNavigate,
-}))
+it.each(['unread', 'type'])(
+  'scopes a zero-match %s filter to the loaded list and restores results when cleared',
+  async (filter) => {
+    backend.notifications = [makeNotification({ isRead: true })]
+    await renderDashboard('/dashboard/notifications')
+    const control =
+      filter === 'unread'
+        ? screen.getByRole('tab', { name: 'Unread' })
+        : screen.getByRole('button', { name: 'Alerts' })
+    fireEvent.click(control)
+    expect(
+      screen.getByRole('heading', {
+        name: 'No notifications match these filters in the loaded list.',
+      }),
+    ).toBeVisible()
+    expect(
+      screen.getByText('Showing 0 of 1 loaded notifications'),
+    ).toBeVisible()
+    expect(
+      screen.getByText(
+        'Showing up to 20 notifications. Filters apply to this list.',
+      ),
+    ).toBeVisible()
+    fireEvent.click(
+      filter === 'unread' ? screen.getByRole('tab', { name: 'All' }) : control,
+    )
+    expect(screen.getByText('Website inquiry')).toBeVisible()
+    expect(
+      screen.getByText('Showing 1 of 1 loaded notifications'),
+    ).toBeVisible()
+  },
+)
 
-const routeModule = await import('./notifications.index')
-const routeConfig = routeModule.Route as unknown as {
-  loader: () => Promise<{ notifications: Array<Notification> }>
-  component: React.ComponentType
-}
-
-const NotificationsPage = routeConfig.component
-
-function makeNotification(
-  overrides: Partial<Notification> & Pick<Notification, 'id'>,
-): Notification {
-  return {
-    userId: 'user-1',
-    type: 'TaskAssigned',
-    title: 'Test notification',
-    message: 'Test message body',
-    isRead: false,
-    readAt: null,
-    actionUrl: null,
-    createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: '2026-01-01T00:00:00Z',
-    ...overrides,
-  }
-}
-
-function setupFiltersMock(
-  overrides: Record<string, unknown> = {},
-  notifications: Array<Notification> = [],
-) {
-  const unreadCount =
-    overrides.unreadCount ?? notifications.filter((n) => !n.isRead).length
-  mockUseNotificationFilters.mockReturnValue({
-    unreadOnly: false,
-    activeType: null,
-    page: 1,
-    setPage: vi.fn(),
-    filtered: notifications,
-    unreadCount,
-    handleTabChange: vi.fn(),
-    handleTypeFilter: vi.fn(),
-    ...overrides,
+it('selects and deselects individual rows without navigating', async () => {
+  backend.notifications = [
+    makeNotification(),
+    makeNotification({ id: secondInquiryId, title: 'Second inquiry' }),
+  ]
+  const { router } = await renderDashboard('/dashboard/notifications')
+  const first = screen.getByRole('checkbox', {
+    name: 'Select notification: Website inquiry',
   })
-}
-
-function setupSelectionMock(overrides: Record<string, unknown> = {}) {
-  mockUseNotificationSelection.mockReturnValue({
-    selectedIds: new Set<string>(),
-    allSelected: false,
-    selectAll: vi.fn(),
-    selectOne: vi.fn(),
-    clearSelection: vi.fn(),
-    ...overrides,
+  const second = screen.getByRole('checkbox', {
+    name: 'Select notification: Second inquiry',
   })
-}
+  fireEvent.click(first)
+  fireEvent.click(second)
+  expect(first).toBeChecked()
+  expect(second).toBeChecked()
+  expect(screen.getByText('2 selected')).toBeVisible()
+  fireEvent.click(first)
+  expect(first).not.toBeChecked()
+  expect(second).toBeChecked()
+  expect(screen.getByText('1 selected')).toBeVisible()
+  expect(router.state.location.pathname).toBe('/dashboard/notifications')
+  expect(
+    backend.requests.filter((request) => request.method !== 'GET'),
+  ).toHaveLength(0)
+})
 
-describe('notifications.index', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockMarkNotificationRead.mockResolvedValue(undefined)
-    mockMarkAllNotificationsRead.mockResolvedValue(undefined)
-  })
+it('selects only visible notifications and clears the selection', async () => {
+  backend.notifications = [
+    makeNotification(),
+    makeNotification({
+      id: secondInquiryId,
+      title: 'Second inquiry',
+      type: 'SystemAlert',
+    }),
+  ]
+  await renderDashboard('/dashboard/notifications')
+  fireEvent.click(screen.getByRole('button', { name: 'Inquiries' }))
+  const all = screen.getByRole('checkbox', { name: 'Select all notifications' })
+  fireEvent.click(all)
+  expect(all).toBeChecked()
+  expect(
+    screen.getByRole('checkbox', {
+      name: 'Select notification: Website inquiry',
+    }),
+  ).toBeChecked()
+  expect(screen.getByText('1 selected')).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: 'Inquiries' }))
+  expect(
+    screen.getByRole('checkbox', {
+      name: 'Select notification: Second inquiry',
+    }),
+  ).not.toBeChecked()
+  expect(all).not.toBeChecked()
+  fireEvent.click(all)
+  expect(screen.getByText('2 selected')).toBeVisible()
+  fireEvent.click(all)
+  expect(
+    screen
+      .getAllByRole('checkbox')
+      .every((checkbox) => checkbox.getAttribute('aria-checked') === 'false'),
+  ).toBe(true)
+  expect(screen.getByText('Select all')).toBeVisible()
+})
 
-  afterEach(() => {
-    cleanup()
-  })
+it('marks the whole account read despite a filter and selection, disables repeats, and refreshes the loaded state', async () => {
+  backend.notifications = [
+    makeNotification(),
+    makeNotification({
+      id: secondInquiryId,
+      title: 'Hidden alert',
+      type: 'SystemAlert',
+    }),
+  ]
+  backend.unreadCount = 80
+  await renderDashboard('/dashboard/notifications')
+  fireEvent.click(screen.getByRole('button', { name: 'Inquiries' }))
+  fireEvent.click(
+    screen.getByRole('checkbox', {
+      name: 'Select notification: Website inquiry',
+    }),
+  )
+  const pending = pauseRequest('POST', '/v1/notifications/read-all')
+  const button = screen.getByRole('button', { name: 'Mark all as read' })
+  expect(button).toBeEnabled()
+  fireEvent.click(button)
+  await waitFor(() => expect(button).toBeDisabled())
+  fireEvent.click(button)
+  await waitFor(() =>
+    expect(
+      backend.requests.filter((request) => request.method === 'POST'),
+    ).toHaveLength(1),
+  )
+  const request = backend.requests.find((item) => item.method === 'POST')!
+  expect(new URL(request.url).pathname).toBe('/v1/notifications/read-all')
+  expect(await request.text()).toBe('')
+  await act(() => pending.resolve(undefined))
+  expect(
+    await screen.findByText('All notifications marked as read'),
+  ).toBeVisible()
+  await waitFor(() =>
+    expect(screen.queryByText('2 unread')).not.toBeInTheDocument(),
+  )
+  expect(button).toBeDisabled()
+  expect(backend.unreadCount).toBe(0)
+  expect(
+    backend.notifications.every((notification) => notification.isRead),
+  ).toBe(true)
+  fireEvent.click(screen.getByRole('tab', { name: 'Unread' }))
+  expect(
+    screen.getByRole('heading', {
+      name: 'No notifications match these filters in the loaded list.',
+    }),
+  ).toBeVisible()
+})
 
-  describe('loader', () => {
-    it('returns notifications from fetchNotifications', async () => {
-      const fakeData = [makeNotification({ id: '1' })]
-      mockFetchNotifications.mockResolvedValue(fakeData)
+it('does not write when every loaded notification is already read', async () => {
+  backend.notifications = [makeNotification({ isRead: true })]
+  await renderDashboard('/dashboard/notifications')
+  const button = screen.getByRole('button', { name: 'Mark all as read' })
+  expect(button).toBeDisabled()
+  fireEvent.click(button)
+  expect(screen.queryByText(/^\d+ unread$/)).not.toBeInTheDocument()
+  expect(
+    backend.requests.filter((request) => request.method !== 'GET'),
+  ).toHaveLength(0)
+})
 
-      const result = await routeConfig.loader()
+it('shows mark-all failure without changing read state or reporting success and permits retry', async () => {
+  await renderDashboard('/dashboard/notifications')
+  const pending = pauseRequest('POST', '/v1/notifications/read-all')
+  fireEvent.click(screen.getByRole('button', { name: 'Mark all as read' }))
+  await act(() =>
+    pending.resolve(
+      Response.json(
+        {
+          status: 409,
+          code: 'read_conflict',
+          title: 'Conflict',
+          detail: 'Could not mark all read',
+        },
+        { status: 409 },
+      ),
+    ),
+  )
+  expect(await screen.findByText('Could not mark all read')).toBeVisible()
+  expect(
+    screen.queryByText('All notifications marked as read'),
+  ).not.toBeInTheDocument()
+  expect(screen.getByText('1 unread')).toBeVisible()
+  expect(backend.notifications[0].isRead).toBe(false)
+  const button = screen.getByRole('button', { name: 'Mark all as read' })
+  expect(button).toBeEnabled()
+  backend.intercept = undefined
+  fireEvent.click(button)
+  expect(
+    await screen.findByText('All notifications marked as read'),
+  ).toBeVisible()
+})
 
-      expect(mockFetchNotifications).toHaveBeenCalledOnce()
-      expect(result).toEqual({ notifications: fakeData })
-    })
-  })
+it.each([false, true])(
+  'opens the inquiry from a row with isRead=%s and writes only for unread items',
+  async (isRead) => {
+    backend.notifications = [makeNotification({ isRead })]
+    const { router } = await renderDashboard('/dashboard/notifications')
+    const pending = pauseRequest(
+      'POST',
+      `/v1/notifications/${firstInquiryId}/read`,
+    )
+    fireEvent.click(screen.getByRole('button', { name: /Website inquiry/ }))
+    expect(
+      await screen.findByRole('heading', { name: 'Inquiry Details' }),
+    ).toBeVisible()
+    expect(router.state.location.pathname).toBe(
+      `/dashboard/inquiries/${firstInquiryId}`,
+    )
+    expect(screen.getByText('A new website')).toBeVisible()
+    if (isRead)
+      expect(
+        backend.requests.filter((request) => request.method !== 'GET'),
+      ).toHaveLength(0)
+    else {
+      await waitFor(() =>
+        expect(
+          backend.requests.filter((request) => request.method === 'POST'),
+        ).toHaveLength(1),
+      )
+      expect(backend.notifications[0].isRead).toBe(false)
+      await act(() =>
+        pending.resolve(
+          Response.json(
+            { status: 503, code: 'unavailable', title: 'Unavailable' },
+            { status: 503 },
+          ),
+        ),
+      )
+      expect(
+        await screen.findByText('Failed to mark notification as read'),
+      ).toBeVisible()
+      expect(router.state.location.pathname).toBe(
+        `/dashboard/inquiries/${firstInquiryId}`,
+      )
+    }
+  },
+)
 
-  describe('component', () => {
-    it('renders empty state when no notifications', () => {
-      mockUseLoaderData.mockReturnValue({ notifications: [] })
-      setupFiltersMock({}, [])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('No notifications')).toBeTruthy()
-      expect(screen.getByText('You have no notifications yet.')).toBeTruthy()
-    })
-
-    it('renders empty state with unread message when filtering unread', () => {
-      mockUseLoaderData.mockReturnValue({ notifications: [] })
-      setupFiltersMock({ unreadOnly: true }, [])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('You have no unread notifications.')).toBeTruthy()
-    })
-
-    it('renders notification rows when present', () => {
-      const notifications = [
-        makeNotification({ id: '1', title: 'First alert' }),
-        makeNotification({
-          id: '2',
-          title: 'Second alert',
-          isRead: true,
+it('refreshes visible notifications and the loaded unread count after a real stream event', async () => {
+  const { queryClient } = await renderDashboard('/dashboard/notifications')
+  await waitFor(() => expect(queryClient.isFetching()).toBe(0))
+  backend.notifications = [
+    makeNotification({ title: 'Updated message', isRead: true }),
+  ]
+  act(() =>
+    DashboardEventSource.instances[0].dispatchEvent(
+      new MessageEvent('NotificationCreated', {
+        data: JSON.stringify({
+          type: 'NotificationCreated',
+          module: 'Notifications',
+          payload: null,
         }),
-      ]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock()
+      }),
+    ),
+  )
+  expect(await screen.findByText('Updated message')).toBeVisible()
+  expect(screen.queryByText('Website inquiry')).not.toBeInTheDocument()
+  expect(screen.queryByText('1 unread')).not.toBeInTheDocument()
+})
 
-      renderWithProviders(<NotificationsPage />)
+it('redirects signed-out visitors before loading protected notifications', async () => {
+  backend.signedIn = false
+  const { router } = await renderDashboard('/dashboard/notifications')
+  expect(router.state.location.href).toBe(
+    '/bff/login?returnTo=%2Fdashboard%2Fnotifications',
+  )
+  expect(backend.requests).toHaveLength(0)
+})
 
-      expect(screen.getByText('First alert')).toBeTruthy()
-      expect(screen.getByText('Second alert')).toBeTruthy()
-    })
-
-    it('shows unread count badge when unreadCount > 0', () => {
-      const notifications = [
-        makeNotification({ id: '1', isRead: false }),
-        makeNotification({ id: '2', isRead: true }),
-      ]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 1 }, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('1 unread')).toBeTruthy()
-    })
-
-    it('does not show unread count badge when unreadCount is 0', () => {
-      const notifications = [makeNotification({ id: '1', isRead: true })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 0 }, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.queryByText(/unread/)).toBeNull()
-    })
-
-    it('"Mark all as read" button is disabled when unreadCount === 0', () => {
-      const notifications = [makeNotification({ id: '1', isRead: true })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 0 }, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      const btn = screen.getByRole('button', { name: /mark all as read/i })
-      expect(btn).toBeTruthy()
-      expect((btn as HTMLButtonElement).disabled).toBe(true)
-    })
-
-    it('"Mark all as read" button is enabled when unreadCount > 0', () => {
-      const notifications = [makeNotification({ id: '1', isRead: false })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 1 }, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      const btn = screen.getByRole('button', { name: /mark all as read/i })
-      expect((btn as HTMLButtonElement).disabled).toBe(false)
-    })
-
-    it('renders filter chip buttons for all notification types', () => {
-      mockUseLoaderData.mockReturnValue({ notifications: [] })
-      setupFiltersMock({}, [])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByRole('button', { name: 'Tasks' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Inquiries' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Announcements' })).toBeTruthy()
-    })
-
-    it('shows "Showing N notification(s)" summary text', () => {
-      const notifications = [
-        makeNotification({ id: '1' }),
-        makeNotification({ id: '2' }),
-      ]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('Showing 2 notifications')).toBeTruthy()
-    })
-
-    it('clicking a notification row triggers navigate', () => {
-      const notification = makeNotification({
-        id: '1',
-        title: 'Click me',
-        isRead: true,
-      })
-      mockUseLoaderData.mockReturnValue({
-        notifications: [notification],
-      })
-      setupFiltersMock({}, [notification])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      fireEvent.click(screen.getByText('Click me'))
-      expect(mockNavigate).toHaveBeenCalled()
-    })
-
-    it('shows selected count when items are selected', () => {
-      const notifications = [
-        makeNotification({ id: '1' }),
-        makeNotification({ id: '2' }),
-      ]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock({ selectedIds: new Set(['1', '2']) })
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('2 selected')).toBeTruthy()
-    })
-
-    it('shows "Select all" when no items are selected', () => {
-      const notifications = [makeNotification({ id: '1' })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock({ selectedIds: new Set() })
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByText('Select all')).toBeTruthy()
-    })
-
-    it('shows spinner when mark all read mutation is pending', async () => {
-      const notifications = [makeNotification({ id: '1', isRead: false })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 1 }, notifications)
-      setupSelectionMock()
-
-      // Keep the mutation pending to check its loading state.
-      mockMarkAllNotificationsRead.mockReturnValue(new Promise(() => {}))
-
-      renderWithProviders(<NotificationsPage />)
-
-      const btn = screen.getByRole('button', { name: /mark all as read/i })
-      fireEvent.click(btn)
-
-      await vi.waitFor(() => {
-        const spinner = btn.querySelector('.animate-spin')
-        expect(spinner).toBeTruthy()
-      })
-    })
-
-    it('shows "Load more" button when 20 or more notifications', () => {
-      const notifications = Array.from({ length: 20 }, (_, i) =>
-        makeNotification({ id: `n-${i}`, title: `Notification ${i}` }),
-      )
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.getByRole('button', { name: 'Load more' })).toBeTruthy()
-    })
-
-    it('does not show "Load more" button when fewer than 20 notifications', () => {
-      const notifications = [makeNotification({ id: '1' })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({}, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      expect(screen.queryByRole('button', { name: 'Load more' })).toBeNull()
-    })
-
-    it('"Load more" calls setPage when clicked', () => {
-      const mockSetPage = vi.fn()
-      const notifications = Array.from({ length: 20 }, (_, i) =>
-        makeNotification({ id: `n-${i}`, title: `Notification ${i}` }),
-      )
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ setPage: mockSetPage }, notifications)
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      const btn = screen.getByRole('button', { name: 'Load more' })
-      fireEvent.click(btn)
-
-      expect(mockSetPage).toHaveBeenCalledOnce()
-      const updater = mockSetPage.mock.calls[0][0]
-      expect(typeof updater).toBe('function')
-      expect(updater(1)).toBe(2)
-      expect(updater(3)).toBe(4)
-    })
-
-    it('markAllRead onError calls toast.error with failure message', async () => {
-      const notifications = [makeNotification({ id: '1', isRead: false })]
-      mockUseLoaderData.mockReturnValue({ notifications })
-      setupFiltersMock({ unreadCount: 1 }, notifications)
-      setupSelectionMock()
-
-      mockMarkAllNotificationsRead.mockRejectedValue(
-        new Error('Network failure'),
-      )
-
-      renderWithProviders(<NotificationsPage />)
-
-      const btn = screen.getByRole('button', { name: /mark all as read/i })
-      fireEvent.click(btn)
-
-      await vi.waitFor(() => {
-        expect(mockToast.error).toHaveBeenCalledWith(
-          'Unable to reach the server. Check your connection and try again.',
-        )
-      })
-    })
-
-    it('clicking an unread notification calls markNotificationRead', async () => {
-      const notification = makeNotification({
-        id: 'unread-1',
-        title: 'Unread notification',
-        isRead: false,
-      })
-      mockUseLoaderData.mockReturnValue({
-        notifications: [notification],
-      })
-      setupFiltersMock({}, [notification])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      fireEvent.click(screen.getByText('Unread notification'))
-
-      await vi.waitFor(() => {
-        expect(mockMarkNotificationRead).toHaveBeenCalledWith({
-          data: { id: 'unread-1' },
-        })
-      })
-      expect(mockNavigate).toHaveBeenCalled()
-    })
-
-    it('clicking a read notification does not call markNotificationRead', () => {
-      const notification = makeNotification({
-        id: 'read-1',
-        title: 'Read notification',
-        isRead: true,
-      })
-      mockUseLoaderData.mockReturnValue({
-        notifications: [notification],
-      })
-      setupFiltersMock({}, [notification])
-      setupSelectionMock()
-
-      renderWithProviders(<NotificationsPage />)
-
-      fireEvent.click(screen.getByText('Read notification'))
-
-      expect(mockMarkNotificationRead).not.toHaveBeenCalled()
-      expect(mockNavigate).toHaveBeenCalled()
-    })
-  })
+it('shows the router error screen after a failed notification load', async () => {
+  vi.spyOn(console, 'warn').mockImplementation(() => {})
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  backend.intercept = (request) =>
+    Promise.resolve(
+      new URL(request.url).pathname === '/v1/notifications'
+        ? Response.json(
+            { status: 503, code: 'unavailable', title: 'Unavailable' },
+            { status: 503 },
+          )
+        : undefined,
+    )
+  await renderDashboard('/dashboard/notifications')
+  expect(screen.getByText('Something went wrong!')).toBeVisible()
+  expect(screen.queryByText('Website inquiry')).not.toBeInTheDocument()
 })

@@ -1,40 +1,44 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { QueryClient, QueryObserver } from '@tanstack/react-query'
+import { expect, it } from 'vitest'
+import { waitFor } from '@testing-library/react'
 import { invalidateNotifications } from './query-utils'
-import type { QueryClient } from '@tanstack/react-query'
 
-function createMockQueryClient(): QueryClient {
-  return {
-    invalidateQueries: vi.fn(),
-  } as unknown as QueryClient
-}
-
-describe('invalidateNotifications', () => {
-  let queryClient: QueryClient
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-    queryClient = createMockQueryClient()
+it('refreshes the active notification list and unread count without changing unrelated cached data', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
   })
-
-  it('invalidates the notifications list query', () => {
-    invalidateNotifications(queryClient)
-
-    expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
-      queryKey: ['notifications'],
-    })
+  let titles = ['Original message']
+  let unread = 3
+  const list = new QueryObserver(client, {
+    queryKey: ['notifications'],
+    queryFn: () => Promise.resolve(titles),
   })
-
-  it('invalidates the unread-count query', () => {
-    invalidateNotifications(queryClient)
-
-    expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
-      queryKey: ['notifications', 'unread-count'],
-    })
+  const count = new QueryObserver(client, {
+    queryKey: ['notifications', 'unread-count'],
+    queryFn: () => Promise.resolve(unread),
   })
-
-  it('calls invalidateQueries exactly twice', () => {
-    invalidateNotifications(queryClient)
-
-    expect(queryClient.invalidateQueries).toHaveBeenCalledTimes(2)
-  })
+  const stopList = list.subscribe(() => {})
+  const stopCount = count.subscribe(() => {})
+  client.setQueryData(['profile'], { name: 'Alice' })
+  try {
+    await waitFor(() =>
+      expect(list.getCurrentResult().data).toEqual(['Original message']),
+    )
+    await waitFor(() => expect(count.getCurrentResult().data).toBe(3))
+    titles = ['Updated message', 'Another message']
+    unread = 7
+    invalidateNotifications(client)
+    await waitFor(() =>
+      expect(list.getCurrentResult().data).toEqual([
+        'Updated message',
+        'Another message',
+      ]),
+    )
+    await waitFor(() => expect(count.getCurrentResult().data).toBe(7))
+    expect(client.getQueryData(['profile'])).toEqual({ name: 'Alice' })
+  } finally {
+    stopList()
+    stopCount()
+    client.clear()
+  }
 })

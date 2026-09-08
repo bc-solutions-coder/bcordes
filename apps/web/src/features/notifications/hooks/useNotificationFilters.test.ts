@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import { useNotificationFilters } from './useNotificationFilters'
 import type { Notification } from '@bcordes/wallow/types'
@@ -28,8 +28,6 @@ const fixtures: Array<Notification> = [
 ]
 
 describe('useNotificationFilters', () => {
-  beforeEach(() => vi.clearAllMocks())
-
   it('returns the full array when no filters are active', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
     expect(result.current.filtered).toEqual(fixtures)
@@ -37,21 +35,17 @@ describe('useNotificationFilters', () => {
     expect(result.current.activeType).toBeNull()
   })
 
-  it('handleTabChange("unread") filters to unread only and resets page', () => {
+  it('shows only unread notifications from the loaded list', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
-
-    act(() => result.current.setPage(3))
-    expect(result.current.page).toBe(3)
 
     act(() => result.current.handleTabChange('unread'))
 
     expect(result.current.unreadOnly).toBe(true)
-    expect(result.current.page).toBe(1)
     expect(result.current.filtered).toHaveLength(2)
-    expect(result.current.filtered.every((n) => !n.isRead)).toBe(true)
+    expect(result.current.filtered.map((n) => n.id)).toEqual(['1', '3'])
   })
 
-  it('handleTabChange("all") removes unread filter', () => {
+  it('restores the loaded list when the unread filter is cleared', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
 
     act(() => result.current.handleTabChange('unread'))
@@ -62,23 +56,20 @@ describe('useNotificationFilters', () => {
     expect(result.current.unreadOnly).toBe(false)
   })
 
-  it('handleTypeFilter filters by type and toggles off on second call', () => {
+  it('shows only the selected type until that filter is toggled off', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
 
     act(() => result.current.handleTypeFilter('InquirySubmitted'))
     expect(result.current.activeType).toBe('InquirySubmitted')
     expect(result.current.filtered).toHaveLength(2)
-    expect(
-      result.current.filtered.every((n) => n.type === 'InquirySubmitted'),
-    ).toBe(true)
-    expect(result.current.page).toBe(1)
+    expect(result.current.filtered.map((n) => n.id)).toEqual(['3', '4'])
 
     act(() => result.current.handleTypeFilter('InquirySubmitted'))
     expect(result.current.activeType).toBeNull()
     expect(result.current.filtered).toHaveLength(4)
   })
 
-  it('unreadCount reflects only unread items regardless of filters', () => {
+  it('counts unread entries in the loaded list independently of filters', () => {
     const { result } = renderHook(() => useNotificationFilters(fixtures))
 
     expect(result.current.unreadCount).toBe(2)
