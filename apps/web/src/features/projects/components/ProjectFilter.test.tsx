@@ -32,90 +32,55 @@ function renderFilter(
 
 describe('ProjectFilter', () => {
   describe('tag filter', () => {
-    it('renders all tag buttons plus the "All" button', () => {
+    it('shows an All button and a button for each technology', () => {
       renderFilter()
 
-      // Total buttons = 4 (tag: All + 3 tags) + 4 (year: All Years + 3 years) = 8
-      const buttons = screen.getAllByRole('button')
-      expect(buttons).toHaveLength(8)
-
-      expect(screen.getByText('All')).toBeDefined()
-      expect(screen.getByText('React')).toBeDefined()
-      expect(screen.getByText('TypeScript')).toBeDefined()
-      expect(screen.getByText('Tailwind')).toBeDefined()
+      expect(screen.getByRole('button', { name: 'All' })).toBeDefined()
+      expect(screen.getByRole('button', { name: 'React' })).toBeDefined()
+      expect(screen.getByRole('button', { name: 'TypeScript' })).toBeDefined()
+      expect(screen.getByRole('button', { name: 'Tailwind' })).toBeDefined()
     })
 
     it('calls onTagChange with the tag when a tag button is clicked', () => {
       const { props } = renderFilter()
 
-      fireEvent.click(screen.getByText('React'))
+      fireEvent.click(screen.getByRole('button', { name: 'React' }))
       expect(props.onTagChange).toHaveBeenCalledWith('React')
 
-      fireEvent.click(screen.getByText('TypeScript'))
+      fireEvent.click(screen.getByRole('button', { name: 'TypeScript' }))
       expect(props.onTagChange).toHaveBeenCalledWith('TypeScript')
     })
 
     it('calls onTagChange with null when "All" is clicked', () => {
       const { props } = renderFilter({ selectedTag: 'React' })
 
-      fireEvent.click(screen.getByText('All'))
+      fireEvent.click(screen.getByRole('button', { name: 'All' }))
       expect(props.onTagChange).toHaveBeenCalledWith(null)
-    })
-
-    it('renders selected tag badge with active styling', () => {
-      renderFilter({ selectedTag: 'React' })
-
-      const reactBadge = screen.getByText('React')
-      const allBadge = screen.getByText('All')
-
-      expect(reactBadge.className).toContain('bg-primary')
-      expect(allBadge.className).toContain('border-border')
-    })
-
-    it('renders "All" badge as selected when no tag is selected', () => {
-      renderFilter({ selectedTag: null })
-
-      const allBadge = screen.getByText('All')
-      expect(allBadge.className).toContain('bg-primary')
     })
   })
 
   describe('year filter', () => {
-    it('renders all year buttons plus the "All Years" button', () => {
+    it('shows an All Years button and a button for each year', () => {
       renderFilter()
 
-      expect(screen.getByText('All Years')).toBeDefined()
-      expect(screen.getByText('2025')).toBeDefined()
-      expect(screen.getByText('2024')).toBeDefined()
-      expect(screen.getByText('2023')).toBeDefined()
+      expect(screen.getByRole('button', { name: 'All Years' })).toBeDefined()
+      expect(screen.getByRole('button', { name: '2025' })).toBeDefined()
+      expect(screen.getByRole('button', { name: '2024' })).toBeDefined()
+      expect(screen.getByRole('button', { name: '2023' })).toBeDefined()
     })
 
     it('calls onYearChange with the year when a year button is clicked', () => {
       const { props } = renderFilter()
 
-      fireEvent.click(screen.getByText('2025'))
+      fireEvent.click(screen.getByRole('button', { name: '2025' }))
       expect(props.onYearChange).toHaveBeenCalledWith(2025)
     })
 
     it('calls onYearChange with null when "All Years" is clicked', () => {
       const { props } = renderFilter({ selectedYear: 2025 })
 
-      fireEvent.click(screen.getByText('All Years'))
+      fireEvent.click(screen.getByRole('button', { name: 'All Years' }))
       expect(props.onYearChange).toHaveBeenCalledWith(null)
-    })
-
-    it('renders selected year badge with active styling', () => {
-      renderFilter({ selectedYear: 2024 })
-
-      const yearBadge = screen.getByText('2024')
-      expect(yearBadge.className).toContain('bg-primary')
-    })
-
-    it('renders "All Years" as selected when no year is selected', () => {
-      renderFilter({ selectedYear: null })
-
-      const allYearsBadge = screen.getByText('All Years')
-      expect(allYearsBadge.className).toContain('bg-primary')
     })
   })
 

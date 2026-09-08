@@ -1,38 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, screen } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
+import { renderRoute } from '../../../../testing/render-route'
 import { ProjectCard } from './ProjectCard'
 import type { ShowcaseMeta } from '../content'
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    params,
-    children,
-    ...rest
-  }: {
-    to: string
-    params?: Record<string, string>
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => {
-    const href = params
-      ? to.replace(/\$(\w+)/g, (_, key) => params[key as string] || '')
-      : to
-    return (
-      <a href={href} {...rest}>
-        {children}
-      </a>
-    )
-  },
-}))
-
 beforeEach(() => {
-  vi.clearAllMocks()
+  vi.stubGlobal('scrollTo', vi.fn())
 })
 
 afterEach(() => {
   cleanup()
+  vi.unstubAllGlobals()
 })
 
 function makeShowcase(overrides: Partial<ShowcaseMeta> = {}): ShowcaseMeta {
@@ -49,25 +27,25 @@ function makeShowcase(overrides: Partial<ShowcaseMeta> = {}): ShowcaseMeta {
 }
 
 describe('ProjectCard', () => {
-  it('renders title, year, and description', () => {
-    renderWithProviders(<ProjectCard showcase={makeShowcase()} />)
+  it('renders title, year, and description', async () => {
+    await renderRoute(<ProjectCard showcase={makeShowcase()} />)
 
     expect(screen.getByText('Test Project')).toBeDefined()
     expect(screen.getByText('2025')).toBeDefined()
     expect(screen.getByText('A test project description')).toBeDefined()
   })
 
-  it('renders a link whose href includes the slug', () => {
-    renderWithProviders(
+  it('links the project title to its detail route', async () => {
+    await renderRoute(
       <ProjectCard showcase={makeShowcase({ slug: 'my-app' })} />,
     )
 
-    const link = screen.getByRole('link')
+    const link = screen.getByRole('link', { name: /Test Project/ })
     expect(link.getAttribute('href')).toBe('/projects/my-app')
   })
 
-  it('renders tags as badges', () => {
-    renderWithProviders(
+  it('shows each tag when fewer than four are provided', async () => {
+    await renderRoute(
       <ProjectCard
         showcase={makeShowcase({ tags: ['React', 'TypeScript'] })}
       />,
@@ -77,41 +55,34 @@ describe('ProjectCard', () => {
     expect(screen.getByText('TypeScript')).toBeDefined()
   })
 
-  it('shows overflow count when more than 3 tags', () => {
-    renderWithProviders(
-      <ProjectCard
-        showcase={makeShowcase({
-          tags: ['React', 'TypeScript', 'Tailwind', 'Vite', 'Node'],
-        })}
-      />,
-    )
+  it.each([
+    { tags: ['React', 'TypeScript', 'Tailwind', 'Vite'], overflow: '+1' },
+    {
+      tags: ['React', 'TypeScript', 'Tailwind', 'Vite', 'Node'],
+      overflow: '+2',
+    },
+  ])(
+    'shows $overflow when project tags overflow the first three',
+    async ({ tags, overflow }) => {
+      await renderRoute(
+        <ProjectCard
+          showcase={makeShowcase({
+            tags,
+          })}
+        />,
+      )
 
-    expect(screen.getByText('React')).toBeDefined()
-    expect(screen.getByText('TypeScript')).toBeDefined()
-    expect(screen.getByText('Tailwind')).toBeDefined()
-    expect(screen.queryByText('Vite')).toBeNull()
-    expect(screen.queryByText('Node')).toBeNull()
-    expect(screen.getByText('+2')).toBeDefined()
-  })
+      expect(screen.getByText('React')).toBeDefined()
+      expect(screen.getByText('TypeScript')).toBeDefined()
+      expect(screen.getByText('Tailwind')).toBeDefined()
+      expect(screen.queryByText('Vite')).toBeNull()
+      expect(screen.queryByText('Node')).toBeNull()
+      expect(screen.getByText(overflow)).toBeDefined()
+    },
+  )
 
-  it('only renders first 3 tags', () => {
-    renderWithProviders(
-      <ProjectCard
-        showcase={makeShowcase({
-          tags: ['A', 'B', 'C', 'D'],
-        })}
-      />,
-    )
-
-    expect(screen.getByText('A')).toBeDefined()
-    expect(screen.getByText('B')).toBeDefined()
-    expect(screen.getByText('C')).toBeDefined()
-    expect(screen.queryByText('D')).toBeNull()
-    expect(screen.getByText('+1')).toBeDefined()
-  })
-
-  it('does not render overflow badge when 3 or fewer tags', () => {
-    renderWithProviders(
+  it('does not render overflow badge when 3 or fewer tags', async () => {
+    await renderRoute(
       <ProjectCard
         showcase={makeShowcase({ tags: ['React', 'TypeScript', 'Tailwind'] })}
       />,
@@ -120,8 +91,8 @@ describe('ProjectCard', () => {
     expect(screen.queryByText(/^\+\d+$/)).toBeNull()
   })
 
-  it('renders image when provided', () => {
-    renderWithProviders(
+  it('renders image when provided', async () => {
+    await renderRoute(
       <ProjectCard
         showcase={makeShowcase({
           title: 'Img Project',
@@ -135,8 +106,8 @@ describe('ProjectCard', () => {
     expect(img.getAttribute('src')).toBe('/img/test.png')
   })
 
-  it('renders first letter placeholder when no image', () => {
-    renderWithProviders(
+  it('renders first letter placeholder when no image', async () => {
+    await renderRoute(
       <ProjectCard
         showcase={makeShowcase({ title: 'Zeta', image: undefined })}
       />,

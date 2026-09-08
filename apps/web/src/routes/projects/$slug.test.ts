@@ -1,39 +1,23 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, screen } from '@testing-library/react'
+import { renderProjectRoute } from '../../../testing/render-project-route'
+import { controlIntersections, controlMotion } from '../../../testing/motion'
 import type { ShowcaseMeta } from '@/features/projects'
+import type * as ProjectsModule from '@/features/projects'
+import { getShowcases } from '@/features/projects'
 
-const mockGetShowcases = vi.fn()
-const mockNotFound = vi.fn()
-
-vi.mock('@/features/projects', () => ({
-  getShowcases: mockGetShowcases,
-  getShowcaseContent: vi.fn(),
+vi.mock('@/features/projects', async (importOriginal) => ({
+  ...(await importOriginal<typeof ProjectsModule>()),
+  getShowcases: vi.fn(),
 }))
-
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (routeConfig: unknown) => routeConfig,
-  notFound: mockNotFound,
-  Link: 'a',
-}))
-
-vi.mock('lucide-react', () => ({
-  ArrowLeft: () => null,
-}))
-
-const routeModule = await import('./$slug')
-const loader = (
-  routeModule.Route as unknown as {
-    loader: (ctx: { params: { slug: string } }) => { showcase: ShowcaseMeta }
-  }
-).loader
-
-const fakeShowcases: Array<ShowcaseMeta> = [
+const projects: Array<ShowcaseMeta> = [
   {
     slug: 'project-a',
     title: 'Project A',
     description: 'Description A',
     client: 'Client A',
     year: 2024,
-    tags: ['react', 'typescript'],
+    tags: ['React', 'TypeScript'],
     featured: true,
   },
   {
@@ -42,113 +26,94 @@ const fakeShowcases: Array<ShowcaseMeta> = [
     description: 'Description B',
     client: 'Client B',
     year: 2023,
-    tags: ['node'],
+    tags: ['Node'],
     featured: false,
   },
 ]
+beforeEach(() => {
+  vi.mocked(getShowcases).mockReturnValue(projects)
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
-const head = (
-  routeModule.Route as unknown as {
-    head: (ctx: { loaderData: { showcase: ShowcaseMeta } | undefined }) => {
-      meta: Array<Record<string, string>>
-    }
-  }
-).head
+function meta(property: string) {
+  return document
+    .querySelector(`meta[property="${property}"]`)
+    ?.getAttribute('content')
+}
 
-describe('Route config', () => {
-  it('has no project metadata when the loader did not find a project', () => {
-    expect(head({ loaderData: undefined })).toEqual({})
+describe('Project page metadata', () => {
+  it('has no project metadata when the loader did not find a project', async () => {
+    await renderProjectRoute('/projects/missing')
+    expect(
+      screen.getByRole('heading', { name: 'Project Not Found' }),
+    ).toBeInTheDocument()
+    expect(meta('og:title')).toBeUndefined()
+    expect(meta('og:url')).toBeUndefined()
   })
-
-  it('exports a route config with head', () => {
-    expect(routeModule.Route).toHaveProperty('head')
-  })
-
-  it('head returns correct meta tags for a showcase', () => {
-    const showcase = fakeShowcases[0]
-    const result = head({ loaderData: { showcase } })
-
-    expect(result).toHaveProperty('meta')
-    expect(result.meta).toEqual(
-      expect.arrayContaining([
-        { title: 'Project A | BC Solutions' },
-        { name: 'description', content: 'Description A' },
-        { property: 'og:title', content: 'Project A | BC Solutions' },
-        { property: 'og:description', content: 'Description A' },
-        {
-          property: 'og:url',
-          content: 'https://bcordes.dev/projects/project-a',
-        },
-      ]),
+  it('provides project title, description and canonical Open Graph URL', async () => {
+    await renderProjectRoute('/projects/project-a')
+    expect(document.title).toBe('Project A | BC Solutions')
+    expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'Description A',
     )
+    expect(meta('og:title')).toBe('Project A | BC Solutions')
+    expect(meta('og:description')).toBe('Description A')
+    expect(meta('og:url')).toBe('https://bcordes.dev/projects/project-a')
   })
-
-  it('head includes og:image when showcase has an image', () => {
-    const showcase: ShowcaseMeta = {
-      ...fakeShowcases[0],
-      image: '/images/project-a.png',
-    }
-    const result = head({ loaderData: { showcase } })
-
-    expect(result.meta).toEqual(
-      expect.arrayContaining([
-        { property: 'og:image', content: '/images/project-a.png' },
-      ]),
-    )
+  it('publishes an Open Graph image when the project has an image', async () => {
+    vi.mocked(getShowcases).mockReturnValue([
+      { ...projects[0], image: '/images/project-a.png' },
+    ])
+    await renderProjectRoute('/projects/project-a')
+    expect(meta('og:image')).toBe('/images/project-a.png')
   })
-
-  it('head omits og:image when showcase has no image', () => {
-    const showcase = fakeShowcases[0]
-    const result = head({ loaderData: { showcase } })
-
-    const ogImage = result.meta.find(
-      (m: Record<string, string>) => m.property === 'og:image',
-    )
-    expect(ogImage).toBeUndefined()
+  it('omits the Open Graph image when the project has no image', async () => {
+    await renderProjectRoute('/projects/project-a')
+    expect(meta('og:image')).toBeUndefined()
   })
 })
 
-describe('GET /projects/$slug loader', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockNotFound.mockReturnValue(new Error('Not Found'))
+describe('Project page loading', () => {
+  it('loads Project A when its slug matches', async () => {
+    await renderProjectRoute('/projects/project-a')
+    expect(
+      screen.getByRole('heading', { name: 'Project A', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Description A')).toBeInTheDocument()
+    expect(screen.queryByText('Description B')).not.toBeInTheDocument()
   })
-
-  it('returns the matching showcase when slug matches', () => {
-    mockGetShowcases.mockReturnValue(fakeShowcases)
-
-    const result = loader({ params: { slug: 'project-a' } })
-
-    expect(result).toEqual({ showcase: fakeShowcases[0] })
+  it('loads Project B when its slug matches', async () => {
+    await renderProjectRoute('/projects/project-b')
+    expect(
+      screen.getByRole('heading', { name: 'Project B', level: 1 }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Description B')).toBeInTheDocument()
+    expect(screen.queryByText('Description A')).not.toBeInTheDocument()
   })
-
-  it('returns second showcase when its slug matches', () => {
-    mockGetShowcases.mockReturnValue(fakeShowcases)
-
-    const result = loader({ params: { slug: 'project-b' } })
-
-    expect(result).toEqual({ showcase: fakeShowcases[1] })
+  it('shows project-not-found for an unknown slug', async () => {
+    await renderProjectRoute('/projects/missing')
+    expect(
+      screen.getByRole('heading', { name: 'Project Not Found', level: 1 }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Back to Projects' }),
+    ).toHaveAttribute('href', '/projects')
   })
-
-  it('throws notFound() when slug does not match any showcase', () => {
-    mockGetShowcases.mockReturnValue(fakeShowcases)
-
-    expect(() => loader({ params: { slug: 'nonexistent' } })).toThrow()
-    expect(mockNotFound).toHaveBeenCalledTimes(1)
-  })
-
-  it('throws notFound() when showcases array is empty', () => {
-    mockGetShowcases.mockReturnValue([])
-
-    expect(() => loader({ params: { slug: 'project-a' } })).toThrow()
-    expect(mockNotFound).toHaveBeenCalledTimes(1)
-  })
-
-  it('uses params.slug for the lookup', () => {
-    mockGetShowcases.mockReturnValue(fakeShowcases)
-
-    const result = loader({ params: { slug: 'project-b' } })
-
-    expect(result.showcase.slug).toBe('project-b')
+  it('shows project-not-found when the catalog is empty', async () => {
+    vi.mocked(getShowcases).mockReturnValue([])
+    await renderProjectRoute('/projects/project-a')
+    expect(
+      screen.getByRole('heading', { name: 'Project Not Found', level: 1 }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Back to Projects' }),
+    ).toHaveAttribute('href', '/projects')
   })
 })

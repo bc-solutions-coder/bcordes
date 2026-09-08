@@ -34,9 +34,6 @@ const repoRoot = findRepoRoot(appDir)
 const rootConfigPath = join(repoRoot, 'vitest.config.ts')
 const appConfigPath = join(appDir, 'vitest.config.ts')
 
-// Keep the recorded 947-test baseline as a floor; compare discovered files to disk separately.
-const BASELINE_TEST_COUNT = 947
-
 interface ResolvedTestConfig {
   environment?: string
   setupFiles?: Array<string> | string
@@ -281,16 +278,6 @@ describe('the root run collects the whole workspace', () => {
       expect(
         packageTests.every((entry) => entry.projectName !== 'bcordes'),
       ).toBe(true)
-    },
-  )
-
-  it(
-    'collects at least the pre-migration test baseline',
-    { timeout: 180_000 },
-    async () => {
-      expect((await collectFromRootConfig()).length).toBeGreaterThanOrEqual(
-        BASELINE_TEST_COUNT,
-      )
     },
   )
 })

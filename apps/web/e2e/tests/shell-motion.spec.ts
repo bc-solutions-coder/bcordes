@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/motion'
+import { test, expect } from '../fixtures/components'
 
 test('reveals at the requested threshold, keeps the reveal after exit, and applies caller presentation', async ({
   page,

@@ -1,76 +1,71 @@
-import { afterEach, describe, expect, it } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
-import { Content, meta } from './wallow'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { renderProjectRoute } from '../../../../testing/render-project-route'
+import { controlIntersections, controlMotion } from '../../../../testing/motion'
+import { Content } from './wallow'
+import { getFeaturedShowcases } from './index'
 
 describe('wallow project', () => {
+  beforeEach(() => {
+    controlMotion(true)
+    controlIntersections()
+    vi.stubGlobal('scrollTo', vi.fn())
+  })
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
-  describe('meta', () => {
-    it('has the correct slug', () => {
-      expect(meta.slug).toBe('wallow')
-    })
-
-    it('has the correct title', () => {
-      expect(meta.title).toBe('Wallow')
-    })
-
-    it('has a description', () => {
-      expect(meta.description).toContain('multi-tenant SaaS platform')
-    })
-
-    it('has the correct client', () => {
-      expect(meta.client).toBe('BC Solutions, LLC')
-    })
-
-    it('has the correct year', () => {
-      expect(meta.year).toBe(2025)
-    })
-
-    it('has all expected tags', () => {
-      expect(meta.tags).toEqual([
-        '.NET',
-        'ASP.NET Core',
-        'PostgreSQL',
-        'OpenIddict',
-        'Docker',
-      ])
-    })
-
-    it('is marked as featured', () => {
-      expect(meta.featured).toBe(true)
-    })
-
-    it('has an image path', () => {
-      expect(meta.image).toBe('/images/projects/wallow.svg')
-    })
+  it('publishes wallow at its project URL with its details', async () => {
+    await renderProjectRoute()
+    const link = screen.getByRole('link', { name: /Wallow/ })
+    expect(link).toHaveAttribute('href', '/projects/wallow')
+    fireEvent.click(link)
+    expect(
+      await screen.findByRole('heading', { name: 'Wallow', level: 1 }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/A multi-tenant SaaS platform built with ASP.NET Core/i),
+    ).toBeInTheDocument()
+    expect(screen.getByText('2025')).toBeInTheDocument()
+    for (const tag of [
+      '.NET',
+      'ASP.NET Core',
+      'PostgreSQL',
+      'OpenIddict',
+      'Docker',
+    ])
+      expect(screen.getByText(tag)).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Wallow' })).toHaveAttribute(
+      'src',
+      '/images/projects/wallow.svg',
+    )
+    expect(getFeaturedShowcases().map((project) => project.slug)).toContain(
+      'wallow',
+    )
   })
 
   describe('Content', () => {
-    it('renders without crashing', () => {
-      const { container } = render(<Content />)
-      expect(container.querySelector('.showcase-content')).toBeTruthy()
-    })
-
     it('renders the Overview heading', () => {
       render(<Content />)
-      expect(screen.getByText('Overview')).toBeTruthy()
+      expect(screen.getByRole('heading', { name: 'Overview' })).toBeTruthy()
     })
 
     it('renders the Architecture heading', () => {
       render(<Content />)
-      expect(screen.getByText('Architecture')).toBeTruthy()
+      expect(screen.getByRole('heading', { name: 'Architecture' })).toBeTruthy()
     })
 
     it('renders the Key Modules heading', () => {
       render(<Content />)
-      expect(screen.getByText('Key Modules')).toBeTruthy()
+      expect(screen.getByRole('heading', { name: 'Key Modules' })).toBeTruthy()
     })
 
     it('renders the Technical Highlights heading', () => {
       render(<Content />)
-      expect(screen.getByText('Technical Highlights')).toBeTruthy()
+      expect(
+        screen.getByRole('heading', { name: 'Technical Highlights' }),
+      ).toBeTruthy()
     })
 
     it('renders overview description text', () => {
@@ -135,23 +130,12 @@ describe('wallow project', () => {
       expect(screen.getByText('Infrastructure')).toBeTruthy()
     })
 
-    it('renders all list items in Key Modules', () => {
-      const { container } = render(<Content />)
-      const lists = container.querySelectorAll('ul')
-      expect(lists.length).toBe(2)
-      expect(lists[0].querySelectorAll('li').length).toBe(5)
-    })
-
-    it('renders all list items in Technical Highlights', () => {
-      const { container } = render(<Content />)
-      const lists = container.querySelectorAll('ul')
-      expect(lists[1].querySelectorAll('li').length).toBe(5)
-    })
-
-    it('mentions PKCE in multiple sections', () => {
+    it('describes PKCE support in identity and provider integration', () => {
       render(<Content />)
-      const matches = screen.getAllByText(/PKCE/)
-      expect(matches.length).toBe(2)
+      for (const name of ['Identity & Auth', 'OpenIddict Integration']) {
+        const item = screen.getByText(name).closest('li')
+        expect(item).toHaveTextContent(/PKCE/)
+      }
     })
 
     it('mentions PostgreSQL in Infrastructure', () => {

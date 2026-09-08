@@ -1,211 +1,159 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
-
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { renderProjectRoute } from '../../../testing/render-project-route'
+import { controlIntersections, controlMotion } from '../../../testing/motion'
 import type { ShowcaseMeta } from '@/features/projects'
+import type * as ProjectsModule from '@/features/projects'
+import { getShowcases } from '@/features/projects'
 
-const useLoaderDataMock = vi.fn()
-const mockGetShowcaseContent = vi.fn()
-
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (routeConfig: Record<string, unknown>) => ({
-    ...routeConfig,
-    useLoaderData: useLoaderDataMock,
-  }),
-  notFound: vi.fn(),
-  Link: ({
-    to,
-    children,
-    ...rest
-  }: {
-    to: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  ),
-}))
-
-vi.mock('@/shared/motion', () => ({
-  FadeInView: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-}))
-
-vi.mock('@/features/projects', () => ({
-  getShowcases: vi.fn(),
-  getShowcaseContent: (...args: Array<unknown>) =>
-    mockGetShowcaseContent(...args),
-}))
-
-vi.mock('lucide-react', () => ({
-  ArrowLeft: () => <span data-testid="arrow-left-icon" />,
-}))
-
-const routeModule = await import('./$slug')
-
-const routeConfig = routeModule.Route as unknown as {
-  component: React.ComponentType
-  notFoundComponent: React.ComponentType
-}
-
-const ShowcaseDetailPage = routeConfig.component
-const NotFoundComponent = routeConfig.notFoundComponent
-
-const fakeShowcase: ShowcaseMeta = {
-  slug: 'project-alpha',
-  title: 'Project Alpha',
-  description: 'A wonderful project about alpha things',
-  client: 'Client A',
+vi.mock('@/features/projects', async (importOriginal) => {
+  const actual = await importOriginal<typeof ProjectsModule>()
+  return { ...actual, getShowcases: vi.fn(actual.getShowcases) }
+})
+const actual = await vi.importActual<typeof ProjectsModule>(
+  '@/features/projects',
+)
+const withoutBody: ShowcaseMeta = {
+  slug: 'sample',
+  title: 'Sample project',
+  description: 'A project with no published body.',
+  client: 'Sample client',
   year: 2024,
-  tags: ['react', 'typescript', 'tailwind'],
-  featured: true,
+  tags: ['React'],
+  featured: false,
 }
 
-const fakeShowcaseWithImage: ShowcaseMeta = {
-  ...fakeShowcase,
-  slug: 'project-with-image',
-  title: 'Project With Image',
-  image: '/images/project-alpha.png',
+beforeEach(() => {
+  vi.mocked(getShowcases).mockReset().mockImplementation(actual.getShowcases)
+  controlMotion(true)
+  controlIntersections()
+  vi.stubGlobal('scrollTo', vi.fn())
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
+
+async function followBack(name: string) {
+  const link = screen.getByRole('link', { name })
+  expect(link).toHaveAttribute('href', '/projects')
+  fireEvent.click(link)
+  expect(
+    await screen.findByRole('heading', { name: 'Projects', level: 1 }),
+  ).toBeInTheDocument()
 }
 
-describe('projects/$slug component', () => {
-  afterEach(() => {
-    cleanup()
-    vi.clearAllMocks()
-  })
-
-  it('renders the project title', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => <p>Content here</p>)
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.getByText('Project Alpha')).toBeTruthy()
-  })
-
-  it('renders the project description', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => <p>Content here</p>)
-    render(<ShowcaseDetailPage />)
-
+describe('Project details', () => {
+  it('renders the project title', async () => {
+    await renderProjectRoute('/projects/bcordes')
     expect(
-      screen.getByText('A wonderful project about alpha things'),
-    ).toBeTruthy()
+      screen.getByRole('heading', { name: 'Bcordes', level: 1 }),
+    ).toBeInTheDocument()
   })
-
-  it('renders the project year', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => <p>Content here</p>)
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.getByText('2024')).toBeTruthy()
+  it('renders the project description', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    expect(
+      screen.getByText(
+        /A professional portfolio and contact site built with TanStack Start/,
+      ),
+    ).toBeInTheDocument()
   })
-
-  it('renders all tags as badges', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => <p>Content here</p>)
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.getByText('react')).toBeTruthy()
-    expect(screen.getByText('typescript')).toBeTruthy()
-    expect(screen.getByText('tailwind')).toBeTruthy()
+  it('renders the project year', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    expect(screen.getByText('2025')).toBeInTheDocument()
   })
-
-  it('renders the MDX content component', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => (
-      <p data-testid="mdx-content">MDX project content</p>
-    ))
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.getByTestId('mdx-content')).toBeTruthy()
-    expect(screen.getByText('MDX project content')).toBeTruthy()
+  it('shows every project technology tag', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    for (const tag of [
+      'React',
+      'TypeScript',
+      'TanStack Start',
+      'Tailwind CSS',
+      'Docker',
+    ])
+      expect(screen.getByText(tag)).toBeInTheDocument()
   })
-
-  it('renders nothing in content area when getShowcaseContent returns undefined', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(undefined)
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.getByText('Project Alpha')).toBeTruthy()
+  it.each([
+    {
+      slug: 'bcordes',
+      body: /full-stack portfolio site/i,
+      other: /modular, multi-tenant SaaS backend/i,
+    },
+    {
+      slug: 'wallow',
+      body: /modular, multi-tenant SaaS backend/i,
+      other: /full-stack portfolio site/i,
+    },
+  ])(
+    'shows the body belonging to the loaded $slug project',
+    async ({ slug, body, other }) => {
+      await renderProjectRoute(`/projects/${slug}`)
+      expect(screen.getByText(body)).toBeInTheDocument()
+      expect(screen.queryByText(other)).not.toBeInTheDocument()
+    },
+  )
+  it.each(['Back to Projects', 'Back to all projects'])(
+    'keeps project details and usable %s navigation when the body is unavailable',
+    async (name) => {
+      vi.mocked(getShowcases).mockReturnValue([withoutBody])
+      await renderProjectRoute('/projects/sample')
+      expect(
+        screen.getByRole('heading', { name: 'Sample project', level: 1 }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('A project with no published body.'),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByRole('heading', { name: 'Overview' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('heading', { name: 'Architecture' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByText(
+          /full-stack portfolio site|modular, multi-tenant SaaS backend/i,
+        ),
+      ).not.toBeInTheDocument()
+      await followBack(name)
+    },
+  )
+  it('renders a "Back to Projects" link in the header', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    await followBack('Back to Projects')
   })
-
-  it('renders a "Back to Projects" link in the header', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => null)
-    render(<ShowcaseDetailPage />)
-
-    const backLinks = screen.getAllByText('Back to Projects')
-    expect(backLinks.length).toBeGreaterThanOrEqual(1)
-    expect(backLinks[0].closest('a')?.getAttribute('href')).toBe('/projects')
+  it('renders a "Back to all projects" link in the footer', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    await followBack('Back to all projects')
   })
-
-  it('renders a "Back to all projects" link in the footer', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => null)
-    render(<ShowcaseDetailPage />)
-
-    const footerLink = screen.getByText('Back to all projects')
-    expect(footerLink.closest('a')?.getAttribute('href')).toBe('/projects')
+  it('renders the project image when showcase has an image', async () => {
+    await renderProjectRoute('/projects/bcordes')
+    expect(screen.getByRole('img', { name: 'Bcordes' })).toHaveAttribute(
+      'src',
+      '/images/projects/bcordes.svg',
+    )
   })
-
-  it('renders the project image when showcase has an image', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcaseWithImage })
-    mockGetShowcaseContent.mockReturnValue(() => null)
-    render(<ShowcaseDetailPage />)
-
-    const img = screen.getByAltText('Project With Image')
-    expect(img).toBeTruthy()
-    expect(img.getAttribute('src')).toBe('/images/project-alpha.png')
-  })
-
-  it('does not render an image when showcase has no image', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => null)
-    render(<ShowcaseDetailPage />)
-
-    expect(screen.queryByRole('img')).toBeNull()
-  })
-
-  it('calls getShowcaseContent with the showcase slug', () => {
-    useLoaderDataMock.mockReturnValue({ showcase: fakeShowcase })
-    mockGetShowcaseContent.mockReturnValue(() => null)
-    render(<ShowcaseDetailPage />)
-
-    expect(mockGetShowcaseContent).toHaveBeenCalledWith('project-alpha')
+  it('does not render an image when showcase has no image', async () => {
+    vi.mocked(getShowcases).mockReturnValue([withoutBody])
+    await renderProjectRoute('/projects/sample')
+    expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 })
 
-describe('projects/$slug notFoundComponent', () => {
-  afterEach(() => {
-    cleanup()
+describe('Unknown project', () => {
+  it('renders "Project Not Found" heading', async () => {
+    await renderProjectRoute('/projects/missing')
+    expect(
+      screen.getByRole('heading', { name: 'Project Not Found', level: 1 }),
+    ).toBeInTheDocument()
   })
-
-  it('renders "Project Not Found" heading', () => {
-    render(<NotFoundComponent />)
-
-    expect(screen.getByText('Project Not Found')).toBeTruthy()
-  })
-
-  it('renders descriptive message', () => {
-    render(<NotFoundComponent />)
-
+  it('renders descriptive message', async () => {
+    await renderProjectRoute('/projects/missing')
     expect(
       screen.getByText('The project you are looking for does not exist.'),
-    ).toBeTruthy()
+    ).toBeInTheDocument()
   })
-
-  it('renders a link back to /projects', () => {
-    render(<NotFoundComponent />)
-
-    const link = screen.getByText('Back to Projects')
-    expect(link.closest('a')?.getAttribute('href')).toBe('/projects')
-  })
-
-  it('renders the ArrowLeft icon', () => {
-    render(<NotFoundComponent />)
-
-    expect(screen.getByTestId('arrow-left-icon')).toBeTruthy()
+  it('renders a link back to /projects', async () => {
+    await renderProjectRoute('/projects/missing')
+    await followBack('Back to Projects')
   })
 })
