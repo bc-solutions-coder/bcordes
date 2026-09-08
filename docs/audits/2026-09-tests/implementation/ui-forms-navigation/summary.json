@@ -504,5 +504,6 @@
     "Popup border measurement waits for the previous popup to close.",
     "The initial active-link mutation override preceded spread props; the corrected override catches the defect."
   ],
-  "coverageLossAssessment": "No measured per-file coverage loss or denominator change."
+  "coverageLossAssessment": "No measured per-file coverage loss or denominator change.",
+  "implementationRevision": "79168cb"
 }

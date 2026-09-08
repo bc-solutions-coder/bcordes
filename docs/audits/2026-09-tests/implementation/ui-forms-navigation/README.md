@@ -1,6 +1,6 @@
 # UI, forms and navigation behavior
 
-Implementation for [issue 100](https://github.com/bc-solutions-coder/bcordes/issues/100), based on `94e2874`. [dispositions.tsv](dispositions.tsv) maps all 159 original declarations to their retained behavior, replacements or deletions. The 69 accepted structural and duplicate declarations are removed or consolidated, including the forms and UI package scaffold files. Their public-import and runner guarantees now come from rendered consumers and the actual workspace execution tests from issue 91.
+Implementation for [issue 100](https://github.com/bc-solutions-coder/bcordes/issues/100), based on `94e2874`, implemented in `79168cb`. [dispositions.tsv](dispositions.tsv) maps all 159 original declarations to their retained behavior, replacements or deletions. The 69 accepted structural and duplicate declarations are removed or consolidated, including the forms and UI package scaffold files. Their public-import and runner guarantees now come from rendered consumers and the actual workspace execution tests from issue 91.
 
 Forms use public package imports and real React Hook Form controllers. Tests observe label association, help and error descriptions, invalid state, rejected empty submission, corrected payload submission and stale-error recovery. SelectFormField submits the actual stored value and reports it through the trigger. The current trigger displays `mobile`, not `Mobile App`; cleanup does not invent a new label-mapping contract. The context-error test truthfully describes mounting without form context.
 
