@@ -216,6 +216,14 @@ export async function startBackend(port = 0, serviceOwner = 'service') {
       })
     } else if (path === '/v1/notifications/unread-count')
       send(res, 200, { count: state.isRead ? 0 : 1 })
+    else if (method === 'GET' && path === '/v1/notification-settings')
+      send(res, 200, {
+        channelSettings: [
+          { channelType: 0, isGloballyEnabled: true },
+          { channelType: 1, isGloballyEnabled: false },
+          { channelType: 2, isGloballyEnabled: true },
+        ],
+      })
     else if (path === '/v1/notifications')
       send(res, 200, {
         items: [notification],

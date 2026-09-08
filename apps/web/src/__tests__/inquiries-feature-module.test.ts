@@ -41,9 +41,7 @@ const OLD_CONFIG_PATH = ['@/config', 'inquiries'].join('/')
 
 const DASHBOARD_CONSUMERS = [
   'routes/dashboard/inquiries.index.tsx',
-  'routes/dashboard/inquiries.index.test.tsx',
   'routes/dashboard/inquiries.$id.tsx',
-  'routes/dashboard/inquiries.$id.test.tsx',
 ] as const
 
 // The contact module test names the old path in test titles, so exclude it from this scan.

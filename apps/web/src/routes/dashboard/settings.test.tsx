@@ -1,27 +1,43 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { cleanup, screen } from '@testing-library/react'
+import { resetBackend } from '../../../testing/dashboard-backend'
+import { renderDashboard } from '../../../testing/render-dashboard'
 
-vi.mock('@tanstack/react-router', () => ({
-  Outlet: () => <div data-testid="outlet" />,
-  createFileRoute: () => (config: Record<string, unknown>) => config,
-}))
+vi.mock(
+  '@tanstack/react-start',
+  () => import('../../../testing/server-functions'),
+)
+vi.mock(
+  '@bcordes/auth/session',
+  () => import('../../../testing/dashboard-backend'),
+)
+vi.mock('@bcordes/auth/sdk', () => import('../../../testing/dashboard-backend'))
+vi.mock(
+  '@bcordes/wallow/client',
+  () => import('../../../testing/dashboard-backend'),
+)
 
-const routeModule = await import('./settings')
-const routeConfig = routeModule.Route as unknown as {
-  component: React.ComponentType
-}
+beforeEach(() => {
+  resetBackend()
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+  vi.stubGlobal('BroadcastChannel', undefined)
+  vi.stubGlobal(
+    'EventSource',
+    class extends EventTarget {
+      close() {}
+    },
+  )
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+})
 
-describe('settings layout route', () => {
-  it('exports a route with a component', () => {
-    expect(routeConfig.component).toBeDefined()
-    expect(typeof routeConfig.component).toBe('function')
-  })
-
-  it('renders an Outlet', async () => {
-    const { render, screen } = await import('@testing-library/react')
-    const Component = routeConfig.component
-
-    render(<Component />)
-
-    expect(screen.getByTestId('outlet')).toBeTruthy()
-  })
+it('renders the settings index and loaded controls inside the real settings parent', async () => {
+  const { router } = await renderDashboard('/dashboard/settings')
+  expect(screen.getByRole('heading', { name: 'Settings' })).toBeVisible()
+  expect(screen.getByText('Receive notifications via email')).toBeVisible()
+  expect(screen.getAllByRole('switch')).toHaveLength(4)
+  expect(router.state.location.pathname).toBe('/dashboard/settings')
 })

@@ -1,515 +1,276 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  screen,
+  waitFor,
+} from '@testing-library/react'
+import {
+  backend,
+  firstInquiryId,
+  makeComment,
+  makeInquiry,
+  pauseRequest,
+  resetBackend,
+  secondInquiryId,
+} from '../../../testing/dashboard-backend'
+import { renderDashboard } from '../../../testing/render-dashboard'
 
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
-import type { Inquiry, InquiryComment } from '@bcordes/wallow/types'
+vi.mock(
+  '@tanstack/react-start',
+  () => import('../../../testing/server-functions'),
+)
+vi.mock(
+  '@bcordes/auth/session',
+  () => import('../../../testing/dashboard-backend'),
+)
+vi.mock('@bcordes/auth/sdk', () => import('../../../testing/dashboard-backend'))
+vi.mock(
+  '@bcordes/wallow/client',
+  () => import('../../../testing/dashboard-backend'),
+)
 
-if (!('ResizeObserver' in globalThis)) {
-  globalThis.ResizeObserver = class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-}
-
-const mockFetchInquiry = vi.fn()
-const mockFetchInquiryComments = vi.fn()
-const mockFetchCurrentUserRoles = vi.fn()
-const mockServerRequireAuth = vi.fn()
-const mockSubmitInquiryComment = vi.fn()
-
-vi.mock('@/features/inquiries', () => ({
-  fetchInquiry: (...args: Array<unknown>) => mockFetchInquiry(...args),
-  fetchInquiryComments: (...args: Array<unknown>) =>
-    mockFetchInquiryComments(...args),
-  submitInquiryComment: (...args: Array<unknown>) =>
-    mockSubmitInquiryComment(...args),
-}))
-
-vi.mock('@/shared/auth', () => ({
-  fetchCurrentUserRoles: (...args: Array<unknown>) =>
-    mockFetchCurrentUserRoles(...args),
-  serverRequireAuth: (...args: Array<unknown>) =>
-    mockServerRequireAuth(...args),
-}))
-
-vi.mock('@/features/notifications', () => ({
-  useEventStreamEvents: vi.fn(),
-}))
-
-const mockRouterInvalidate = vi.fn().mockResolvedValue(undefined)
-const mockUseLoaderData = vi.fn()
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router')
-  return {
-    ...actual,
-    createFileRoute: () => (routeConfig: unknown) => {
-      const route = routeConfig as Record<string, unknown>
-      route.useLoaderData = mockUseLoaderData
-      return route
+const path = `/dashboard/inquiries/${firstInquiryId}`
+const internalLabel = 'Internal note (not visible to submitter)'
+beforeEach(() => {
+  resetBackend()
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+  vi.stubGlobal('BroadcastChannel', undefined)
+  vi.stubGlobal(
+    'EventSource',
+    class extends EventTarget {
+      close() {}
     },
-    useRouter: () => ({
-      invalidate: mockRouterInvalidate,
-      navigate: vi.fn(),
-    }),
-    Link: ({
-      to,
-      children,
-      ...rest
-    }: {
-      to: string
-      children: React.ReactNode
-      [key: string]: unknown
-    }) => (
-      <a href={to} {...rest}>
-        {children}
-      </a>
-    ),
-  }
+  )
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
 })
 
-const routeModule = await import('./inquiries.$id')
-const routeConfig = routeModule.Route as unknown as {
-  loader: (ctx: { params: { id: string } }) => Promise<{
-    inquiry: Inquiry
-    comments: Array<InquiryComment>
-    isAdmin: boolean
-  }>
-  beforeLoad: () => Promise<unknown>
-  component: React.ComponentType
-}
-
-const TEST_ID = 'inq-abc-123'
-
-function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
-  return {
-    id: TEST_ID,
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    phone: '555-1234',
-    company: 'Acme Corp',
-    projectType: 'Full-Stack',
-    budgetRange: '$5k-$15k',
-    timeline: '1-3 months',
-    message: 'I need a website built for my business.',
-    status: 'new',
-    submitterId: 'user-1',
-    createdAt: '2026-01-15T10:30:00Z',
-    updatedAt: '2026-01-15T10:30:00Z',
-    ...overrides,
-  }
-}
-
-function makeComment(overrides: Partial<InquiryComment> = {}): InquiryComment {
-  return {
-    id: 'comment-1',
-    inquiryId: TEST_ID,
-    authorId: 'user-1',
-    authorName: 'Test User',
-    content: 'A public comment',
-    isInternal: false,
-    createdAt: '2026-01-16T08:00:00Z',
-    ...overrides,
-  }
-}
-
-describe('inquiries.$id loader', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('calls fetchInquiry, fetchInquiryComments, and fetchCurrentUserRoles in parallel', async () => {
-    mockFetchInquiry.mockResolvedValue(makeInquiry())
-    mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user'],
-      permissions: ['InquiriesWrite'],
-    })
-
-    await routeConfig.loader({ params: { id: TEST_ID } })
-
-    expect(mockFetchInquiry).toHaveBeenCalledWith({ data: { id: TEST_ID } })
-    expect(mockFetchInquiryComments).toHaveBeenCalledWith({
-      data: { id: TEST_ID },
-    })
-    expect(mockFetchCurrentUserRoles).toHaveBeenCalledOnce()
-  })
-
-  it('returns isAdmin=true when user has admin role', async () => {
-    mockFetchInquiry.mockResolvedValue(makeInquiry())
-    mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user', 'admin'],
-      permissions: ['InquiriesRead'],
-    })
-
-    const result = await routeConfig.loader({ params: { id: TEST_ID } })
-
-    expect(result.isAdmin).toBe(true)
-  })
-
-  it('returns isAdmin=false when user lacks admin role', async () => {
-    mockFetchInquiry.mockResolvedValue(makeInquiry())
-    mockFetchInquiryComments.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user'],
-      permissions: ['InquiriesWrite'],
-    })
-
-    const result = await routeConfig.loader({ params: { id: TEST_ID } })
-
-    expect(result.isAdmin).toBe(false)
-  })
-
-  it('returns the inquiry and comments from the loader', async () => {
-    const inquiry = makeInquiry()
-    const comments = [makeComment(), makeComment({ id: 'comment-2' })]
-    mockFetchInquiry.mockResolvedValue(inquiry)
-    mockFetchInquiryComments.mockResolvedValue(comments)
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [], permissions: [] })
-
-    const result = await routeConfig.loader({ params: { id: TEST_ID } })
-
-    expect(result.inquiry.id).toBe(TEST_ID)
-    expect(result.comments).toHaveLength(2)
-  })
-})
-
-describe('InquiryDetailPage component', () => {
-  const Component = routeConfig.component
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    cleanup()
-  })
-
-  it('renders inquiry detail fields', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Jane Doe')).toBeTruthy()
-    expect(screen.getByText('jane@example.com')).toBeTruthy()
-    expect(screen.getByText('Acme Corp')).toBeTruthy()
-    expect(screen.getByText('Full-Stack')).toBeTruthy()
-    expect(screen.getByText('$5k-$15k')).toBeTruthy()
-    expect(screen.getByText('1-3 months')).toBeTruthy()
-    expect(
-      screen.getByText('I need a website built for my business.'),
-    ).toBeTruthy()
-  })
-
-  it('renders the "Inquiry Details" heading', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Inquiry Details')).toBeTruthy()
-  })
-
-  it('renders the "Back to inquiries" link', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    const backLink = screen.getByText('Back to inquiries')
-    expect(backLink.closest('a')?.getAttribute('href')).toBe(
-      '/dashboard/inquiries',
-    )
-  })
-
-  it('renders the status badge', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry({ status: 'in_progress' }),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('in progress')).toBeTruthy()
-  })
-
-  it('renders "No comments yet." when there are no visible comments', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('No comments yet.')).toBeTruthy()
-  })
-
-  it('renders public comments for non-admin users', () => {
-    const comments = [
-      makeComment({ id: 'c1', content: 'Public note', isInternal: false }),
+it.each([firstInquiryId, secondInquiryId])(
+  'loads the inquiry and comments selected by UUID %s',
+  async (id) => {
+    backend.inquiries = [
+      makeInquiry(),
+      makeInquiry({
+        id: secondInquiryId,
+        name: 'Bob',
+        message: 'A reporting tool',
+      }),
+    ]
+    backend.comments = [
+      makeComment(),
       makeComment({
-        id: 'c2',
-        content: 'Secret internal note',
-        isInternal: true,
+        id: secondInquiryId,
+        inquiryId: secondInquiryId,
+        content: 'Reporting clarification',
       }),
     ]
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments,
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Public note')).toBeTruthy()
-    expect(screen.queryByText('Secret internal note')).toBeNull()
-  })
-
-  it('admin sees all comments including internal', () => {
-    const comments = [
-      makeComment({ id: 'c1', content: 'Public note', isInternal: false }),
-      makeComment({
-        id: 'c2',
-        content: 'Secret internal note',
-        isInternal: true,
-      }),
-    ]
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments,
-      isAdmin: true,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Public note')).toBeTruthy()
-    expect(screen.getByText('Secret internal note')).toBeTruthy()
-  })
-
-  it('admin sees "Internal" badge on internal comments', () => {
-    const comments = [
-      makeComment({ id: 'c1', content: 'Internal stuff', isInternal: true }),
-    ]
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments,
-      isAdmin: true,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Internal')).toBeTruthy()
-  })
-
-  it('admin sees "Internal note" checkbox', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: true,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(
-      screen.getByText('Internal note (not visible to submitter)'),
-    ).toBeTruthy()
-  })
-
-  it('non-admin does NOT see "Internal note" checkbox', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(
-      screen.queryByText('Internal note (not visible to submitter)'),
-    ).toBeNull()
-  })
-
-  it('renders the comment textarea and Send button', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByPlaceholderText('Write a comment...')).toBeTruthy()
-    expect(screen.getByText('Send')).toBeTruthy()
-  })
-
-  it('renders comment author names and content', () => {
-    const comments = [
-      makeComment({
-        id: 'c1',
-        authorName: 'Alice Smith',
-        content: 'Great work!',
-      }),
-    ]
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments,
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Alice Smith')).toBeTruthy()
-    expect(screen.getByText('Great work!')).toBeTruthy()
-  })
-
-  it('hides optional fields when not present', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry({
-        company: undefined,
-        projectType: undefined,
-        budgetRange: undefined,
-        timeline: undefined,
-      }),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.queryByText('Company')).toBeNull()
-    expect(screen.queryByText('Project Type')).toBeNull()
-    expect(screen.queryByText('Budget')).toBeNull()
-    expect(screen.queryByText('Timeline')).toBeNull()
-  })
-
-  it('submits a comment and clears the form', async () => {
-    mockSubmitInquiryComment.mockResolvedValue(undefined)
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    const textarea = screen.getByPlaceholderText('Write a comment...')
-    fireEvent.change(textarea, { target: { value: 'Hello world' } })
-
-    const sendButton = screen.getByText('Send')
-    fireEvent.click(sendButton)
-
-    await waitFor(() => {
-      expect(mockSubmitInquiryComment).toHaveBeenCalledWith({
-        data: {
-          id: TEST_ID,
-          content: 'Hello world',
-          isInternal: false,
-        },
-      })
-    })
-
-    await waitFor(() => {
-      expect(textarea).toHaveValue('')
-    })
-  })
-
-  it('does not submit when comment text is empty', () => {
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    const sendButton = screen.getByText('Send')
-    expect(sendButton).toBeDisabled()
-  })
-
-  it('handles comment submission error gracefully', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    mockSubmitInquiryComment.mockRejectedValue(new Error('Network error'))
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: false,
-    })
-
-    renderWithProviders(<Component />)
-
-    const textarea = screen.getByPlaceholderText('Write a comment...')
-    fireEvent.change(textarea, { target: { value: 'A comment' } })
-
-    const sendButton = screen.getByText('Send')
-    fireEvent.click(sendButton)
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to submit comment:',
-        expect.any(Error),
+    const selected = backend.inquiries.find((inquiry) => inquiry.id === id)!
+    const other = backend.inquiries.find((inquiry) => inquiry.id !== id)!
+    await renderDashboard(`/dashboard/inquiries/${id}`)
+    expect(screen.getByText(selected.name)).toBeVisible()
+    expect(screen.getByText(selected.message)).toBeVisible()
+    expect(screen.queryByText(other.name)).not.toBeInTheDocument()
+    expect(screen.queryByText(other.message)).not.toBeInTheDocument()
+    for (const comment of backend.comments) {
+      expect(screen.queryByText(comment.content) !== null).toBe(
+        comment.inquiryId === id,
       )
-    })
+    }
+  },
+)
 
-    consoleSpy.mockRestore()
-  })
-
-  it('toggles isInternal checkbox for admin users', async () => {
-    mockSubmitInquiryComment.mockResolvedValue(undefined)
-    mockUseLoaderData.mockReturnValue({
-      inquiry: makeInquiry(),
-      comments: [],
-      isAdmin: true,
-    })
-
-    renderWithProviders(<Component />)
-
-    const checkbox = screen.getByRole('checkbox')
-    fireEvent.click(checkbox)
-
-    const textarea = screen.getByPlaceholderText('Write a comment...')
-    fireEvent.change(textarea, { target: { value: 'Internal note' } })
-
-    const sendButton = screen.getByText('Send')
-    fireEvent.click(sendButton)
-
-    await waitFor(() => {
-      expect(mockSubmitInquiryComment).toHaveBeenCalledWith({
-        data: {
-          id: TEST_ID,
-          content: 'Internal note',
-          isInternal: true,
-        },
-      })
-    })
-  })
+it('shows contact and project values under their labels, submission time and message', async () => {
+  await renderDashboard(path)
+  expect(screen.getByRole('heading', { name: 'Inquiry Details' })).toBeVisible()
+  for (const [label, value] of [
+    ['Name', 'Alice'],
+    ['Email', 'alice@example.com'],
+    ['Company', 'Acme'],
+    ['Project Type', 'fullstack'],
+    ['Budget', '$5k-$15k'],
+    ['Timeline', '1-3 months'],
+    ['Submitted', 'Jan 15, 2026'],
+  ]) {
+    const term = screen.getByText(label, { selector: 'dt' })
+    expect(term.nextElementSibling).toHaveTextContent(value)
+  }
+  expect(
+    screen.getByRole('heading', { name: 'Message' }).parentElement,
+  ).toHaveTextContent('A new website')
 })
 
-describe('inquiries.$id beforeLoad', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+it('omits absent optional detail fields', async () => {
+  backend.inquiries = [
+    makeInquiry({
+      company: undefined,
+      projectType: undefined,
+      budgetRange: undefined,
+      timeline: undefined,
+    }),
+  ]
+  await renderDashboard(path)
+  for (const name of ['Company', 'Project Type', 'Budget', 'Timeline']) {
+    expect(screen.queryByText(name, { selector: 'dt' })).not.toBeInTheDocument()
+  }
+  expect(screen.getByText('Alice')).toBeVisible()
+})
 
-  it('calls serverRequireAuth with returnTo path', async () => {
-    mockServerRequireAuth.mockResolvedValue(undefined)
+it('returns to the inquiry list through the Back to inquiries link', async () => {
+  const { router } = await renderDashboard(path)
+  const link = screen.getByRole('link', { name: 'Back to inquiries' })
+  expect(link).toHaveAttribute('href', '/dashboard/inquiries')
+  fireEvent.click(link)
+  expect(await screen.findByRole('heading', { name: 'Messages' })).toBeVisible()
+  expect(router.state.location.pathname).toBe('/dashboard/inquiries')
+  expect(screen.getByRole('cell', { name: 'Alice' })).toBeVisible()
+})
 
-    await routeConfig.beforeLoad()
+it('shows in_progress status as in progress', async () => {
+  backend.inquiries = [makeInquiry({ status: 'in_progress' })]
+  await renderDashboard(path)
+  expect(screen.getByText('in progress')).toBeVisible()
+})
 
-    expect(mockServerRequireAuth).toHaveBeenCalledWith({
-      data: { returnTo: '/dashboard/inquiries' },
+it.each([
+  { roles: ['user'], permissions: ['InquiriesRead'], staff: true },
+  { roles: ['admin'], permissions: ['InquiriesWrite'], staff: false },
+])(
+  'uses permission rather than roles $roles for internal notes',
+  async ({ roles, permissions, staff }) => {
+    Object.assign(backend.user, { roles, permissions })
+    backend.comments = [
+      makeComment(),
+      makeComment({
+        id: secondInquiryId,
+        content: 'Private assessment',
+        isInternal: true,
+        authorName: 'Private author',
+      }),
+    ]
+    await renderDashboard(path)
+    expect(screen.getByText('We can help')).toBeVisible()
+    expect(screen.getByText('Support')).toBeVisible()
+    expect(screen.queryByText('Private assessment') !== null).toBe(staff)
+    expect(screen.queryByText('Private author') !== null).toBe(staff)
+    expect(screen.queryByText('Internal', { exact: true }) !== null).toBe(staff)
+    expect(
+      screen.queryByRole('checkbox', { name: internalLabel }) !== null,
+    ).toBe(staff)
+  },
+)
+
+it.each([false, true])(
+  'shows no comments when customers have no public comments (internal only: %s)',
+  async (internalOnly) => {
+    backend.comments = internalOnly
+      ? [makeComment({ content: 'Private assessment', isInternal: true })]
+      : []
+    await renderDashboard(path)
+    expect(screen.getByText('No comments yet.')).toBeVisible()
+    expect(screen.queryByText('Private assessment')).not.toBeInTheDocument()
+  },
+)
+
+it.each([false, true])(
+  'sends a trimmed comment with internal=%s, disables Send while pending, then resets and shows it',
+  async (internal) => {
+    if (internal) backend.user.permissions = ['InquiriesRead']
+    await renderDashboard(path)
+    const pending = pauseRequest(
+      'POST',
+      `/v1/inquiries/${firstInquiryId}/comments`,
+    )
+    const input = screen.getByPlaceholderText('Write a comment...')
+    fireEvent.change(input, { target: { value: '  A useful reply  ' } })
+    if (internal)
+      fireEvent.click(screen.getByRole('checkbox', { name: internalLabel }))
+    else expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    expect(screen.getByRole('button', { name: 'Sending...' })).toBeDisabled()
+    await waitFor(() =>
+      expect(
+        backend.requests.filter((request) => request.method === 'POST'),
+      ).toHaveLength(1),
+    )
+    const write = backend.requests.find((request) => request.method === 'POST')!
+    expect(new URL(write.url).pathname).toBe(
+      `/v1/inquiries/${firstInquiryId}/comments`,
+    )
+    expect(await write.json()).toEqual({
+      content: 'A useful reply',
+      isInternal: internal,
     })
-  })
+    await act(() => pending.resolve(undefined))
+    expect(await screen.findByText('A useful reply')).toBeVisible()
+    expect(input).toHaveValue('')
+    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
+    if (internal) {
+      expect(
+        screen.getByRole('checkbox', { name: internalLabel }),
+      ).not.toBeChecked()
+      expect(screen.getByText('Internal', { exact: true })).toBeVisible()
+    }
+  },
+)
+
+it.each(['', '   '])(
+  'does not submit an empty or whitespace-only draft %j',
+  async (draft) => {
+    await renderDashboard(path)
+    fireEvent.change(screen.getByPlaceholderText('Write a comment...'), {
+      target: { value: draft },
+    })
+    const send = screen.getByRole('button', { name: 'Send' })
+    expect(send).toBeDisabled()
+    fireEvent.click(send)
+    expect(
+      backend.requests.filter((request) => request.method !== 'GET'),
+    ).toHaveLength(0)
+  },
+)
+
+it('retains a failed comment draft and sends it successfully on retry', async () => {
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  await renderDashboard(path)
+  const pending = pauseRequest(
+    'POST',
+    `/v1/inquiries/${firstInquiryId}/comments`,
+  )
+  const input = screen.getByPlaceholderText('Write a comment...')
+  fireEvent.change(input, { target: { value: 'Keep my draft' } })
+  fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+  expect(screen.getByRole('button', { name: 'Sending...' })).toBeDisabled()
+  await act(() =>
+    pending.resolve(
+      Response.json(
+        { status: 503, code: 'unavailable', title: 'Unavailable' },
+        { status: 503 },
+      ),
+    ),
+  )
+  await waitFor(() =>
+    expect(screen.getByRole('button', { name: 'Send' })).toBeEnabled(),
+  )
+  expect(input).toHaveValue('Keep my draft')
+  expect(backend.comments).toHaveLength(0)
+  backend.intercept = undefined
+  fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+  expect(await screen.findByText('Keep my draft')).toBeVisible()
+  expect(input).toHaveValue('')
+  expect(backend.comments).toHaveLength(1)
+})
+
+it('redirects signed-out detail visitors before fetching protected content', async () => {
+  backend.signedIn = false
+  const { router } = await renderDashboard(path)
+  expect(router.state.location.href).toBe(
+    '/bff/login?returnTo=%2Fdashboard%2Finquiries',
+  )
+  expect(backend.requests).toHaveLength(0)
+  expect(screen.queryByText('A new website')).not.toBeInTheDocument()
 })

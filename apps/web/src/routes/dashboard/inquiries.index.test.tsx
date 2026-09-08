@@ -1,417 +1,340 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
-import { renderWithProviders } from '@bcordes/test-utils'
-import type { Inquiry } from '@bcordes/wallow/types'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
+import {
+  backend,
+  firstInquiryId,
+  makeInquiry,
+  pauseRequest,
+  resetBackend,
+  secondInquiryId,
+} from '../../../testing/dashboard-backend'
+import { renderDashboard } from '../../../testing/render-dashboard'
 
-const mockFetchMyInquiries = vi.fn()
-const mockFetchCurrentUserRoles = vi.fn()
-const mockUpdateInquiryStatus = vi.fn()
-const mockServerRequireAuth = vi.fn()
+vi.mock(
+  '@tanstack/react-start',
+  () => import('../../../testing/server-functions'),
+)
+vi.mock(
+  '@bcordes/auth/session',
+  () => import('../../../testing/dashboard-backend'),
+)
+vi.mock('@bcordes/auth/sdk', () => import('../../../testing/dashboard-backend'))
+vi.mock(
+  '@bcordes/wallow/client',
+  () => import('../../../testing/dashboard-backend'),
+)
 
-vi.mock('@/features/inquiries', async () => ({
-  ...(await vi.importActual('@/features/inquiries')),
-  fetchMyInquiries: (...args: Array<unknown>) => mockFetchMyInquiries(...args),
-  updateInquiryStatus: (...args: Array<unknown>) =>
-    mockUpdateInquiryStatus(...args),
-}))
-
-vi.mock('@/shared/auth', () => ({
-  fetchCurrentUserRoles: (...args: Array<unknown>) =>
-    mockFetchCurrentUserRoles(...args),
-  serverRequireAuth: (...args: Array<unknown>) =>
-    mockServerRequireAuth(...args),
-}))
-
-vi.mock('@/features/notifications', () => ({
-  useEventStreamEvents: vi.fn(),
-}))
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router')
-  return {
-    ...actual,
-    createFileRoute: () => (routeConfig: unknown) => {
-      const route = routeConfig as Record<string, unknown>
-      route.useLoaderData = mockUseLoaderData
-      return route
+beforeEach(() => {
+  resetBackend()
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+  vi.stubGlobal('BroadcastChannel', undefined)
+  vi.stubGlobal(
+    'EventSource',
+    class extends EventTarget {
+      close() {}
     },
-    useRouter: () => ({
-      invalidate: mockRouterInvalidate,
-      navigate: mockRouterNavigate,
+  )
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+})
+
+it.each([
+  { roles: ['user'], permissions: ['InquiriesRead'], editable: true },
+  { roles: ['admin'], permissions: ['InquiriesWrite'], editable: false },
+])(
+  'uses InquiriesRead permission for editing with roles $roles',
+  async ({ roles, permissions, editable }) => {
+    Object.assign(backend.user, { roles, permissions })
+    await renderDashboard()
+    expect(screen.queryByRole('combobox') !== null).toBe(editable)
+    expect(screen.getByRole('heading', { name: 'Messages' })).toBeVisible()
+  },
+)
+
+it.each([
+  {
+    permissions: ['InquiriesRead'],
+    explanation: 'Contact form submissions will appear here.',
+  },
+  {
+    permissions: ['InquiriesWrite'],
+    explanation: 'Inquiries you submit will appear here.',
+  },
+])(
+  'explains the empty list for $permissions',
+  async ({ permissions, explanation }) => {
+    backend.user.permissions = permissions
+    backend.inquiries = []
+    await renderDashboard()
+    expect(
+      screen.getByRole('heading', { name: 'No messages yet' }),
+    ).toBeVisible()
+    expect(screen.getByText(explanation)).toBeVisible()
+  },
+)
+
+it('associates each customer with their email, company, project and budget', async () => {
+  backend.inquiries = [
+    makeInquiry(),
+    makeInquiry({
+      id: secondInquiryId,
+      name: 'Bob',
+      email: 'bob@example.com',
+      company: 'BobCorp',
+      projectType: 'consulting',
+      budgetRange: '$50k+',
     }),
-  }
+  ]
+  await renderDashboard()
+  const rows = screen.getAllByRole('row').slice(1)
+  expect(rows).toHaveLength(2)
+  expect(
+    within(rows[0])
+      .getAllByRole('cell')
+      .slice(0, 5)
+      .map((cell) => cell.textContent),
+  ).toEqual([
+    'Alice',
+    'alice@example.com',
+    'Acme',
+    'Full-Stack Development',
+    '$5k-$15k',
+  ])
+  expect(
+    within(rows[1])
+      .getAllByRole('cell')
+      .slice(0, 5)
+      .map((cell) => cell.textContent),
+  ).toEqual(['Bob', 'bob@example.com', 'BobCorp', 'Consulting', '$50k+'])
+  expect(screen.getByText('Showing 2 messages')).toBeVisible()
 })
 
-const mockRouterInvalidate = vi.fn().mockResolvedValue(undefined)
-const mockRouterNavigate = vi.fn()
-const mockUseLoaderData = vi.fn()
-
-const routeModule = await import('./inquiries.index')
-const routeConfig = routeModule.Route as unknown as {
-  loader: () => Promise<{ inquiries: Array<Inquiry>; isAdmin: boolean }>
-  beforeLoad: () => Promise<unknown>
-  component: React.ComponentType
-}
-
-function makeInquiry(overrides: Partial<Inquiry> = {}): Inquiry {
-  return {
-    id: 'inq-1',
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    phone: '555-1234',
-    company: 'Acme',
-    projectType: 'fullstack',
-    budgetRange: '$5k-$15k',
-    timeline: '1-3 months',
-    message: 'I need a website.',
-    status: 'new',
-    submitterId: 'user-1',
-    createdAt: '2026-01-15T10:30:00Z',
-    updatedAt: '2026-01-15T10:30:00Z',
-    ...overrides,
-  }
-}
-
-describe('inquiries.index loader', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('beforeLoad calls serverRequireAuth with returnTo path', async () => {
-    mockServerRequireAuth.mockResolvedValue(undefined)
-
-    await routeConfig.beforeLoad()
-
-    expect(mockServerRequireAuth).toHaveBeenCalledWith({
-      data: { returnTo: '/dashboard/inquiries' },
-    })
-  })
-
-  it('calls fetchMyInquiries and fetchCurrentUserRoles in parallel', async () => {
-    mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user'],
-      permissions: ['InquiriesWrite'],
-    })
-
-    await routeConfig.loader()
-
-    expect(mockFetchMyInquiries).toHaveBeenCalledOnce()
-    expect(mockFetchCurrentUserRoles).toHaveBeenCalledOnce()
-  })
-
-  it('returns isAdmin=true when user has admin role', async () => {
-    mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user', 'admin'],
-      permissions: ['InquiriesRead'],
-    })
-
-    const result = await routeConfig.loader()
-
-    expect(result.isAdmin).toBe(true)
-  })
-
-  it('returns isAdmin=false when user has no admin role', async () => {
-    mockFetchMyInquiries.mockResolvedValue([])
-    mockFetchCurrentUserRoles.mockResolvedValue({
-      roles: ['user'],
-      permissions: ['InquiriesWrite'],
-    })
-
-    const result = await routeConfig.loader()
-
-    expect(result.isAdmin).toBe(false)
-  })
-
-  it('returns the inquiries array from fetchMyInquiries', async () => {
-    const inquiries = [makeInquiry({ id: '1' }), makeInquiry({ id: '2' })]
-    mockFetchMyInquiries.mockResolvedValue(inquiries)
-    mockFetchCurrentUserRoles.mockResolvedValue({ roles: [], permissions: [] })
-
-    const result = await routeConfig.loader()
-
-    expect(result.inquiries).toHaveLength(2)
-    expect(result.inquiries[0].id).toBe('1')
-  })
+it('shows placeholders in each missing optional column while preserving a populated row', async () => {
+  backend.inquiries = [
+    makeInquiry({
+      company: undefined,
+      projectType: undefined,
+      budgetRange: undefined,
+    }),
+    makeInquiry({ id: secondInquiryId, name: 'Bob' }),
+  ]
+  await renderDashboard()
+  const rows = screen.getAllByRole('row').slice(1)
+  expect(
+    within(rows[0])
+      .getAllByRole('cell')
+      .slice(2, 5)
+      .map((cell) => cell.textContent),
+  ).toEqual(['-', '-', '-'])
+  expect(
+    within(rows[1])
+      .getAllByRole('cell')
+      .slice(2, 5)
+      .map((cell) => cell.textContent),
+  ).toEqual(['Acme', 'Full-Stack Development', '$5k-$15k'])
 })
 
-describe('DashboardInquiriesPage component', () => {
-  const Component = routeConfig.component
+it.each(['New', 'Reviewed', 'Contacted', 'Closed'])(
+  'shows the read-only %s status to customers',
+  async (status) => {
+    backend.inquiries = [makeInquiry({ status })]
+    await renderDashboard()
+    const row = screen.getAllByRole('row')[1]
+    expect(within(row).getAllByRole('cell')[6]).toHaveTextContent(status)
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+  },
+)
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+it('counts only new inquiries in the header', async () => {
+  backend.inquiries = [
+    makeInquiry(),
+    makeInquiry({ id: secondInquiryId }),
+    makeInquiry({
+      id: '550e8400-e29b-41d4-a716-446655440002',
+      status: 'Reviewed',
+    }),
+  ]
+  await renderDashboard()
+  expect(screen.getByText('2 new')).toBeVisible()
+})
 
-  afterEach(() => {
-    cleanup()
-  })
+it('uses singular message for one result', async () => {
+  await renderDashboard()
+  expect(screen.getByText('Showing 1 message')).toBeVisible()
+})
 
-  it('renders empty state when no inquiries (admin)', () => {
-    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: true })
+it('preserves an unknown project type and humanizes an unknown status', async () => {
+  backend.inquiries = [
+    makeInquiry({ projectType: 'custom_unknown_type', status: 'in_progress' }),
+  ]
+  await renderDashboard()
+  expect(screen.getByText('custom_unknown_type')).toBeVisible()
+  expect(screen.getByText('in progress')).toBeVisible()
+})
 
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('No messages yet')).toBeTruthy()
-    expect(
-      screen.getByText('Contact form submissions will appear here.'),
-    ).toBeTruthy()
-  })
-
-  it('renders empty state when no inquiries (non-admin)', () => {
-    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('No messages yet')).toBeTruthy()
-    expect(
-      screen.getByText('Inquiries you submit will appear here.'),
-    ).toBeTruthy()
-  })
-
-  it('renders inquiry rows with name, email, and company', () => {
-    const inquiries = [
-      makeInquiry({ id: '1', name: 'Alice', email: 'alice@test.com' }),
+it.each([firstInquiryId, secondInquiryId])(
+  'opens the selected inquiry %s through the nested detail route',
+  async (id) => {
+    backend.inquiries = [
+      makeInquiry(),
       makeInquiry({
-        id: '2',
+        id: secondInquiryId,
         name: 'Bob',
-        email: 'bob@test.com',
-        company: 'BobCorp',
+        message: 'A reporting tool',
       }),
     ]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
+    const selected = backend.inquiries.find((inquiry) => inquiry.id === id)!
+    const other = backend.inquiries.find((inquiry) => inquiry.id !== id)!
+    const { router } = await renderDashboard()
+    fireEvent.click(screen.getByText(selected.name))
+    expect(
+      await screen.findByRole('heading', { name: 'Inquiry Details' }),
+    ).toBeVisible()
+    expect(router.state.location.pathname).toBe(`/dashboard/inquiries/${id}`)
+    expect(screen.getByText(selected.message)).toBeVisible()
+    expect(screen.queryByText(other.message)).not.toBeInTheDocument()
+  },
+)
 
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Alice')).toBeTruthy()
-    expect(screen.getByText('alice@test.com')).toBeTruthy()
-    expect(screen.getByText('Bob')).toBeTruthy()
-    expect(screen.getByText('bob@test.com')).toBeTruthy()
-    expect(screen.getByText('BobCorp')).toBeTruthy()
-  })
-
-  it('renders "-" for missing optional fields', () => {
-    const inquiries = [
-      makeInquiry({
-        id: '1',
-        company: undefined,
-        projectType: undefined,
-        budgetRange: undefined,
-      }),
+it.each(['New', 'Reviewed', 'Contacted', 'Closed'])(
+  'persists %s and reloads the row without opening detail',
+  async (status) => {
+    backend.user.permissions = ['InquiriesRead']
+    backend.inquiries = [
+      makeInquiry({ status: status === 'New' ? 'Closed' : 'New' }),
     ]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    const dashes = screen.getAllByText('-')
-    expect(dashes.length).toBeGreaterThanOrEqual(3)
-  })
-
-  it('shows human-readable project type labels', () => {
-    const inquiries = [makeInquiry({ id: '1', projectType: 'fullstack' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Full-Stack Development')).toBeTruthy()
-  })
-
-  it('admin sees Select controls for status', () => {
-    const inquiries = [makeInquiry({ id: '1', status: 'new' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: true })
-
-    renderWithProviders(<Component />)
-
-    const combobox = screen.getByRole('combobox')
-    expect(combobox).toBeTruthy()
-  })
-
-  it('non-admin sees Badge for status instead of Select', () => {
-    const inquiries = [makeInquiry({ id: '1', status: 'new' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('New')).toBeTruthy()
-    expect(screen.queryByRole('combobox')).toBeNull()
-  })
-
-  it('shows "new" badge count in header', () => {
-    const inquiries = [
-      makeInquiry({ id: '1', status: 'new' }),
-      makeInquiry({ id: '2', status: 'new' }),
-      makeInquiry({ id: '3', status: 'reviewed' }),
-    ]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('2 new')).toBeTruthy()
-  })
-
-  it('shows summary count text', () => {
-    const inquiries = [makeInquiry({ id: '1' }), makeInquiry({ id: '2' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Showing 2 messages')).toBeTruthy()
-  })
-
-  it('shows singular "message" when only 1 inquiry', () => {
-    const inquiries = [makeInquiry({ id: '1' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Showing 1 message')).toBeTruthy()
-  })
-
-  it('renders the Refresh button', () => {
-    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('Refresh')).toBeTruthy()
-  })
-
-  it('navigates to inquiry detail when row is clicked', () => {
-    const inquiries = [makeInquiry({ id: 'inq-click-1' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    const nameCell = screen.getByText('Jane Doe')
-    fireEvent.click(nameCell)
-
-    expect(mockRouterNavigate).toHaveBeenCalledWith({
-      to: '/dashboard/inquiries/$id',
-      params: { id: 'inq-click-1' },
-    })
-  })
-
-  it('falls back to raw projectType when no label mapping exists', () => {
-    const inquiries = [
-      makeInquiry({ id: '1', projectType: 'custom_unknown_type' }),
-    ]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('custom_unknown_type')).toBeTruthy()
-  })
-
-  it('calls updateInquiryStatus when admin changes status via Select', async () => {
-    // Select needs scrollIntoView, which JSDOM does not provide.
-    Element.prototype.scrollIntoView = vi.fn()
-    mockUpdateInquiryStatus.mockResolvedValue(undefined)
-    const inquiries = [makeInquiry({ id: 'inq-status-1', status: 'new' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: true })
-
-    renderWithProviders(<Component />)
-
-    const combobox = screen.getByRole('combobox')
-    fireEvent.click(combobox)
-
-    await waitFor(() => {
-      const option = screen.getByText('Reviewed')
-      fireEvent.click(option)
-    })
-
-    await waitFor(() => {
-      expect(mockUpdateInquiryStatus).toHaveBeenCalledWith({
-        data: { id: 'inq-status-1', status: 'reviewed' },
-      })
-    })
-  })
-
-  it('falls back to raw status label for unknown status values (non-admin)', () => {
-    const inquiries = [makeInquiry({ id: '1', status: 'in_progress' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: false })
-
-    renderWithProviders(<Component />)
-
-    expect(screen.getByText('in progress')).toBeTruthy()
-  })
-
-  it('clicking Refresh calls router.invalidate and re-enables button after', async () => {
-    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
-    let resolveInvalidate: () => void
-    mockRouterInvalidate.mockImplementation(
-      () =>
-        new Promise<void>((resolve) => {
-          resolveInvalidate = resolve
-        }),
+    const { router } = await renderDashboard()
+    const pending = pauseRequest(
+      'PATCH',
+      `/v1/inquiries/${firstInquiryId}/status`,
     )
+    fireEvent.click(screen.getByRole('combobox'))
+    expect(
+      (await screen.findAllByRole('option')).map(
+        (option) => option.textContent,
+      ),
+    ).toEqual(['New', 'Reviewed', 'Contacted', 'Closed'])
+    fireEvent.click(screen.getByRole('option', { name: status }))
+    await waitFor(() =>
+      expect(
+        backend.requests.filter((request) => request.method === 'PATCH'),
+      ).toHaveLength(1),
+    )
+    const write = backend.requests.find(
+      (request) => request.method === 'PATCH',
+    )!
+    expect(await write.json()).toEqual({ newStatus: status })
+    expect(backend.inquiries[0].status).not.toBe(status)
+    await act(() => pending.resolve(undefined))
+    await waitFor(() =>
+      expect(screen.getByRole('combobox')).toHaveTextContent(
+        status.toLowerCase(),
+      ),
+    )
+    expect(backend.inquiries[0].status).toBe(status)
+    expect(router.state.location.pathname).toBe('/dashboard/inquiries')
+  },
+)
 
-    renderWithProviders(<Component />)
+it('disables refresh until new records arrive, then permits another refresh', async () => {
+  await renderDashboard()
+  const pending = pauseRequest('GET', '/v1/inquiries/submitted')
+  const button = screen.getByRole('button', { name: 'Refresh' })
+  fireEvent.click(button)
+  expect(button).toBeDisabled()
+  backend.inquiries = [makeInquiry({ name: 'Updated Alice' })]
+  await act(() => pending.resolve(undefined))
+  expect(await screen.findByText('Updated Alice')).toBeVisible()
+  expect(screen.queryByText('Alice')).not.toBeInTheDocument()
+  await waitFor(() => expect(button).toBeEnabled())
+  fireEvent.click(button)
+  await waitFor(() => expect(button).toBeEnabled())
+})
 
-    const refreshBtn = screen.getByText('Refresh').closest('button')!
-    fireEvent.click(refreshBtn)
+it('shows a failed status update, keeps the persisted status, and permits retry', async () => {
+  backend.user.permissions = ['InquiriesRead']
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  await renderDashboard()
+  const pending = pauseRequest(
+    'PATCH',
+    `/v1/inquiries/${firstInquiryId}/status`,
+  )
+  fireEvent.click(screen.getByRole('combobox'))
+  fireEvent.click(await screen.findByRole('option', { name: 'Closed' }))
+  await act(() =>
+    pending.resolve(
+      Response.json(
+        {
+          type: 'about:blank',
+          title: 'Try again',
+          status: 409,
+          code: 'status_conflict',
+          detail: 'Status service unavailable',
+        },
+        { status: 409 },
+      ),
+    ),
+  )
+  expect(await screen.findByText('Failed to update status')).toBeVisible()
+  expect(screen.getByText('Status service unavailable')).toBeVisible()
+  expect(screen.getByRole('combobox')).toHaveTextContent('new')
+  backend.intercept = undefined
+  fireEvent.click(screen.getByRole('combobox'))
+  fireEvent.click(await screen.findByRole('option', { name: 'Closed' }))
+  await waitFor(() =>
+    expect(screen.getByRole('combobox')).toHaveTextContent('closed'),
+  )
+  expect(backend.inquiries[0].status).toBe('Closed')
+})
 
-    expect(refreshBtn.disabled).toBe(true)
+it('redirects signed-out visitors to sign in with the inquiry return destination before loading inquiries', async () => {
+  backend.signedIn = false
+  const { router } = await renderDashboard()
+  expect(router.state.location.href).toBe(
+    '/bff/login?returnTo=%2Fdashboard%2Finquiries',
+  )
+  expect(backend.requests).toHaveLength(0)
+  expect(
+    screen.queryByRole('heading', { name: 'Messages' }),
+  ).not.toBeInTheDocument()
+})
 
-    resolveInvalidate!()
-
-    await waitFor(() => {
-      expect(refreshBtn.disabled).toBe(false)
-    })
-
-    expect(mockRouterInvalidate).toHaveBeenCalledOnce()
+it('surfaces a failed refresh through the router and permits a successful reload', async () => {
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  vi.spyOn(console, 'warn').mockImplementation(() => {})
+  const { router } = await renderDashboard()
+  const pending = pauseRequest('GET', '/v1/inquiries/submitted')
+  const button = screen.getByRole('button', { name: 'Refresh' })
+  fireEvent.click(button)
+  expect(button).toBeDisabled()
+  await act(() =>
+    pending.resolve(
+      Response.json(
+        { status: 503, title: 'Unavailable', code: 'unavailable' },
+        { status: 503 },
+      ),
+    ),
+  )
+  expect(await screen.findByText('Something went wrong!')).toBeVisible()
+  backend.intercept = undefined
+  backend.inquiries = [makeInquiry({ name: 'Recovered Alice' })]
+  await act(async () => {
+    await router.invalidate()
   })
-
-  it('handleRefresh clears isRefreshing even when invalidate rejects', async () => {
-    mockUseLoaderData.mockReturnValue({ inquiries: [], isAdmin: false })
-    const error = new Error('invalidate failed')
-    mockRouterInvalidate.mockRejectedValue(error)
-
-    // Suppress the unhandled rejection from the async onClick handler
-    const onUnhandled = (event: unknown) => {
-      const e = event as { reason: unknown; preventDefault: () => void }
-      if (e.reason === error) e.preventDefault()
-    }
-    window.addEventListener('unhandledrejection', onUnhandled)
-    process.on('unhandledRejection', () => {})
-
-    renderWithProviders(<Component />)
-
-    const refreshBtn = screen.getByText('Refresh').closest('button')!
-    fireEvent.click(refreshBtn)
-
-    await waitFor(() => {
-      expect(refreshBtn.disabled).toBe(false)
-    })
-
-    expect(mockRouterInvalidate).toHaveBeenCalledOnce()
-    window.removeEventListener('unhandledrejection', onUnhandled)
-    process.removeAllListeners('unhandledRejection')
-  })
-
-  it('handles status change error gracefully', async () => {
-    // Select needs scrollIntoView, which JSDOM does not provide.
-    Element.prototype.scrollIntoView = vi.fn()
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    mockUpdateInquiryStatus.mockRejectedValue(new Error('API error'))
-    const inquiries = [makeInquiry({ id: 'inq-err', status: 'new' })]
-    mockUseLoaderData.mockReturnValue({ inquiries, isAdmin: true })
-
-    renderWithProviders(<Component />)
-
-    const combobox = screen.getByRole('combobox')
-    fireEvent.click(combobox)
-
-    await waitFor(() => {
-      const option = screen.getByText('Closed')
-      fireEvent.click(option)
-    })
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to update status:',
-        expect.any(Error),
-      )
-    })
-
-    consoleSpy.mockRestore()
-  })
+  expect(await screen.findByText('Recovered Alice')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Refresh' })).toBeEnabled()
+  fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
+  await waitFor(() =>
+    expect(screen.getByRole('button', { name: 'Refresh' })).toBeEnabled(),
+  )
 })

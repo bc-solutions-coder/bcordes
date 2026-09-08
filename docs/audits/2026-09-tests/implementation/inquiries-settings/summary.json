@@ -1,0 +1,472 @@
+{
+  "issue": 98,
+  "baseRevision": "d0e5722",
+  "tests": {
+    "numPassedTests": 1191,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "browser": {
+    "startTime": "2026-09-08T00:56:36.354Z",
+    "duration": 13888.201,
+    "expected": 37,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 1076,
+      "covered": 1035,
+      "skipped": 0,
+      "pct": 96.18
+    },
+    "statements": {
+      "total": 1155,
+      "covered": 1098,
+      "skipped": 0,
+      "pct": 95.06
+    },
+    "functions": {
+      "total": 382,
+      "covered": 360,
+      "skipped": 0,
+      "pct": 94.24
+    },
+    "branches": {
+      "total": 671,
+      "covered": 615,
+      "skipped": 0,
+      "pct": 91.65
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageChanges": [
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "metrics": {
+        "lines": {
+          "before": 33,
+          "after": 39,
+          "totalBefore": 39,
+          "totalAfter": 39
+        },
+        "statements": {
+          "before": 34,
+          "after": 40,
+          "totalBefore": 40,
+          "totalAfter": 40
+        },
+        "branches": {
+          "before": 17,
+          "after": 22,
+          "totalBefore": 22,
+          "totalAfter": 22
+        },
+        "functions": {
+          "before": 9,
+          "after": 10,
+          "totalBefore": 10,
+          "totalAfter": 10
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/apps/web/src/features/notifications/server-fns/notifications.ts",
+      "metrics": {
+        "lines": {
+          "before": 20,
+          "after": 26,
+          "totalBefore": 29,
+          "totalAfter": 29
+        },
+        "statements": {
+          "before": 21,
+          "after": 27,
+          "totalBefore": 30,
+          "totalAfter": 30
+        },
+        "functions": {
+          "before": 6,
+          "after": 12,
+          "totalBefore": 14,
+          "totalAfter": 14
+        }
+      }
+    },
+    {
+      "file": "/Users/traveler/Repos/bcordes/packages/test-utils/src/setup.ts",
+      "metrics": {
+        "functions": {
+          "before": 5,
+          "after": 6,
+          "totalBefore": 6,
+          "totalAfter": 6
+        }
+      }
+    }
+  ],
+  "coverageLosses": [],
+  "thresholdsUnchanged": true,
+  "denominatorsUnchanged": true,
+  "exclusionsUnchanged": true,
+  "unitDefects": [
+    {
+      "defect": "uuid-validation-bypassed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "malformed UUIDs",
+      "exitCode": 1
+    },
+    {
+      "defect": "submission-name-unbounded",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects invalid name",
+      "exitCode": 1
+    },
+    {
+      "defect": "submission-email-unbounded",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects invalid email",
+      "exitCode": 1
+    },
+    {
+      "defect": "submission-phone-unbounded",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects invalid phone",
+      "exitCode": 1
+    },
+    {
+      "defect": "submission-message-unbounded",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects invalid message",
+      "exitCode": 1
+    },
+    {
+      "defect": "submission-choice-invalid",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects invalid projectType",
+      "exitCode": 1
+    },
+    {
+      "defect": "status-enum-bypassed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "unsupported inquiry statuses",
+      "exitCode": 1
+    },
+    {
+      "defect": "comment-limit-loosened",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "invalid comment length",
+      "exitCode": 1
+    },
+    {
+      "defect": "notification-uuid-bypassed",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/validation.test.ts",
+      "title": "malformed",
+      "exitCode": 1
+    },
+    {
+      "defect": "push-url-bypassed",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/validation.test.ts",
+      "title": "invalid endpoint",
+      "exitCode": 1
+    },
+    {
+      "defect": "push-endpoint-unbounded",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/validation.test.ts",
+      "title": "invalid endpoint",
+      "exitCode": 1
+    },
+    {
+      "defect": "push-key-unbounded",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/validation.test.ts",
+      "title": "invalid p256dh",
+      "exitCode": 1
+    },
+    {
+      "defect": "push-auth-unbounded",
+      "file": "apps/web/src/features/notifications/server-fns/notifications.ts",
+      "test": "apps/web/src/features/notifications/server-fns/validation.test.ts",
+      "title": "invalid auth",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-outbound-status",
+      "file": "apps/web/src/features/inquiries/lib/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "sends",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-list-permission",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "permission for editing",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-permission",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "permission rather than roles",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-selection",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "loads the inquiry and comments",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-row-destination",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "opens the selected inquiry",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-status-label",
+      "file": "apps/web/src/features/inquiries/lib/inquiries.ts",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "read-only",
+      "exitCode": 1
+    },
+    {
+      "defect": "status-write-swapped",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "persists",
+      "exitCode": 1
+    },
+    {
+      "defect": "status-error-toast-removed",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "failed status update",
+      "exitCode": 1
+    },
+    {
+      "defect": "refresh-never-disabled",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "disables refresh",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-detail-status-format",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "in_progress",
+      "exitCode": 1
+    },
+    {
+      "defect": "comment-not-trimmed",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "sends a trimmed comment",
+      "exitCode": 1
+    },
+    {
+      "defect": "comment-internal-state-lost",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "sends a trimmed comment",
+      "exitCode": 1
+    },
+    {
+      "defect": "comment-draft-not-reset",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "sends a trimmed comment",
+      "exitCode": 1
+    },
+    {
+      "defect": "comment-failure-clears-draft",
+      "file": "apps/web/src/routes/dashboard/inquiries.$id.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.$id.test.tsx",
+      "title": "retains a failed comment",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-wrong-channel",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "optimistically changes SMS",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-no-rollback",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "rolls back",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-no-optimistic-change",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "optimistically changes SMS",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-no-unsaved-preference",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "previously unsaved Email",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-push-no-success",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "resulting state and success",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-push-no-error",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "current authenticated push-enable",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-test-no-success",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "controlled public hook completes",
+      "exitCode": 1
+    },
+    {
+      "defect": "settings-test-no-error",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "current authenticated test-delivery",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-inbound-status",
+      "file": "apps/web/src/features/inquiries/lib/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "normalized",
+      "exitCode": 1
+    },
+    {
+      "defect": "inquiry-ownership-bypassed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "another customer|anonymous inquiry",
+      "exitCode": 1
+    },
+    {
+      "defect": "internal-comment-privacy-bypassed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "removes internal comments",
+      "exitCode": 1
+    },
+    {
+      "defect": "customer-internal-write-allowed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "rejects customer internal comments",
+      "exitCode": 1
+    },
+    {
+      "defect": "expired-session-fallback-enabled",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "session expiry",
+      "exitCode": 1
+    },
+    {
+      "defect": "submit-client-selection-reversed",
+      "file": "apps/web/src/features/inquiries/server-fns/inquiries.ts",
+      "test": "apps/web/src/features/inquiries/server-fns/inquiries.test.ts",
+      "title": "signed-in|anonymously",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-inquiry-return-destination",
+      "file": "apps/web/src/routes/dashboard/inquiries.index.tsx",
+      "test": "apps/web/src/routes/dashboard/inquiries.index.test.tsx",
+      "title": "redirects signed-out",
+      "exitCode": 1
+    },
+    {
+      "defect": "wrong-settings-return-destination",
+      "file": "apps/web/src/routes/dashboard/settings.index.tsx",
+      "test": "apps/web/src/routes/dashboard/settings.index.test.tsx",
+      "title": "redirects signed-out",
+      "exitCode": 1
+    }
+  ],
+  "browserDefects": {
+    "defect": "both push explanations replaced",
+    "exitCode": 1,
+    "stats": {
+      "startTime": "2026-09-08T00:51:45.003Z",
+      "duration": 8597.057999999999,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 2,
+      "flaky": 0
+    }
+  },
+  "originalCases": 104,
+  "acceptedDeletedDeclarations": 36,
+  "reviews": {
+    "spec": 0,
+    "standards": 0,
+    "resolvedStandardsFinding": "Controlled backend now runtime-parses incoming JSON wire shapes before mutation."
+  },
+  "commands": [
+    "pnpm exec vitest run --coverage --maxWorkers=4 --reporter=json --outputFile=/tmp/bcordes-inquiries-suite.json",
+    "pnpm exec playwright test --reporter=json (cwd apps/web)",
+    "pnpm build",
+    "pnpm typecheck",
+    "pnpm lint",
+    "pnpm format:check",
+    "python3 scripts/check-docs.py",
+    "git diff --check"
+  ],
+  "earlyRemovalsFor103": [
+    {
+      "file": "apps/web/src/__tests__/inquiries-feature-module.test.ts",
+      "removedConsumers": [
+        "routes/dashboard/inquiries.index.test.tsx",
+        "routes/dashboard/inquiries.$id.test.tsx"
+      ]
+    },
+    {
+      "file": "apps/web/src/__tests__/notifications-feature-module.test.ts",
+      "removedConsumers": [
+        "routes/dashboard/inquiries.index.test.tsx",
+        "routes/dashboard/inquiries.$id.test.tsx"
+      ]
+    }
+  ],
+  "diagnosticNotes": [
+    "First full run failed only four obsolete consumer import checks, subsequently removed.",
+    "One full run alongside typecheck/lint hit the existing query-inspector lazy-render timeout; final full run uses four workers without concurrent quality processes.",
+    "First inbound mapping probe selected no tests; corrected selector caught the defect.",
+    "Tooltip output has no tooltip role; browser assertions use actual visible explanation text."
+  ]
+}

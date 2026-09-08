@@ -8,22 +8,10 @@ import { createRequestSdk } from '@bcordes/auth/sdk'
 vi.mock('@bcordes/auth/session', () => ({ getSession: vi.fn() }))
 vi.mock('@bcordes/auth/sdk', () => ({ createRequestSdk: vi.fn() }))
 
-vi.mock('@tanstack/react-start', () => ({
-  createServerFn: () => {
-    let validate = (input: unknown) => input
-    const chain = {
-      inputValidator: (validator: { parse: (input: unknown) => unknown }) => {
-        validate = (input) => validator.parse(input)
-        return chain
-      },
-      handler:
-        (handler: (context: { data: unknown }) => Promise<unknown>) =>
-        async (options?: { data?: unknown }) =>
-          handler({ data: validate(options?.data) }),
-    }
-    return chain
-  },
-}))
+vi.mock(
+  '@tanstack/react-start',
+  () => import('../../../../testing/server-functions'),
+)
 
 const { fetchCurrentUserRoles, serverRequireAuth } = await import('./auth')
 beforeEach(() => vi.resetAllMocks())

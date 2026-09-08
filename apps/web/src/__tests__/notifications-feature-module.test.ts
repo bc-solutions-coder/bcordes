@@ -93,9 +93,7 @@ const CONSUMERS = [
   'routes/dashboard/settings.index.tsx',
   'routes/dashboard/settings.index.test.tsx',
   'routes/dashboard/inquiries.index.tsx',
-  'routes/dashboard/inquiries.index.test.tsx',
   'routes/dashboard/inquiries.$id.tsx',
-  'routes/dashboard/inquiries.$id.test.tsx',
   '__tests__/notification-routing.test.ts',
 ] as const
 
