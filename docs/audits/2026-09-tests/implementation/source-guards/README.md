@@ -1,6 +1,6 @@
 # Remaining source-guard removal — #103
 
-Implements [#103](https://github.com/bc-solutions-coder/bcordes/issues/103) from base `a651665`, following the [accepted source-guard review](../../reviews/app-migration-source-guards/README.md). [Dispositions](dispositions.tsv) retain all 279 original declarations: 200 cases and 79 suites, including historical absences. Twenty remaining files are deleted; the H3-resolution file was already absent.
+Implements [#103](https://github.com/bc-solutions-coder/bcordes/issues/103) at implementation revision `d2d7aa2` from base `a651665`, following the [accepted source-guard review](../../reviews/app-migration-source-guards/README.md). [Dispositions](dispositions.tsv) retain all 279 original declarations: 200 cases and 79 suites, including historical absences. Twenty remaining files are deleted; the H3-resolution file was already absent.
 
 All six useful execution obligations have verified owners in [prerequisites](prerequisites.tsv): built Storybook usability, delivered package styling, two tag-output examples, a real application alias consumer and actual root coverage execution. Their implementation records include relevant deliberate-defect failure and restored success. This slice reuses those checks and adds no duplicate test. The global coverage prerequisite and production/Docker checks are also complete.
 
