@@ -1,6 +1,6 @@
 # Built Storybook and release outputs — #102
 
-Implements [#102](https://github.com/bc-solutions-coder/bcordes/issues/102) from base `111283b`, following the [accepted source-guard review](../../reviews/app-migration-source-guards/README.md). [Dispositions](dispositions.tsv) map the three owned original behavior cases. [Resources](resources.tsv) records the shared script, standalone tests, runtime probe and command/workflow entrypoints.
+Implements [#102](https://github.com/bc-solutions-coder/bcordes/issues/102) at implementation revision `74cb966` from base `111283b`, following the [accepted source-guard review](../../reviews/app-migration-source-guards/README.md). [Dispositions](dispositions.tsv) map the three owned original behavior cases. [Resources](resources.tsv) records the shared script, standalone tests, runtime probe and command/workflow entrypoints.
 
 `pnpm verify:storybook` serves the actual static Storybook build on an ephemeral loopback port, locates UI/Button Default through the emitted index, opens its iframe in Chromium, and requires a visible, enabled Button that accepts focus on click. Browser and preview server close on success or failure. This exercises one package story; detailed UI interactions and appearance remain owned by #100. CI preserves compilation and invokes the runtime check afterward.
 
